@@ -14,6 +14,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/dashboard',
+        destination: '/owner/dashboard',
+        permanent: true,
+      },
+      {
         source: '/customer/bookings/:id',
         destination: '/owner/bookings/:id',
         permanent: false,

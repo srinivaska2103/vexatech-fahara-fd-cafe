@@ -67,9 +67,9 @@ export default function PaymentsPage() {
   // Calculate dynamic stats from payments list if revenue object is empty
   const totalBookingValue = revenue.total_booking_value ?? rawPayments.reduce((sum, p) => sum + Number(p.bookingAmount || p.amount || 0), 0);
   const yourEarnings = revenue.your_earnings ?? rawPayments.reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
-  const pendingSettlement = revenue.pending_settlement ?? rawPayments.filter(p => (p.settlementStatus || p.settlement_status) === 'Pending').reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
-  const settledAmount = revenue.settled_amount ?? rawPayments.filter(p => (p.settlementStatus || p.settlement_status) === 'Settled').reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
-  const refundAmount = revenue.refund_amount ?? rawPayments.filter(p => (p.status || p.paymentStatus) === 'Refunded').reduce((sum, p) => sum + Number(p.amount || 0), 0);
+  const pendingSettlement = revenue.pending_settlement ?? rawPayments.filter(p => String(p.settlementStatus || p.settlement_status || '').toUpperCase() === 'PENDING').reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
+  const settledAmount = revenue.settled_amount ?? rawPayments.filter(p => ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(String(p.settlementStatus || p.settlement_status || '').toUpperCase())).reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
+  const refundAmount = revenue.refund_amount ?? rawPayments.filter(p => ['REFUNDED', 'PARTIALLY_REFUNDED'].includes(String(p.status || p.paymentStatus || '').toUpperCase())).reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
   const handleExportCSV = () => {
     let csv = 'Booking ID,Customer Name,Booking Date,Gross Amount,Cafe Net Amount,Payment Status,Settlement Status,Payment Date\n';
@@ -100,40 +100,33 @@ export default function PaymentsPage() {
   };
 
   const getStatusBadge = (status) => {
-    switch (status) {
-      case 'Paid':
-      case 'Settled':
-      case 'Completed':
-      case 'SUCCESS':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 border border-emerald-500/30">
-            <CheckCircle2 className="w-3 h-3" /> {status}
-          </span>
-        );
-      case 'Pending':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/10 text-amber-700 border border-amber-500/30">
-            <Clock className="w-3 h-3" /> {status}
-          </span>
-        );
-      case 'Processing':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-700 border border-blue-500/30">
-            <RefreshCw className="w-3 h-3 animate-spin" /> {status}
-          </span>
-        );
-      case 'Failed':
-      case 'Refunded':
-      case 'Partially Refunded':
-      case 'Reversed':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/10 text-rose-700 border border-rose-500/30">
-            {status}
-          </span>
-        );
-      default:
-        return <span className="text-[10px] font-bold text-text/60">{status || 'Pending'}</span>;
+    const uppercaseStatus = String(status || '').toUpperCase();
+    if (['PAID', 'SETTLED', 'COMPLETED', 'SUCCESS'].includes(uppercaseStatus)) {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 border border-emerald-500/30">
+          <CheckCircle2 className="w-3 h-3" /> {status}
+        </span>
+      );
     }
+    if (uppercaseStatus === 'PENDING') {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/10 text-amber-700 border border-amber-500/30">
+          <Clock className="w-3 h-3" /> {status}
+        </span>
+      );
+    }
+    if (uppercaseStatus === 'PROCESSING') {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-700 border border-blue-500/30">
+          <RefreshCw className="w-3 h-3 animate-spin" /> {status}
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/10 text-rose-700 border border-rose-500/30">
+        <XCircle className="w-3 h-3" /> {status}
+      </span>
+    );
   };
 
   return (

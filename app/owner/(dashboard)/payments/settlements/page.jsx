@@ -75,10 +75,10 @@ export default function SettlementsPage() {
   });
 
   // Calculate high-level summary metrics
-  const totalSettled = settlements.filter(s => (s.status || s.settlement_status) === 'Settled').reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
-  const pendingSettlement = settlements.filter(s => (s.status || s.settlement_status) === 'Pending').reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
-  const processingSettlement = settlements.filter(s => (s.status || s.settlement_status) === 'Processing').reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
-  const failedSettlement = settlements.filter(s => ['Failed', 'Reversed'].includes(s.status || s.settlement_status)).reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
+  const totalSettled = settlements.filter(s => ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(String(s.status || s.settlement_status || '').toUpperCase())).reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
+  const pendingSettlement = settlements.filter(s => String(s.status || s.settlement_status || '').toUpperCase() === 'PENDING').reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
+  const processingSettlement = settlements.filter(s => String(s.status || s.settlement_status || '').toUpperCase() === 'PROCESSING').reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
+  const failedSettlement = settlements.filter(s => ['FAILED', 'REVERSED'].includes(String(s.status || s.settlement_status || '').toUpperCase())).reduce((sum, s) => sum + Number(s.amount || s.settled_amount || 0), 0);
 
   const handleExportCSV = () => {
     let csv = 'Booking ID,Razorpay Reference,Settlement Date,Amount,Status,Tag\n';
@@ -99,14 +99,16 @@ export default function SettlementsPage() {
   };
 
   const getStatusBadge = (status, tag) => {
-    const isCompleted = ['Settled', 'COMPLETED', 'SUCCESS'].includes(String(status || '').toUpperCase());
+    const uppercaseStatus = String(status || '').toUpperCase();
+    const isCompleted = ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(uppercaseStatus);
+    const isProcessing = uppercaseStatus === 'PROCESSING';
     return (
       <div className="inline-flex items-center gap-1.5 flex-wrap">
         {isCompleted ? (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 border border-emerald-500/30">
             <CheckCircle2 className="w-3 h-3" /> Settled
           </span>
-        ) : status === 'Processing' ? (
+        ) : isProcessing ? (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-700 border border-blue-500/30">
             <RefreshCw className="w-3 h-3 animate-spin" /> Processing
           </span>
@@ -127,10 +129,10 @@ export default function SettlementsPage() {
 
   const statusTabs = [
     { id: 'ALL', label: 'All Settlements', count: settlements.length },
-    { id: 'Settled', label: 'Settled to Bank', count: settlements.filter(s => (s.status || s.settlement_status) === 'Settled').length },
-    { id: 'Pending', label: 'Pending Split', count: settlements.filter(s => (s.status || s.settlement_status) === 'Pending').length },
-    { id: 'Processing', label: 'Processing', count: settlements.filter(s => (s.status || s.settlement_status) === 'Processing').length },
-    { id: 'Failed', label: 'Failed / Hold', count: settlements.filter(s => ['Failed', 'Reversed'].includes(s.status || s.settlement_status)).length },
+    { id: 'Settled', label: 'Settled to Bank', count: settlements.filter(s => ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(String(s.status || s.settlement_status || '').toUpperCase())).length },
+    { id: 'Pending', label: 'Pending Split', count: settlements.filter(s => String(s.status || s.settlement_status || '').toUpperCase() === 'PENDING').length },
+    { id: 'Processing', label: 'Processing', count: settlements.filter(s => String(s.status || s.settlement_status || '').toUpperCase() === 'PROCESSING').length },
+    { id: 'Failed', label: 'Failed / Hold', count: settlements.filter(s => ['FAILED', 'REVERSED'].includes(String(s.status || s.settlement_status || '').toUpperCase())).length },
   ];
 
   return (
