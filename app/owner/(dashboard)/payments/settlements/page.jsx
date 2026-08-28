@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { useSettlements } from '@/hooks/payment';
+import { useSettlements, useSyncSettlements } from '@/hooks/payment';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { 
@@ -36,6 +36,7 @@ export default function SettlementsPage() {
   const [selectedSettlement, setSelectedSettlement] = useState(null);
 
   const { data, isLoading, refetch } = useSettlements({ search, status: statusFilter, vendor_type: 'CAFE' });
+  const { mutate: syncSettlements, isPending: isSyncing } = useSyncSettlements();
   const rawSettlements = (data?.data || []).map(s => {
     const rawSt = s.status || s.settlement_status;
     const isCompleted = ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(String(rawSt || '').toUpperCase());
@@ -173,11 +174,12 @@ export default function SettlementsPage() {
 
           <button 
             type="button"
-            onClick={() => refetch()}
-            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            disabled={isSyncing}
+            onClick={() => syncSettlements({ vendor_type: 'CAFE' })}
+            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-60"
           >
-            <RefreshCw className="w-4 h-4 text-white" />
-            <span>Sync Razorpay Settlements</span>
+            <RefreshCw className={cn("w-4 h-4 text-white", isSyncing && "animate-spin")} />
+            <span>{isSyncing ? 'Syncing...' : 'Sync Razorpay Settlements'}</span>
           </button>
         </div>
       </div>

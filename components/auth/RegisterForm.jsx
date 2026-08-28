@@ -18,8 +18,12 @@ export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
   });
 
   const registerMutation = useRegister((res) => {
-    const userId = res?.user?.id || res?.userId || getValues('email');
-    router.push(`/owner/verify-otp?id=${encodeURIComponent(userId)}`);
+    const userId = res?.user?.id || res?.userId || res?.data?.user?.id;
+    if (userId) {
+      router.push(`/owner/verify-otp?id=${encodeURIComponent(userId)}`);
+    } else {
+      router.push('/owner/verify-otp');
+    }
   });
 
   const onSubmit = (data) => {
