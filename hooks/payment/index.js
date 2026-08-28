@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { paymentService } from '@/services/payment.service';
 import toast from 'react-hot-toast';
 
@@ -34,6 +34,20 @@ export const useSettlements = (params = {}) => {
   return useQuery({
     queryKey: ['settlements', params],
     queryFn: () => paymentService.getSettlements(params),
+  });
+};
+
+export const useSyncSettlements = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params) => paymentService.syncSettlements(params),
+    onSuccess: (data) => {
+      toast.success(data?.message || 'Razorpay settlements synced successfully');
+      queryClient.invalidateQueries({ queryKey: ['settlements'] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || error.message || 'Failed to sync Razorpay settlements');
+    }
   });
 };
 

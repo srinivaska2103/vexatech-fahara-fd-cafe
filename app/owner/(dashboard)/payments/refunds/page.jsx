@@ -211,16 +211,6 @@ export default function RefundsPage() {
 
       </div>
 
-      {/* Security & API Policy Reminder */}
-      <div className="p-4 rounded-3xl bg-[#FFF8F0] border border-[#DDB892]/50 text-[#2C1810] flex items-start gap-3.5 shadow-2xs">
-        <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center shrink-0 font-bold">
-          <Info className="w-4 h-4" />
-        </div>
-        <div className="text-xs leading-relaxed">
-          <span className="font-extrabold text-[#6F4E37] block mb-0.5">Automated Backend Refund Protocol</span>
-          All customer refunds are initiated and authorized strictly via secure backend Fahara API integrations. The frontend displays confirmed Razorpay gateway adjustment logs to maintain complete financial transparency.
-        </div>
-      </div>
 
       {/* Toolbar & Status Filters */}
       <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs space-y-4">

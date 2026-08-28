@@ -55,7 +55,12 @@ export const VerifyOtpForm = ({ identifier, email }) => {
   };
 
   const onSubmit = (data) => {
-    verifyOtpMutation.mutate(data);
+    const payload = {
+      ...data,
+      id: effectiveIdentifier,
+      email: effectiveIdentifier
+    };
+    verifyOtpMutation.mutate(payload);
   };
 
   return (

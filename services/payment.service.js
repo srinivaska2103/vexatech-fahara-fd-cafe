@@ -47,6 +47,12 @@ export const paymentService = {
     }
   },
 
+  // Sync Razorpay Settlements
+  syncSettlements: async (params = {}) => {
+    const response = await axiosInstance.post('/payments/owner/settlements/sync', {}, { params });
+    return response.data;
+  },
+
   // Get single Settlement by ID
   getSettlementById: async (id) => {
     try {
