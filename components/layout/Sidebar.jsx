@@ -28,26 +28,26 @@ import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
 const mainMenuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/owner/dashboard' },
-  { icon: Store, label: 'Cafe Management', href: '/owner/cafes' },
-  { icon: CalendarCheck, label: 'Bookings', href: '/owner/bookings' },
-  { icon: CalendarDays, label: 'Events', href: '/owner/events' },
-  { icon: Users, label: 'Customers', href: '/owner/customers' },
-  { icon: Star, label: 'Reviews', href: '/owner/reviews' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/owner/dashboard', color: 'text-amber-600', bg: 'bg-amber-100/70' },
+  { icon: Store, label: 'Cafe Management', href: '/owner/cafes', color: 'text-indigo-600', bg: 'bg-indigo-100/70' },
+  { icon: CalendarCheck, label: 'Bookings', href: '/owner/bookings', color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
+  { icon: CalendarDays, label: 'Events', href: '/owner/events', color: 'text-cyan-600', bg: 'bg-cyan-100/70' },
+  { icon: Users, label: 'Customers', href: '/owner/customers', color: 'text-sky-600', bg: 'bg-sky-100/70' },
+  { icon: Star, label: 'Reviews', href: '/owner/reviews', color: 'text-amber-500', bg: 'bg-amber-100/70' },
 ];
 
 const financeMenuItems = [
-  { icon: CreditCard, label: 'Payments', href: '/owner/payments', exact: true },
-  { icon: ArrowRightLeft, label: 'Settlements', href: '/owner/payments/settlements' },
-  { icon: RefreshCw, label: 'Refunds', href: '/owner/payments/refunds' },
-  { icon: ShieldCheck, label: 'Payment Account', href: '/owner/payments/account' },
+  { icon: CreditCard, label: 'Payments', href: '/owner/payments', exact: true, color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
+  { icon: ArrowRightLeft, label: 'Settlements', href: '/owner/payments/settlements', color: 'text-violet-600', bg: 'bg-violet-100/70' },
+  { icon: RefreshCw, label: 'Refunds', href: '/owner/payments/refunds', color: 'text-orange-600', bg: 'bg-orange-100/70' },
+  { icon: ShieldCheck, label: 'Payment Account', href: '/owner/payments/account', color: 'text-blue-600', bg: 'bg-blue-100/70' },
 ];
 
 const systemMenuItems = [
-  { icon: BarChart3, label: 'Analytics', href: '/owner/analytics' },
-  { icon: Bell, label: 'Notifications', href: '/owner/notifications' },
-  { icon: Settings, label: 'Settings', href: '/owner/settings' },
-  { icon: HelpCircle, label: 'Help & Support', href: '/owner/support' },
+  { icon: BarChart3, label: 'Analytics', href: '/owner/analytics', color: 'text-purple-600', bg: 'bg-purple-100/70' },
+  { icon: Bell, label: 'Notifications', href: '/owner/notifications', color: 'text-rose-600', bg: 'bg-rose-100/70' },
+  { icon: Settings, label: 'Settings', href: '/owner/settings', color: 'text-slate-600', bg: 'bg-slate-200/80' },
+  { icon: HelpCircle, label: 'Help & Support', href: '/owner/support', color: 'text-teal-600', bg: 'bg-teal-100/70' },
 ];
 
 export const Sidebar = () => {
@@ -127,7 +127,7 @@ export const Sidebar = () => {
             </div>
 
             <p className="text-[10px] text-text/60 font-medium leading-relaxed">
-              Razorpay payouts & real-time dining reservations are active.
+              Automated payouts & real-time dining reservations are active.
             </p>
 
             <Link 

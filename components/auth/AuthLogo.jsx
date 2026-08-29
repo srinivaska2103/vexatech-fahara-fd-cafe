@@ -8,26 +8,20 @@ export const AuthLogo = () => {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="flex justify-center mb-3"
+      className="flex justify-center mb-4"
     >
-      <div className="flex flex-col items-center justify-center space-y-2.5 text-center">
-        {/* Official Fahara Logo Badge matching reference design */}
-        <motion.div 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.96 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-          className="flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-3xl overflow-hidden bg-white shadow-md border border-[#DDB892]/70 p-3 cursor-pointer"
-        >
+      <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-2xl border border-[#DDB892]/50 shadow-2xs">
+        <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FAF0E6] border border-[#DDB892]/60 p-0.5 shrink-0">
           <img 
             src="/logo.jpeg" 
             alt="Fahara Logo" 
-            className="w-full h-full object-contain rounded-2xl" 
+            className="w-full h-full object-contain rounded-lg" 
           />
-        </motion.div>
-
-        <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-widest bg-[#6F4E37]/10 px-3.5 py-1 rounded-full border border-[#DDB892]/40 inline-block">
-          VENUE PARTNER PORTAL
-        </span>
+        </div>
+        <div className="flex flex-col text-left">
+          <span className="text-base font-black text-[#2C1810] tracking-wider leading-none">FAHARA</span>
+          <span className="text-[10px] font-bold text-[#6F4E37]/75 leading-none mt-1">Cafe & Event Booking</span>
+        </div>
       </div>
     </motion.div>
   );

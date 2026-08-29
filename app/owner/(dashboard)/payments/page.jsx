@@ -143,7 +143,7 @@ export default function PaymentsPage() {
             Payments & Finances
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Track Razorpay customer booking payments, platform fee adjustments, and net cafe bank split settlements.
+            Track customer booking payments, platform fee adjustments, and net cafe bank split settlements.
           </p>
         </div>
 
@@ -239,7 +239,7 @@ export default function PaymentsPage() {
             <p className="text-xl sm:text-2xl font-black text-amber-700">
               ₹{Number(pendingSettlement).toLocaleString()}
             </p>
-            <p className="text-[10px] text-amber-700/70 font-medium mt-0.5">Razorpay split pending</p>
+            <p className="text-[10px] text-amber-700/70 font-medium mt-0.5">Split settlement pending</p>
           </div>
         </div>
 
@@ -443,7 +443,7 @@ export default function PaymentsPage() {
                     <div className="flex items-center justify-between pb-2 border-b border-border/40">
                       <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#6F4E37] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-[#6F4E37]" />
-                        <span>Razorpay Split Breakdown</span>
+                        <span>Split Settlement Breakdown</span>
                       </h4>
                       <span className="text-[10px] font-bold text-[#6F4E37] bg-[#6F4E37]/10 px-2 py-0.5 rounded-full">
                         T+1 Split
@@ -508,25 +508,25 @@ export default function PaymentsPage() {
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Payment Method</span>
                       <span className="font-bold text-[#2C1810] truncate">
-                        {selectedPayment.paymentMethod || selectedPayment.method || 'UPI / Razorpay Gateway'}
+                        {selectedPayment.paymentMethod || selectedPayment.method || 'UPI Gateway'}
                       </span>
                     </div>
 
-                    {/* Razorpay Reference */}
+                    {/* Reference ID */}
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
-                      <span className="text-text/60 shrink-0">Razorpay Reference</span>
+                      <span className="text-text/60 shrink-0">Reference ID</span>
                       <div className="flex items-center gap-1 min-w-0">
                         <span className="font-mono text-xs text-[#6F4E37] font-bold truncate max-w-[160px] sm:max-w-[200px]">
-                          {selectedPayment.razorpayRef || selectedPayment.cashfreeRef || selectedPayment.cashfree_reference || selectedPayment.razorpay_reference || 'RZP_SPLIT_SETTLED'}
+                          {selectedPayment.razorpayRef || selectedPayment.cashfreeRef || selectedPayment.cashfree_reference || selectedPayment.razorpay_reference || 'SPLIT_SETTLED'}
                         </span>
                         <button
                           type="button"
                           onClick={() => {
-                            navigator.clipboard.writeText(selectedPayment.razorpayRef || selectedPayment.cashfreeRef || selectedPayment.cashfree_reference || selectedPayment.razorpay_reference || 'RZP_SPLIT_SETTLED');
-                            toast.success('Razorpay Ref copied!');
+                            navigator.clipboard.writeText(selectedPayment.razorpayRef || selectedPayment.cashfreeRef || selectedPayment.cashfree_reference || selectedPayment.razorpay_reference || 'SPLIT_SETTLED');
+                            toast.success('Reference ID copied!');
                           }}
                           className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
-                          title="Copy Razorpay Reference"
+                          title="Copy Reference ID"
                         >
                           <Copy className="w-3 h-3" />
                         </button>

@@ -6,6 +6,7 @@ import { cafeSchema } from '@/schemas/cafe.schema';
 import { Input } from '../ui/Input';
 import { Label } from '../ui/Label';
 import { Button } from '../ui/Button';
+import toast from 'react-hot-toast';
 import { GalleryUploader } from './GalleryUploader';
 import { BusinessHours } from './BusinessHours';
 import { CafeAmenities } from './CafeAmenities';
@@ -208,36 +209,46 @@ const ModernCategorySelect = ({ value, onChange, error, register }) => {
   );
 };
 
-export const CafeForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "Save Cafe Changes" }) => {
+export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel = "Save Cafe Changes" }) => {
   const [currentStep, setCurrentStep] = useState(1);
+
+  // Sanitize incoming defaultValues to replace nulls with empty strings and merge businessHours
+  const sanitizedDefaultValues = {
+    name: defaultValues?.name ?? '',
+    description: defaultValues?.description ?? '',
+    email: defaultValues?.email ?? '',
+    phone: defaultValues?.phone ?? '',
+    address: defaultValues?.address ?? '',
+    city: defaultValues?.city ?? '',
+    state: defaultValues?.state ?? '',
+    country: defaultValues?.country ?? '',
+    pincode: defaultValues?.pincode ?? '',
+    latitude: defaultValues?.latitude ?? '',
+    longitude: defaultValues?.longitude ?? '',
+    category: defaultValues?.category ?? '',
+    price: defaultValues?.price ?? '',
+    capacity: defaultValues?.capacity ?? '',
+    google_place_id: defaultValues?.google_place_id ?? '',
+    google_rating: defaultValues?.google_rating ?? '',
+    provides_event_services: defaultValues?.provides_event_services ?? false,
+    cover_image: defaultValues?.cover_image ?? '',
+    status: defaultValues?.status ?? 'DRAFT',
+    amenities: Array.isArray(defaultValues?.amenities) ? defaultValues.amenities : [],
+    gallery: Array.isArray(defaultValues?.gallery) ? defaultValues.gallery : [],
+    businessHours: {
+      monday: defaultValues?.businessHours?.monday || defaultBusinessHours.monday,
+      tuesday: defaultValues?.businessHours?.tuesday || defaultBusinessHours.tuesday,
+      wednesday: defaultValues?.businessHours?.wednesday || defaultBusinessHours.wednesday,
+      thursday: defaultValues?.businessHours?.thursday || defaultBusinessHours.thursday,
+      friday: defaultValues?.businessHours?.friday || defaultBusinessHours.friday,
+      saturday: defaultValues?.businessHours?.saturday || defaultBusinessHours.saturday,
+      sunday: defaultValues?.businessHours?.sunday || defaultBusinessHours.sunday,
+    }
+  };
 
   const methods = useForm({
     resolver: zodResolver(cafeSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      email: '',
-      phone: '',
-      address: '',
-      city: '',
-      state: '',
-      country: '',
-      pincode: '',
-      latitude: '',
-      longitude: '',
-      category: '',
-      price: '',
-      capacity: '',
-      google_place_id: '',
-      google_rating: '',
-      provides_event_services: false,
-      cover_image: '',
-      status: 'DRAFT',
-      amenities: [],
-      gallery: [],
-      businessHours: defaultBusinessHours,
-      ...defaultValues
-    },
+    defaultValues: sanitizedDefaultValues,
   });
 
   const draftKey = `fahara_cafe_edit_draft_${defaultValues?.id || 'new'}`;
@@ -301,6 +312,9 @@ export const CafeForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "Sa
 
   const onFormError = (errors) => {
     console.error("Form validation errors:", errors);
+    const firstErr = Object.values(errors)[0];
+    const errMsg = firstErr?.message || (firstErr ? Object.values(firstErr)[0]?.message : null) || 'Please fill in all required form fields.';
+    toast.error(`Cannot submit form: ${errMsg}`);
   };
 
   return (

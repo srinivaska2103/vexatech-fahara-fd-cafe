@@ -1,9 +1,12 @@
 'use client';
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { PageHeader } from '@/components/layout/PageContainer';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SettingsLayout({ children }) {
+  const pathname = usePathname();
+
   return (
     <div className="p-3 sm:p-5 max-w-5xl mx-auto space-y-4 text-[#2C1810]">
       {/* Settings Header */}
@@ -14,11 +17,11 @@ export default function SettingsLayout({ children }) {
         />
       </div>
 
-      {/* Main Settings Content Area - Full Width without left sidebar */}
+      {/* Main Settings Content Area - Full Width */}
       <main className="w-full pb-16 md:pb-0">
         <AnimatePresence mode="wait">
            <motion.div
-             key={typeof window !== 'undefined' ? window.location.pathname : 'settings'}
+             key={pathname}
              initial={{ opacity: 0, y: 8 }}
              animate={{ opacity: 1, y: 0 }}
              exit={{ opacity: 0, y: -8 }}

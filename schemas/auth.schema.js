@@ -16,7 +16,7 @@ export const registerSchema = z.object({
 });
 
 export const verifyOtpSchema = z.object({
-  email: z.string().email(),
+  email: z.string().min(1, 'Email or User ID is required'),
   otp: z.string().length(6, 'OTP must be 6 digits').regex(/^\d+$/, 'OTP must contain only numbers'),
 });
 

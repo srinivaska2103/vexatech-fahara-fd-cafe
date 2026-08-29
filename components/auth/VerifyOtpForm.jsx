@@ -16,10 +16,16 @@ export const VerifyOtpForm = ({ identifier, email }) => {
   const [timer, setTimer] = useState(30);
   const [isResending, setIsResending] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(verifyOtpSchema),
-    defaultValues: { email: effectiveIdentifier },
+    defaultValues: { email: effectiveIdentifier, otp: '' },
   });
+
+  useEffect(() => {
+    if (effectiveIdentifier) {
+      setValue('email', effectiveIdentifier);
+    }
+  }, [effectiveIdentifier, setValue]);
 
   const verifyOtpMutation = useVerifyOtp();
 

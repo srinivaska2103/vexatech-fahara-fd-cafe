@@ -175,13 +175,11 @@ export default function PaymentAccountPage() {
               </button>
             </Link>
             <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• BANK VERIFICATION</span>
-          </div>
-
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
+          </div>          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
             Payment Account & Bank Verification
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Validate your bank details via Razorpay Payment Gateway for automated vendor split settlements.
+            Validate your bank details via Payment Gateway for automated vendor split settlements.
           </p>
         </div>
 
@@ -211,7 +209,7 @@ export default function PaymentAccountPage() {
             </div>
             <div>
               <div className="flex items-center gap-3 flex-wrap mb-1">
-                <h2 className="text-xl font-bold text-[#2C1810]">Razorpay Vendor Payment Account</h2>
+                <h2 className="text-xl font-bold text-[#2C1810]">Vendor Payment Account</h2>
                 {renderStatusBadge(bankStatus)}
               </div>
               <p className="text-sm text-[#2C1810]/70 max-w-xl">
@@ -255,7 +253,7 @@ export default function PaymentAccountPage() {
                     : 'Verified Settlement Destination'}
                 </h3>
                 <p className="text-xs text-[#2C1810]/60">
-                  {isEditing ? 'Fill in all required fields to initiate Razorpay bank validation' : 'Bank account linked to your Razorpay Vendor ID'}
+                  {isEditing ? 'Fill in all required fields to initiate bank account validation' : 'Bank account linked to your Vendor ID'}
                 </p>
               </div>
             </div>
@@ -285,7 +283,7 @@ export default function PaymentAccountPage() {
                       value={formData.accountHolderName}
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
-                      placeholder="e.g. Ramesh Kumar"
+                      placeholder="Enter Account Holder Name"
                       className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-medium text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
                       required
                     />
@@ -302,7 +300,7 @@ export default function PaymentAccountPage() {
                       value={formData.accountNumber}
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
-                      placeholder="Enter Full Account Number"
+                      placeholder="Enter Bank Account Number"
                       className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-mono text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
                       required
                     />
@@ -319,7 +317,7 @@ export default function PaymentAccountPage() {
                       value={formData.confirmAccountNumber}
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
-                      placeholder="Re-enter Account Number"
+                      placeholder="Re-enter Bank Account Number"
                       className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-mono text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
                       required
                     />
@@ -336,7 +334,7 @@ export default function PaymentAccountPage() {
                       value={formData.ifsc}
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
-                      placeholder="e.g. HDFC0001234"
+                      placeholder="Enter IFSC Code"
                       className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-mono uppercase text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
                       required
                     />
@@ -353,7 +351,7 @@ export default function PaymentAccountPage() {
                       value={formData.phone}
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
-                      placeholder="10-digit mobile number"
+                      placeholder="Enter 10-digit Mobile Number"
                       className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-medium text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
                       required
                     />
@@ -370,7 +368,7 @@ export default function PaymentAccountPage() {
                       value={formData.email}
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
-                      placeholder="e.g. vendor@example.com"
+                      placeholder="Enter Email Address"
                       className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-medium text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
                       required
                     />
@@ -420,20 +418,32 @@ export default function PaymentAccountPage() {
                 exit={{ opacity: 0 }}
                 className="space-y-6"
               >
-                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-[#2C1810]">✓ Bank Account Verified</h4>
-                    <p className="text-xs text-[#2C1810]/70 mt-0.5">
-                      Razorpay validation complete. Automated payouts are active.
-                    </p>
+                {bankStatus === 'VERIFIED' ? (
+                  <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#2C1810]">✓ Bank Account Verified</h4>
+                      <p className="text-xs text-[#2C1810]/70 mt-0.5">
+                        Bank account validation complete. Automated payouts are active.
+                      </p>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#2C1810]">Bank Details Not Configured</h4>
+                      <p className="text-xs text-[#2C1810]/70 mt-0.5">
+                        Please click "Edit Bank Details" to link your settlement bank account.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
                     <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Account Holder Name</p>
-                    <p className="text-base font-semibold text-[#2C1810]">{accountInfo.accountHolderName || 'N/A'}</p>
+                    <p className="text-base font-semibold text-[#2C1810]">{accountInfo.accountHolderName || 'Not Configured'}</p>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
@@ -441,19 +451,23 @@ export default function PaymentAccountPage() {
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-[#6F4E37]" />
                       <p className="text-base font-bold text-[#2C1810] tracking-widest font-mono">
-                        {accountInfo.maskedBankAccount || `•••• ${accountInfo.bankAccountLast4 || '9012'}`}
+                        {accountInfo.maskedBankAccount || (accountInfo.bankAccountLast4 ? `•••• ${accountInfo.bankAccountLast4}` : 'Not Configured')}
                       </p>
                     </div>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
                     <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">IFSC Code</p>
-                    <p className="text-base font-semibold text-[#2C1810] font-mono">{accountInfo.ifsc || 'HDFC0001234'}</p>
+                    <p className="text-base font-semibold text-[#2C1810] font-mono">{accountInfo.ifsc || 'Not Configured'}</p>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
                     <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Settlement Capability</p>
-                    <p className="text-base font-semibold text-emerald-700">✓ Enabled</p>
+                    {bankStatus === 'VERIFIED' ? (
+                      <p className="text-base font-semibold text-emerald-700">✓ Enabled</p>
+                    ) : (
+                      <p className="text-base font-semibold text-amber-700">Disabled</p>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -481,7 +495,7 @@ export default function PaymentAccountPage() {
               </div>
 
               <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-                <span className="text-xs font-semibold text-[#2C1810]/80">Razorpay Vendor ID</span>
+                <span className="text-xs font-semibold text-[#2C1810]/80">Vendor ID</span>
                 <span className="text-xs font-mono font-bold text-[#6F4E37] max-w-[140px] truncate">
                   {accountInfo.cashfreeVendorId || '✓ Active'}
                 </span>
@@ -505,7 +519,7 @@ export default function PaymentAccountPage() {
 
           <div className="mt-8 pt-4 border-t border-[#DDB892]/30 flex items-center gap-2 text-xs text-[#2C1810]/60">
             <Lock className="w-4 h-4 text-[#6F4E37] shrink-0" />
-            <span>Razorpay Security Protocol Encrypted</span>
+            <span>Security Protocol Encrypted</span>
           </div>
         </motion.div>
 

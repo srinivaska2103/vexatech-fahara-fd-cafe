@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation';
+import BusinessProfilePage from './profile/page';
 
 export default function SettingsIndexPage() {
-  // Redirect base /settings to the first tab (profile)
-  redirect('/owner/settings/profile');
+  return <BusinessProfilePage />;
 }

@@ -132,7 +132,7 @@ export default function RefundsPage() {
             Customer Refunds & Adjustments
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Track customer booking refund activities, cancellation adjustments, and automated Razorpay payout reversals.
+            Track customer booking refund activities, cancellation adjustments, and automated payout reversals.
           </p>
         </div>
 
@@ -153,7 +153,7 @@ export default function RefundsPage() {
             className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <RefreshCw className="w-4 h-4 text-white" />
-            <span>Sync Razorpay Refunds</span>
+            <span>Sync Refunds</span>
           </button>
         </div>
       </div>

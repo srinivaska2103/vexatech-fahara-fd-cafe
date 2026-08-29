@@ -150,14 +150,14 @@ export default function SettlementsPage() {
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Payments</span>
             </button>
-            <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• RAZORPAY BANK SETTLEMENTS</span>
+            <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• BANK SETTLEMENTS</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
             Bank Payout Settlements
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Track Razorpay vendor payout transfers directly into your registered bank account.
+            Track vendor payout transfers directly into your registered bank account.
           </p>
         </div>
 
@@ -179,7 +179,7 @@ export default function SettlementsPage() {
             className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-60"
           >
             <RefreshCw className={cn("w-4 h-4 text-white", isSyncing && "animate-spin")} />
-            <span>{isSyncing ? 'Syncing...' : 'Sync Razorpay Settlements'}</span>
+            <span>{isSyncing ? 'Syncing...' : 'Sync Settlements'}</span>
           </button>
         </div>
       </div>
@@ -208,7 +208,7 @@ export default function SettlementsPage() {
             </div>
           </div>
           <p className="text-xl sm:text-3xl font-black text-amber-700">₹{pendingSettlement.toLocaleString()}</p>
-          <p className="text-[10px] text-amber-700/70 font-medium">Razorpay split pending</p>
+          <p className="text-[10px] text-amber-700/70 font-medium">Split settlement pending</p>
         </div>
 
         {/* Processing */}
@@ -277,7 +277,7 @@ export default function SettlementsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
-              placeholder="Search Booking ID, Razorpay Ref..." 
+              placeholder="Search Booking ID, Reference..." 
             />
           </div>
 
@@ -305,7 +305,7 @@ export default function SettlementsPage() {
                   <th className="px-6 py-4">Settlement Date</th>
                   <th className="px-6 py-4 text-right">Net Cafe Amount</th>
                   <th className="px-6 py-4 text-center">Status</th>
-                  <th className="px-6 py-4">Razorpay Reference</th>
+                  <th className="px-6 py-4">Reference ID</th>
                   <th className="px-6 py-4 text-right">Details</th>
                 </tr>
               </thead>
