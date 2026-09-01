@@ -458,7 +458,7 @@ export default function PaymentsPage() {
                     </div>
 
                     <div className="flex items-center justify-between text-xs py-1.5 text-rose-600">
-                      <span className="text-text/70">Fahara Platform Fee Adjustment</span>
+                      <span className="text-text/70">Platform Fee Adjustment</span>
                       <span className="font-bold">
                         -₹{Number(selectedPayment.faharaFee || 0).toLocaleString()}
                       </span>

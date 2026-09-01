@@ -29,9 +29,11 @@ export default function CreateCafePage() {
       maximum_persons: data.capacity ? Number(data.capacity) : null,
       google_rating: data.google_rating ? Number(data.google_rating) : null,
       provides_event_services: data.provides_event_services || false,
+      allow_third_party_decoration: data.allow_third_party_decoration ?? true,
       cover_image: data.cover_image || (data.gallery && data.gallery.length > 0 ? (data.gallery[0].file_url || data.gallery[0].url || (typeof data.gallery[0] === 'string' ? data.gallery[0] : "")) : ""),
       gallery: data.gallery ? data.gallery.map(img => img.file_url || img.url || (typeof img === 'string' ? img : "")) : [],
       amenities: data.amenities || [],
+      discounts: data.discounts || null,
       business_hours: data.businessHours || null,
       status: data.status || "DRAFT"
     };

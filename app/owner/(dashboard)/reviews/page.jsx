@@ -32,9 +32,10 @@ export default function ReviewsPage() {
   const reviews = rawReviews.filter(r => {
     const searchLower = search.toLowerCase();
     const matchesSearch = !search || 
-      (r.review || r.comment || '').toLowerCase().includes(searchLower) ||
-      (r.users?.name || '').toLowerCase().includes(searchLower) ||
-      (r.cafes?.name || '').toLowerCase().includes(searchLower);
+      (r.review || r.comment || r.content || '').toLowerCase().includes(searchLower) ||
+      (r.customer_name || r.user_name || r.users?.name || '').toLowerCase().includes(searchLower) ||
+      (r.cafe_name || r.service_name || r.cafes?.name || '').toLowerCase().includes(searchLower) ||
+      (r.booking_number || r.bookings?.booking_number || '').toLowerCase().includes(searchLower);
 
     let matchesRating = true;
     if (ratingFilter === '5') {
@@ -44,7 +45,7 @@ export default function ReviewsPage() {
     } else if (ratingFilter === '3_BELOW') {
       matchesRating = (r.rating || 0) <= 3;
     } else if (ratingFilter === 'REPLIED') {
-      matchesRating = Boolean(r.owner_reply || r.reply);
+      matchesRating = Boolean(r.owner_reply || r.reply || r.reply_text);
     }
 
     return matchesSearch && matchesRating;
@@ -56,22 +57,23 @@ export default function ReviewsPage() {
     ? (rawReviews.reduce((sum, r) => sum + (r.rating || 5), 0) / totalCount).toFixed(1)
     : '5.0';
   const fiveStarCount = rawReviews.filter(r => r.rating === 5).length;
-  const repliedCount = rawReviews.filter(r => Boolean(r.owner_reply || r.reply)).length;
+  const repliedCount = rawReviews.filter(r => Boolean(r.owner_reply || r.reply || r.reply_text)).length;
   const responseRate = totalCount > 0 ? Math.round((repliedCount / totalCount) * 100) : 0;
 
   const handleExportCSV = () => {
-    let csv = 'Customer Name,Rating,Review Comment,Venue Name,Created Date,Owner Reply\n';
+    let csv = 'Customer Name,Booking ID,Rating,Review Comment,Venue Name,Created Date,Owner Reply\n';
     
     if (reviews && reviews.length > 0) {
       reviews.forEach(r => {
-        const name = r.users?.name || 'Anonymous';
+        const name = r.customer_name || r.user_name || r.users?.name || 'Valued Customer';
+        const bookingNo = r.booking_number || r.bookings?.booking_number || (r.booking_id ? `#${String(r.booking_id).slice(0, 8)}` : 'N/A');
         const rating = r.rating || 5;
-        const text = (r.review || r.comment || '').replace(/"/g, '""');
-        const cafe = r.cafes?.name || 'Cafe';
+        const text = (r.review || r.comment || r.content || '').replace(/"/g, '""');
+        const cafe = r.cafe_name || r.service_name || r.cafes?.name || 'Cafe';
         const date = r.created_at ? new Date(r.created_at).toLocaleDateString() : 'N/A';
-        const reply = (r.owner_reply || r.reply || '').replace(/"/g, '""');
+        const reply = (r.owner_reply || r.reply || r.reply_text || '').replace(/"/g, '""');
         
-        csv += `"${name}","${rating}","${text}","${cafe}","${date}","${reply}"\n`;
+        csv += `"${name}","${bookingNo}","${rating}","${text}","${cafe}","${date}","${reply}"\n`;
       });
     }
 

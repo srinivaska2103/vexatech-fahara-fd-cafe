@@ -46,7 +46,7 @@ export const CustomerReviewCard = ({ customer, className }) => {
           </div>
         )}
         <div className="min-w-0">
-          <h3 className="font-extrabold text-base text-[#2C1810] truncate">{customer.name || 'Anonymous Diner'}</h3>
+          <h3 className="font-extrabold text-base text-[#2C1810] truncate">{customer.name || customer.customer_name || customer.user_name || 'Valued Customer'}</h3>
           <div className="flex items-center gap-1 text-xs text-text/60 mt-0.5">
             <MapPin className="w-3.5 h-3.5 text-[#6F4E37]" />
             <span className="truncate">{customer.city || 'Verified Diner'}</span>

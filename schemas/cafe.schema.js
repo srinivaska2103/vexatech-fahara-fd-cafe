@@ -60,6 +60,8 @@ export const cafeSchema = z.object({
   capacity: numberOrNull,
   google_rating: numberOrNull,
   provides_event_services: z.boolean().default(false),
+  allow_third_party_decoration: z.boolean().default(true),
+  discounts: z.any().optional(),
   
   // Status
   status: z.enum(['ACTIVE', 'INACTIVE', 'DRAFT']).default('DRAFT'),

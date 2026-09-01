@@ -22,8 +22,9 @@ export const ReviewTable = ({ reviews }) => {
           </thead>
           <tbody className="divide-y divide-border/30">
             {reviews.map((review) => {
-              const userName = review.users?.name || 'Anonymous Diner';
-              const cafeName = review.cafes?.name || 'Cafe Venue';
+              const userName = review.customer_name || review.user_name || review.users?.name || 'Valued Customer';
+              const cafeName = review.cafe_name || review.service_name || review.cafes?.name || 'Cafe Venue';
+              const bookingNo = review.booking_number || review.bookings?.booking_number || (review.booking_id ? `#${String(review.booking_id).slice(0, 8)}` : 'N/A');
               const rating = review.rating || 5;
 
               return (
@@ -35,8 +36,8 @@ export const ReviewTable = ({ reviews }) => {
                   {/* Customer Info */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      {review.users?.profile_image ? (
-                        <img src={review.users.profile_image} alt={userName} className="w-10 h-10 rounded-full object-cover border border-[#DDB892]/50" />
+                      {review.profile_image || review.users?.profile_image ? (
+                        <img src={review.profile_image || review.users.profile_image} alt={userName} className="w-10 h-10 rounded-full object-cover border border-[#DDB892]/50" />
                       ) : (
                         <div className="w-10 h-10 rounded-full bg-[#6F4E37]/10 border border-[#DDB892]/40 text-[#6F4E37] font-black text-sm flex items-center justify-center shrink-0">
                           {userName.charAt(0).toUpperCase()}
@@ -45,7 +46,7 @@ export const ReviewTable = ({ reviews }) => {
                       <div>
                         <p className="font-extrabold text-[#2C1810]">{userName}</p>
                         <p className="text-[10px] text-[#6F4E37] font-mono font-bold">
-                          Booking ID: {review.bookings?.booking_number || (review.booking_id ? review.booking_id.substring(0, 8).toUpperCase() : (review.bookingId || 'N/A'))}
+                          Booking ID: {bookingNo}
                         </p>
                       </div>
                     </div>

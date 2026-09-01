@@ -26,6 +26,9 @@ import {
   Clock, 
   Calendar,
   Sparkles,
+  Gift,
+  Percent,
+  Tag,
   ExternalLink,
   ChevronRight
 } from 'lucide-react';
@@ -36,6 +39,7 @@ import { CafeStatusBadge } from '@/components/cafes/CafeStatusBadge';
 import { MapPreview } from '@/components/maps/MapPreview';
 import { BackButton } from '@/components/ui/BackButton';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/utils/cn';
 
 const AMENITIES_LIST = [
   { id: 'wifi', label: 'High-Speed WiFi', icon: Wifi },
@@ -54,12 +58,12 @@ export default function CafeDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
-  const { data: cafeData, isLoading } = useCafe(id);
+  const { data: cafeData, isLoading, isPending } = useCafe(id);
   const cafe = cafeData?.data || cafeData;
 
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'amenities' | 'hours' | 'gallery' | 'map'
 
-  if (isLoading) {
+  if (isLoading || isPending) {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         <LoadingSkeleton type="card" className="h-[240px] rounded-3xl" />
@@ -93,8 +97,15 @@ export default function CafeDetailsPage() {
 
   const galleryImages = Array.isArray(cafe.gallery) ? cafe.gallery.map(img => typeof img === 'string' ? img : img?.url || img?.file_url).filter(Boolean) : [];
 
+  const discountsList = Array.isArray(cafe.discounts)
+    ? cafe.discounts
+    : (cafe.discounts && typeof cafe.discounts === 'object')
+      ? Object.values(cafe.discounts).filter(Boolean)
+      : [];
+
   const tabs = [
     { id: 'overview', label: 'Overview & Info', icon: Coffee },
+    { id: 'discounts', label: 'Discounts & Offers', icon: Gift, count: discountsList.length },
     { id: 'amenities', label: 'Amenities', icon: CheckCircle2, count: cafe.amenities?.length || 0 },
     { id: 'hours', label: 'Business Hours', icon: Clock },
     { id: 'gallery', label: 'Photo Gallery', icon: ImageIcon, count: galleryImages.length },
@@ -166,7 +177,13 @@ export default function CafeDetailsPage() {
           <div className="flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/40 shadow-md text-[#2C1810]">
             <div className="px-3 border-r border-border/40">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Hourly Rate</p>
-              <p className="text-sm font-black text-[#6F4E37]">₹{cafe.price_per_hour || 0}<span className="text-[10px] font-normal text-text/50">/hr</span></p>
+              <p className="text-sm font-black text-[#6F4E37]">
+                {Number(cafe.price_per_hour) > 0 ? (
+                  <>₹{cafe.price_per_hour}<span className="text-[10px] font-normal text-text/50">/hr</span></>
+                ) : (
+                  '-'
+                )}
+              </p>
             </div>
             <div className="px-3">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Max Capacity</p>
@@ -178,25 +195,27 @@ export default function CafeDetailsPage() {
 
       {/* Interactive Tabs Header Navigation */}
       <div className="bg-white p-2 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
-        {tabs.map(tab => {
+        {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-2 shrink-0 ${
-                isActive
-                  ? 'bg-[#6F4E37] text-white shadow-2xs'
-                  : 'bg-transparent text-text/70 hover:bg-surface hover:text-[#2C1810]'
-              }`}
+              className={cn(
+                "px-4 py-2.5 rounded-2xl text-xs font-black transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+                isActive 
+                  ? "bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white shadow-md" 
+                  : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
+              )}
             >
               <Icon className="w-4 h-4" />
               <span>{tab.label}</span>
-              {typeof tab.count === 'number' && tab.count > 0 && (
-                <span className={`px-2 py-0.2 rounded-full text-[10px] ${
-                  isActive ? 'bg-white/20 text-white' : 'bg-surface text-[#6F4E37]'
-                }`}>
+              {typeof tab.count === 'number' && (
+                <span className={cn(
+                  "px-2 py-0.5 rounded-full text-[10px] font-extrabold",
+                  isActive ? "bg-white/20 text-white" : "bg-border/40 text-text/60"
+                )}>
                   {tab.count}
                 </span>
               )}
@@ -205,11 +224,10 @@ export default function CafeDetailsPage() {
         })}
       </div>
 
-      {/* Grid Layout: Main Tab Content + Quick Venue Details Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        {/* Main Tab Active View (8 columns) */}
-        <div className="lg:col-span-8">
+      {/* Grid Layout: Main Tab Content (8 cols) + Right Sidebar Action Card (4 cols) */}
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Main Tab Content Display (8 columns) */}
+        <div className="lg:col-span-8 space-y-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -218,10 +236,10 @@ export default function CafeDetailsPage() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
             >
-              
-              {/* TAB 1: OVERVIEW */}
+              {/* TAB 1: OVERVIEW & INFO */}
               {activeTab === 'overview' && (
                 <div className="space-y-6">
+                  {/* About Dining Space */}
                   <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-4">
                     <div className="flex items-center gap-3 pb-3 border-b border-border/40">
                       <div className="w-9 h-9 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold">
@@ -250,7 +268,9 @@ export default function CafeDetailsPage() {
                       </div>
                       <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                         <p className="text-[10px] text-text/50 font-bold uppercase">Hourly Rate</p>
-                        <p className="text-sm font-black text-[#6F4E37] mt-0.5">₹{cafe.price_per_hour || 0}/hr</p>
+                        <p className="text-sm font-black text-[#6F4E37] mt-0.5">
+                          {Number(cafe.price_per_hour) > 0 ? `₹${cafe.price_per_hour}/hr` : '-'}
+                        </p>
                       </div>
                       <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                         <p className="text-[10px] text-text/50 font-bold uppercase">Location City</p>
@@ -258,6 +278,64 @@ export default function CafeDetailsPage() {
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* TAB: DISCOUNTS & OFFERS */}
+              {activeTab === 'discounts' && (
+                <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
+                  <div className="flex items-center justify-between gap-4 pb-4 border-b border-border/40">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-extrabold">
+                        <Gift className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-extrabold text-[#2C1810]">Active Promotional Discounts & Offers</h3>
+                        <p className="text-[11px] text-text/60">Special discount offers enabled for venue customers</p>
+                      </div>
+                    </div>
+
+                    <Link href={`/owner/cafes/${id}/edit`}>
+                      <Button className="py-2 px-3.5 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold flex items-center gap-1.5">
+                        <Edit2 className="w-3.5 h-3.5" />
+                        Manage Discounts
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {discountsList.length === 0 ? (
+                    <div className="text-center py-10 space-y-3 bg-[#FFF8F0]/50 rounded-2xl border border-dashed border-[#DDB892]/60">
+                      <Sparkles className="w-10 h-10 text-amber-500/50 mx-auto" />
+                      <p className="text-xs font-bold text-[#2C1810]">No Promotional Discounts Configured</p>
+                      <p className="text-[11px] text-text/50 max-w-sm mx-auto">
+                        Boost your venue bookings by adding flat or percentage-based discount offers.
+                      </p>
+                      <Link href={`/owner/cafes/${id}/edit`}>
+                        <Button className="bg-[#6F4E37] text-white font-extrabold text-xs rounded-xl px-4 py-2 mt-2">
+                          + Add Discount Offers
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {discountsList.map((disc, idx) => (
+                        <div key={idx} className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF8F0] via-white to-[#FFF5EA] border border-[#DDB892]/60 shadow-2xs space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-800 text-[10px] font-black uppercase">
+                              Promotional Offer #{idx + 1}
+                            </span>
+                            <Sparkles className="w-4 h-4 text-amber-600" />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-extrabold text-[#2C1810]">{disc.title || disc.name || 'Special Discount'}</h4>
+                            <p className="text-lg font-black text-[#6F4E37] mt-1">
+                              {disc.discountType === 'PERCENT' ? `${disc.amount || 0}% OFF` : `₹${disc.amount || 0} OFF`}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -432,17 +510,16 @@ export default function CafeDetailsPage() {
         </div>
 
         {/* Right Sidebar Action Card (4 columns) */}
-        <div className="lg:col-span-4 space-y-4">
-          
+        <div className="lg:col-span-4 space-y-4 sticky top-6">
           <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs space-y-4">
             <h4 className="text-xs font-extrabold text-[#2C1810] uppercase tracking-wider pb-2 border-b border-border/40 flex items-center justify-between">
               <span>Quick Venue Actions</span>
               <Sparkles className="w-4 h-4 text-[#6F4E37]" />
             </h4>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <Link href={`/owner/cafes/${id}/edit`} className="block">
-                <Button className="w-full justify-between py-2.5 px-4 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold shadow-xs">
+                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">
                   <span className="flex items-center gap-2">
                     <Edit2 className="w-4 h-4" />
                     <span>Edit Venue Profile</span>
@@ -452,12 +529,12 @@ export default function CafeDetailsPage() {
               </Link>
 
               <Link href={`/owner/bookings?cafe_id=${cafe.id}`} className="block">
-                <Button className="w-full justify-between py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md transition-all">
+                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
                   <span className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-white" />
+                    <Calendar className="w-4 h-4 text-[#6F4E37]" />
                     <span>Manage Bookings</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-white" />
+                  <ChevronRight className="w-4 h-4 text-[#6F4E37]" />
                 </Button>
               </Link>
             </div>

@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Navbar } from '@/components/layout/Navbar';
 import { OwnerOnboardingTour } from '@/components/onboarding/OwnerOnboardingTour';
+import { LiveNotificationListener } from '@/components/notifications/LiveNotificationListener';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { Loader2, Coffee, Sparkles, Store, ShieldCheck, Heart, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -128,6 +129,7 @@ export default function DashboardLayout({ children }) {
         </main>
       </div>
       <MobileBottomNav />
+      <LiveNotificationListener />
       {role === 'CAFE_OWNER' && <OwnerOnboardingTour />}
     </div>
   );

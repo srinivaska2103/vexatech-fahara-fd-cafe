@@ -92,7 +92,9 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {reviews.slice(0, 4).map((r) => {
-              const name = r.users?.name || 'Anonymous Diner';
+              const name = r.customer_name || r.user_name || r.users?.name || 'Valued Customer';
+              const cafeName = r.cafe_name || r.service_name || r.cafes?.name || 'Cafe Venue';
+              const bookingNo = r.booking_number || r.bookings?.booking_number || (r.booking_id ? `#${String(r.booking_id).slice(0, 8)}` : 'N/A');
               const rating = r.rating || 5;
 
               return (
@@ -108,7 +110,9 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
                       </div>
                       <div>
                         <p className="text-xs font-extrabold text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">{name}</p>
-                        <p className="text-[10px] text-text/50">{r.cafes?.name || 'Cafe Venue'}</p>
+                        <p className="text-[10px] text-text/50">
+                          {cafeName} {bookingNo !== 'N/A' && <span className="font-mono font-bold text-[#6F4E37] ml-1">({bookingNo})</span>}
+                        </p>
                       </div>
                     </div>
 

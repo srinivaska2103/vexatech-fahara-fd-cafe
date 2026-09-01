@@ -77,45 +77,17 @@ export const RecipientSelector = ({ selected = [], onChange, customers = [] }) =
         )}
       </div>
 
-      {/* Prominent & Interactive Search + Custom Email Inputs */}
+      {/* Prominent & Interactive Search Input */}
       <div className="p-4 bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] border-b border-border/40 space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-          
-          {/* Big Interactive Search Box */}
-          <div className="md:col-span-7 relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6F4E37]" />
-            <input 
-              type="text" 
-              placeholder="Search customers by name or email address..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-2xl border border-[#DDB892]/60 bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10 shadow-2xs font-medium transition-all"
-            />
-          </div>
-
-          {/* Big Custom Email Input */}
-          <div className="md:col-span-5 flex items-center gap-1.5">
-            <div className="relative flex-1">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-              <input 
-                type="email" 
-                placeholder="Enter custom email address..." 
-                value={customEmail}
-                onChange={(e) => setCustomEmail(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomEmailRecipient(); }}}
-                className="w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-2xl border border-[#DDB892]/60 bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10 shadow-2xs font-medium transition-all"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={addCustomEmailRecipient}
-              className="px-4 py-2.5 bg-[#6F4E37] hover:bg-[#5D3F2B] text-white rounded-2xl text-xs font-extrabold shrink-0 shadow-2xs hover:shadow-xs transition-all flex items-center gap-1"
-              title="Add custom email recipient"
-            >
-              <Plus className="w-4 h-4" /> Add
-            </button>
-          </div>
-
+        <div className="relative w-full">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6F4E37]" />
+          <input 
+            type="text" 
+            placeholder="Search customers by name or email address..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-2xl border border-[#DDB892]/60 bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10 shadow-2xs font-medium transition-all"
+          />
         </div>
 
         {/* Selected Recipients Pills */}

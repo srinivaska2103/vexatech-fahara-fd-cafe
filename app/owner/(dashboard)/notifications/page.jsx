@@ -14,21 +14,26 @@ import {
   CheckCheck, 
   Grid, 
   List as ListIcon, 
-  Settings, 
   Bell, 
   BellRing, 
   CalendarCheck, 
   CreditCard,
   Sparkles,
   FilterX,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Mail,
+  Users,
+  CheckCircle2,
+  Clock
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { cn } from '@/utils/cn';
 
 export default function NotificationsPage() {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState('system'); // 'system' | 'sent_emails'
   const [viewMode, setViewMode] = useState('list');
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({
@@ -43,9 +48,22 @@ export default function NotificationsPage() {
   const markAllAsReadMutation = useMarkAllAsRead();
   
   const notifications = data?.data || [];
-  const unreadCount = notifications.filter(n => !n.is_read).length;
-  const bookingCount = notifications.filter(n => n.type === 'BOOKING').length;
-  const paymentCount = notifications.filter(n => n.type === 'PAYMENT').length;
+  
+  // Separate System Alerts vs Sent Email Broadcasts
+  const customMessages = notifications.filter(n => 
+    n.type === 'CUSTOM_MESSAGE' || 
+    n.notification_type === 'CUSTOM_MESSAGE' || 
+    n.channel === 'EMAIL'
+  );
+  
+  const systemNotifications = notifications.filter(n => 
+    n.type !== 'CUSTOM_MESSAGE' && 
+    n.notification_type !== 'CUSTOM_MESSAGE'
+  );
+
+  const unreadCount = systemNotifications.filter(n => !n.is_read && n.status !== 'READ').length;
+  const bookingCount = systemNotifications.filter(n => n.type === 'BOOKING' || n.notification_type?.includes('BOOKING')).length;
+  const paymentCount = systemNotifications.filter(n => n.type === 'PAYMENT' || n.notification_type?.includes('PAYMENT')).length;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
@@ -66,14 +84,14 @@ export default function NotificationsPage() {
               )}
             </div>
             <p className="text-xs sm:text-sm text-text/70 mt-0.5">
-              Stay updated with incoming venue reservations, reviews, and automated payouts.
+              Manage system alerts, booking updates, and review email broadcasts sent to diners.
             </p>
           </div>
         </div>
 
         {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-2.5 z-10">
-          {unreadCount > 0 && (
+          {unreadCount > 0 && activeTab === 'system' && (
             <Button 
               variant="outline" 
               onClick={() => setIsMarkAllDialogOpen(true)}
@@ -103,145 +121,327 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* Quick Metric Stat Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        
-        {/* Total Notifications */}
-        <div 
-          onClick={() => setFilters({ status: '', priority: '', type: '' })}
-          className="p-4 rounded-2xl bg-white border border-border/60 hover:border-[#6F4E37]/40 shadow-2xs transition-all cursor-pointer group"
+      {/* 2 Primary Tabs: System Notifications vs Sent Email Broadcasts */}
+      <div className="bg-white p-2 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-2 overflow-x-auto">
+        <button
+          type="button"
+          onClick={() => setActiveTab('system')}
+          className={cn(
+            "px-5 py-2.5 rounded-2xl text-xs font-black transition-all flex items-center gap-2.5 cursor-pointer shrink-0",
+            activeTab === 'system'
+              ? "bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white shadow-md"
+              : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
+          )}
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Total Alerts</span>
-            <div className="w-7 h-7 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Bell className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-2xl font-extrabold text-[#2C1810] mt-1">{notifications.length}</p>
-          <span className="text-[10px] font-semibold text-text/50">All received messages</span>
-        </div>
+          <Bell className="w-4 h-4" />
+          <span>System Alerts & Notifications</span>
+          {unreadCount > 0 && (
+            <span className={cn(
+              "px-2 py-0.5 rounded-full text-[10px] font-extrabold",
+              activeTab === 'system' ? "bg-white/20 text-white" : "bg-rose-100 text-rose-700"
+            )}>
+              {unreadCount}
+            </span>
+          )}
+        </button>
 
-        {/* Unread Alerts */}
-        <div 
-          onClick={() => setFilters({ ...filters, status: 'UNREAD' })}
-          className="p-4 rounded-2xl bg-white border border-border/60 hover:border-amber-500/40 shadow-2xs transition-all cursor-pointer group"
+        <button
+          type="button"
+          onClick={() => setActiveTab('sent_emails')}
+          className={cn(
+            "px-5 py-2.5 rounded-2xl text-xs font-black transition-all flex items-center gap-2.5 cursor-pointer shrink-0",
+            activeTab === 'sent_emails'
+              ? "bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white shadow-md"
+              : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
+          )}
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Unread Alerts</span>
-            <div className="w-7 h-7 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-2xl font-extrabold text-amber-700 mt-1">{unreadCount}</p>
-          <span className="text-[10px] font-semibold text-amber-700/70">Needs attention</span>
-        </div>
-
-        {/* Booking Alerts */}
-        <div 
-          onClick={() => setFilters({ ...filters, type: 'BOOKING' })}
-          className="p-4 rounded-2xl bg-white border border-border/60 hover:border-emerald-500/40 shadow-2xs transition-all cursor-pointer group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Booking Updates</span>
-            <div className="w-7 h-7 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <CalendarCheck className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-2xl font-extrabold text-emerald-800 mt-1">{bookingCount}</p>
-          <span className="text-[10px] font-semibold text-emerald-700/70">Reservations</span>
-        </div>
-
-        {/* Payment & Payouts */}
-        <div 
-          onClick={() => setFilters({ ...filters, type: 'PAYMENT' })}
-          className="p-4 rounded-2xl bg-white border border-border/60 hover:border-indigo-500/40 shadow-2xs transition-all cursor-pointer group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Payments & Payouts</span>
-            <div className="w-7 h-7 rounded-xl bg-indigo-500/10 text-indigo-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <CreditCard className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-2xl font-extrabold text-indigo-800 mt-1">{paymentCount}</p>
-          <span className="text-[10px] font-semibold text-indigo-700/70">Financial alerts</span>
-        </div>
+          <Mail className="w-4 h-4" />
+          <span>Sent Email Broadcasts</span>
+          <span className={cn(
+            "px-2 py-0.5 rounded-full text-[10px] font-extrabold",
+            activeTab === 'sent_emails' ? "bg-white/20 text-white" : "bg-border/40 text-text/60"
+          )}>
+            {customMessages.length}
+          </span>
+        </button>
       </div>
 
-      {/* Filter Control Bar */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-border/60 shadow-2xs flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
-        <NotificationSearch value={search} onChange={setSearch} />
-        
-        <div className="flex flex-wrap items-center gap-2.5">
-          <NotificationFilters filters={filters} setFilters={setFilters} />
-          
-          {(search || filters.status || filters.priority || filters.type) && (
-            <button
-              onClick={() => {
+      {/* TAB 1: SYSTEM NOTIFICATIONS & ALERTS */}
+      {activeTab === 'system' && (
+        <div className="space-y-6">
+          {/* Quick Metric Stat Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            
+            {/* Total Notifications */}
+            <div 
+              onClick={() => setFilters({ status: '', priority: '', type: '' })}
+              className="p-4 rounded-2xl bg-white border border-border/60 hover:border-[#6F4E37]/40 shadow-2xs transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Total Alerts</span>
+                <div className="w-7 h-7 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Bell className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <p className="text-xl sm:text-2xl font-extrabold text-[#2C1810] mt-1">{notifications.length}</p>
+              <span className="text-[10px] font-semibold text-text/50">All received messages</span>
+            </div>
+
+            {/* Unread Alerts */}
+            <div 
+              onClick={() => setFilters({ ...filters, status: 'UNREAD' })}
+              className="p-4 rounded-2xl bg-white border border-border/60 hover:border-amber-500/40 shadow-2xs transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Unread Alerts</span>
+                <div className="w-7 h-7 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <p className="text-xl sm:text-2xl font-extrabold text-amber-700 mt-1">{unreadCount}</p>
+              <span className="text-[10px] font-semibold text-amber-700/70">Needs attention</span>
+            </div>
+
+            {/* Booking Alerts */}
+            <div 
+              onClick={() => setFilters({ ...filters, type: 'BOOKING' })}
+              className="p-4 rounded-2xl bg-white border border-border/60 hover:border-emerald-500/40 shadow-2xs transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Booking Updates</span>
+                <div className="w-7 h-7 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <CalendarCheck className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <p className="text-xl sm:text-2xl font-extrabold text-emerald-800 mt-1">{bookingCount}</p>
+              <span className="text-[10px] font-semibold text-emerald-700/70">Reservations</span>
+            </div>
+
+            {/* Payment & Payouts */}
+            <div 
+              onClick={() => setFilters({ ...filters, type: 'PAYMENT' })}
+              className="p-4 rounded-2xl bg-white border border-border/60 hover:border-indigo-500/40 shadow-2xs transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-text/50 uppercase tracking-wider">Payments & Payouts</span>
+                <div className="w-7 h-7 rounded-xl bg-indigo-500/10 text-indigo-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <CreditCard className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <p className="text-xl sm:text-2xl font-extrabold text-indigo-800 mt-1">{paymentCount}</p>
+              <span className="text-[10px] font-semibold text-indigo-700/70">Financial alerts</span>
+            </div>
+          </div>
+
+          {/* Filter Control Bar */}
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-border/60 shadow-2xs flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+            <NotificationSearch value={search} onChange={setSearch} />
+            
+            <div className="flex flex-wrap items-center gap-2.5">
+              <NotificationFilters filters={filters} setFilters={setFilters} />
+              
+              {(search || filters.status || filters.priority || filters.type) && (
+                <button
+                  onClick={() => {
+                    setSearch('');
+                    setFilters({ status: '', priority: '', type: '' });
+                  }}
+                  className="py-2.5 px-3 rounded-xl border border-border/60 hover:bg-surface text-text/60 hover:text-danger text-xs font-bold flex items-center gap-1 transition-colors"
+                  title="Reset Search Filters"
+                >
+                  <FilterX className="w-3.5 h-3.5" /> Reset
+                </button>
+              )}
+
+              {/* Grid / List View Toggle */}
+              <div className="hidden sm:flex bg-surface p-1 rounded-xl border border-border/40 shrink-0">
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37]' : 'text-text/50 hover:text-text'}`}
+                  title="Grid View"
+                >
+                  <Grid className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => setViewMode('list')}
+                  className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-[#6F4E37] text-white shadow-2xs' : 'text-text/50 hover:text-text'}`}
+                  title="List View"
+                >
+                  <ListIcon className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Content State Handling */}
+          {isLoading ? (
+            <LoadingSkeleton count={5} />
+          ) : isError ? (
+            <div className="bg-rose-50 text-rose-700 p-6 rounded-3xl border border-rose-200 text-center">
+              <p className="font-extrabold mb-1 text-sm">Error Loading Notifications</p>
+              <p className="text-xs text-rose-600">{error?.message || 'Please check backend services or try refreshing the page.'}</p>
+            </div>
+          ) : systemNotifications.length === 0 ? (
+            <EmptyNotificationState 
+              showClear={Boolean(search || filters.status || filters.priority || filters.type)}
+              onClear={() => {
                 setSearch('');
                 setFilters({ status: '', priority: '', type: '' });
               }}
-              className="py-2.5 px-3 rounded-xl border border-border/60 hover:bg-surface text-text/60 hover:text-danger text-xs font-bold flex items-center gap-1 transition-colors"
-              title="Reset Search Filters"
-            >
-              <FilterX className="w-3.5 h-3.5" /> Reset
-            </button>
-          )}
-
-          {/* Grid / List View Toggle */}
-          <div className="hidden sm:flex bg-surface p-1 rounded-xl border border-border/40 shrink-0">
-            <button 
-              onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37]' : 'text-text/50 hover:text-text'}`}
-              title="Grid View"
-            >
-              <Grid className="w-4 h-4" />
-            </button>
-            <button 
-              onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white shadow-2xs text-[#6F4E37]' : 'text-text/50 hover:text-text'}`}
-              title="List View"
-            >
-              <ListIcon className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Content State Handling */}
-      {isLoading ? (
-        <LoadingSkeleton count={5} />
-      ) : isError ? (
-        <div className="bg-rose-50 text-rose-700 p-6 rounded-3xl border border-rose-200 text-center">
-          <p className="font-extrabold mb-1 text-sm">Error Loading Notifications</p>
-          <p className="text-xs text-rose-600">{error?.message || 'Please check backend services or try refreshing the page.'}</p>
-        </div>
-      ) : notifications.length === 0 ? (
-        <EmptyNotificationState 
-          showClear={Boolean(search || filters.status || filters.priority || filters.type)}
-          onClear={() => {
-            setSearch('');
-            setFilters({ status: '', priority: '', type: '' });
-          }}
-        />
-      ) : (
-        <motion.div
-          key={viewMode}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {viewMode === 'list' ? (
-            <NotificationTable notifications={notifications} />
+            />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <motion.div
+              key={viewMode}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {viewMode === 'list' ? (
+                <NotificationTable notifications={systemNotifications} />
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <AnimatePresence>
+                    {systemNotifications.map(notification => (
+                      <NotificationCard key={notification.id} notification={notification} />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 2: SENT EMAIL BROADCASTS BY CAFE OWNER */}
+      {activeTab === 'sent_emails' && (
+        <div className="space-y-6">
+          
+          {/* Top Hero Banner & Metric Overview */}
+          <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-7 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
+            <div className="flex items-center gap-4 z-10">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#8C6246] text-white flex items-center justify-center font-extrabold shadow-md shrink-0">
+                <Mail className="w-7 h-7" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-[#2C1810]">Sent Email Broadcasts</h3>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-black uppercase tracking-wider">
+                    {customMessages.length} Broadcast{customMessages.length === 1 ? '' : 's'}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-text/70 mt-1">
+                  Review all custom promotional emails and venue updates dispatched to diner inboxes.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 z-10 shrink-0">
+              <Link href="/owner/notifications/compose">
+                <Button className="py-3 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5D3F2B] hover:to-[#8C6246] text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg flex items-center gap-2 transition-all">
+                  <Send className="w-4 h-4" />
+                  Compose Broadcast
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {customMessages.length === 0 ? (
+            <div className="text-center py-16 px-4 space-y-4 bg-white rounded-3xl border border-border/60 shadow-xs">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-[#FFF8F0] to-[#FFF5EA] text-[#6F4E37] flex items-center justify-center mx-auto border border-[#DDB892]/40 shadow-2xs">
+                <Mail className="w-8 h-8" />
+              </div>
+              <div className="max-w-md mx-auto">
+                <h4 className="text-base font-extrabold text-[#2C1810]">No Email Broadcasts Sent Yet</h4>
+                <p className="text-xs text-text/60 mt-1.5 leading-relaxed">
+                  You haven't composed any email broadcasts to diners yet. Click "Compose Broadcast" to send promotional offers, menu updates, or venue announcements.
+                </p>
+              </div>
+              <Link href="/owner/notifications/compose">
+                <Button className="bg-[#6F4E37] hover:bg-[#5D3F2B] text-white font-extrabold text-xs rounded-2xl px-6 py-3 shadow-xs inline-flex items-center gap-2">
+                  <Send className="w-4 h-4" /> Compose Broadcast
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
               <AnimatePresence>
-                {notifications.map(notification => (
-                  <NotificationCard key={notification.id} notification={notification} />
-                ))}
+                {customMessages.map((item, idx) => {
+                  const sentDate = item.sent_at || item.created_at;
+                  const formattedDate = sentDate 
+                    ? new Date(sentDate).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })
+                    : 'Recently Sent';
+
+                  return (
+                    <motion.div 
+                      key={item.id || idx}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: idx * 0.05 }}
+                      className="bg-gradient-to-br from-white via-[#FFFBF7] to-[#FFF8F0] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 hover:border-[#6F4E37] shadow-2xs hover:shadow-md transition-all duration-300 space-y-4 relative overflow-hidden group"
+                    >
+                      {/* Top Status & Timestamp Header Bar */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-[#DDB892]/30">
+                        
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-black uppercase tracking-wider border border-[#6F4E37]/20">
+                            <Mail className="w-3 h-3 text-[#6F4E37]" />
+                            EMAIL BROADCAST
+                          </span>
+
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-50 text-emerald-800 text-[10px] font-extrabold border border-emerald-200 shadow-2xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            DELIVERED
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-text/60 bg-white px-3 py-1 rounded-xl border border-border/40 shrink-0">
+                          <Clock className="w-3.5 h-3.5 text-[#6F4E37]" />
+                          <span>{formattedDate}</span>
+                        </div>
+
+                      </div>
+
+                      {/* Broadcast Subject Line & Message Content Container */}
+                      <div className="space-y-2.5">
+                        <h4 className="text-base sm:text-lg font-extrabold text-[#2C1810] tracking-tight group-hover:text-[#6F4E37] transition-colors">
+                          {item.title || item.subject || 'Custom Email Broadcast'}
+                        </h4>
+                        
+                        <div className="bg-white/90 p-4 rounded-2xl border border-[#DDB892]/40 text-xs sm:text-sm text-[#4A3222] font-medium leading-relaxed shadow-2xs whitespace-pre-wrap">
+                          {item.message}
+                        </div>
+                      </div>
+
+                      {/* Footer Info Metadata Bar */}
+                      <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                        
+                        <div className="flex items-center gap-2 text-[#6F4E37] font-bold">
+                          <div className="w-6 h-6 rounded-lg bg-[#6F4E37]/10 flex items-center justify-center shrink-0">
+                            <Users className="w-3.5 h-3.5 text-[#6F4E37]" />
+                          </div>
+                          <span>Target: <span className="font-extrabold text-[#2C1810]">Registered Diners</span></span>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-text/50">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Verified Sender: <span className="font-bold text-[#6F4E37]">noreply@vexatech.in</span></span>
+                        </div>
+
+                      </div>
+
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </div>
           )}
-        </motion.div>
+        </div>
       )}
 
       {/* Mark All Read Confirmation Dialog */}

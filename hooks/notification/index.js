@@ -57,10 +57,12 @@ export const useDeleteNotification = () => {
 };
 
 export const useSendMessage = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => notificationService.sendMessage(data),
     onSuccess: () => {
       toast.success('Message sent successfully!');
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || 'Failed to send message');

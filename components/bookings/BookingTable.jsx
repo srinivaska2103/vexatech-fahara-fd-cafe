@@ -89,6 +89,11 @@ export const BookingTable = ({ bookings = [], onApprove, onReject, onComplete })
                       <div>
                         <p className="font-extrabold text-[#2C1810]">{customerName}</p>
                         {customerEmail && <p className="text-[10px] text-text/50">{customerEmail}</p>}
+                        {(booking.special_request || booking.specialRequests || booking.notes) && (
+                          <span className="inline-block mt-0.5 text-[9px] font-bold text-[#6F4E37] bg-[#FFF8F0] px-2 py-0.5 rounded-md border border-[#DDB892]/40 truncate max-w-[140px]" title={booking.special_request || booking.specialRequests || booking.notes}>
+                            💬 {booking.special_request || booking.specialRequests || booking.notes}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </td>
