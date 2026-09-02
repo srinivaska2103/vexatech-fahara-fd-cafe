@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
+
 @theme inline {
+  --breakpoint-xs: 360px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
   --color-primary: #6F4E37;
   --color-secondary: #A67B5B;
   --color-accent: #DDB892;
@@ -23,9 +30,14 @@
   --foreground: #2C1810;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1A0F0A; /* Darkened coffee background */
+    --background: #1A0F0A;
     --foreground: #FFF8F0;
   }
 }
