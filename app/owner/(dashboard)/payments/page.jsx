@@ -20,6 +20,7 @@ import {
   Clock,
   RefreshCw,
   X,
+  XCircle,
   ShieldCheck,
   Building2,
   Sparkles,

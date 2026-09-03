@@ -16,7 +16,8 @@ import {
   FileCheck,
   Search,
   RotateCcw,
-  Edit3
+  Edit3,
+  Mail
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -443,7 +444,11 @@ export default function PaymentAccountPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
                     <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Account Holder Name</p>
-                    <p className="text-base font-semibold text-[#2C1810]">{accountInfo.accountHolderName || 'Not Configured'}</p>
+                    <p className="text-base font-semibold text-[#2C1810]">
+                      {accountInfo.accountHolderName && accountInfo.accountHolderName !== 'Not Configured' 
+                        ? accountInfo.accountHolderName.toUpperCase() 
+                        : 'Not Configured'}
+                    </p>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
@@ -451,20 +456,39 @@ export default function PaymentAccountPage() {
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-[#6F4E37]" />
                       <p className="text-base font-bold text-[#2C1810] tracking-widest font-mono">
-                        {accountInfo.maskedBankAccount || (accountInfo.bankAccountLast4 ? `•••• ${accountInfo.bankAccountLast4}` : 'Not Configured')}
+                        {accountInfo.bankAccountLast4 
+                          ? `XXXX XXXX ${accountInfo.bankAccountLast4}` 
+                          : (accountInfo.maskedBankAccount && accountInfo.maskedBankAccount !== 'Not Configured' ? accountInfo.maskedBankAccount : 'Not Configured')}
                       </p>
                     </div>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
                     <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">IFSC Code</p>
-                    <p className="text-base font-semibold text-[#2C1810] font-mono">{accountInfo.ifsc || 'Not Configured'}</p>
+                    <p className="text-base font-semibold text-[#2C1810] font-mono">
+                      {accountInfo.ifsc && accountInfo.ifsc !== 'Not Configured' 
+                        ? accountInfo.ifsc 
+                        : 'Not Configured'}
+                    </p>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
+                    <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Beneficiary Email</p>
+                    <div className="flex items-center gap-2 truncate">
+                      <Mail className="w-4 h-4 text-[#6F4E37] shrink-0" />
+                      <p className="text-base font-semibold text-[#2C1810] truncate">
+                        {accountInfo.email || 'Not Configured'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1 sm:col-span-2">
                     <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Settlement Capability</p>
                     {bankStatus === 'VERIFIED' ? (
-                      <p className="text-base font-semibold text-emerald-700">✓ Enabled</p>
+                      <p className="text-base font-semibold text-emerald-700 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <span>Enabled for Automated Daily Settlement</span>
+                      </p>
                     ) : (
                       <p className="text-base font-semibold text-amber-700">Disabled</p>
                     )}
