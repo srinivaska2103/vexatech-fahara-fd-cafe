@@ -121,8 +121,34 @@ export const BookingTable = ({ bookings = [], onApprove, onReject, onComplete })
 
                   {/* Amount & Payment Badge */}
                   <td className="px-6 py-4">
-                    <p className="font-extrabold text-[#2C1810]">₹{amount}</p>
-                    {paymentStatus && <PaymentStatusBadge status={paymentStatus} className="mt-0.5 inline-block text-[10px]" />}
+                    {(() => {
+                      let cafeNetSplit = 0;
+                      if (booking.amount !== undefined && booking.amount !== null) {
+                        cafeNetSplit = Math.max(0, Number(booking.amount));
+                      } else {
+                        let totalCafeCharges = Number(booking.cafe_amount || 0);
+                        if (totalCafeCharges === 0 && Array.isArray(booking.booking_items)) {
+                          totalCafeCharges = booking.booking_items
+                            .filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'CAFE_INCLUSION')
+                            .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                        }
+                        if (totalCafeCharges === 0 && booking.subtotal) {
+                          totalCafeCharges = Math.max(0, Number(booking.subtotal || 0) - Number(booking.event_service_amount || 0));
+                        }
+                        cafeNetSplit = Math.max(0, totalCafeCharges);
+                      }
+
+                      const isFreeReservation = cafeNetSplit === 0;
+
+                      return (
+                        <>
+                          <p className="font-extrabold text-[#2C1810]">
+                            {isFreeReservation ? 'Free Table' : `₹${cafeNetSplit.toFixed(2)}`}
+                          </p>
+                          {!isFreeReservation && <PaymentStatusBadge status={paymentStatus || 'PENDING'} className="mt-0.5 inline-block text-[10px]" />}
+                        </>
+                      );
+                    })()}
                   </td>
 
                   {/* Status Badge */}

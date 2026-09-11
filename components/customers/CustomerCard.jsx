@@ -4,7 +4,7 @@ import { Mail, Phone, MoreVertical, Crown, Calendar, ShieldAlert } from 'lucide-
 import { VIPBadge } from './VIPBadge';
 import { motion } from 'framer-motion';
 
-export const CustomerCard = ({ customer }) => {
+export const CustomerCard = ({ customer, isRestaurant }) => {
   const router = useRouter();
 
   if (!customer) return null;
@@ -65,15 +65,17 @@ export const CustomerCard = ({ customer }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border/50 relative z-0">
+      <div className={`grid ${isRestaurant ? 'grid-cols-1' : 'grid-cols-2'} gap-3 pt-4 border-t border-border/50 relative z-0`}>
          <div className="bg-surface/50 rounded-2xl p-3 text-center">
             <div className="text-xl font-bold text-primary">{customer.total_bookings || 0}</div>
             <div className="text-xs text-text/50 font-medium mt-0.5">Bookings</div>
          </div>
-         <div className="bg-surface/50 rounded-2xl p-3 text-center">
-            <div className="text-xl font-bold text-primary">₹{customer.total_spend || 0}</div>
-            <div className="text-xs text-text/50 font-medium mt-0.5">Total Spend</div>
-         </div>
+         {!isRestaurant && (
+           <div className="bg-surface/50 rounded-2xl p-3 text-center">
+              <div className="text-xl font-bold text-primary">₹{customer.total_spend || 0}</div>
+              <div className="text-xs text-text/50 font-medium mt-0.5">Total Spend</div>
+           </div>
+         )}
       </div>
     </motion.div>
   );

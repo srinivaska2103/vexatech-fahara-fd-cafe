@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }) {
     if (isMounted && hasHydrated) {
       if (!isAuthenticated) {
         router.push('/owner/login');
-      } else if (role !== 'CAFE_OWNER') {
+      } else if (role !== 'CAFE_OWNER' && role !== 'RESTAURANT_OWNER') {
         router.push('/owner/login'); 
       }
     }

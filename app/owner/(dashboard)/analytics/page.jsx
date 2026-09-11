@@ -65,30 +65,30 @@ export default function AnalyticsDashboardPage() {
   const topCustomersList = data?.top_customers || [];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 text-[#2C1810]">
+    <div className="p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 text-[#2C1810]">
       
       {/* Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-7 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-4 sm:p-7 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
         
-        <div className="flex items-center gap-4 z-10">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#8C6246] text-white flex items-center justify-center font-extrabold shadow-md shrink-0">
-            <BarChart3 className="w-7 h-7" />
+        <div className="flex items-center gap-3 sm:gap-4 z-10">
+          <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#8C6246] text-white flex items-center justify-center font-extrabold shadow-md shrink-0">
+            <BarChart3 className="w-5 h-5 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">Cafe Analytics & Intelligence</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-800 text-[10px] font-black flex items-center gap-1 shadow-2xs">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-base sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">Cafe Analytics & Intelligence</h1>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-800 text-[9px] sm:text-[10px] font-black flex items-center gap-1 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> LIVE DATA
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-text/70 mt-1">
+            <p className="text-[11px] sm:text-sm text-text/70 mt-0.5 sm:mt-1 leading-snug">
               Real-time booking revenue, space utilization, peak dining hours, and customer retention metrics.
             </p>
           </div>
         </div>
 
         {/* Date Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-[#DDB892]/60 shadow-2xs z-10 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 bg-white p-1.5 rounded-2xl border border-[#DDB892]/60 shadow-2xs z-10 shrink-0 overflow-x-auto custom-scrollbar">
           {[
             { key: 'TODAY', label: 'Today' },
             { key: 'THIS_WEEK', label: '7 Days' },
@@ -100,7 +100,7 @@ export default function AnalyticsDashboardPage() {
               type="button"
               onClick={() => setDateRange(tab.key)}
               className={cn(
-                "px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer",
+                "px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer shrink-0",
                 dateRange === tab.key
                   ? "bg-[#6F4E37] text-white shadow-2xs"
                   : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
@@ -221,15 +221,6 @@ export default function AnalyticsDashboardPage() {
               </div>
               <p className="text-xs text-text/60 mt-0.5">Track daily booking revenue trends and reservation velocity.</p>
             </div>
-
-            <Link href="/owner/analytics/revenue">
-              <button 
-                type="button"
-                className="py-1.5 px-3 rounded-xl border border-border/60 text-[#6F4E37] hover:bg-[#6F4E37]/10 text-xs font-bold flex items-center gap-1 transition-all"
-              >
-                Full Financial Report <ExternalLink className="w-3.5 h-3.5" />
-              </button>
-            </Link>
           </div>
 
           <div className="h-[280px] w-full">
@@ -390,10 +381,10 @@ export default function AnalyticsDashboardPage() {
       </div>
 
       {/* Top Diners & Repeat Customers Table */}
-      <div className="bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-4">
+      <div className="bg-white p-4 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold text-xs">
+            <div className="w-9 h-9 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold text-xs shrink-0">
               <Award className="w-5 h-5" />
             </div>
             <div>
@@ -403,7 +394,7 @@ export default function AnalyticsDashboardPage() {
           </div>
 
           <Link href="/owner/customers">
-            <button type="button" className="text-xs font-bold text-[#6F4E37] hover:underline flex items-center gap-1">
+            <button type="button" className="text-xs font-bold text-[#6F4E37] hover:underline flex items-center gap-1 shrink-0">
               View All Customers <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </Link>
@@ -412,15 +403,15 @@ export default function AnalyticsDashboardPage() {
         {topCustomersList.length === 0 ? (
           <div className="text-center py-8 text-xs text-text/50">No customer activity recorded yet.</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-left text-xs min-w-[540px]">
               <thead>
                 <tr className="border-b border-border/50 text-[10px] font-bold text-text/50 uppercase tracking-wider">
-                  <th className="pb-3 px-2">Customer Info</th>
-                  <th className="pb-3 px-2">Email Address</th>
-                  <th className="pb-3 px-2 text-center">Visits</th>
-                  <th className="pb-3 px-2 text-right">Lifetime Spend</th>
-                  <th className="pb-3 px-2 text-right">Loyalty Badge</th>
+                  <th className="pb-3 px-2 min-w-[130px]">Customer Info</th>
+                  <th className="pb-3 px-2 min-w-[160px]">Email Address</th>
+                  <th className="pb-3 px-2 text-center min-w-[60px]">Visits</th>
+                  <th className="pb-3 px-2 text-right min-w-[90px]">Lifetime Spend</th>
+                  <th className="pb-3 px-2 text-right min-w-[100px]">Loyalty Badge</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
@@ -428,17 +419,17 @@ export default function AnalyticsDashboardPage() {
                   <tr key={cust.id || idx} className="hover:bg-[#FFF8F0]/50 transition-colors">
                     <td className="py-3 px-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-xl bg-[#6F4E37] text-white flex items-center justify-center font-extrabold text-xs">
+                        <div className="w-8 h-8 rounded-xl bg-[#6F4E37] text-white flex items-center justify-center font-extrabold text-xs shrink-0">
                           {cust.name?.[0]?.toUpperCase() || 'C'}
                         </div>
-                        <span className="font-extrabold text-[#2C1810]">{cust.name || 'Diner'}</span>
+                        <span className="font-extrabold text-[#2C1810] truncate max-w-[100px] sm:max-w-none">{cust.name || 'Diner'}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-2 text-text/70 font-medium">{cust.email}</td>
+                    <td className="py-3 px-2 text-text/70 font-medium truncate max-w-[140px] sm:max-w-none">{cust.email}</td>
                     <td className="py-3 px-2 text-center font-bold text-[#2C1810]">{cust.visits || cust.total_bookings || 1}</td>
                     <td className="py-3 px-2 text-right font-extrabold text-[#6F4E37]">₹{cust.spent || cust.lifetime_value || 1}</td>
                     <td className="py-3 px-2 text-right">
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800 text-[10px] font-black uppercase tracking-wider">
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800 text-[10px] font-black uppercase tracking-wider inline-block">
                         VIP DINER
                       </span>
                     </td>

@@ -11,6 +11,7 @@ import { GalleryUploader } from './GalleryUploader';
 import { BusinessHours } from './BusinessHours';
 import { CafeAmenities } from './CafeAmenities';
 import { MapPicker } from '../maps/MapPicker';
+import { useAuthStore } from '@/store/auth.store';
 import { 
   MapPin, 
   Info, 
@@ -61,6 +62,7 @@ const CATEGORY_OPTIONS = [
   'Coffee Shop',
   'Bakery & Cafe',
   'Bistro',
+  'Restaurant',
   'Co-working Cafe',
   'Party Hall'
 ];
@@ -157,6 +159,13 @@ const ModernCategorySelect = ({ value, onChange, error, register }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const role = useAuthStore((state) => state.role);
+  const isRestaurantOwner = role === 'RESTAURANT_OWNER';
+
+  const categoryOptions = isRestaurantOwner
+    ? ['Restaurant']
+    : CATEGORY_OPTIONS.filter(cat => cat !== 'Restaurant');
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -187,7 +196,7 @@ const ModernCategorySelect = ({ value, onChange, error, register }) => {
 
       {isOpen && (
         <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-2xl border border-[#DDB892]/60 shadow-xl z-50 p-2 space-y-1 text-[#2C1810] animate-in fade-in zoom-in-95 duration-150">
-          {CATEGORY_OPTIONS.map((cat) => {
+          {categoryOptions.map((cat) => {
             const isSelected = value === cat;
             return (
               <button
@@ -314,6 +323,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
     capacity: defaultValues?.capacity ?? '',
     google_place_id: defaultValues?.google_place_id ?? '',
     google_rating: defaultValues?.google_rating ?? '',
+    google_reviews_link: defaultValues?.google_reviews_link ?? '',
     provides_event_services: defaultValues?.provides_event_services ?? false,
     allow_third_party_decoration: defaultValues?.allow_third_party_decoration ?? true,
     cover_image: defaultValues?.cover_image ?? '',
@@ -385,8 +395,14 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
     if (typeof window !== 'undefined') {
       localStorage.removeItem(draftKey);
     }
+    const checkStr = `${data.category || ''} ${data.name || ''}`.toLowerCase();
+    const isRest = checkStr.includes('restaur') || checkStr.includes('restur');
+
     onSubmit({
       ...data,
+      price: isRest ? null : data.price,
+      provides_event_services: isRest ? false : Boolean(data.provides_event_services),
+      allow_third_party_decoration: isRest ? false : Boolean(data.allow_third_party_decoration),
       discounts: discountsList
     });
   };
@@ -412,6 +428,18 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
   const coverImage = watch('cover_image');
   const currentStatus = watch('status');
   const currentCategory = watch('category');
+
+  const role = useAuthStore((state) => state.role);
+  const isRestaurantOwnerRole = role === 'RESTAURANT_OWNER';
+  const isRestaurantCategory = currentCategory?.toLowerCase() === 'restaurant' || currentCategory?.toLowerCase() === 'resturant';
+  const isRestaurant = isRestaurantOwnerRole || isRestaurantCategory;
+
+  // Auto-set category to Restaurant if logged in as RESTAURANT_OWNER and category is not set yet
+  React.useEffect(() => {
+    if (isRestaurantOwnerRole && !currentCategory) {
+      setValue('category', 'Restaurant', { shouldDirty: true });
+    }
+  }, [isRestaurantOwnerRole, currentCategory, setValue]);
 
   const onFormError = (errors) => {
     console.error("Form validation errors:", errors);
@@ -446,7 +474,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
           </div>
 
           {/* Stepper Tab Buttons */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-2 pt-2">
             {steps.map((step) => {
               const Icon = step.icon;
               const isCompleted = currentStep > step.id;
@@ -458,7 +486,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   type="button"
                   onClick={() => setCurrentStep(step.id)}
                   className={cn(
-                    "p-3 rounded-2xl border text-left transition-all flex items-start gap-2.5",
+                    "p-2 sm:p-3 rounded-2xl border text-left transition-all flex items-center sm:items-start gap-1.5 sm:gap-2.5 cursor-pointer",
                     isCurrent 
                       ? "bg-[#FFF8F0] border-[#DDB892] shadow-2xs" 
                       : isCompleted 
@@ -467,17 +495,17 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   )}
                 >
                   <div className={cn(
-                    "w-7 h-7 rounded-xl flex items-center justify-center text-xs font-extrabold shrink-0 mt-0.5",
+                    "w-6 h-6 sm:w-7 sm:h-7 rounded-xl flex items-center justify-center text-[11px] sm:text-xs font-extrabold shrink-0",
                     isCurrent 
                       ? "bg-[#6F4E37] text-white" 
                       : isCompleted 
                         ? "bg-emerald-500/10 text-emerald-700" 
                         : "bg-surface text-text/50"
                   )}>
-                    {isCompleted ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : step.id}
+                    {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" /> : step.id}
                   </div>
-                  <div className="min-w-0">
-                    <p className={cn("text-xs font-extrabold truncate", isCurrent ? "text-[#6F4E37]" : "text-[#2C1810]")}>
+                  <div className="min-w-0 flex-1">
+                    <p className={cn("text-[11px] sm:text-xs font-extrabold truncate", isCurrent ? "text-[#6F4E37]" : "text-[#2C1810]")}>
                       {step.title}
                     </p>
                     <p className="text-[10px] text-text/50 truncate hidden sm:block">{step.description}</p>
@@ -679,15 +707,17 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         />
                       </div>
                       
-                      <div>
-                        <Label htmlFor="price">Hourly Booking Rate (₹/hr) *</Label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6F4E37] font-bold text-xs">
-                            ₹
+                      {!isRestaurant && (
+                        <div>
+                          <Label htmlFor="price">Hourly Booking Rate (₹/hr) *</Label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6F4E37] font-bold text-xs">
+                              ₹
+                            </div>
+                            <Input id="price" type="number" className="pl-7" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
                           </div>
-                          <Input id="price" type="number" className="pl-7" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
                         </div>
-                      </div>
+                      )}
                       
                       <div>
                         <Label htmlFor="capacity">Max Seating Capacity (Guests) *</Label>
@@ -704,35 +734,45 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         <Input id="google_rating" type="number" step="0.1" min="0" max="5" {...register('google_rating')} error={errors.google_rating?.message} placeholder="4.5" />
                       </div>
 
-                      <div className="md:col-span-2 flex items-center gap-3 pt-6">
-                        <input 
-                          type="checkbox" 
-                          id="provides_event_services" 
-                          {...register('provides_event_services')} 
-                          className="w-5 h-5 rounded border-border/70 text-[#6F4E37] focus:ring-[#6F4E37]"
-                        />
-                        <div>
-                          <Label htmlFor="provides_event_services" className="mb-0 cursor-pointer font-extrabold text-[#2C1810]">
-                            Provides Private Event & Party Services
-                          </Label>
-                          <p className="text-[10px] text-text/60">Check this if your cafe hosts private birthday parties, workshops, or group gatherings.</p>
-                        </div>
+                      <div className="md:col-span-2">
+                        <Label htmlFor="google_reviews_link">Google Reviews Link (Optional)</Label>
+                        <Input id="google_reviews_link" type="url" {...register('google_reviews_link')} error={errors.google_reviews_link?.message} placeholder="e.g. https://maps.app.goo.gl/... or https://g.page/r/..." />
+                        <p className="text-[10px] text-text/50 mt-1">Paste your official Google Reviews / Maps link to allow customers to view original reviews.</p>
                       </div>
 
-                      <div className="md:col-span-2 flex items-center gap-3 pt-2">
-                        <input 
-                          type="checkbox" 
-                          id="allow_third_party_decoration" 
-                          {...register('allow_third_party_decoration')} 
-                          className="w-5 h-5 rounded border-border/70 text-[#6F4E37] focus:ring-[#6F4E37]"
-                        />
-                        <div>
-                          <Label htmlFor="allow_third_party_decoration" className="mb-0 cursor-pointer font-extrabold text-[#2C1810]">
-                            Allow 3rd Party Event Management & Decoration Services
-                          </Label>
-                          <p className="text-[10px] text-text/60">Check this if your venue permits external 3rd-party decorators and event management vendors.</p>
-                        </div>
-                      </div>
+                      {!isRestaurant && (
+                        <>
+                          <div className="md:col-span-2 flex items-center gap-3 pt-6">
+                            <input 
+                              type="checkbox" 
+                              id="provides_event_services" 
+                              {...register('provides_event_services')} 
+                              className="w-5 h-5 rounded border-border/70 text-[#6F4E37] focus:ring-[#6F4E37]"
+                            />
+                            <div>
+                              <Label htmlFor="provides_event_services" className="mb-0 cursor-pointer font-extrabold text-[#2C1810]">
+                                Provides Private Event & Party Services
+                              </Label>
+                              <p className="text-[10px] text-text/60">Check this if your cafe hosts private birthday parties, workshops, or group gatherings.</p>
+                            </div>
+                          </div>
+
+                          <div className="md:col-span-2 flex items-center gap-3 pt-2">
+                            <input 
+                              type="checkbox" 
+                              id="allow_third_party_decoration" 
+                              {...register('allow_third_party_decoration')} 
+                              className="w-5 h-5 rounded border-border/70 text-[#6F4E37] focus:ring-[#6F4E37]"
+                            />
+                            <div>
+                              <Label htmlFor="allow_third_party_decoration" className="mb-0 cursor-pointer font-extrabold text-[#2C1810]">
+                                Allow 3rd Party Event Management & Decoration Services
+                              </Label>
+                              <p className="text-[10px] text-text/60">Check this if your venue permits external 3rd-party decorators and event management vendors.</p>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 )}

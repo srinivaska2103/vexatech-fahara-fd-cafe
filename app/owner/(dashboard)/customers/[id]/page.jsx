@@ -93,8 +93,8 @@ export default function CustomerDetailsPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
-      <Button variant="ghost" onClick={() => router.push('/owner/customers')} className="mb-2 -ml-4">
+    <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-4 sm:space-y-6 text-[#2C1810]">
+      <Button variant="ghost" onClick={() => router.push('/owner/customers')} className="mb-1 -ml-2 text-xs font-bold">
         <ChevronLeft className="w-4 h-4 mr-1" /> Back to Customers
       </Button>
 

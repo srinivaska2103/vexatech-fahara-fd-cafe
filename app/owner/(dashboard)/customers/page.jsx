@@ -22,11 +22,26 @@ import {
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useAuthStore } from '@/store/auth.store';
+import { useCafes } from '@/hooks/cafe';
+
 export default function CustomersPage() {
   const router = useRouter();
   const [viewMode, setViewMode] = useState('list');
   const [search, setSearch] = useState('');
   const [segmentFilter, setSegmentFilter] = useState('ALL');
+
+  const userRole = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const { data: cafesData } = useCafes();
+  const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
+
+  const isRestaurant = 
+    userRole === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(userRole || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    cafeList.some(c => (c.category || '').toLowerCase().includes('restaurant'));
 
   const { data: customerRes, isLoading, isError, error, refetch } = useCustomers({ search });
   const rawCustomers = Array.isArray(customerRes?.data) ? customerRes.data : (Array.isArray(customerRes) ? customerRes : []);
@@ -130,8 +145,8 @@ export default function CustomersPage() {
         </div>
       </div>
 
-      {/* 4 Dynamic Customer Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      {/* Dynamic Customer Metric Cards */}
+      <div className={`grid grid-cols-2 ${isRestaurant ? 'lg:grid-cols-2 max-w-2xl' : 'lg:grid-cols-4'} gap-3.5 sm:gap-4`}>
         
         {/* Total Diners */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
@@ -157,29 +172,33 @@ export default function CustomersPage() {
           <p className="text-[10px] text-emerald-700/80 font-bold">Multiple venue bookings</p>
         </div>
 
-        {/* Total Diner Spend (LTV) */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Total LTV Spend</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-bold">
-              <IndianRupee className="w-4 h-4" />
+        {/* Total Diner Spend (LTV) - Hidden for Restaurants */}
+        {!isRestaurant && (
+          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Total LTV Spend</span>
+              <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-bold">
+                <IndianRupee className="w-4 h-4" />
+              </div>
             </div>
+            <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{totalSpend.toLocaleString()}</p>
+            <p className="text-[10px] text-text/50 font-medium">Gross customer revenue</p>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{totalSpend.toLocaleString()}</p>
-          <p className="text-[10px] text-text/50 font-medium">Gross customer revenue</p>
-        </div>
+        )}
 
-        {/* Avg Spend / Diner */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-blue-700 uppercase tracking-wider">Avg Spend / Diner</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-bold">
-              <IndianRupee className="w-4 h-4" />
+        {/* Avg Spend / Diner - Hidden for Restaurants */}
+        {!isRestaurant && (
+          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-extrabold text-blue-700 uppercase tracking-wider">Avg Spend / Diner</span>
+              <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-bold">
+                <IndianRupee className="w-4 h-4" />
+              </div>
             </div>
+            <p className="text-xl sm:text-3xl font-black text-[#2C1810]">₹{avgSpend.toLocaleString()}</p>
+            <p className="text-[10px] text-text/50 font-medium">Average lifetime value</p>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">₹{avgSpend.toLocaleString()}</p>
-          <p className="text-[10px] text-text/50 font-medium">Average lifetime value</p>
-        </div>
+        )}
 
       </div>
 
@@ -284,12 +303,12 @@ export default function CustomersPage() {
           transition={{ duration: 0.2 }}
         >
           {viewMode === 'list' ? (
-            <CustomerTable customers={customers} />
+            <CustomerTable customers={customers} isRestaurant={isRestaurant} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               <AnimatePresence>
                 {customers.map(customer => (
-                  <CustomerCard key={customer.id} customer={customer} />
+                  <CustomerCard key={customer.id} customer={customer} isRestaurant={isRestaurant} />
                 ))}
               </AnimatePresence>
             </div>

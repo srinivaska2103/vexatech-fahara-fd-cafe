@@ -88,15 +88,10 @@ export const EventCard = ({ event, onDelete }) => {
           </div>
         </div>
 
-        {/* Price & View Details Action */}
-        <div className="pt-3 border-t border-border/40 flex items-center justify-between gap-3">
-          <div>
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider block">Package Rate</span>
-            <span className="text-base font-black text-[#6F4E37]">₹{event.price}</span>
-          </div>
-
-          <Link href={`/owner/events/${event.id}`}>
-            <Button className="py-2 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-1.5">
+        {/* View Details Action */}
+        <div className="pt-3 border-t border-border/40 flex items-center justify-end">
+          <Link href={`/owner/events/${event.id}`} className="w-full">
+            <Button className="w-full py-2 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5">
               <span>View Details</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>

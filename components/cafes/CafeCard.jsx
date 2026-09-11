@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { MapPin, Users, Star, IndianRupee, Edit2, Eye, Trash2, ArrowRight, ShieldCheck } from 'lucide-react';
+import { MapPin, Users, Star, IndianRupee, Edit2, Eye, Trash2, ArrowRight, ShieldCheck, Layers } from 'lucide-react';
 import { CafeStatusBadge } from './CafeStatusBadge';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
@@ -17,6 +17,9 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
   if (!imageSrc) {
     imageSrc = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800";
   }
+
+  const categoryStr = `${cafe.category || ''} ${cafe.name || ''}`.toLowerCase();
+  const isRestaurant = categoryStr.includes('restaur') || categoryStr.includes('restur');
 
   if (viewMode === 'list') {
     return (
@@ -63,11 +66,13 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
                 <span>Up to {cafe.maximum_persons || 'N/A'} guests</span>
               </div>
 
-              <div className="flex items-center text-sm font-extrabold text-[#2C1810]">
-                <IndianRupee className="w-4 h-4 text-[#6F4E37]" />
-                <span>{cafe.price_per_hour || 0}</span>
-                <span className="text-[10px] text-text/50 font-normal ml-0.5">/hr</span>
-              </div>
+              {!isRestaurant && (
+                <div className="flex items-center text-sm font-extrabold text-[#2C1810]">
+                  <IndianRupee className="w-4 h-4 text-[#6F4E37]" />
+                  <span>{cafe.price_per_hour || 0}</span>
+                  <span className="text-[10px] text-text/50 font-normal ml-0.5">/hr</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -134,11 +139,13 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
         </div>
 
         {/* Price Tag Overlay */}
-        <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-white/60 shadow-xs flex items-center gap-0.5 text-xs font-extrabold text-[#2C1810]">
-          <IndianRupee className="w-3.5 h-3.5 text-[#6F4E37]" />
-          <span>{cafe.price_per_hour || 0}</span>
-          <span className="text-[10px] text-text/50 font-normal">/hr</span>
-        </div>
+        {!isRestaurant && (
+          <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-white/60 shadow-xs flex items-center gap-0.5 text-xs font-extrabold text-[#2C1810]">
+            <IndianRupee className="w-3.5 h-3.5 text-[#6F4E37]" />
+            <span>{cafe.price_per_hour || 0}</span>
+            <span className="text-[10px] text-text/50 font-normal">/hr</span>
+          </div>
+        )}
       </div>
 
       {/* Content Body */}
@@ -172,14 +179,22 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
         </div>
 
         {/* Card Footer Action */}
-        <div className="pt-2">
-          <Link href={`/owner/cafes/${cafe.id}`} className="block">
-            <Button className="w-full justify-between py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white hover:shadow-md transition-all duration-300 font-extrabold text-xs shadow-xs border-0">
-              <span className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-white" />
-                <span>View Venue Details</span>
+        <div className="pt-2 flex items-center gap-2">
+          <Link href={`/owner/cafes/${cafe.id}/tables`} className="flex-1">
+            <Button variant="outline" className="w-full justify-center py-2.5 px-3 rounded-2xl border-[#DDB892]/80 text-[#6F4E37] hover:bg-[#FFF8F0] font-extrabold text-xs shadow-2xs">
+              <span className="flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-[#6F4E37]" />
+                <span>Tables</span>
               </span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-white" />
+            </Button>
+          </Link>
+          <Link href={`/owner/cafes/${cafe.id}`} className="flex-1">
+            <Button className="w-full justify-between py-2.5 px-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white hover:shadow-md transition-all duration-300 font-extrabold text-xs shadow-xs border-0">
+              <span className="flex items-center gap-1.5 truncate">
+                <Eye className="w-4 h-4 text-white shrink-0" />
+                <span className="truncate">View Cafe</span>
+              </span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-white shrink-0" />
             </Button>
           </Link>
         </div>

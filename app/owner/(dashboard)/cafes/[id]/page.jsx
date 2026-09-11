@@ -30,7 +30,8 @@ import {
   Percent,
   Tag,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Layers
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
@@ -98,9 +99,9 @@ export default function CafeDetailsPage() {
   const galleryImages = Array.isArray(cafe.gallery) ? cafe.gallery.map(img => typeof img === 'string' ? img : img?.url || img?.file_url).filter(Boolean) : [];
 
   const discountsList = Array.isArray(cafe.discounts)
-    ? cafe.discounts
+    ? cafe.discounts.filter(d => d && (d.title || d.name) && Number(d.amount) > 0)
     : (cafe.discounts && typeof cafe.discounts === 'object')
-      ? Object.values(cafe.discounts).filter(Boolean)
+      ? Object.values(cafe.discounts).filter(d => d && (d.title || d.name || d.discount1_title || d.discount2_title) && (Number(d.amount) > 0 || Number(d.discount1_amount) > 0 || Number(d.discount2_amount) > 0))
       : [];
 
   const tabs = [
@@ -133,16 +134,23 @@ export default function CafeDetailsPage() {
 
         {/* Header Action Controls */}
         <div className="flex items-center gap-2">
-          <Link href={`/owner/bookings?cafe_id=${cafe.id}`}>
+          <Link href={`/owner/cafes/${id}/tables`}>
             <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
-              <Calendar className="w-4 h-4 text-white" />
+              <Layers className="w-4 h-4 text-white" />
+              <span>Manage Tables</span>
+            </Button>
+          </Link>
+
+          <Link href={`/owner/bookings?cafe_id=${cafe.id}`}>
+            <Button className="py-2.5 px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-1.5 transition-all">
+              <Calendar className="w-4 h-4 text-[#6F4E37]" />
               <span>View Bookings</span>
             </Button>
           </Link>
 
           <Link href={`/owner/cafes/${id}/edit`}>
-            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
-              <Edit2 className="w-4 h-4" />
+            <Button className="py-2.5 px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-1.5 transition-all">
+              <Edit2 className="w-4 h-4 text-[#6F4E37]" />
               <span>Edit Details</span>
             </Button>
           </Link>
@@ -518,13 +526,23 @@ export default function CafeDetailsPage() {
             </h4>
 
             <div className="space-y-2.5">
-              <Link href={`/owner/cafes/${id}/edit`} className="block">
+              <Link href={`/owner/cafes/${id}/tables`} className="block">
                 <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">
                   <span className="flex items-center gap-2">
-                    <Edit2 className="w-4 h-4" />
-                    <span>Edit Venue Profile</span>
+                    <Layers className="w-4 h-4" />
+                    <span>Manage Seating Tables</span>
                   </span>
                   <ChevronRight className="w-4 h-4" />
+                </Button>
+              </Link>
+
+              <Link href={`/owner/cafes/${id}/edit`} className="block">
+                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
+                  <span className="flex items-center gap-2">
+                    <Edit2 className="w-4 h-4 text-[#6F4E37]" />
+                    <span>Edit Venue Profile</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-[#6F4E37]" />
                 </Button>
               </Link>
 

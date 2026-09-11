@@ -5,7 +5,7 @@ import { ShieldAlert, ArrowUpRight, User, Mail, Phone, Calendar } from 'lucide-r
 import { VIPBadge } from './VIPBadge';
 import { cn } from '@/utils/cn';
 
-export const CustomerTable = ({ customers }) => {
+export const CustomerTable = ({ customers, isRestaurant }) => {
   const router = useRouter();
 
   return (
@@ -17,7 +17,7 @@ export const CustomerTable = ({ customers }) => {
               <th className="px-6 py-4">Diner Customer</th>
               <th className="px-6 py-4">Contact Info</th>
               <th className="px-6 py-4 text-center">Total Bookings</th>
-              <th className="px-6 py-4 text-right">Lifetime Spend (LTV)</th>
+              {!isRestaurant && <th className="px-6 py-4 text-right">Lifetime Spend (LTV)</th>}
               <th className="px-6 py-4 text-center">Status</th>
               <th className="px-6 py-4 text-right">Profile</th>
             </tr>
@@ -89,12 +89,14 @@ export const CustomerTable = ({ customers }) => {
                     </span>
                   </td>
 
-                  {/* Lifetime Spend (LTV) */}
-                  <td className="px-6 py-4 text-right">
-                    <span className="font-black text-[#6F4E37] text-sm">
-                      ₹{spend.toLocaleString()}
-                    </span>
-                  </td>
+                  {/* Lifetime Spend (LTV) - Hidden for Restaurants */}
+                  {!isRestaurant && (
+                    <td className="px-6 py-4 text-right">
+                      <span className="font-black text-[#6F4E37] text-sm">
+                        ₹{spend.toLocaleString()}
+                      </span>
+                    </td>
+                  )}
 
                   {/* Status Badge */}
                   <td className="px-6 py-4 text-center">

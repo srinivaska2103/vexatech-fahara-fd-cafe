@@ -5,49 +5,49 @@ export const CustomerStats = ({ customer }) => {
   if (!customer) return null;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
       {/* Total Bookings */}
-      <div className="bg-white p-5 rounded-2xl border border-border shadow-sm flex flex-col">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <CalendarCheck className="w-4 h-4" />
+      <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-border/60 shadow-2xs flex flex-col justify-between space-y-1.5 min-w-0">
+        <div className="flex items-center justify-between gap-1">
+          <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider truncate">Total Bookings</span>
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center shrink-0">
+            <CalendarCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <span className="text-sm font-medium text-text/60">Total Bookings</span>
         </div>
-        <div className="text-2xl font-bold text-text mt-auto">{customer.total_bookings || 0}</div>
+        <div className="text-lg sm:text-2xl font-black text-[#2C1810]">{customer.total_bookings || 0}</div>
       </div>
 
       {/* Cancelled Bookings */}
-      <div className="bg-white p-5 rounded-2xl border border-border shadow-sm flex flex-col">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-danger/10 flex items-center justify-center text-danger">
-            <CalendarX className="w-4 h-4" />
+      <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-border/60 shadow-2xs flex flex-col justify-between space-y-1.5 min-w-0">
+        <div className="flex items-center justify-between gap-1">
+          <span className="text-[10px] sm:text-xs font-extrabold text-rose-600 uppercase tracking-wider truncate">Cancellations</span>
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
+            <CalendarX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <span className="text-sm font-medium text-text/60">Cancellations</span>
         </div>
-        <div className="text-2xl font-bold text-text mt-auto">{customer.cancelled_bookings || 0}</div>
+        <div className="text-lg sm:text-2xl font-black text-[#2C1810]">{customer.cancelled_bookings || 0}</div>
       </div>
 
       {/* Total Spend */}
-      <div className="bg-white p-5 rounded-2xl border border-border shadow-sm flex flex-col">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-            <CreditCard className="w-4 h-4" />
+      <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-border/60 shadow-2xs flex flex-col justify-between space-y-1.5 min-w-0">
+        <div className="flex items-center justify-between gap-1">
+          <span className="text-[10px] sm:text-xs font-extrabold text-emerald-700 uppercase tracking-wider truncate">Total Spend</span>
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center shrink-0">
+            <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <span className="text-sm font-medium text-text/60">Total Spend</span>
         </div>
-        <div className="text-2xl font-bold text-text mt-auto">₹{Number(customer.total_spend || 0).toLocaleString()}</div>
+        <div className="text-lg sm:text-2xl font-black text-[#6F4E37] truncate">₹{Number(customer.total_spend || 0).toLocaleString()}</div>
       </div>
 
       {/* Average Rating */}
-      <div className="bg-white p-5 rounded-2xl border border-border shadow-sm flex flex-col">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">
-            <Star className="w-4 h-4" />
+      <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-border/60 shadow-2xs flex flex-col justify-between space-y-1.5 min-w-0">
+        <div className="flex items-center justify-between gap-1">
+          <span className="text-[10px] sm:text-xs font-extrabold text-amber-700 uppercase tracking-wider truncate">Average Rating</span>
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+            <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <span className="text-sm font-medium text-text/60">Average Rating</span>
         </div>
-        <div className="text-2xl font-bold text-text mt-auto">{Number(customer.average_rating || 0).toFixed(1)}</div>
+        <div className="text-lg sm:text-2xl font-black text-[#2C1810]">{Number(customer.average_rating || 0).toFixed(1)}</div>
       </div>
     </div>
   );

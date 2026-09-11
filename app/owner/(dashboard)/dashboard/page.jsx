@@ -16,6 +16,8 @@ import {
   useRecentReviews, 
   useActivityTimeline 
 } from '@/hooks/dashboard';
+import { useAuthStore } from '@/store/auth.store';
+import { useCafes } from '@/hooks/cafe';
 import { Store, CalendarCheck, IndianRupee, TrendingUp, Users, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -33,6 +35,18 @@ const itemVariants = {
 };
 
 export default function DashboardPage() {
+  const userRole = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const { data: cafesData } = useCafes();
+  const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
+
+  const isRestaurant = 
+    userRole === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(userRole || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    cafeList.some(c => (c.category || '').toLowerCase().includes('restaurant'));
+
   const { data: summaryResponse, isLoading: isLoadingSummary } = useDashboardSummary();
   const { data: revenueData, isLoading: isLoadingRevenue } = useDashboardRevenue();
   const { data: recentBookings, isLoading: isLoadingRecent } = useRecentBookings();
@@ -70,15 +84,17 @@ export default function DashboardPage() {
         className="space-y-6"
       >
         {/* Stats Grid */}
-        <motion.div variants={itemVariants} data-tour="dashboard-overview" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard 
-            title="Total Revenue" 
-            value={stats.totalRevenue} 
-            trend={stats.revenueTrend} 
-            trendValue={stats.revenueTrendValue} 
-            icon={IndianRupee} 
-            isLoading={isLoadingSummary} 
-          />
+        <motion.div variants={itemVariants} data-tour="dashboard-overview" className={`grid grid-cols-1 sm:grid-cols-2 ${isRestaurant ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-4`}>
+          {!isRestaurant && (
+            <StatsCard 
+              title="Total Revenue" 
+              value={stats.totalRevenue} 
+              trend={stats.revenueTrend} 
+              trendValue={stats.revenueTrendValue} 
+              icon={IndianRupee} 
+              isLoading={isLoadingSummary} 
+            />
+          )}
           <StatsCard 
             title="Total Customers" 
             value={stats.totalCustomers} 
@@ -108,7 +124,7 @@ export default function DashboardPage() {
         {/* Charts & Main Content Area */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <RevenueChart data={revenueData} isLoading={isLoadingRevenue} />
+            {!isRestaurant && <RevenueChart data={revenueData} isLoading={isLoadingRevenue} />}
             <RecentBookingsTable data={recentBookings} isLoading={isLoadingRecent} />
           </div>
           

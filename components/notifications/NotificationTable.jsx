@@ -27,8 +27,8 @@ export const NotificationTable = ({ notifications }) => {
 
   return (
     <div className="bg-white rounded-3xl border border-border overflow-hidden shadow-sm">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+      <div className="overflow-x-auto custom-scrollbar">
+        <table className="w-full text-left border-collapse min-w-[500px]">
           <tbody className="divide-y divide-border/50 text-sm">
             {notifications.map((notification) => (
               <tr 

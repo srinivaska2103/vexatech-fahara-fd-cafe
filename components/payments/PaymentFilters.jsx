@@ -1,57 +1,61 @@
 import React from 'react';
-import { Filter, Calendar } from 'lucide-react';
+import { Filter, Calendar, CreditCard } from 'lucide-react';
+import { CustomSelect } from '../ui/CustomSelect';
+
+const STATUS_OPTIONS = [
+  { value: '', label: 'All Statuses' },
+  { value: 'PAID', label: 'Paid' },
+  { value: 'PENDING', label: 'Pending' },
+  { value: 'FAILED', label: 'Failed' },
+  { value: 'REFUNDED', label: 'Refunded' },
+  { value: 'PARTIALLY_REFUNDED', label: 'Partially Refunded' },
+];
+
+const METHOD_OPTIONS = [
+  { value: '', label: 'All Methods' },
+  { value: 'UPI', label: 'UPI' },
+  { value: 'CARD', label: 'Credit / Debit Card' },
+  { value: 'NETBANKING', label: 'Net Banking' },
+  { value: 'WALLET', label: 'Wallet' },
+  { value: 'CASH', label: 'Cash' },
+];
+
+const DATE_RANGE_OPTIONS = [
+  { value: 'ALL', label: 'All Time' },
+  { value: 'TODAY', label: 'Today' },
+  { value: 'THIS_WEEK', label: 'This Week' },
+  { value: 'THIS_MONTH', label: 'This Month' },
+];
 
 export const PaymentFilters = ({ filters, setFilters }) => {
   return (
     <div className="flex flex-wrap items-center gap-3">
       {/* Status Filter */}
-      <div className="relative">
-        <select
-          value={filters.status || ''}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          className="appearance-none bg-white border border-border rounded-xl pl-10 pr-8 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm min-w-[140px]"
-        >
-          <option value="">All Statuses</option>
-          <option value="PAID">Paid</option>
-          <option value="PENDING">Pending</option>
-          <option value="FAILED">Failed</option>
-          <option value="REFUNDED">Refunded</option>
-          <option value="PARTIALLY_REFUNDED">Partially Refunded</option>
-        </select>
-        <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-      </div>
+      <CustomSelect
+        options={STATUS_OPTIONS}
+        value={filters.status || ''}
+        onChange={(val) => setFilters({ ...filters, status: val })}
+        icon={Filter}
+        className="min-w-[150px]"
+      />
 
       {/* Method Filter */}
-      <div className="relative">
-        <select
-          value={filters.method || ''}
-          onChange={(e) => setFilters({ ...filters, method: e.target.value })}
-          className="appearance-none bg-white border border-border rounded-xl pl-10 pr-8 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm min-w-[160px]"
-        >
-          <option value="">All Methods</option>
-          <option value="UPI">UPI</option>
-          <option value="CARD">Credit / Debit Card</option>
-          <option value="NETBANKING">Net Banking</option>
-          <option value="WALLET">Wallet</option>
-          <option value="CASH">Cash</option>
-        </select>
-        <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-      </div>
+      <CustomSelect
+        options={METHOD_OPTIONS}
+        value={filters.method || ''}
+        onChange={(val) => setFilters({ ...filters, method: val })}
+        icon={CreditCard}
+        className="min-w-[160px]"
+      />
 
       {/* Date Range Filter */}
-      <div className="relative">
-        <select
-          value={filters.date_range || 'ALL'}
-          onChange={(e) => setFilters({ ...filters, date_range: e.target.value })}
-          className="appearance-none bg-white border border-border rounded-xl pl-10 pr-8 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm min-w-[140px]"
-        >
-          <option value="ALL">All Time</option>
-          <option value="TODAY">Today</option>
-          <option value="THIS_WEEK">This Week</option>
-          <option value="THIS_MONTH">This Month</option>
-        </select>
-        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-      </div>
+      <CustomSelect
+        options={DATE_RANGE_OPTIONS}
+        value={filters.date_range || 'ALL'}
+        onChange={(val) => setFilters({ ...filters, date_range: val })}
+        icon={Calendar}
+        className="min-w-[150px]"
+      />
     </div>
   );
 };

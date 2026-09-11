@@ -9,10 +9,11 @@ import { Label } from '@/components/ui/Label';
 import { PasswordInput } from './PasswordInput';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Loader2, UserPlus } from 'lucide-react';
+import { Loader2, UserPlus, Coffee, Utensils } from 'lucide-react';
 
 export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
   const router = useRouter();
+  const [selectedRole, setSelectedRole] = React.useState(defaultRole);
   const { register, handleSubmit, getValues, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
   });
@@ -27,7 +28,7 @@ export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
   });
 
   const onSubmit = (data) => {
-    const payload = { ...data, roleName: defaultRole };
+    const payload = { ...data, roleName: selectedRole };
     registerMutation.mutate(payload);
   };
 
@@ -39,6 +40,37 @@ export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
       onSubmit={handleSubmit(onSubmit)} 
       className="space-y-3.5 text-[#2C1810]"
     >
+      {/* Account Type Selection */}
+      <div className="space-y-1">
+        <Label className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Account Type</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setSelectedRole('CAFE_OWNER')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
+              selectedRole === 'CAFE_OWNER'
+                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
+                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
+            }`}
+          >
+            <Coffee className={`w-4 h-4 ${selectedRole === 'CAFE_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
+            <span>Cafe Owner</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedRole('RESTAURANT_OWNER')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
+              selectedRole === 'RESTAURANT_OWNER'
+                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
+                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
+            }`}
+          >
+            <Utensils className={`w-4 h-4 ${selectedRole === 'RESTAURANT_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
+            <span>Restaurant Owner</span>
+          </button>
+        </div>
+      </div>
+
       <div className="space-y-1">
         <Label htmlFor="name" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Full Name</Label>
         <Input
@@ -95,12 +127,12 @@ export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
         {registerMutation.isPending ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin text-white" />
-            <span>Creating Cafe Account...</span>
+            <span>Creating {selectedRole === 'RESTAURANT_OWNER' ? 'Restaurant' : 'Cafe'} Account...</span>
           </>
         ) : (
           <>
             <UserPlus className="w-4 h-4 text-white" />
-            <span>Create Cafe Owner Account</span>
+            <span>Create {selectedRole === 'RESTAURANT_OWNER' ? 'Restaurant Owner' : 'Cafe Owner'} Account</span>
           </>
         )}
       </motion.button>

@@ -28,6 +28,7 @@ export default function CreateCafePage() {
       price_per_hour: data.price ? Number(data.price) : 0,
       maximum_persons: data.capacity ? Number(data.capacity) : null,
       google_rating: data.google_rating ? Number(data.google_rating) : null,
+      google_reviews_link: data.google_reviews_link || "",
       provides_event_services: data.provides_event_services || false,
       allow_third_party_decoration: data.allow_third_party_decoration ?? true,
       cover_image: data.cover_image || (data.gallery && data.gallery.length > 0 ? (data.gallery[0].file_url || data.gallery[0].url || (typeof data.gallery[0] === 'string' ? data.gallery[0] : "")) : ""),

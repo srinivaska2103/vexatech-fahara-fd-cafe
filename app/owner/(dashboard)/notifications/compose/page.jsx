@@ -49,7 +49,7 @@ function ComposeFormContent() {
 
     sendMessageMutation.mutate(payload, {
       onSuccess: () => {
-        router.push('/owner/notifications');
+        router.push('/owner/campaigns');
       }
     });
   };
@@ -61,9 +61,9 @@ function ComposeFormContent() {
       <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 z-10">
           <button 
-            onClick={() => router.push('/owner/notifications')}
+            onClick={() => router.push('/owner/campaigns')}
             className="w-10 h-10 rounded-2xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0"
-            title="Back to Notifications"
+            title="Back to Campaigns"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -129,7 +129,7 @@ function ComposeFormContent() {
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               type="button"
-              onClick={() => router.push('/owner/notifications')}
+              onClick={() => router.push('/owner/campaigns')}
               className="w-full sm:w-auto py-2.5 px-4 rounded-xl border border-border/60 text-xs font-bold text-text/70 hover:bg-surface transition-colors"
             >
               Cancel

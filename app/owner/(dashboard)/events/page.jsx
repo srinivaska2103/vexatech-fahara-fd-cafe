@@ -112,8 +112,8 @@ export default function EventsPage() {
         </div>
       </div>
 
-      {/* 4 Dynamic Event Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      {/* 3 Dynamic Event Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
         
         {/* Total Event Packages */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
@@ -137,18 +137,6 @@ export default function EventsPage() {
           </div>
           <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{publishedCount}</p>
           <p className="text-[10px] text-emerald-700/80 font-bold">Visible to diners</p>
-        </div>
-
-        {/* Average Package Rate */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Avg Package Rate</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-bold">
-              <IndianRupee className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{avgPrice}</p>
-          <p className="text-[10px] text-text/50 font-medium">Average base rate</p>
         </div>
 
         {/* Event Types */}

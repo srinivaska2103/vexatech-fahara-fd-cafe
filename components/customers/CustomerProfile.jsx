@@ -16,7 +16,7 @@ export const CustomerProfile = ({
   handlers 
 }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Top Header Section */}
       <CustomerHeader 
         customer={customer} 
@@ -26,14 +26,14 @@ export const CustomerProfile = ({
       />
 
       {/* Stats & Notes Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+        <div className="xl:col-span-2 space-y-4 sm:space-y-6">
           <CustomerStats customer={customer} />
           
           {/* Main Content Tabs */}
-          <div className="bg-white p-6 rounded-3xl border border-border shadow-sm min-h-[400px]">
+          <div className="bg-white p-3.5 sm:p-6 rounded-3xl border border-border shadow-xs min-h-[350px]">
              <Tabs defaultValue="bookings" className="w-full">
-                <TabsList className="mb-6">
+                <TabsList className="mb-4 sm:mb-6 overflow-x-auto custom-scrollbar flex max-w-full">
                   <TabsTrigger value="bookings">Booking History</TabsTrigger>
                   <TabsTrigger value="payments">Payments</TabsTrigger>
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>

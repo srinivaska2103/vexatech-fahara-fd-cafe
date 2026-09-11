@@ -7,6 +7,8 @@ import Link from 'next/link';
 
 export const DashboardHeader = () => {
   const user = useAuthStore(state => state.user) || { name: 'Owner' };
+  const role = useAuthStore(state => state.role);
+  const isRestaurantOwner = role === 'RESTAURANT_OWNER';
   
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', {
@@ -74,16 +76,18 @@ export const DashboardHeader = () => {
             </Button>
           </Link>
 
-          <Link href="/owner/events">
-            <Button 
-              variant="primary" 
-              size="sm" 
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-text font-bold shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm"
-            >
-              <Plus className="w-4 h-4 stroke-[3]" />
-              <span>Create Event</span>
-            </Button>
-          </Link>
+          {!isRestaurantOwner && (
+            <Link href="/owner/events">
+              <Button 
+                variant="primary" 
+                size="sm" 
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-text font-bold shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>Create Event</span>
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

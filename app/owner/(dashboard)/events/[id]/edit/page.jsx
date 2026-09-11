@@ -19,7 +19,7 @@ export default function EditEventPage() {
   const updateMutation = useUpdateEvent();
 
   const handleSubmit = (data) => {
-    const { cafe_id, cafe, ...payload } = data; // strip frontend-only or relation fields
+    const { cafe, ...payload } = data; // keep cafe_id for backend sync
 
     updateMutation.mutate({ id, data: payload }, {
       onSuccess: () => {

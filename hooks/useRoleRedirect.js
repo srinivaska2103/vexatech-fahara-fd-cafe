@@ -14,6 +14,7 @@ export const useRoleRedirect = () => {
         router.push('/customer/dashboard');
         break;
       case 'CAFE_OWNER':
+      case 'RESTAURANT_OWNER':
         router.push('/owner/cafes');
         break;
       case 'EVENT_MANAGER':

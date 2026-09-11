@@ -35,6 +35,7 @@ import {
   Music, 
   Image as ImageIcon 
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { cn } from '@/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -281,32 +282,64 @@ const ModernEventTypeSelect = ({ value, onChange, error, register }) => {
   );
 };
 
+
 export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "Save Event Package" }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const { data: cafesData } = useCafes();
   const cafes = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
 
+  const parsedInclusions = React.useMemo(() => {
+    let inc = defaultValues?.inclusions;
+    if (typeof inc === 'string') {
+      try { inc = JSON.parse(inc); } catch (e) { inc = []; }
+    }
+    if (Array.isArray(inc)) {
+      return inc.map(item => {
+        const tiers = item.tiers || [];
+        const basicTier = tiers.find(t => t.tier_name === 'BASIC') || {};
+        const standardTier = tiers.find(t => t.tier_name === 'STANDARD') || {};
+        const premiumTier = tiers.find(t => t.tier_name === 'PREMIUM') || {};
+        return {
+          ...item,
+          basic_price: item.basic_price ?? basicTier.unit_price ?? item.unit_price ?? 0,
+          basic_desc: item.basic_desc || basicTier.description || item.description || '',
+          standard_price: item.standard_price ?? standardTier.unit_price ?? item.unit_price ?? 0,
+          standard_desc: item.standard_desc || standardTier.description || item.description || '',
+          premium_price: item.premium_price ?? premiumTier.unit_price ?? item.unit_price ?? 0,
+          premium_desc: item.premium_desc || premiumTier.description || item.description || '',
+          tiers: tiers.length > 0 ? tiers : [
+            { tier_name: 'BASIC', description: item.basic_desc || item.description, unit_price: item.basic_price ?? item.unit_price ?? 0, pricing_type: item.pricing_type || 'FIXED' },
+            { tier_name: 'STANDARD', description: item.standard_desc || item.description, unit_price: item.standard_price ?? item.unit_price ?? 0, pricing_type: item.pricing_type || 'FIXED' },
+            { tier_name: 'PREMIUM', description: item.premium_desc || item.description, unit_price: item.premium_price ?? item.unit_price ?? 0, pricing_type: item.pricing_type || 'FIXED' },
+          ]
+        };
+      });
+    }
+    return inc || [];
+  }, [defaultValues?.inclusions]);
+
   const methods = useForm({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      cafe_id: '',
-      event_type: '',
-      package_name: '',
-      description: '',
-      price: '',
-      duration_hours: '',
-      minimum_persons: '',
-      maximum_persons: '',
-      food: false,
-      cake: false,
-      decoration: false,
-      music: false,
-      other: false,
-      other_text: '',
-      status: 'DRAFT',
-      cover_image: '',
-      gallery: [],
-      ...defaultValues
+      cafe_id: defaultValues?.cafe_id || defaultValues?.cafe?.id || '',
+      event_type: defaultValues?.event_type || defaultValues?.category || defaultValues?.custom_category || defaultValues?.inclusions?.event_type || 'Birthday Party',
+      package_name: defaultValues?.package_name || '',
+      package_level: defaultValues?.package_level || 'STANDARD',
+      package_inclusions: Array.isArray(parsedInclusions) && parsedInclusions.length > 0 ? parsedInclusions : (defaultValues?.package_inclusions || []),
+      description: defaultValues?.description || '',
+      price: defaultValues?.price !== undefined && defaultValues?.price !== null && defaultValues?.price !== '' ? defaultValues.price : (defaultValues?.base_price || 0),
+      duration_hours: defaultValues?.duration_hours ?? '',
+      minimum_persons: defaultValues?.minimum_persons ?? '',
+      maximum_persons: defaultValues?.maximum_persons ?? '',
+      food: Boolean(defaultValues?.food ?? false),
+      cake: Boolean(defaultValues?.cake ?? false),
+      decoration: Boolean(defaultValues?.decoration ?? false),
+      music: Boolean(defaultValues?.music ?? false),
+      other: Boolean(defaultValues?.other ?? false),
+      other_text: defaultValues?.other_text || '',
+      status: defaultValues?.status || 'DRAFT',
+      cover_image: defaultValues?.cover_image || '',
+      gallery: defaultValues?.gallery || []
     },
   });
 
@@ -314,45 +347,215 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
   const currentStatus = watch('status');
   const currentCafeId = watch('cafe_id');
   const currentEventType = watch('event_type');
-  const coverImage = watch('cover_image');
+  useEffect(() => {
+    if (defaultValues && (defaultValues.id || defaultValues.package_name || defaultValues.cafe_id || defaultValues.inclusions)) {
+      let inc = defaultValues.inclusions || defaultValues.package_inclusions;
+      if (typeof inc === 'string') {
+        try { inc = JSON.parse(inc); } catch (e) { inc = []; }
+      }
+      const parsedIncs = Array.isArray(inc) ? inc.map(item => {
+        const tiers = item.tiers || [];
+        const basicTier = tiers.find(t => t.tier_name === 'BASIC') || {};
+        const standardTier = tiers.find(t => t.tier_name === 'STANDARD') || {};
+        const premiumTier = tiers.find(t => t.tier_name === 'PREMIUM') || {};
+        return {
+          ...item,
+          basic_price: item.basic_price ?? basicTier.unit_price ?? item.unit_price ?? 0,
+          basic_desc: item.basic_desc || basicTier.description || item.description || '',
+          standard_price: item.standard_price ?? standardTier.unit_price ?? item.unit_price ?? 0,
+          standard_desc: item.standard_desc || standardTier.description || item.description || '',
+          premium_price: item.premium_price ?? premiumTier.unit_price ?? item.unit_price ?? 0,
+          premium_desc: item.premium_desc || premiumTier.description || item.description || '',
+          tiers: tiers.length > 0 ? tiers : [
+            { tier_name: 'BASIC', description: item.basic_desc || item.description, unit_price: item.basic_price ?? item.unit_price ?? 0, pricing_type: item.pricing_type || 'FIXED' },
+            { tier_name: 'STANDARD', description: item.standard_desc || item.description, unit_price: item.standard_price ?? item.unit_price ?? 0, pricing_type: item.pricing_type || 'FIXED' },
+            { tier_name: 'PREMIUM', description: item.premium_desc || item.description, unit_price: item.premium_price ?? item.unit_price ?? 0, pricing_type: item.pricing_type || 'FIXED' },
+          ]
+        };
+      }) : [];
+
+      methods.reset({
+        cafe_id: defaultValues.cafe_id || defaultValues.cafe?.id || '',
+        event_type: defaultValues.event_type || defaultValues.category || defaultValues.custom_category || defaultValues.inclusions?.event_type || 'Birthday Party',
+        package_name: defaultValues.package_name || '',
+        package_level: defaultValues.package_level || 'STANDARD',
+        package_inclusions: parsedIncs,
+        inclusions_list: parsedIncs,
+        description: defaultValues.description || '',
+        price: defaultValues.price !== undefined && defaultValues.price !== null && defaultValues.price !== '' ? defaultValues.price : (defaultValues.base_price || 0),
+        duration_hours: defaultValues.duration_hours ?? '',
+        minimum_persons: defaultValues.minimum_persons ?? '',
+        maximum_persons: defaultValues.maximum_persons ?? '',
+        food: Boolean(defaultValues.food ?? false),
+        cake: Boolean(defaultValues.cake ?? false),
+        decoration: Boolean(defaultValues.decoration ?? false),
+        music: Boolean(defaultValues.music ?? false),
+        other: Boolean(defaultValues.other ?? false),
+        other_text: defaultValues.other_text || '',
+        status: defaultValues.status || 'DRAFT',
+        cover_image: defaultValues.cover_image || '',
+        gallery: defaultValues.gallery || []
+      });
+    }
+  }, [defaultValues, methods]);
+
+  useEffect(() => {
+    if (!currentCafeId && cafes.length > 0) {
+      setValue('cafe_id', cafes[0].id, { shouldValidate: true });
+    }
+  }, [cafes, currentCafeId, setValue]);
 
   const [uploading, setUploading] = useState(false);
 
   const handleFinalSubmit = async (data) => {
     try {
       setUploading(true);
-      let coverImageUrl = defaultValues?.cover_image || data.cover_image;
-
-      // Check if a new file upload was added
-      if (data.gallery && data.gallery.length > 0 && data.gallery[0].file) {
-        const formData = new FormData();
-        formData.append('image', data.gallery[0].file);
-        
-        const { axiosInstance } = await import('@/lib/axios');
-        const res = await axiosInstance.post('/uploads', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        
-        coverImageUrl = res.data.data.url;
+      if (!data.cafe_id && cafes.length > 0) {
+        data.cafe_id = cafes[0].id;
+      }
+      if (!data.cafe_id) {
+        toast.error("Please select a cafe for this event package.");
+        setUploading(false);
+        return;
       }
 
-      const finalData = { ...data, cover_image: coverImageUrl };
+      let coverImageUrl = data.cover_image || defaultValues?.cover_image;
+      const galleryList = [];
+
+      if (Array.isArray(data.gallery)) {
+        for (const item of data.gallery) {
+          const actualFile = item?.file instanceof File ? item.file : item instanceof File ? item : null;
+          if (actualFile) {
+            try {
+              const formData = new FormData();
+              formData.append('image', actualFile);
+              const { axiosInstance } = await import('@/lib/axios');
+              const res = await axiosInstance.post('/uploads', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+              });
+              if (res.data?.data?.url) {
+                galleryList.push(res.data.data.url);
+                if (!coverImageUrl || coverImageUrl.startsWith('blob:')) {
+                  coverImageUrl = res.data.data.url;
+                }
+              }
+            } catch (uploadErr) {
+              console.error('Failed to upload image file:', uploadErr);
+            }
+          } else if (typeof item === 'string' && item.startsWith('http')) {
+            galleryList.push(item);
+          } else if (item?.url && typeof item.url === 'string' && item.url.startsWith('http')) {
+            galleryList.push(item.url);
+          }
+        }
+      }
+
+      // Ensure coverImageUrl is valid
+      if (!coverImageUrl || coverImageUrl.startsWith('blob:')) {
+        coverImageUrl = defaultValues?.cover_image || 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d';
+      }
+
+      const inclusionsData = {
+        food: Boolean(data.food),
+        food_items: data.food_items || [],
+        cake: Boolean(data.cake),
+        cake_items: data.cake_items || [],
+        decoration: Boolean(data.decoration),
+        decoration_items: data.decoration_items || [],
+        music: Boolean(data.music),
+        music_items: data.music_items || [],
+        other: Boolean(data.other),
+        other_text: data.other_text || '',
+        other_items: data.other_items || []
+      };
+
+      let calculatedInclusionPrice = 0;
+      if (data.food && Array.isArray(data.food_items)) {
+        data.food_items.forEach(item => { calculatedInclusionPrice += Number(item.price) || 0; });
+      }
+      if (data.cake && Array.isArray(data.cake_items)) {
+        data.cake_items.forEach(item => { calculatedInclusionPrice += Number(item.price) || 0; });
+      }
+      if (data.decoration && Array.isArray(data.decoration_items)) {
+        data.decoration_items.forEach(item => { calculatedInclusionPrice += Number(item.price) || 0; });
+      }
+      if (data.music && Array.isArray(data.music_items)) {
+        data.music_items.forEach(item => { calculatedInclusionPrice += Number(item.price) || 0; });
+      }
+      if (data.other && Array.isArray(data.other_items)) {
+        data.other_items.forEach(item => { calculatedInclusionPrice += Number(item.price) || 0; });
+      }
+
+      const finalPrice = Number(data.price) || calculatedInclusionPrice || 0;
+
+      const rawInclusions = methods.getValues('package_inclusions') || methods.getValues('inclusions_list') || data.package_inclusions || data.inclusions_list || [];
+      const formattedInclusions = Array.isArray(rawInclusions) ? rawInclusions.map((inc, idx) => ({
+        id: inc.id || `inc_${idx}`,
+        name: inc.name,
+        category: inc.category || inc.name,
+        description: inc.description || null,
+        pricing_type: inc.pricing_type || 'FIXED',
+        unit_price: inc.unit_price || 0,
+        basic_price: inc.basic_price ?? inc.unit_price ?? 0,
+        basic_desc: inc.basic_desc || inc.description,
+        standard_price: inc.standard_price ?? inc.unit_price ?? 0,
+        standard_desc: inc.standard_desc || inc.description,
+        premium_price: inc.premium_price ?? inc.unit_price ?? 0,
+        premium_desc: inc.premium_desc || inc.description,
+        quantity: inc.quantity || 1,
+        inclusion_type: inc.inclusion_type || (inc.is_optional ? 'OPTIONAL_ADDON' : 'INCLUDED'),
+        is_optional: Boolean(inc.is_optional || inc.inclusion_type === 'OPTIONAL_ADDON'),
+        display_order: idx,
+        tiers: Array.isArray(inc.tiers) ? inc.tiers : [
+          { tier_name: 'BASIC', description: inc.basic_desc || inc.description, unit_price: inc.basic_price ?? inc.unit_price ?? 0, pricing_type: inc.pricing_type || 'FIXED' },
+          { tier_name: 'STANDARD', description: inc.standard_desc || inc.description, unit_price: inc.standard_price ?? inc.unit_price ?? 0, pricing_type: inc.pricing_type || 'FIXED' },
+          { tier_name: 'PREMIUM', description: inc.premium_desc || inc.description, unit_price: inc.premium_price ?? inc.unit_price ?? 0, pricing_type: inc.pricing_type || 'FIXED' },
+        ],
+      })) : [];
+
+      const finalData = { 
+        ...data, 
+        price: finalPrice,
+        base_price: finalPrice,
+        cover_image: coverImageUrl,
+        gallery: galleryList,
+        inclusions: formattedInclusions,
+        package_inclusions: formattedInclusions,
+        food: Boolean(data.food),
+        cake: Boolean(data.cake),
+        decoration: Boolean(data.decoration),
+        music: Boolean(data.music),
+        other: Boolean(data.other)
+      };
+
       await onSubmit(finalData);
     } catch (err) {
-      console.error('Image upload failed', err);
-      alert('Failed to upload image. Please try again.');
+      console.error('Submit failed', err);
+      toast.error('Failed to save event package.');
     } finally {
       setUploading(false);
     }
   };
 
-  const onFormError = (errors) => {
-    console.error("Form validation errors:", errors);
+  const onFormError = (errs) => {
+    console.error("Form validation errors:", errs);
+    const messages = [];
+    if (errs.cafe_id) messages.push(errs.cafe_id.message);
+    if (errs.event_type) messages.push(errs.event_type.message);
+    if (errs.package_name) messages.push(errs.package_name.message);
+    if (errs.description) messages.push(errs.description.message);
+    if (errs.price) messages.push(errs.price.message);
+
+    if (messages.length > 0) {
+      toast.error(`Please fix: ${messages.join(' • ')}`);
+    } else {
+      toast.error("Please fill in all required package details in earlier steps.");
+    }
   };
 
   const steps = [
     { id: 1, title: 'Package Profile', icon: Info, description: 'Select venue cafe, title & event category' },
-    { id: 2, title: 'Capacity & Pricing', icon: Tag, description: 'Base package rate & guest limits' },
+    { id: 2, title: 'Guest Capacity', icon: Users, description: 'Set minimum & maximum guest limits' },
     { id: 3, title: 'Inclusions & Media', icon: ListChecks, description: 'Party inclusions & photo gallery' },
   ];
 
@@ -537,44 +740,40 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
               </div>
             )}
 
-            {/* STEP 2: CAPACITY & PRICING */}
+            {/* STEP 2: GUEST CAPACITY */}
             {currentStep === 2 && (
               <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
                 <div className="flex items-center gap-3 pb-4 border-b border-border/40">
                   <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-700 flex items-center justify-center font-extrabold">
-                    <Tag className="w-5 h-5" />
+                    <Users className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#2C1810]">Pricing & Guest Capacity</h3>
-                    <p className="text-xs text-text/60">Set base package price and minimum/maximum guest seating limits</p>
+                    <h3 className="text-base font-extrabold text-[#2C1810]">Guest Seating Capacity</h3>
+                    <p className="text-xs text-text/60">Configure minimum and maximum guest seating limits for this reservation</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <EventPricing />
-                  
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="minimum_persons">Min Guests *</Label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text/40">
-                            <Users className="w-4 h-4" />
-                          </div>
-                          <Input id="minimum_persons" type="number" className="pl-9" {...register('minimum_persons')} error={errors.minimum_persons?.message} placeholder="1" />
-                        </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+                  <div>
+                    <Label htmlFor="minimum_persons">Min Guests *</Label>
+                    <div className="relative mt-1">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text/40">
+                        <Users className="w-4 h-4 text-[#6F4E37]" />
                       </div>
-                      <div>
-                        <Label htmlFor="maximum_persons">Max Guests</Label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text/40">
-                            <Users className="w-4 h-4" />
-                          </div>
-                          <Input id="maximum_persons" type="number" className="pl-9" {...register('maximum_persons')} error={errors.maximum_persons?.message} placeholder="50" />
-                        </div>
-                      </div>
+                      <Input id="minimum_persons" type="number" min="1" className="pl-9 font-bold text-xs" {...register('minimum_persons')} error={errors.minimum_persons?.message} placeholder="1" />
                     </div>
-                    <p className="text-[10px] text-text/50">Leave max guests empty if seating capacity is flexible.</p>
+                    <p className="text-[10px] text-text/50 mt-1">Minimum number of guests required to book.</p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="maximum_persons">Max Guests</Label>
+                    <div className="relative mt-1">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text/40">
+                        <Users className="w-4 h-4 text-[#6F4E37]" />
+                      </div>
+                      <Input id="maximum_persons" type="number" min="1" className="pl-9 font-bold text-xs" {...register('maximum_persons')} error={errors.maximum_persons?.message} placeholder="50" />
+                    </div>
+                    <p className="text-[10px] text-text/50 mt-1">Maximum seating limit (leave empty if flexible).</p>
                   </div>
                 </div>
               </div>

@@ -18,22 +18,31 @@ import {
   Settings,
   HelpCircle,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  Armchair,
+  Megaphone
 } from 'lucide-react';
 import { SidebarItem } from './SidebarItem';
 import { SidebarGroup } from './SidebarGroup';
 import { SidebarFooter } from './SidebarFooter';
 import { useLayoutStore } from '@/store/layout.store';
+import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
 const mainMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/owner/dashboard', color: 'text-amber-600', bg: 'bg-amber-100/70' },
   { icon: Store, label: 'Cafe Management', href: '/owner/cafes', color: 'text-indigo-600', bg: 'bg-indigo-100/70' },
+  { icon: Armchair, label: 'Table Seating', href: '/owner/tables', color: 'text-amber-700', bg: 'bg-amber-100/70' },
   { icon: CalendarCheck, label: 'Bookings', href: '/owner/bookings', color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
   { icon: CalendarDays, label: 'Events', href: '/owner/events', color: 'text-cyan-600', bg: 'bg-cyan-100/70' },
+];
+
+const marketingMenuItems = [
+  { icon: Megaphone, label: 'Campaigns', href: '/owner/campaigns', color: 'text-fuchsia-600', bg: 'bg-fuchsia-100/70' },
   { icon: Users, label: 'Customers', href: '/owner/customers', color: 'text-sky-600', bg: 'bg-sky-100/70' },
   { icon: Star, label: 'Reviews', href: '/owner/reviews', color: 'text-amber-500', bg: 'bg-amber-100/70' },
+  { icon: BarChart3, label: 'Analytics', href: '/owner/analytics', color: 'text-purple-600', bg: 'bg-purple-100/70' },
 ];
 
 const financeMenuItems = [
@@ -44,7 +53,6 @@ const financeMenuItems = [
 ];
 
 const systemMenuItems = [
-  { icon: BarChart3, label: 'Analytics', href: '/owner/analytics', color: 'text-purple-600', bg: 'bg-purple-100/70' },
   { icon: Bell, label: 'Notifications', href: '/owner/notifications', color: 'text-rose-600', bg: 'bg-rose-100/70' },
   { icon: Settings, label: 'Settings', href: '/owner/settings', color: 'text-slate-600', bg: 'bg-slate-200/80' },
   { icon: HelpCircle, label: 'Help & Support', href: '/owner/support', color: 'text-teal-600', bg: 'bg-teal-100/70' },
@@ -53,6 +61,16 @@ const systemMenuItems = [
 export const Sidebar = () => {
   const isSidebarCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const isRestaurantOwner = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+
+  const visibleMainMenuItems = mainMenuItems.filter(item => !(isRestaurantOwner && item.label === 'Events'));
+  const visibleSystemMenuItems = systemMenuItems.filter(item => !(isRestaurantOwner && (item.label === 'Analytics' || item.label === 'Help & Support')));
 
   return (
     <aside
@@ -74,7 +92,9 @@ export const Sidebar = () => {
           {!isSidebarCollapsed && (
             <div className="flex flex-col justify-center">
               <span className="text-base font-black text-[#2C1810] tracking-tight truncate leading-none">Fahara</span>
-              <span className="text-[9px] font-extrabold text-[#6F4E37] uppercase tracking-widest leading-none mt-1">Venue Partner</span>
+              <span className="text-[9px] font-extrabold text-[#6F4E37] uppercase tracking-widest leading-none mt-1">
+                {isRestaurantOwner ? 'Restaurant Partner' : 'Venue Partner'}
+              </span>
             </div>
           )}
         </Link>
@@ -94,19 +114,27 @@ export const Sidebar = () => {
         
         <div className="space-y-4">
           <SidebarGroup label="Main Menu">
-            {mainMenuItems.map((item) => (
+            {visibleMainMenuItems.map((item) => (
               <SidebarItem key={item.label} {...item} />
             ))}
           </SidebarGroup>
 
-          <SidebarGroup label="Finance">
-            {financeMenuItems.map((item) => (
+          <SidebarGroup label="Marketing">
+            {marketingMenuItems.map((item) => (
               <SidebarItem key={item.label} {...item} />
             ))}
           </SidebarGroup>
+
+          {!isRestaurantOwner && (
+            <SidebarGroup label="Finance">
+              {financeMenuItems.map((item) => (
+                <SidebarItem key={item.label} {...item} />
+              ))}
+            </SidebarGroup>
+          )}
 
           <SidebarGroup label="System">
-            {systemMenuItems.map((item) => (
+            {visibleSystemMenuItems.map((item) => (
               <SidebarItem key={item.label} {...item} />
             ))}
           </SidebarGroup>

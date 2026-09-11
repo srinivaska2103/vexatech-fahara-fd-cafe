@@ -37,6 +37,7 @@ export default function EditCafePage() {
       price_per_hour: data.price ? Number(data.price) : 0,
       maximum_persons: data.capacity ? Number(data.capacity) : null,
       google_rating: data.google_rating !== "" && data.google_rating !== null && data.google_rating !== undefined ? Number(data.google_rating) : null,
+      google_reviews_link: data.google_reviews_link || "",
       provides_event_services: data.provides_event_services || false,
       allow_third_party_decoration: data.allow_third_party_decoration ?? true,
       cover_image: data.cover_image || (data.gallery && data.gallery.length > 0 ? (data.gallery[0].file_url || data.gallery[0].url || (typeof data.gallery[0] === 'string' ? data.gallery[0] : "")) : ""),
@@ -63,20 +64,33 @@ export default function EditCafePage() {
     );
   }
 
+  if (!cafe) {
+    return (
+      <div className="p-12 text-center space-y-4 max-w-lg mx-auto bg-white rounded-3xl border border-border/60 shadow-xs mt-10">
+        <Store className="w-12 h-12 text-[#6F4E37] opacity-40 mx-auto" />
+        <h3 className="text-lg font-extrabold text-[#2C1810]">Venue Not Found</h3>
+        <p className="text-xs text-text/60">The requested cafe venue does not exist or you do not have permission to edit it.</p>
+        <Button onClick={() => router.push('/owner/cafes')}>Back to Cafes</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
       
       {/* Modern Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5 z-10">
-          <BackButton href={`/owner/cafes/${id}`} label="Back to Details" />
+      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-4 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 z-10 min-w-0">
+          <div className="shrink-0">
+            <BackButton href={`/owner/cafes/${id}`} label="Back to Details" />
+          </div>
 
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-lg sm:text-2xl font-extrabold text-[#2C1810] tracking-tight truncate max-w-full">
                 Edit {cafe?.name || 'Cafe Venue'}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold shrink-0">
                 WIZARD
               </span>
             </div>

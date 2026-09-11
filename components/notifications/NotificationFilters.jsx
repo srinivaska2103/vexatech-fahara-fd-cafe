@@ -1,54 +1,61 @@
 import React from 'react';
 import { Filter } from 'lucide-react';
+import { CustomSelect } from '../ui/CustomSelect';
 
 export const NotificationFilters = ({ filters, setFilters }) => {
+  const statusOptions = [
+    { label: 'All Statuses', value: '' },
+    { label: 'Unread', value: 'UNREAD' },
+    { label: 'Read', value: 'READ' },
+  ];
+
+  const priorityOptions = [
+    { label: 'All Priorities', value: '' },
+    { label: 'High Priority', value: 'HIGH' },
+    { label: 'Medium Priority', value: 'MEDIUM' },
+    { label: 'Low Priority', value: 'LOW' },
+  ];
+
+  const typeOptions = [
+    { label: 'All Types', value: '' },
+    { label: 'Booking', value: 'BOOKING' },
+    { label: 'Events', value: 'EVENT' },
+    { label: 'Payments', value: 'PAYMENT' },
+    { label: 'Reviews', value: 'REVIEW' },
+    { label: 'System', value: 'SYSTEM' },
+  ];
+
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto custom-scrollbar pb-1 sm:pb-0 w-full sm:w-auto">
       {/* Read Status Filter */}
-      <div className="relative">
-        <select
-          value={filters.status || ''}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          className="appearance-none bg-white border border-border rounded-xl pl-10 pr-8 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
-        >
-          <option value="">All Statuses</option>
-          <option value="UNREAD">Unread</option>
-          <option value="READ">Read</option>
-        </select>
-        <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-      </div>
+      <CustomSelect
+        options={statusOptions}
+        value={filters.status || ''}
+        onChange={(val) => setFilters({ ...filters, status: val })}
+        placeholder="All Statuses"
+        icon={Filter}
+        className="w-32 sm:w-36 shrink-0 text-xs"
+      />
 
       {/* Priority Filter */}
-      <div className="relative">
-        <select
-          value={filters.priority || ''}
-          onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
-          className="appearance-none bg-white border border-border rounded-xl pl-10 pr-8 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
-        >
-          <option value="">All Priorities</option>
-          <option value="HIGH">High Priority</option>
-          <option value="MEDIUM">Medium Priority</option>
-          <option value="LOW">Low Priority</option>
-        </select>
-        <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-      </div>
+      <CustomSelect
+        options={priorityOptions}
+        value={filters.priority || ''}
+        onChange={(val) => setFilters({ ...filters, priority: val })}
+        placeholder="All Priorities"
+        icon={Filter}
+        className="w-34 sm:w-38 shrink-0 text-xs"
+      />
 
       {/* Type Filter */}
-      <div className="relative">
-        <select
-          value={filters.type || ''}
-          onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-          className="appearance-none bg-white border border-border rounded-xl pl-10 pr-8 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
-        >
-          <option value="">All Types</option>
-          <option value="BOOKING">Booking</option>
-          <option value="EVENT">Events</option>
-          <option value="PAYMENT">Payments</option>
-          <option value="REVIEW">Reviews</option>
-          <option value="SYSTEM">System</option>
-        </select>
-        <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
-      </div>
+      <CustomSelect
+        options={typeOptions}
+        value={filters.type || ''}
+        onChange={(val) => setFilters({ ...filters, type: val })}
+        placeholder="All Types"
+        icon={Filter}
+        className="w-32 sm:w-36 shrink-0 text-xs"
+      />
     </div>
   );
 };

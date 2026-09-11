@@ -22,12 +22,25 @@ import Link from 'next/link';
 import { BookingTable } from '@/components/bookings/BookingTable';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
 import { useBookings, useApproveBooking, useRejectBooking, useCompleteBooking } from '@/hooks/booking';
+import { useCafes } from '@/hooks/cafe';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function BookingsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const confirm = useConfirm();
+  const userRole = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const { data: cafesData } = useCafes();
+  const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
+
+  const isRestaurant = 
+    userRole === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(userRole || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    cafeList.some(c => (c.category || '').toLowerCase().includes('restaurant'));
   
   const { data: bookingsData, isLoading, refetch } = useBookings({ 
     search, 
@@ -56,7 +69,11 @@ export default function BookingsPage() {
   const totalCount = rawBookings.length;
   const pendingCount = rawBookings.filter(b => (b.status || b.booking_status) === 'PENDING').length;
   const confirmedCount = rawBookings.filter(b => (b.status || b.booking_status) === 'CONFIRMED').length;
-  const totalRevenue = rawBookings.reduce((sum, b) => sum + (Number(b.amount || b.total_price || b.total) || 0), 0);
+  const totalRevenue = rawBookings.reduce((sum, b) => {
+    let rawAmount = Number(b.cafe_amount || b.subtotal || b.amount || b.total || 0);
+    if (b.event_service_id) rawAmount -= Number(b.event_service_amount || 0);
+    return sum + Math.max(0, rawAmount);
+  }, 0).toFixed(2);
 
   const handleApprove = async (booking) => {
     const ok = await confirm({
@@ -200,8 +217,8 @@ export default function BookingsPage() {
         </div>
       </div>
 
-      {/* 4 Dynamic Reservation Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      {/* Dynamic Reservation Metric Cards */}
+      <div className={`grid grid-cols-2 ${isRestaurant ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-3.5 sm:gap-4`}>
         
         {/* Total Reservations */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
@@ -239,17 +256,19 @@ export default function BookingsPage() {
           <p className="text-[10px] text-emerald-700/80 font-bold">Approved reservations</p>
         </div>
 
-        {/* Total Revenue */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Total Revenue</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-bold">
-              <IndianRupee className="w-4 h-4" />
+        {/* Total Revenue (Hidden for Restaurant Owners) */}
+        {!isRestaurant && (
+          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Total Revenue</span>
+              <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-bold">
+                <IndianRupee className="w-4 h-4" />
+              </div>
             </div>
+            <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{totalRevenue}</p>
+            <p className="text-[10px] text-text/50 font-medium">Recorded booking value</p>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{totalRevenue}</p>
-          <p className="text-[10px] text-text/50 font-medium">Recorded booking value</p>
-        </div>
+        )}
 
       </div>
 

@@ -13,7 +13,6 @@ export const EventTable = ({ events, onDelete }) => {
               <th className="px-6 py-4 font-medium">Package Name</th>
               <th className="px-6 py-4 font-medium">Cafe</th>
               <th className="px-6 py-4 font-medium">Category</th>
-              <th className="px-6 py-4 font-medium">Price</th>
               <th className="px-6 py-4 font-medium">Status</th>
               <th className="px-6 py-4 font-medium text-right">Actions</th>
             </tr>
@@ -27,7 +26,6 @@ export const EventTable = ({ events, onDelete }) => {
                 </td>
                 <td className="px-6 py-4 text-text/80">{event.cafe?.name}</td>
                 <td className="px-6 py-4 text-text/80">{event.event_type}</td>
-                <td className="px-6 py-4 font-medium text-text">${event.price}</td>
                 <td className="px-6 py-4">
                   <EventStatusBadge status={event.status || 'PUBLISHED'} />
                 </td>

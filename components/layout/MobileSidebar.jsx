@@ -18,7 +18,9 @@ import {
   HelpCircle, 
   LogOut, 
   X,
-  Sparkles
+  Sparkles,
+  Armchair,
+  Megaphone
 } from 'lucide-react';
 import { useLayoutStore } from '@/store/layout.store';
 import { useAuthStore } from '@/store/auth.store';
@@ -43,10 +45,21 @@ const menuTabs = [
     label: 'Cafe Management',
     href: '/owner/cafes',
     icon: Store,
-    activeBg: 'bg-gradient-to-br from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white shadow-md shadow-[#6F4E37]/30 border-[#DDB892]/40',
+    activeBg: 'bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-800 text-white shadow-md shadow-indigo-600/30 border-indigo-400/40',
+    inactiveBg: 'bg-indigo-500/10 text-indigo-900 border-indigo-500/20 hover:bg-indigo-500/20',
+    iconColor: 'text-indigo-600',
+    activeIconColor: 'text-indigo-200'
+  },
+  {
+    id: 'tables',
+    category: 'main',
+    label: 'Table Management',
+    href: '/owner/tables',
+    icon: Armchair,
+    activeBg: 'bg-gradient-to-br from-[#6F4E37] via-[#A67B5B] to-[#DDB892] text-white shadow-md shadow-[#6F4E37]/30 border-[#DDB892]/40',
     inactiveBg: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#6F4E37]/20 hover:bg-[#6F4E37]/20',
     iconColor: 'text-[#6F4E37]',
-    activeIconColor: 'text-amber-200'
+    activeIconColor: 'text-[#DDB892]'
   },
   {
     id: 'bookings',
@@ -72,7 +85,7 @@ const menuTabs = [
   },
   {
     id: 'customers',
-    category: 'main',
+    category: 'marketing',
     label: 'Customers',
     href: '/owner/customers',
     icon: Users,
@@ -83,7 +96,7 @@ const menuTabs = [
   },
   {
     id: 'reviews',
-    category: 'main',
+    category: 'marketing',
     label: 'Reviews',
     href: '/owner/reviews',
     icon: Star,
@@ -91,6 +104,17 @@ const menuTabs = [
     inactiveBg: 'bg-yellow-500/10 text-yellow-900 border-yellow-500/20 hover:bg-yellow-500/20',
     iconColor: 'text-amber-500',
     activeIconColor: 'text-yellow-200'
+  },
+  {
+    id: 'campaigns',
+    category: 'marketing',
+    label: 'Campaigns',
+    href: '/owner/campaigns',
+    icon: Megaphone,
+    activeBg: 'bg-gradient-to-br from-fuchsia-600 via-fuchsia-700 to-pink-800 text-white shadow-md shadow-fuchsia-600/30 border-fuchsia-400/40',
+    inactiveBg: 'bg-fuchsia-500/10 text-fuchsia-900 border-fuchsia-500/20 hover:bg-fuchsia-500/20',
+    iconColor: 'text-fuchsia-600',
+    activeIconColor: 'text-fuchsia-200'
   },
   {
     id: 'payments',
@@ -139,7 +163,7 @@ const menuTabs = [
   },
   {
     id: 'analytics',
-    category: 'system',
+    category: 'marketing',
     label: 'Analytics',
     href: '/owner/analytics',
     icon: BarChart3,
@@ -207,7 +231,20 @@ export const MobileSidebar = () => {
     router.push('/owner/login');
   };
 
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const isRestaurantOwner = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+
   const filteredTabs = menuTabs.filter((tab) => {
+    if (isRestaurantOwner) {
+      if (tab.id === 'events' || tab.id === 'analytics' || tab.id === 'support' || tab.category === 'finance') {
+        return false;
+      }
+    }
     if (activeCategory === 'all') return true;
     return tab.category === activeCategory;
   });

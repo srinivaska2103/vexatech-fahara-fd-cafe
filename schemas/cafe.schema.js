@@ -59,6 +59,7 @@ export const cafeSchema = z.object({
   price: numberOrNull,
   capacity: numberOrNull,
   google_rating: numberOrNull,
+  google_reviews_link: stringOrNull,
   provides_event_services: z.boolean().default(false),
   allow_third_party_decoration: z.boolean().default(true),
   discounts: z.any().optional(),

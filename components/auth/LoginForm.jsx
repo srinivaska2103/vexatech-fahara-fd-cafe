@@ -11,13 +11,14 @@ import Link from 'next/link';
 import { useAuthStore } from '@/store/auth.store';
 import { useRoleRedirect } from '@/hooks/useRoleRedirect';
 import { motion } from 'framer-motion';
-import { Loader2, LogIn } from 'lucide-react';
+import { Loader2, LogIn, Coffee, Utensils } from 'lucide-react';
 
 export const LoginForm = ({ 
   role, 
   registerLink = "/owner/signup", 
   forgotPasswordLink = "/owner/forgotpassword" 
 }) => {
+  const [selectedRole, setSelectedRole] = React.useState('CAFE_OWNER');
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
   });
@@ -45,6 +46,37 @@ export const LoginForm = ({
       onSubmit={handleSubmit(onSubmit)} 
       className="space-y-4 text-[#2C1810]"
     >
+      {/* Account Type Selection */}
+      <div className="space-y-1">
+        <Label className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Account Type</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setSelectedRole('CAFE_OWNER')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
+              selectedRole === 'CAFE_OWNER'
+                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
+                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
+            }`}
+          >
+            <Coffee className={`w-4 h-4 ${selectedRole === 'CAFE_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
+            <span>Cafe Owner</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedRole('RESTAURANT_OWNER')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
+              selectedRole === 'RESTAURANT_OWNER'
+                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
+                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
+            }`}
+          >
+            <Utensils className={`w-4 h-4 ${selectedRole === 'RESTAURANT_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
+            <span>Restaurant Owner</span>
+          </button>
+        </div>
+      </div>
+
       <div className="space-y-1.5">
         <Label htmlFor="email" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Email Address</Label>
         <Input
@@ -88,7 +120,7 @@ export const LoginForm = ({
         ) : (
           <>
             <LogIn className="w-4 h-4 text-white" />
-            <span>Sign in to Dashboard</span>
+            <span>Sign in to {selectedRole === 'RESTAURANT_OWNER' ? 'Restaurant' : 'Cafe'} Dashboard</span>
           </>
         )}
       </motion.button>
