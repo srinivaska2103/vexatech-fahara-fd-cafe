@@ -123,19 +123,24 @@ export const BookingTable = ({ bookings = [], onApprove, onReject, onComplete })
                   <td className="px-6 py-4">
                     {(() => {
                       let cafeNetSplit = 0;
-                      if (booking.amount !== undefined && booking.amount !== null) {
-                        cafeNetSplit = Math.max(0, Number(booking.amount));
+                      let itemizedCafeTotal = 0;
+                      if (Array.isArray(booking.booking_items) && booking.booking_items.length > 0) {
+                        itemizedCafeTotal = booking.booking_items
+                          .filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'PACKAGE' || it.item_type === 'PACKAGE_BASE')
+                          .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                      }
+                      
+                      if (booking.amount !== undefined && booking.amount !== null && Number(booking.amount) > 0) {
+                        cafeNetSplit = Math.max(Number(booking.amount), itemizedCafeTotal);
                       } else {
                         let totalCafeCharges = Number(booking.cafe_amount || 0);
-                        if (totalCafeCharges === 0 && Array.isArray(booking.booking_items)) {
-                          totalCafeCharges = booking.booking_items
-                            .filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'CAFE_INCLUSION')
-                            .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                        if (totalCafeCharges === 0 && itemizedCafeTotal > 0) {
+                          totalCafeCharges = itemizedCafeTotal;
                         }
-                        if (totalCafeCharges === 0 && booking.subtotal) {
-                          totalCafeCharges = Math.max(0, Number(booking.subtotal || 0) - Number(booking.event_service_amount || 0));
+                        if (totalCafeCharges === 0 && (booking.total || booking.subtotal)) {
+                          totalCafeCharges = Math.max(0, Number(booking.total || booking.subtotal || 0) - Number(booking.event_service_amount || 0));
                         }
-                        cafeNetSplit = Math.max(0, totalCafeCharges);
+                        cafeNetSplit = Math.max(0, totalCafeCharges > 0 ? totalCafeCharges : Number(booking.total || booking.subtotal || 0));
                       }
 
                       const isFreeReservation = cafeNetSplit === 0;

@@ -70,8 +70,15 @@ export default function BookingsPage() {
   const pendingCount = rawBookings.filter(b => (b.status || b.booking_status) === 'PENDING').length;
   const confirmedCount = rawBookings.filter(b => (b.status || b.booking_status) === 'CONFIRMED').length;
   const totalRevenue = rawBookings.reduce((sum, b) => {
-    let rawAmount = Number(b.cafe_amount || b.subtotal || b.amount || b.total || 0);
-    if (b.event_service_id) rawAmount -= Number(b.event_service_amount || 0);
+    let rawAmount = 0;
+    if (b.amount !== undefined && b.amount !== null && Number(b.amount) > 0) {
+      rawAmount = Number(b.amount);
+    } else {
+      rawAmount = Number(b.cafe_amount || b.subtotal || b.total || 0);
+      if (b.event_service_id && Number(b.event_service_amount || 0) > 0) {
+        rawAmount -= Number(b.event_service_amount || 0);
+      }
+    }
     return sum + Math.max(0, rawAmount);
   }, 0).toFixed(2);
 

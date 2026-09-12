@@ -274,12 +274,14 @@ export default function CafeDetailsPage() {
                         <p className="text-[10px] text-text/50 font-bold uppercase">Max Capacity</p>
                         <p className="text-sm font-black text-[#2C1810] mt-0.5">{cafe.maximum_persons || 'N/A'} Guests</p>
                       </div>
-                      <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
-                        <p className="text-[10px] text-text/50 font-bold uppercase">Hourly Rate</p>
-                        <p className="text-sm font-black text-[#6F4E37] mt-0.5">
-                          {Number(cafe.price_per_hour) > 0 ? `₹${cafe.price_per_hour}/hr` : '-'}
-                        </p>
-                      </div>
+                      {!isRestaurant && (
+                        <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
+                          <p className="text-[10px] text-text/50 font-bold uppercase">Hourly Rate</p>
+                          <p className="text-sm font-black text-[#6F4E37] mt-0.5">
+                            {Number(cafe.price_per_hour) > 0 ? `₹${cafe.price_per_hour}/hr` : '-'}
+                          </p>
+                        </div>
+                      )}
                       <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                         <p className="text-[10px] text-text/50 font-bold uppercase">Location City</p>
                         <p className="text-sm font-black text-[#2C1810] mt-0.5 truncate">{cafe.city || 'N/A'}</p>

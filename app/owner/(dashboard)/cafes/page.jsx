@@ -69,8 +69,13 @@ export default function CafesPage() {
   const activeVenues = cafes.filter(c => c.status === 'ACTIVE' || c.status === 'APPROVED' || !c.status).length;
   const pendingVenues = cafes.filter(c => c.status === 'PENDING' || c.status === 'UNDER_REVIEW').length;
   
-  const avgHourlyRate = cafes.length > 0 
-    ? Math.round(cafes.reduce((acc, c) => acc + (Number(c.price_per_hour) || 0), 0) / cafes.length)
+  const nonRestaurantCafes = cafes.filter(c => {
+    const catStr = `${c.category || ''} ${c.name || ''}`.toLowerCase();
+    return !catStr.includes('restaur') && !catStr.includes('restur');
+  });
+
+  const avgHourlyRate = nonRestaurantCafes.length > 0 
+    ? Math.round(nonRestaurantCafes.reduce((acc, c) => acc + (Number(c.price_per_hour) || 0), 0) / nonRestaurantCafes.length)
     : 0;
 
   const statusTabs = [
@@ -123,7 +128,7 @@ export default function CafesPage() {
         </div>
       </div>
 
-      {/* 4 Interactive Venue Stat Cards */}
+      {/* Interactive Venue Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold shrink-0">
@@ -155,15 +160,27 @@ export default function CafesPage() {
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-extrabold shrink-0">
-            <IndianRupee className="w-5 h-5" />
+        {nonRestaurantCafes.length > 0 ? (
+          <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-extrabold shrink-0">
+              <IndianRupee className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Avg Hourly Rate</p>
+              <h3 className="text-lg font-black text-[#2C1810]">₹{avgHourlyRate}/hr</h3>
+            </div>
           </div>
-          <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Avg Hourly Rate</p>
-            <h3 className="text-lg font-black text-[#2C1810]">₹{avgHourlyRate}/hr</h3>
+        ) : (
+          <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-extrabold shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Pricing Mode</p>
+              <h3 className="text-sm font-black text-emerald-700">Table Dining (Free)</h3>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Modern Filter Toolbar */}

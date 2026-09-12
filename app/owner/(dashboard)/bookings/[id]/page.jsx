@@ -90,17 +90,17 @@ export default function BookingDetailsPage() {
   const allBookingItems = bookingData.booking_items || bookingData.bookingItems || [];
   
   // Sum of itemized CAFE inclusions / package items / cafe charges attached to this booking
-  const cafeItems = allBookingItems.filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'PACKAGE');
+  const cafeItems = allBookingItems.filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'PACKAGE' || it.item_type === 'PACKAGE_BASE');
   const itemizedCafeTotal = cafeItems.reduce((sum, it) => sum + Number(it.amount || (Number(it.unit_price || 0) * (it.pricing_type === 'PER_GUEST' ? Number(guests || 1) : Number(it.quantity || 1)))), 0);
 
   // Stored subtotal / cafe_amount / subtotal from booking record
   const storedCafeAmount = Number(bookingData.cafe_amount || 0);
   const storedFoodAmount = Number(bookingData.food_amount || 0);
-  const storedSubtotal = Number(bookingData.subtotal || bookingData.total || 0);
+  const storedSubtotal = Number(bookingData.total || bookingData.subtotal || 0);
 
   let amount = 0;
   if (itemizedCafeTotal > 0) {
-    amount = itemizedCafeTotal;
+    amount = Math.max(itemizedCafeTotal, storedCafeAmount);
   } else if (storedCafeAmount > 0 || storedFoodAmount > 0) {
     amount = storedCafeAmount + storedFoodAmount;
   } else {
