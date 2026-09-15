@@ -20,18 +20,32 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { BookingTable } from '@/components/bookings/BookingTable';
-import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
+import { useRouter } from 'next/navigation';
 import { useBookings, useApproveBooking, useRejectBooking, useCompleteBooking } from '@/hooks/booking';
 import { useCafes } from '@/hooks/cafe';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/store/auth.store';
+import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
 
 export default function BookingsPage() {
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const confirm = useConfirm();
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
+
+  const isWalkingCafe = 
+    userRole === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(userRole || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
+  React.useEffect(() => {
+    if (isWalkingCafe) {
+      router.push('/owner/dashboard');
+    }
+  }, [isWalkingCafe, router]);
   const { data: cafesData } = useCafes();
   const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
 

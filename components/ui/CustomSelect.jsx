@@ -75,7 +75,7 @@ export const CustomSelect = ({
             animate={{ opacity: 1, y: 4, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-2xl bg-white border border-[#DDB892] shadow-2xl p-1.5 custom-scrollbar text-[#2C1810]"
+            className="absolute left-0 min-w-[150px] w-full z-50 mt-1.5 max-h-60 overflow-y-auto rounded-2xl bg-white border border-[#DDB892] shadow-xl p-1.5 custom-scrollbar text-[#2C1810]"
           >
             {options.map((opt) => {
               const optValue = getOptionValue(opt);

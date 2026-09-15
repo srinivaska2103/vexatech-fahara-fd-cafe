@@ -19,6 +19,7 @@ import { BlockCustomerDialog } from '@/components/customers/BlockCustomerDialog'
 import { Button } from '@/components/ui/Button';
 import { useConfirm } from '@/components/ui/ConfirmModal';
 import { ChevronLeft } from 'lucide-react';
+import { useAuthStore } from '@/store/auth.store';
 import { motion } from 'framer-motion';
 
 export default function CustomerDetailsPage() {
@@ -26,6 +27,15 @@ export default function CustomerDetailsPage() {
   const router = useRouter();
   const confirm = useConfirm();
 
+
+  const userRole = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+
+  const isWalkingCafe = 
+    userRole === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(userRole || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
 
   // Queries
   const { data: customerData, isLoading: loadingCustomer, isError: customerError } = useCustomer(id);
@@ -105,6 +115,7 @@ export default function CustomerDetailsPage() {
           payments={paymentsData?.data || []}
           reviews={reviewsData?.data || []}
           notes={notes}
+          isWalkingCafe={isWalkingCafe}
           handlers={{
             onToggleVip: handleToggleVip,
             isTogglingVip: toggleVipMutation.isPending,

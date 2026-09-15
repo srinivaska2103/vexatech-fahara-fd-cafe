@@ -6,9 +6,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { exportReportSchema } from '@/schemas/payment.schema';
 import { cn } from '@/utils/cn';
+import { CustomSelect } from '../ui/CustomSelect';
 
 export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) => {
-  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, watch, setValue, formState: { errors }, reset } = useForm({
     resolver: zodResolver(exportReportSchema),
     defaultValues: {
       format: 'CSV',
@@ -16,6 +17,7 @@ export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) 
     }
   });
 
+  const formatValue = watch('format');
   const dateRange = watch('date_range');
 
   const onSubmit = (data) => {
@@ -60,21 +62,29 @@ export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) 
               <div className="space-y-4 mb-8">
                 <div>
                   <label className="block text-sm font-medium text-text mb-2">Format</label>
-                  <select {...register('format')} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
-                    <option value="CSV">CSV (Spreadsheet)</option>
-                    <option value="EXCEL">Excel (.xlsx)</option>
-                    <option value="PDF">PDF Document</option>
-                  </select>
+                  <CustomSelect
+                    value={formatValue}
+                    onChange={(val) => setValue('format', val)}
+                    options={[
+                      { value: 'CSV', label: 'CSV (Spreadsheet)' },
+                      { value: 'EXCEL', label: 'Excel (.xlsx)' },
+                      { value: 'PDF', label: 'PDF Document' }
+                    ]}
+                  />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-text mb-2">Date Range</label>
-                  <select {...register('date_range')} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
-                    <option value="TODAY">Today</option>
-                    <option value="THIS_WEEK">This Week</option>
-                    <option value="THIS_MONTH">This Month</option>
-                    <option value="CUSTOM">Custom Range</option>
-                  </select>
+                  <CustomSelect
+                    value={dateRange}
+                    onChange={(val) => setValue('date_range', val)}
+                    options={[
+                      { value: 'TODAY', label: 'Today' },
+                      { value: 'THIS_WEEK', label: 'This Week' },
+                      { value: 'THIS_MONTH', label: 'This Month' },
+                      { value: 'CUSTOM', label: 'Custom Range' }
+                    ]}
+                  />
                 </div>
 
                 {dateRange === 'CUSTOM' && (

@@ -10,20 +10,25 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: authService.login,
-    onSuccess: (data) => {
-      // Prevent non-owners from logging into the Cafe/Restaurant portal
-      if (data.user.role !== 'CAFE_OWNER' && data.user.role !== 'RESTAURANT_OWNER' && data.user.role !== 'ADMIN') {
-        toast.error('Access denied. You do not have owner permissions.');
+    onSuccess: (data, variables) => {
+      const userRole = data?.user?.role;
+      const selectedRole = variables?.expectedRole;
+
+      // Prevent non-owners or wrong role selections from logging in
+      if (
+        (userRole !== 'CAFE_OWNER' && userRole !== 'RESTAURANT_OWNER' && userRole !== 'WALKING_CAFE_OWNER' && userRole !== 'ADMIN') ||
+        (selectedRole && selectedRole !== 'PARTNER' && userRole !== 'ADMIN' && selectedRole !== userRole)
+      ) {
+        toast.error("You don't have permission to login in this portal");
         return;
       }
       
-      // Assuming backend returns { accessToken, refreshToken, user }
       setAuth(data.accessToken, data.refreshToken, data.user, data.user.role);
       toast.success('Successfully logged in');
       redirectByRole(data.user.role);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
+      toast.error(error.response?.data?.message || "You don't have permission to login in this portal");
     },
   });
 };

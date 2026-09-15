@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/auth.store';
 import { useCafe } from '@/hooks/cafe';
 import { 
   useTables, 
@@ -33,9 +34,24 @@ import {
 import { AnimatePresence } from 'framer-motion';
 
 export default function CafeSpecificTablesPage() {
+  const router = useRouter();
   const params = useParams();
   const cafeId = params?.id;
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
   const confirm = useConfirm();
+
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
+  React.useEffect(() => {
+    if (isWalkingCafe) {
+      router.push('/owner/dashboard');
+    }
+  }, [isWalkingCafe, router]);
 
   const [viewMode, setViewMode] = useState('grid');
   const [search, setSearch] = useState('');

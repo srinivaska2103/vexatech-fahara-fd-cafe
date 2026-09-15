@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
 import { CafeStatusBadge } from '@/components/cafes/CafeStatusBadge';
 import { MapPreview } from '@/components/maps/MapPreview';
+import { useAuthStore } from '@/store/auth.store';
 import { BackButton } from '@/components/ui/BackButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
@@ -59,8 +60,32 @@ export default function CafeDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
   const { data: cafeData, isLoading, isPending } = useCafe(id);
   const cafe = cafeData?.data || cafeData;
+
+  const categoryStr = `${cafe?.category || ''} ${cafe?.name || ''}`.toLowerCase();
+  const isRestaurant = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    user?.user_type === 'RESTAURANT_OWNER' ||
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.user_type || '').toUpperCase().includes('RESTAURANT') ||
+    categoryStr.includes('restaur') || 
+    categoryStr.includes('restur');
+
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    user?.user_type === 'WALKING_CAFE_OWNER' ||
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING') ||
+    String(user?.user_type || '').toUpperCase().includes('WALKING') ||
+    Boolean(cafe?.is_walking_cafe) ||
+    cafe?.category === 'Walking Cafe' ||
+    categoryStr.includes('walk');
 
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'amenities' | 'hours' | 'gallery' | 'map'
 
@@ -117,43 +142,50 @@ export default function CafeDetailsPage() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
       
       {/* Top Bar Header with Navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3">
+        <div>
           <BackButton href="/owner/cafes" label="Back to Cafes" />
-          <div>
-            <div className="flex items-center gap-2">
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">{cafe.name}</h1>
               <CafeStatusBadge status={cafe.status} />
             </div>
             <p className="text-xs text-text/60 flex items-center gap-1.5 mt-0.5">
-              <MapPin className="w-3.5 h-3.5 text-[#6F4E37]" />
+              <MapPin className="w-3.5 h-3.5 text-[#6F4E37] shrink-0" />
               <span>{cafe.address ? `${cafe.address}, ${cafe.city || ''} ${cafe.pincode || ''}` : (cafe.city || 'Address N/A')}</span>
             </p>
           </div>
-        </div>
 
-        {/* Header Action Controls */}
-        <div className="flex items-center gap-2">
-          <Link href={`/owner/cafes/${id}/tables`}>
-            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
-              <Layers className="w-4 h-4 text-white" />
-              <span>Manage Tables</span>
-            </Button>
-          </Link>
+          {/* Header Action Controls */}
+          <div className="grid grid-cols-3 sm:flex sm:items-center gap-2">
+            {!isWalkingCafe && (
+              <>
+                <Link href={`/owner/cafes/${id}/tables`} className="col-span-1">
+                  <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-[11px] sm:text-xs font-extrabold shadow-xs hover:shadow-md flex items-center justify-center gap-1.5 transition-all">
+                    <Layers className="w-4 h-4 text-white shrink-0" />
+                    <span className="whitespace-nowrap">Manage Tables</span>
+                  </Button>
+                </Link>
 
-          <Link href={`/owner/bookings?cafe_id=${cafe.id}`}>
-            <Button className="py-2.5 px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-1.5 transition-all">
-              <Calendar className="w-4 h-4 text-[#6F4E37]" />
-              <span>View Bookings</span>
-            </Button>
-          </Link>
+                <Link href={`/owner/bookings?cafe_id=${cafe.id}`} className="col-span-1">
+                  <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-[11px] sm:text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all">
+                    <Calendar className="w-4 h-4 text-[#6F4E37] shrink-0" />
+                    <span className="whitespace-nowrap">View Bookings</span>
+                  </Button>
+                </Link>
+              </>
+            )}
 
-          <Link href={`/owner/cafes/${id}/edit`}>
-            <Button className="py-2.5 px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-1.5 transition-all">
-              <Edit2 className="w-4 h-4 text-[#6F4E37]" />
-              <span>Edit Details</span>
-            </Button>
-          </Link>
+            <Link href={`/owner/cafes/${id}/edit`} className={!isWalkingCafe ? "col-span-1" : "col-span-3 sm:col-span-1"}>
+              <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-[11px] sm:text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all">
+                <Edit2 className="w-4 h-4 text-[#6F4E37] shrink-0" />
+                <span className="whitespace-nowrap">Edit Details</span>
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -183,18 +215,18 @@ export default function CafeDetailsPage() {
 
           {/* Quick Metrics Bar Overlay */}
           <div className="flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/40 shadow-md text-[#2C1810]">
-            <div className="px-3 border-r border-border/40">
-              <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Hourly Rate</p>
-              <p className="text-sm font-black text-[#6F4E37]">
-                {Number(cafe.price_per_hour) > 0 ? (
-                  <>₹{cafe.price_per_hour}<span className="text-[10px] font-normal text-text/50">/hr</span></>
-                ) : (
-                  '-'
-                )}
-              </p>
-            </div>
+            {!isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
+              <div className="px-3 border-r border-border/40">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Hourly Rate</p>
+                <p className="text-sm font-black text-[#6F4E37]">
+                  ₹{cafe.price_per_hour}<span className="text-[10px] font-normal text-text/50">/hr</span>
+                </p>
+              </div>
+            )}
             <div className="px-3">
-              <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Max Capacity</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">
+                {isWalkingCafe ? 'Seating Capacity' : 'Max Capacity'}
+              </p>
               <p className="text-sm font-black text-[#2C1810]">{cafe.maximum_persons || 'N/A'} Guests</p>
             </div>
           </div>
@@ -274,11 +306,11 @@ export default function CafeDetailsPage() {
                         <p className="text-[10px] text-text/50 font-bold uppercase">Max Capacity</p>
                         <p className="text-sm font-black text-[#2C1810] mt-0.5">{cafe.maximum_persons || 'N/A'} Guests</p>
                       </div>
-                      {!isRestaurant && (
+                      {!isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
                         <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                           <p className="text-[10px] text-text/50 font-bold uppercase">Hourly Rate</p>
                           <p className="text-sm font-black text-[#6F4E37] mt-0.5">
-                            {Number(cafe.price_per_hour) > 0 ? `₹${cafe.price_per_hour}/hr` : '-'}
+                            ₹{cafe.price_per_hour}/hr
                           </p>
                         </div>
                       )}
@@ -528,15 +560,17 @@ export default function CafeDetailsPage() {
             </h4>
 
             <div className="space-y-2.5">
-              <Link href={`/owner/cafes/${id}/tables`} className="block">
-                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">
-                  <span className="flex items-center gap-2">
-                    <Layers className="w-4 h-4" />
-                    <span>Manage Seating Tables</span>
-                  </span>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              {!isWalkingCafe && (
+                <Link href={`/owner/cafes/${id}/tables`} className="block">
+                  <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">
+                    <span className="flex items-center gap-2">
+                      <Layers className="w-4 h-4" />
+                      <span>Manage Seating Tables</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
 
               <Link href={`/owner/cafes/${id}/edit`} className="block">
                 <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
@@ -548,15 +582,17 @@ export default function CafeDetailsPage() {
                 </Button>
               </Link>
 
-              <Link href={`/owner/bookings?cafe_id=${cafe.id}`} className="block">
-                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
-                  <span className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#6F4E37]" />
-                    <span>Manage Bookings</span>
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-[#6F4E37]" />
-                </Button>
-              </Link>
+              {!isWalkingCafe && (
+                <Link href={`/owner/bookings?cafe_id=${cafe.id}`} className="block">
+                  <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
+                    <span className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-[#6F4E37]" />
+                      <span>Manage Bookings</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-[#6F4E37]" />
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

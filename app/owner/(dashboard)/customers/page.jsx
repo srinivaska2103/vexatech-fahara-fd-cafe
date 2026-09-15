@@ -43,6 +43,15 @@ export default function CustomersPage() {
     String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
     cafeList.some(c => (c.category || '').toLowerCase().includes('restaurant'));
 
+  const isWalkingCafe = 
+    userRole === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(userRole || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING') ||
+    cafeList.some(c => c.is_walking_cafe === true || (c.category || '').toLowerCase().includes('walking'));
+
+  const hideMonetaryStats = isRestaurant || isWalkingCafe;
+
   const { data: customerRes, isLoading, isError, error, refetch } = useCustomers({ search });
   const rawCustomers = Array.isArray(customerRes?.data) ? customerRes.data : (Array.isArray(customerRes) ? customerRes : []);
 
@@ -146,7 +155,7 @@ export default function CustomersPage() {
       </div>
 
       {/* Dynamic Customer Metric Cards */}
-      <div className={`grid grid-cols-2 ${isRestaurant ? 'lg:grid-cols-2 max-w-2xl' : 'lg:grid-cols-4'} gap-3.5 sm:gap-4`}>
+      <div className={`grid grid-cols-2 ${hideMonetaryStats ? 'lg:grid-cols-2 max-w-2xl' : 'lg:grid-cols-4'} gap-3.5 sm:gap-4`}>
         
         {/* Total Diners */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
@@ -163,17 +172,17 @@ export default function CustomersPage() {
         {/* Repeat Regulars */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Repeat Regulars</span>
+            <span className="text-[10px] sm:text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Repeat Visitors</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-bold">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
           <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{repeatCount}</p>
-          <p className="text-[10px] text-emerald-700/80 font-bold">Multiple venue bookings</p>
+          <p className="text-[10px] text-emerald-700/80 font-bold">Multiple cafe visits</p>
         </div>
 
-        {/* Total Diner Spend (LTV) - Hidden for Restaurants */}
-        {!isRestaurant && (
+        {/* Total Diner Spend (LTV) - Hidden for Restaurants and Walking Cafes */}
+        {!hideMonetaryStats && (
           <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Total LTV Spend</span>
@@ -186,8 +195,8 @@ export default function CustomersPage() {
           </div>
         )}
 
-        {/* Avg Spend / Diner - Hidden for Restaurants */}
-        {!isRestaurant && (
+        {/* Avg Spend / Diner - Hidden for Restaurants and Walking Cafes */}
+        {!hideMonetaryStats && (
           <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="text-[10px] sm:text-xs font-extrabold text-blue-700 uppercase tracking-wider">Avg Spend / Diner</span>
@@ -303,12 +312,12 @@ export default function CustomersPage() {
           transition={{ duration: 0.2 }}
         >
           {viewMode === 'list' ? (
-            <CustomerTable customers={customers} isRestaurant={isRestaurant} />
+            <CustomerTable customers={customers} isRestaurant={hideMonetaryStats} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               <AnimatePresence>
                 {customers.map(customer => (
-                  <CustomerCard key={customer.id} customer={customer} isRestaurant={isRestaurant} />
+                  <CustomerCard key={customer.id} customer={customer} isRestaurant={hideMonetaryStats} />
                 ))}
               </AnimatePresence>
             </div>

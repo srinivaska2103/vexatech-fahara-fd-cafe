@@ -17,6 +17,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useLayoutStore } from '@/store/layout.store';
+import { useAuthStore } from '@/store/auth.store';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const MobileBottomNav = () => {
@@ -60,16 +61,33 @@ export const MobileBottomNav = () => {
       icon: CreditCard,
       color: 'bg-indigo-600 text-white',
     },
-    {
-      title: 'Take Portal Guided Tour',
-      description: 'Restart the step-by-step interactive tour',
-      action: () => {
-        window.dispatchEvent(new CustomEvent('restart-owner-tour'));
-      },
-      icon: HelpCircle,
-      color: 'bg-amber-600 text-white',
-    },
   ];
+
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
+  const isRestaurant = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+
+  const filteredQuickActions = quickActions.filter((action) => {
+    if (action.href === '/owner/events/create' && (isWalkingCafe || isRestaurant)) {
+      return false;
+    }
+    if (isWalkingCafe) {
+      if (action.href === '/owner/payments/account' || action.href === '/owner/bookings') {
+        return false;
+      }
+    }
+    return true;
+  });
 
   const handleActionClick = (action) => {
     setIsQuickActionsOpen(false);
@@ -121,7 +139,7 @@ export const MobileBottomNav = () => {
               </div>
 
               <div className="grid grid-cols-1 gap-2.5">
-                {quickActions.map((item, idx) => {
+                {filteredQuickActions.map((item, idx) => {
                   const Icon = item.icon;
                   return (
                     <button
@@ -149,7 +167,7 @@ export const MobileBottomNav = () => {
       </AnimatePresence>
 
       {/* Fixed Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#FFF8F0]/95 backdrop-blur-md border-t border-[#DDB892]/50 shadow-[0_-4px_25px_rgba(44,24,16,0.12)] px-3 py-1.5">
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#FFF8F0]/95 backdrop-blur-md border-t border-[#DDB892]/60 rounded-t-3xl sm:rounded-t-[32px] shadow-[0_-8px_30px_rgba(44,24,16,0.15)] px-3 py-2">
         <div className="flex items-center justify-between max-w-md mx-auto relative">
           
           {/* Dashboard Item */}
@@ -163,16 +181,28 @@ export const MobileBottomNav = () => {
             <span className="text-[10px] tracking-tight mt-0.5">Dashboard</span>
           </Link>
 
-          {/* Bookings Item */}
-          <Link
-            href="/owner/bookings"
-            className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-              pathname.startsWith('/owner/bookings') ? 'text-emerald-700 font-extrabold' : 'text-[#2C1810]/60 hover:text-emerald-700'
-            }`}
-          >
-            <CalendarCheck className={`w-5 h-5 ${pathname.startsWith('/owner/bookings') ? 'text-emerald-700 scale-110' : ''}`} />
-            <span className="text-[10px] tracking-tight mt-0.5">Bookings</span>
-          </Link>
+          {/* Bookings or Analytics Item */}
+          {isWalkingCafe ? (
+            <Link
+              href="/owner/analytics"
+              className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
+                pathname.startsWith('/owner/analytics') ? 'text-amber-700 font-extrabold' : 'text-[#2C1810]/60 hover:text-amber-700'
+              }`}
+            >
+              <TrendingUp className={`w-5 h-5 ${pathname.startsWith('/owner/analytics') ? 'text-amber-700 scale-110' : ''}`} />
+              <span className="text-[10px] tracking-tight mt-0.5">Analytics</span>
+            </Link>
+          ) : (
+            <Link
+              href="/owner/bookings"
+              className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
+                pathname.startsWith('/owner/bookings') ? 'text-emerald-700 font-extrabold' : 'text-[#2C1810]/60 hover:text-emerald-700'
+              }`}
+            >
+              <CalendarCheck className={`w-5 h-5 ${pathname.startsWith('/owner/bookings') ? 'text-emerald-700 scale-110' : ''}`} />
+              <span className="text-[10px] tracking-tight mt-0.5">Bookings</span>
+            </Link>
+          )}
 
           {/* Center Floating Quick Actions (+) Button */}
           <div className="flex flex-col items-center justify-center flex-1 relative">

@@ -26,7 +26,7 @@ export const NotificationFilters = ({ filters, setFilters }) => {
   ];
 
   return (
-    <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto custom-scrollbar pb-1 sm:pb-0 w-full sm:w-auto">
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
       {/* Read Status Filter */}
       <CustomSelect
         options={statusOptions}

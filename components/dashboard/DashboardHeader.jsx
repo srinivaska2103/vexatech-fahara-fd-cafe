@@ -8,7 +8,13 @@ import Link from 'next/link';
 export const DashboardHeader = () => {
   const user = useAuthStore(state => state.user) || { name: 'Owner' };
   const role = useAuthStore(state => state.role);
-  const isRestaurantOwner = role === 'RESTAURANT_OWNER';
+  const isRestaurantOwner = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    user?.user_type === 'RESTAURANT_OWNER' ||
+    user?.roles?.name === 'RESTAURANT_OWNER' ||
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT');
   
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', {
@@ -26,7 +32,12 @@ export const DashboardHeader = () => {
     greetingEmoji = '☕';
   }
 
-  const firstName = user.name ? user.name.split(' ')[0] : 'Owner';
+  const firstName = user.name ? user.name.split(' ')[0] : (user.full_name ? user.full_name.split(' ')[0] : 'Owner');
+
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING');
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#2C1810] via-[#3D251E] to-[#6F4E37] text-white p-6 md:p-8 mb-8 shadow-xl shadow-primary/10 border border-white/10">
@@ -48,22 +59,28 @@ export const DashboardHeader = () => {
           </h1>
 
           <p className="text-sm md:text-base text-amber-100/80 max-w-xl leading-relaxed">
-            Here's an overview of your cafe performance, active bookings, and recent customer activities today.
+            {isWalkingCafe 
+              ? "Here's a live summary of visitor interest, directions requests, wishlist saves, and customer reviews today."
+              : isRestaurantOwner
+              ? "Here's an overview of your restaurant dining performance, table seating demand, and live table bookings today."
+              : "Here's an overview of your cafe performance, active bookings, and recent customer activities today."}
           </p>
         </div>
         
         {/* Quick Action CTAs */}
         <div className="flex flex-wrap items-center gap-3 shrink-0">
-          <Link href="/owner/bookings">
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              className="bg-white/15 hover:bg-white/25 text-white border-white/20 backdrop-blur-md shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold"
-            >
-              <CalendarCheck className="w-4 h-4 text-amber-300" />
-              <span>Bookings</span>
-            </Button>
-          </Link>
+          {!isWalkingCafe && (
+            <Link href="/owner/bookings">
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="bg-white/15 hover:bg-white/25 text-white border-white/20 backdrop-blur-md shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold"
+              >
+                <CalendarCheck className="w-4 h-4 text-amber-300" />
+                <span>Bookings</span>
+              </Button>
+            </Link>
+          )}
 
           <Link href="/owner/cafes">
             <Button 
@@ -76,7 +93,20 @@ export const DashboardHeader = () => {
             </Button>
           </Link>
 
-          {!isRestaurantOwner && (
+          {isWalkingCafe && (
+            <Link href="/owner/customers">
+              <Button 
+                variant="primary" 
+                size="sm" 
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-text font-bold shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm"
+              >
+                <Sparkles className="w-4 h-4 stroke-[3]" />
+                <span>Customer Directory</span>
+              </Button>
+            </Link>
+          )}
+
+          {!isRestaurantOwner && !isWalkingCafe && (
             <Link href="/owner/events">
               <Button 
                 variant="primary" 

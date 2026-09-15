@@ -56,10 +56,10 @@ export const analyticsService = {
     }
   },
 
-  // Get occupancy analytics
-  getOccupancyAnalytics: async (params = {}) => {
+  // Get Cafe aggregated analytics (views, unique visitors, wishlist, directions, clicks, funnel, date filters)
+  getCafeAnalytics: async (cafeId = 'overview', params = {}) => {
     try {
-      const response = await axiosInstance.get('/analytics/occupancy', { params });
+      const response = await axiosInstance.get(`/analytics/cafe/${cafeId}`, { params });
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) return { data: null };

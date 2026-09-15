@@ -3,9 +3,9 @@ import React from 'react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { CafeForm } from '@/components/cafes/CafeForm';
 import { useCafe, useUpdateCafe } from '@/hooks/cafe';
+import { useAuthStore } from '@/store/auth.store';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Edit2, Store } from 'lucide-react';
-import Link from 'next/link';
+import { Store } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { BackButton } from '@/components/ui/BackButton';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
@@ -15,12 +15,22 @@ export default function EditCafePage() {
   const params = useParams();
   const id = params?.id;
 
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+
   const { data: cafeData, isLoading: isFetching } = useCafe(id);
   const cafe = cafeData?.data || cafeData;
   const updateMutation = useUpdateCafe();
 
+  const isWalkingOwner = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING');
+
   const handleSubmit = (data) => {
-    // Map frontend form data to exactly match backend API schema
+    const isWalking = isWalkingOwner || cafe?.is_walking_cafe === true || data.is_walking_cafe === true || (data.category || '').toLowerCase().includes('walking');
+
+    // Map frontend form data to match backend API schema
     const payload = {
       name: data.name,
       description: data.description || "",
@@ -31,19 +41,32 @@ export default function EditCafePage() {
       state: data.state || "",
       country: data.country || "",
       pincode: data.pincode || "",
-      category: data.category || "",
+      category: data.category || (isWalking ? "Coffee Cafe" : ""),
       latitude: data.latitude ? Number(data.latitude) : null,
       longitude: data.longitude ? Number(data.longitude) : null,
-      price_per_hour: data.price ? Number(data.price) : 0,
+      price_per_hour: isWalking ? null : (data.price ? Number(data.price) : 0),
       maximum_persons: data.capacity ? Number(data.capacity) : null,
       google_rating: data.google_rating !== "" && data.google_rating !== null && data.google_rating !== undefined ? Number(data.google_rating) : null,
       google_reviews_link: data.google_reviews_link || "",
-      provides_event_services: data.provides_event_services || false,
-      allow_third_party_decoration: data.allow_third_party_decoration ?? true,
+      provides_event_services: isWalking ? false : (data.provides_event_services || false),
+      allow_third_party_decoration: isWalking ? false : (data.allow_third_party_decoration ?? true),
+      is_walking_cafe: isWalking,
+      walk_in: true,
+      table_reservation: !isWalking,
+      event_booking: !isWalking,
+      event_packages: !isWalking,
+      event_facilities: !isWalking,
+      capabilities: {
+        walk_in: true,
+        table_reservation: !isWalking,
+        event_booking: !isWalking,
+        event_packages: !isWalking,
+        event_facilities: !isWalking,
+      },
       cover_image: data.cover_image || (data.gallery && data.gallery.length > 0 ? (data.gallery[0].file_url || data.gallery[0].url || (typeof data.gallery[0] === 'string' ? data.gallery[0] : "")) : ""),
       gallery: data.gallery ? data.gallery.map(img => img.file_url || img.url || (typeof img === 'string' ? img : "")) : [],
       amenities: data.amenities || [],
-      discounts: data.discounts || null,
+      discounts: isWalking ? null : (data.discounts || null),
       business_hours: data.businessHours || null,
       status: data.status || "ACTIVE"
     };
@@ -75,6 +98,8 @@ export default function EditCafePage() {
     );
   }
 
+  const isWalking = isWalkingOwner || cafe?.is_walking_cafe === true;
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
       
@@ -91,26 +116,28 @@ export default function EditCafePage() {
                 Edit {cafe?.name || 'Cafe Venue'}
               </h1>
               <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold shrink-0">
-                WIZARD
+                {isWalking ? 'WALKING CAFE ONBOARDING' : 'WIZARD'}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-text/70 mt-0.5">
-              Update venue details, pricing rates, amenities, and operating business hours step-by-step.
+              Update cafe details, location, amenities, and operating business hours step-by-step.
             </p>
           </div>
         </div>
       </div>
 
-      {/* 4-Step Interactive Edit Stepper Form */}
+      {/* Stepper Edit Form */}
       <div className="max-w-5xl mx-auto">
         <CafeForm 
           defaultValues={cafe ? {
             ...cafe,
+            is_walking_cafe: isWalking,
             email: cafe.email || cafe.users?.email || '',
             phone: cafe.phone || cafe.users?.phone || '',
             price: cafe.price_per_hour ?? '',
             capacity: cafe.maximum_persons ?? '',
             google_rating: cafe.google_rating ?? '',
+            google_reviews_link: cafe.google_reviews_link ?? '',
             amenities: cafe.amenities || [],
             businessHours: (() => {
               if (cafe.cafe_business_hours && Array.isArray(cafe.cafe_business_hours) && cafe.cafe_business_hours.length > 0) {

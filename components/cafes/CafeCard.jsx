@@ -5,7 +5,24 @@ import { CafeStatusBadge } from './CafeStatusBadge';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
 
+import { useAuthStore } from '@/store/auth.store';
+
 export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+
+  const categoryStr = `${cafe?.category || ''} ${cafe?.name || ''}`.toLowerCase();
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    user?.user_type === 'WALKING_CAFE_OWNER' ||
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING') ||
+    String(user?.user_type || '').toUpperCase().includes('WALKING') ||
+    Boolean(cafe?.is_walking_cafe) ||
+    cafe?.category === 'Walking Cafe' ||
+    categoryStr.includes('walk');
+
   let imageSrc = cafe.cover_image;
   
   if (!imageSrc && Array.isArray(cafe.gallery) && cafe.gallery.length > 0) {
@@ -18,7 +35,6 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
     imageSrc = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800";
   }
 
-  const categoryStr = `${cafe.category || ''} ${cafe.name || ''}`.toLowerCase();
   const isRestaurant = categoryStr.includes('restaur') || categoryStr.includes('restur');
 
   if (viewMode === 'list') {
@@ -66,10 +82,10 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
                 <span>Up to {cafe.maximum_persons || 'N/A'} guests</span>
               </div>
 
-              {!isRestaurant && (
+              {!isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
                 <div className="flex items-center text-sm font-extrabold text-[#2C1810]">
                   <IndianRupee className="w-4 h-4 text-[#6F4E37]" />
-                  <span>{cafe.price_per_hour || 0}</span>
+                  <span>{cafe.price_per_hour}</span>
                   <span className="text-[10px] text-text/50 font-normal ml-0.5">/hr</span>
                 </div>
               )}
@@ -122,27 +138,32 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
           <CafeStatusBadge status={cafe.status} />
         </div>
 
-        {/* Hover Floating Action Buttons */}
-        <div className="absolute top-3.5 right-3.5 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2">
+        {/* Floating Action Buttons */}
+        <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 z-10">
           <Link href={`/owner/cafes/${cafe.id}/edit`}>
-            <button className="w-9 h-9 bg-white/95 backdrop-blur-md text-[#2C1810] hover:text-[#6F4E37] hover:bg-white rounded-2xl flex items-center justify-center transition-all shadow-xs hover:scale-110">
-              <Edit2 className="w-4 h-4" />
+            <button className="w-8 h-8 bg-white/95 backdrop-blur-md text-[#2C1810] hover:text-[#6F4E37] hover:bg-white rounded-xl flex items-center justify-center transition-all shadow-sm hover:scale-105" title="Edit Cafe">
+              <Edit2 className="w-3.5 h-3.5" />
             </button>
           </Link>
           <button 
             onClick={() => onDelete && onDelete(cafe)}
-            className="w-9 h-9 bg-white/95 backdrop-blur-md text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-2xl flex items-center justify-center transition-all shadow-xs hover:scale-110"
+            className="w-8 h-8 bg-white/95 backdrop-blur-md text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-xl flex items-center justify-center transition-all shadow-sm hover:scale-105"
             title="Delete Cafe"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Price Tag Overlay */}
-        {!isRestaurant && (
+        {/* Price Tag Overlay / Walk-in Badge */}
+        {isWalkingCafe ? (
+          <div className="absolute bottom-3.5 right-3.5 bg-emerald-500/90 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-400/60 shadow-xs flex items-center gap-1 text-[11px] font-extrabold text-white">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Walk-in Cafe</span>
+          </div>
+        ) : !isRestaurant && Number(cafe?.price_per_hour) > 0 && (
           <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-white/60 shadow-xs flex items-center gap-0.5 text-xs font-extrabold text-[#2C1810]">
             <IndianRupee className="w-3.5 h-3.5 text-[#6F4E37]" />
-            <span>{cafe.price_per_hour || 0}</span>
+            <span>{cafe.price_per_hour}</span>
             <span className="text-[10px] text-text/50 font-normal">/hr</span>
           </div>
         )}
@@ -180,15 +201,17 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
 
         {/* Card Footer Action */}
         <div className="pt-2 flex items-center gap-2">
-          <Link href={`/owner/cafes/${cafe.id}/tables`} className="flex-1">
-            <Button variant="outline" className="w-full justify-center py-2.5 px-3 rounded-2xl border-[#DDB892]/80 text-[#6F4E37] hover:bg-[#FFF8F0] font-extrabold text-xs shadow-2xs">
-              <span className="flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-[#6F4E37]" />
-                <span>Tables</span>
-              </span>
-            </Button>
-          </Link>
-          <Link href={`/owner/cafes/${cafe.id}`} className="flex-1">
+          {!isWalkingCafe && (
+            <Link href={`/owner/cafes/${cafe.id}/tables`} className="shrink-0">
+              <Button variant="outline" className="py-2.5 px-3 rounded-2xl border-[#DDB892]/80 text-[#6F4E37] hover:bg-[#FFF8F0] font-extrabold text-xs shadow-2xs">
+                <span className="flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-[#6F4E37]" />
+                  <span>Tables</span>
+                </span>
+              </Button>
+            </Link>
+          )}
+          <Link href={`/owner/cafes/${cafe.id}`} className="flex-1 min-w-0">
             <Button className="w-full justify-between py-2.5 px-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white hover:shadow-md transition-all duration-300 font-extrabold text-xs shadow-xs border-0">
               <span className="flex items-center gap-1.5 truncate">
                 <Eye className="w-4 h-4 text-white shrink-0" />
@@ -197,6 +220,18 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-white shrink-0" />
             </Button>
           </Link>
+          <Link href={`/owner/cafes/${cafe.id}/edit`} className="shrink-0">
+            <button className="h-9 w-9 rounded-2xl border border-border/80 bg-surface hover:bg-[#FFF8F0] hover:border-[#DDB892] text-text/70 hover:text-[#6F4E37] flex items-center justify-center transition-all shadow-2xs" title="Edit Cafe">
+              <Edit2 className="w-4 h-4" />
+            </button>
+          </Link>
+          <button 
+            onClick={() => onDelete && onDelete(cafe)}
+            className="h-9 w-9 rounded-2xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 hover:border-rose-300 text-rose-600 flex items-center justify-center transition-all shrink-0 shadow-2xs"
+            title="Delete Cafe"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>

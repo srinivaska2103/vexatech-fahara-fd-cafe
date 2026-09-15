@@ -42,3 +42,10 @@ export const useOccupancyAnalytics = (params = {}) => {
     queryFn: () => analyticsService.getOccupancyAnalytics(params),
   });
 };
+
+export const useCafeAnalytics = (cafeId = 'overview', params = {}) => {
+  return useQuery({
+    queryKey: ['analytics', 'cafe', cafeId, params],
+    queryFn: () => analyticsService.getCafeAnalytics(cafeId, params),
+  });
+};

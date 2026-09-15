@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, X } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { CustomSelect } from '../ui/CustomSelect';
 
 export const ReportExportDialog = ({ isOpen, onClose, onConfirm, isExporting }) => {
-  // We can use native HTML form since this is simple
+  const [type, setType] = useState('FULL');
+  const [format, setFormat] = useState('PDF');
+  const [dateRange, setDateRange] = useState('THIS_MONTH');
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    onConfirm(Object.fromEntries(formData));
+    onConfirm({ type, format, date_range: dateRange });
   };
 
   return (
@@ -48,31 +51,43 @@ export const ReportExportDialog = ({ isOpen, onClose, onConfirm, isExporting }) 
               <div className="space-y-4 mb-8">
                 <div>
                   <label className="block text-sm font-medium text-text mb-2">Report Type</label>
-                  <select name="type" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
-                    <option value="FULL">Full Business Overview</option>
-                    <option value="REVENUE">Revenue & Financials</option>
-                    <option value="BOOKINGS">Bookings & Occupancy</option>
-                    <option value="CUSTOMERS">Customer Demographics</option>
-                  </select>
+                  <CustomSelect
+                    value={type}
+                    onChange={(val) => setType(val)}
+                    options={[
+                      { value: 'FULL', label: 'Full Business Overview' },
+                      { value: 'REVENUE', label: 'Revenue & Financials' },
+                      { value: 'BOOKINGS', label: 'Bookings & Occupancy' },
+                      { value: 'CUSTOMERS', label: 'Customer Demographics' }
+                    ]}
+                  />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-text mb-2">Format</label>
-                  <select name="format" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
-                    <option value="PDF">PDF Document (Visual)</option>
-                    <option value="CSV">CSV (Raw Data)</option>
-                    <option value="EXCEL">Excel (.xlsx)</option>
-                  </select>
+                  <CustomSelect
+                    value={format}
+                    onChange={(val) => setFormat(val)}
+                    options={[
+                      { value: 'PDF', label: 'PDF Document (Visual)' },
+                      { value: 'CSV', label: 'CSV (Raw Data)' },
+                      { value: 'EXCEL', label: 'Excel (.xlsx)' }
+                    ]}
+                  />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-text mb-2">Date Range</label>
-                  <select name="date_range" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
-                    <option value="THIS_MONTH">This Month</option>
-                    <option value="LAST_MONTH">Last Month</option>
-                    <option value="THIS_YEAR">This Year</option>
-                    <option value="ALL">All Time</option>
-                  </select>
+                  <CustomSelect
+                    value={dateRange}
+                    onChange={(val) => setDateRange(val)}
+                    options={[
+                      { value: 'THIS_MONTH', label: 'This Month' },
+                      { value: 'LAST_MONTH', label: 'Last Month' },
+                      { value: 'THIS_YEAR', label: 'This Year' },
+                      { value: 'ALL', label: 'All Time' }
+                    ]}
+                  />
                 </div>
               </div>
 

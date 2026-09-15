@@ -239,7 +239,18 @@ export const MobileSidebar = () => {
     String(role || '').toUpperCase().includes('RESTAURANT') ||
     String(user?.role || '').toUpperCase().includes('RESTAURANT');
 
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
   const filteredTabs = menuTabs.filter((tab) => {
+    if (isWalkingCafe) {
+      if (tab.id === 'events' || tab.id === 'tables' || tab.id === 'bookings' || tab.category === 'finance' || tab.id === 'support') {
+        return false;
+      }
+    }
     if (isRestaurantOwner) {
       if (tab.id === 'events' || tab.id === 'analytics' || tab.id === 'support' || tab.category === 'finance') {
         return false;
@@ -293,7 +304,7 @@ export const MobileSidebar = () => {
             {[
               { id: 'all', label: 'All Tabs' },
               { id: 'main', label: 'Main' },
-              { id: 'finance', label: 'Finance' },
+              ...(!isWalkingCafe && !isRestaurantOwner ? [{ id: 'finance', label: 'Finance' }] : []),
               { id: 'system', label: 'System' }
             ].map((cat) => (
               <button

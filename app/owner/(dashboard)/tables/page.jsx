@@ -34,11 +34,26 @@ import {
   Link as LinkIcon,
   Store
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function TableManagementPage() {
+  const router = useRouter();
+  const role = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
   const confirm = useConfirm();
+
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
+  useEffect(() => {
+    if (isWalkingCafe) {
+      router.push('/owner/dashboard');
+    }
+  }, [isWalkingCafe, router]);
 
   const [selectedCafeId, setSelectedCafeId] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'layout'

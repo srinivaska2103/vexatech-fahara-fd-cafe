@@ -38,7 +38,20 @@ export default function BookingDetailsPage() {
   const router = useRouter();
   const confirm = useConfirm();
   const userRole = useAuthStore((state) => state.role);
-  
+  const user = useAuthStore((state) => state.user);
+
+  const isWalkingCafe = 
+    userRole === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(userRole || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
+  React.useEffect(() => {
+    if (isWalkingCafe) {
+      router.push('/owner/dashboard');
+    }
+  }, [isWalkingCafe, router]);
+
   const { data: booking, isLoading } = useBooking(id);
   const approveMutation = useApproveBooking();
   const rejectMutation = useRejectBooking();

@@ -3,6 +3,7 @@ import React from 'react';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
 import { CafeForm } from '@/components/cafes/CafeForm';
 import { useCreateCafe, useCafes } from '@/hooks/cafe';
+import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle } from 'lucide-react';
 import { BackButton } from '@/components/ui/BackButton';
@@ -10,33 +11,60 @@ import { BackButton } from '@/components/ui/BackButton';
 export default function CreateCafePage() {
   const router = useRouter();
   const createMutation = useCreateCafe();
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+
   const { data: cafesData } = useCafes();
   const cafes = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
   const isLimitReached = cafes.length >= 3;
 
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING');
+
   const handleSubmit = (data) => {
     if (isLimitReached) return;
 
-    // Map frontend form data to exactly match the backend API schema
+    const isWalking = isWalkingCafe || data.is_walking_cafe === true || (data.category || '').toLowerCase().includes('walking');
+
+    // Map frontend form data to match backend API schema
     const payload = {
       name: data.name,
       description: data.description || "",
+      category: data.category || (isWalking ? "Coffee Cafe" : "Coffee Shop"),
       address: data.address || "",
       city: data.city || "",
+      state: data.state || "",
+      country: data.country || "",
+      pincode: data.pincode || "",
       latitude: data.latitude ? Number(data.latitude) : null,
       longitude: data.longitude ? Number(data.longitude) : null,
-      price_per_hour: data.price ? Number(data.price) : 0,
+      price_per_hour: isWalking ? null : (data.price ? Number(data.price) : 0),
       maximum_persons: data.capacity ? Number(data.capacity) : null,
-      google_rating: data.google_rating ? Number(data.google_rating) : null,
+      google_rating: data.google_rating !== "" && data.google_rating !== null && data.google_rating !== undefined ? Number(data.google_rating) : null,
       google_reviews_link: data.google_reviews_link || "",
-      provides_event_services: data.provides_event_services || false,
-      allow_third_party_decoration: data.allow_third_party_decoration ?? true,
+      provides_event_services: isWalking ? false : (data.provides_event_services || false),
+      allow_third_party_decoration: isWalking ? false : (data.allow_third_party_decoration ?? true),
+      is_walking_cafe: isWalking,
+      walk_in: true,
+      table_reservation: !isWalking,
+      event_booking: !isWalking,
+      event_packages: !isWalking,
+      event_facilities: !isWalking,
+      capabilities: {
+        walk_in: true,
+        table_reservation: !isWalking,
+        event_booking: !isWalking,
+        event_packages: !isWalking,
+        event_facilities: !isWalking,
+      },
       cover_image: data.cover_image || (data.gallery && data.gallery.length > 0 ? (data.gallery[0].file_url || data.gallery[0].url || (typeof data.gallery[0] === 'string' ? data.gallery[0] : "")) : ""),
       gallery: data.gallery ? data.gallery.map(img => img.file_url || img.url || (typeof img === 'string' ? img : "")) : [],
       amenities: data.amenities || [],
-      discounts: data.discounts || null,
+      discounts: isWalking ? null : (data.discounts || null),
       business_hours: data.businessHours || null,
-      status: data.status || "DRAFT"
+      status: data.status || "ACTIVE"
     };
 
     createMutation.mutate(payload, {
@@ -53,8 +81,11 @@ export default function CreateCafePage() {
       </div>
 
       <PageHeader 
-        title="Create New Cafe" 
-        subtitle="Add a new venue to your portfolio. You can manage images and availability after creating."
+        title={isWalkingCafe ? "Create Walking Cafe" : "Create New Cafe"} 
+        subtitle={isWalkingCafe 
+          ? "Add a new Walk-in Cafe listing to your portfolio for walk-in customer discovery."
+          : "Add a new venue to your portfolio. You can manage images and availability after creating."
+        }
       />
 
       {isLimitReached && (
@@ -73,10 +104,9 @@ export default function CreateCafePage() {
         <CafeForm 
           onSubmit={handleSubmit} 
           isLoading={createMutation.isPending || isLimitReached} 
-          submitLabel={isLimitReached ? "Limit Reached (3/3)" : "Create Cafe"}
+          submitLabel={isLimitReached ? "Limit Reached (3/3)" : (isWalkingCafe ? "Create Walking Cafe" : "Create Cafe")}
         />
       </div>
     </PageContainer>
   );
 }
-

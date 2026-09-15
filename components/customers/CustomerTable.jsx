@@ -14,9 +14,9 @@ export const CustomerTable = ({ customers, isRestaurant }) => {
         <table className="w-full text-left text-xs whitespace-nowrap">
           <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#6F4E37] border-b border-border/50 tracking-wider">
             <tr>
-              <th className="px-6 py-4">Diner Customer</th>
+              <th className="px-6 py-4">{isRestaurant ? 'Customer Visitor' : 'Diner Customer'}</th>
               <th className="px-6 py-4">Contact Info</th>
-              <th className="px-6 py-4 text-center">Total Bookings</th>
+              <th className="px-6 py-4 text-center">{isRestaurant ? 'Cafe Activity' : 'Total Bookings'}</th>
               {!isRestaurant && <th className="px-6 py-4 text-right">Lifetime Spend (LTV)</th>}
               <th className="px-6 py-4 text-center">Status</th>
               <th className="px-6 py-4 text-right">Profile</th>
@@ -82,10 +82,12 @@ export const CustomerTable = ({ customers, isRestaurant }) => {
                     </div>
                   </td>
 
-                  {/* Total Bookings */}
+                  {/* Total Bookings / Cafe Visits */}
                   <td className="px-6 py-4 text-center">
                     <span className="inline-flex items-center justify-center px-3 py-1 rounded-xl bg-surface/60 border border-border/40 font-extrabold text-[#2C1810]">
-                      {bookingsCount} Slot{bookingsCount !== 1 ? 's' : ''}
+                      {isRestaurant 
+                        ? (bookingsCount > 0 ? `${bookingsCount} Booking${bookingsCount !== 1 ? 's' : ''}` : 'Cafe Visitor')
+                        : `${bookingsCount} Slot${bookingsCount !== 1 ? 's' : ''}`}
                     </span>
                   </td>
 

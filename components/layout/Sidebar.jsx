@@ -20,7 +20,8 @@ import {
   Sparkles,
   CheckCircle2,
   Armchair,
-  Megaphone
+  Megaphone,
+  Eye
 } from 'lucide-react';
 import { SidebarItem } from './SidebarItem';
 import { SidebarGroup } from './SidebarGroup';
@@ -39,6 +40,7 @@ const mainMenuItems = [
 ];
 
 const marketingMenuItems = [
+  { icon: Eye, label: 'Customer Interest', href: '/owner/analytics', color: 'text-amber-700', bg: 'bg-amber-100/70' },
   { icon: Megaphone, label: 'Campaigns', href: '/owner/campaigns', color: 'text-fuchsia-600', bg: 'bg-fuchsia-100/70' },
   { icon: Users, label: 'Customers', href: '/owner/customers', color: 'text-sky-600', bg: 'bg-sky-100/70' },
   { icon: Star, label: 'Reviews', href: '/owner/reviews', color: 'text-amber-500', bg: 'bg-amber-100/70' },
@@ -66,11 +68,45 @@ export const Sidebar = () => {
   const isRestaurantOwner = 
     role === 'RESTAURANT_OWNER' || 
     user?.role === 'RESTAURANT_OWNER' || 
+    user?.user_type === 'RESTAURANT_OWNER' ||
+    user?.roles?.name === 'RESTAURANT_OWNER' ||
     String(role || '').toUpperCase().includes('RESTAURANT') ||
-    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.user_type || '').toUpperCase().includes('RESTAURANT');
 
-  const visibleMainMenuItems = mainMenuItems.filter(item => !(isRestaurantOwner && item.label === 'Events'));
-  const visibleSystemMenuItems = systemMenuItems.filter(item => !(isRestaurantOwner && (item.label === 'Analytics' || item.label === 'Help & Support')));
+  const isWalkingCafe = 
+    role === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(role || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING');
+
+  const visibleMainMenuItems = mainMenuItems.filter(item => {
+    if (isWalkingCafe) {
+      return item.label !== 'Events' && item.label !== 'Table Seating' && item.label !== 'Bookings';
+    }
+    if (isRestaurantOwner) {
+      return item.label !== 'Events';
+    }
+    return true;
+  });
+  const visibleSystemMenuItems = systemMenuItems.filter(item => {
+    if (isWalkingCafe) {
+      return item.label === 'Notifications' || item.label === 'Settings';
+    }
+    if (isRestaurantOwner) {
+      return item.label !== 'Analytics' && item.label !== 'Help & Support';
+    }
+    return true;
+  });
+
+  const visibleMarketingMenuItems = marketingMenuItems.filter(item => {
+    if (isWalkingCafe) {
+      return item.label !== 'Analytics';
+    }
+    return item.label !== 'Customer Interest';
+  });
+
+  const partnerBadge = isWalkingCafe ? 'Walking Cafe Partner' : isRestaurantOwner ? 'Restaurant Partner' : 'Venue Partner';
 
   return (
     <aside
@@ -93,7 +129,7 @@ export const Sidebar = () => {
             <div className="flex flex-col justify-center">
               <span className="text-base font-black text-[#2C1810] tracking-tight truncate leading-none">Fahara</span>
               <span className="text-[9px] font-extrabold text-[#6F4E37] uppercase tracking-widest leading-none mt-1">
-                {isRestaurantOwner ? 'Restaurant Partner' : 'Venue Partner'}
+                {partnerBadge}
               </span>
             </div>
           )}
@@ -120,12 +156,12 @@ export const Sidebar = () => {
           </SidebarGroup>
 
           <SidebarGroup label="Marketing">
-            {marketingMenuItems.map((item) => (
+            {visibleMarketingMenuItems.map((item) => (
               <SidebarItem key={item.label} {...item} />
             ))}
           </SidebarGroup>
 
-          {!isRestaurantOwner && (
+          {!isRestaurantOwner && !isWalkingCafe && (
             <SidebarGroup label="Finance">
               {financeMenuItems.map((item) => (
                 <SidebarItem key={item.label} {...item} />

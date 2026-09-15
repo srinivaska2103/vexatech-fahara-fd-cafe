@@ -81,16 +81,7 @@ function ComposeFormContent() {
           </div>
         </div>
 
-        {/* Quick Action */}
-        <div className="flex items-center gap-2.5 z-10">
-          <Button 
-            onClick={() => router.push('/owner/notifications/templates')}
-            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-2 transition-all"
-          >
-            <FileText className="w-4 h-4 text-white" />
-            <span>Message Templates</span>
-          </Button>
-        </div>
+
       </div>
 
       {/* Main Compose Form Area */}

@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotifications } from '@/hooks/notification';
 import { useCustomers } from '@/hooks/customer';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 
 export default function CampaignsPage() {
   const router = useRouter();
@@ -173,14 +174,16 @@ export default function CampaignsPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <select
+          <CustomSelect
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2.5 text-xs font-bold rounded-2xl border border-stone-200 bg-white text-stone-700 focus:outline-none focus:border-[#6F4E37] cursor-pointer"
-          >
-            <option value="all">All Campaigns</option>
-            <option value="delivered">Delivered Only</option>
-          </select>
+            onChange={(val) => setCategoryFilter(val)}
+            options={[
+              { value: 'all', label: 'All Campaigns' },
+              { value: 'delivered', label: 'Delivered Only' }
+            ]}
+            className="w-44"
+            icon={Filter}
+          />
         </div>
       </div>
 

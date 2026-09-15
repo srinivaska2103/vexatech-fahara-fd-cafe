@@ -79,48 +79,48 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
       </div>
       
       <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-sm text-left">
-          <thead className="text-xs text-text/50 uppercase bg-surface/40 border-b border-border/40">
+        <table className="w-full min-w-[640px] text-sm text-left">
+          <thead className="text-xs text-text/50 uppercase bg-surface/40 border-b border-border/40 whitespace-nowrap">
             <tr>
-              <th className="px-6 py-3.5 font-bold tracking-wider">Customer</th>
-              <th className="px-6 py-3.5 font-bold tracking-wider">Date & Time</th>
-              <th className="px-6 py-3.5 font-bold tracking-wider text-center">Guests</th>
-              <th className="px-6 py-3.5 font-bold tracking-wider text-right">Amount</th>
-              <th className="px-6 py-3.5 font-bold tracking-wider text-center">Status</th>
-              <th className="px-6 py-3.5 font-bold tracking-wider text-right">Details</th>
+              <th className="px-4 sm:px-6 py-3.5 font-bold tracking-wider">Customer</th>
+              <th className="px-4 sm:px-6 py-3.5 font-bold tracking-wider">Date & Time</th>
+              <th className="px-4 sm:px-6 py-3.5 font-bold tracking-wider text-center">Guests</th>
+              <th className="px-4 sm:px-6 py-3.5 font-bold tracking-wider text-right">Amount</th>
+              <th className="px-4 sm:px-6 py-3.5 font-bold tracking-wider text-center">Status</th>
+              <th className="px-4 sm:px-6 py-3.5 font-bold tracking-wider text-right">Details</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/30">
+          <tbody className="divide-y divide-border/30 whitespace-nowrap">
             {data.map((booking) => (
               <tr key={booking.id} className="hover:bg-surface/40 transition-colors group">
-                <td className="px-6 py-4">
+                <td className="px-4 sm:px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/10 to-accent/20 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs shrink-0 shadow-2xs">
                       {getInitials(booking.customerName)}
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 max-w-[180px] sm:max-w-xs">
                       <div className="font-bold text-text truncate group-hover:text-primary transition-colors">{booking.customerName}</div>
                       <div className="text-xs text-text/50 truncate">{booking.customerEmail || 'Registered Customer'}</div>
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 sm:px-6 py-4">
                   <div className="font-semibold text-text">{new Date(booking.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                   <div className="text-xs text-text/50 font-medium">{booking.time ? new Date(booking.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' }) : ''}</div>
                 </td>
-                <td className="px-6 py-4 text-center">
+                <td className="px-4 sm:px-6 py-4 text-center">
                   <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-surface text-text/80 border border-border/40">
                     <Users className="w-3 h-3 text-text/40" />
                     <span>{booking.guests || 0}</span>
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right font-extrabold text-text font-sans">
+                <td className="px-4 sm:px-6 py-4 text-right font-extrabold text-text font-sans">
                   ₹{Number(booking.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </td>
-                <td className="px-6 py-4 text-center">
+                <td className="px-4 sm:px-6 py-4 text-center">
                   {getStatusBadge(booking.status)}
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-4 sm:px-6 py-4 text-right">
                   <Link href={`/owner/bookings`}>
                     <Button variant="ghost" size="sm" className="w-8 h-8 p-0 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors">
                       <ChevronRight className="w-4 h-4" />

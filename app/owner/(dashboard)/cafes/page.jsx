@@ -84,6 +84,14 @@ export default function CafesPage() {
     { id: 'PENDING', label: 'Pending', count: pendingVenues },
   ];
 
+  const userRole = useAuthStore((state) => state.role);
+  const isWalkingCafeOwner = 
+    userRole === 'WALKING_CAFE_OWNER' || 
+    user?.role === 'WALKING_CAFE_OWNER' || 
+    String(userRole || '').toUpperCase().includes('WALKING') ||
+    String(user?.role || '').toUpperCase().includes('WALKING') ||
+    cafes.some(c => c.is_walking_cafe === true || (c.category || '').toLowerCase().includes('walking'));
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
       
@@ -160,7 +168,17 @@ export default function CafesPage() {
           </div>
         </div>
 
-        {nonRestaurantCafes.length > 0 ? (
+        {isWalkingCafeOwner ? (
+          <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-extrabold shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Pricing Mode</p>
+              <h3 className="text-xs font-black text-emerald-700">Walk-in Cafe (Free Entry)</h3>
+            </div>
+          </div>
+        ) : nonRestaurantCafes.length > 0 ? (
           <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-extrabold shrink-0">
               <IndianRupee className="w-5 h-5" />

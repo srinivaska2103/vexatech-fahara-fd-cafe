@@ -15,8 +15,8 @@ export default function RegisterPage() {
       <AuthCard>
         <AuthLogo />
         <AuthHeader 
-          title="Create an Owner Account" 
-          subtitle="Join Fahara as a Cafe Owner" 
+          title="Walking Cafe & Partner Registration" 
+          subtitle="Join Fahara as a Cafe Partner" 
         />
         <RegisterForm defaultRole="CAFE_OWNER" loginRoute="/owner/login" />
         <AuthFooter 
