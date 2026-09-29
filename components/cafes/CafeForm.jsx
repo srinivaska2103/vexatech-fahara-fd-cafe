@@ -44,7 +44,13 @@ import {
   Layers,
   ExternalLink,
   ShieldCheck,
-  XCircle
+  XCircle,
+  BadgePercent,
+  PartyPopper,
+  Package,
+  Edit3,
+  Calendar,
+  DollarSign
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -58,6 +64,19 @@ const defaultBusinessHours = {
   saturday: { isOpen: true, open: '10:00', close: '23:00' },
   sunday: { isOpen: false, open: '', close: '' },
 };
+
+const EVENT_TYPES_OPTIONS = [
+  { id: 'Birthday Party', label: 'Birthday Party' },
+  { id: 'Anniversary & Couples', label: 'Anniversary & Couples' },
+  { id: 'Corporate Meeting', label: 'Corporate Meeting' },
+  { id: 'Wedding Reception', label: 'Wedding Reception' },
+  { id: 'Private Dining Party', label: 'Private Dining Party' },
+  { id: 'Workshop & Masterclass', label: 'Workshop & Masterclass' },
+  { id: 'Live Music & Concert', label: 'Live Music & Concert' },
+  { id: 'Photoshoot', label: 'Photoshoot' },
+  { id: 'Baby Shower', label: 'Baby Shower' },
+  { id: 'Engagement', label: 'Engagement' },
+];
 
 const STATUS_OPTIONS = [
   { value: 'ACTIVE', label: 'Publish (Active)', desc: 'Live & visible to customers for walk-in discovery', badgeBg: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30', icon: Globe },
@@ -310,6 +329,19 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
     defaultValues: sanitizedDefaultValues,
   });
 
+  useEffect(() => {
+    if (defaultValues && Object.keys(defaultValues).length > 0) {
+      methods.reset(sanitizedDefaultValues);
+    }
+  }, [
+    defaultValues?.id,
+    defaultValues?.name,
+    defaultValues?.email,
+    defaultValues?.phone,
+    defaultValues?.address,
+    defaultValues?.updated_at
+  ]);
+
   const { register, formState: { errors }, watch, handleSubmit, setValue } = methods;
   const lat = watch('latitude');
   const lng = watch('longitude');
@@ -322,6 +354,124 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
   const currentAddress = watch('address');
   const currentAmenities = watch('amenities') || [];
   const galleryImages = watch('gallery') || [];
+
+  const [step2SubTab, setStep2SubTab] = useState('rates'); // 'rates' | 'discounts'
+
+  // Event & Offer Watchers
+  const providesEventServices = watch('provides_event_services') ?? defaultValues?.provides_event_services ?? false;
+  const allowThirdPartyDecoration = watch('allow_third_party_decoration') ?? defaultValues?.allow_third_party_decoration ?? true;
+  const currentCapabilities = watch('capabilities') || defaultValues?.capabilities || {};
+  const selectedEventTypes = currentCapabilities?.event_types || defaultValues?.capabilities?.event_types || [];
+
+  const rawDiscounts = watch('discounts') || defaultValues?.discounts || [];
+  const discountsList = Array.isArray(rawDiscounts)
+    ? rawDiscounts
+    : (rawDiscounts && typeof rawDiscounts === 'object')
+      ? Object.values(rawDiscounts)
+      : [];
+
+  const [isCreatingOffer, setIsCreatingOffer] = useState(false);
+  const [editingOfferIndex, setEditingOfferIndex] = useState(null);
+
+  const defaultOfferState = {
+    title: '',
+    type: 'PERCENTAGE',
+    amount: '',
+    min_booking_amount: '',
+    valid_from: '',
+    valid_until: '',
+    is_active: true,
+  };
+  const [offerFormData, setOfferFormData] = useState(defaultOfferState);
+
+  const toggleEventType = (evtId) => {
+    const currentList = Array.isArray(selectedEventTypes) ? [...selectedEventTypes] : [];
+    const index = currentList.indexOf(evtId);
+    let updatedList = [];
+    if (index > -1) {
+      updatedList = currentList.filter(id => id !== evtId);
+    } else {
+      updatedList = [...currentList, evtId];
+    }
+    const updatedCapabilities = {
+      ...currentCapabilities,
+      event_types: updatedList,
+    };
+    setValue('capabilities', updatedCapabilities, { shouldDirty: true });
+  };
+
+  const handleSaveOffer = () => {
+    if (!offerFormData.title || !offerFormData.amount) {
+      toast.error("Please provide offer title and discount amount.");
+      return;
+    }
+
+    const newOffer = {
+      id: offerFormData.id || `off_${Date.now()}`,
+      title: offerFormData.title,
+      name: offerFormData.title,
+      type: offerFormData.type,
+      discount_type: offerFormData.type,
+      amount: Number(offerFormData.amount) || 0,
+      discount_value: Number(offerFormData.amount) || 0,
+      min_booking_amount: offerFormData.min_booking_amount ? Number(offerFormData.min_booking_amount) : null,
+      valid_from: offerFormData.valid_from || null,
+      valid_until: offerFormData.valid_until || null,
+      is_active: offerFormData.is_active !== false,
+      status: offerFormData.is_active !== false ? 'ACTIVE' : 'INACTIVE',
+    };
+
+    let updatedDiscounts = [...discountsList];
+    if (editingOfferIndex !== null && editingOfferIndex >= 0 && editingOfferIndex < updatedDiscounts.length) {
+      updatedDiscounts[editingOfferIndex] = newOffer;
+      toast.success("Offer updated successfully!");
+    } else {
+      updatedDiscounts.push(newOffer);
+      toast.success("New offer created!");
+    }
+
+    setValue('discounts', updatedDiscounts, { shouldDirty: true });
+    setIsCreatingOffer(false);
+    setEditingOfferIndex(null);
+    setOfferFormData(defaultOfferState);
+  };
+
+  const handleEditOffer = (index) => {
+    const offer = discountsList[index];
+    if (!offer) return;
+    setOfferFormData({
+      id: offer.id,
+      title: offer.title || offer.name || '',
+      type: offer.type || offer.discount_type || 'PERCENTAGE',
+      amount: offer.amount || offer.discount_value || '',
+      min_booking_amount: offer.min_booking_amount || '',
+      valid_from: offer.valid_from || '',
+      valid_until: offer.valid_until || '',
+      is_active: offer.is_active !== false && offer.status !== 'INACTIVE',
+    });
+    setEditingOfferIndex(index);
+    setIsCreatingOffer(true);
+  };
+
+  const handleToggleOfferStatus = (index) => {
+    const updatedDiscounts = [...discountsList];
+    if (updatedDiscounts[index]) {
+      const currentActive = updatedDiscounts[index].is_active !== false && updatedDiscounts[index].status !== 'INACTIVE';
+      updatedDiscounts[index] = {
+        ...updatedDiscounts[index],
+        is_active: !currentActive,
+        status: !currentActive ? 'ACTIVE' : 'INACTIVE'
+      };
+      setValue('discounts', updatedDiscounts, { shouldDirty: true });
+      toast.success(currentActive ? "Offer disabled" : "Offer enabled");
+    }
+  };
+
+  const handleDeleteOffer = (index) => {
+    const updatedDiscounts = discountsList.filter((_, i) => i !== index);
+    setValue('discounts', updatedDiscounts, { shouldDirty: true });
+    toast.success("Offer deleted");
+  };
 
   // Steps configuration for Walking Cafe vs Standard Cafe
   const steps = isWalkingCafe ? [
@@ -864,40 +1014,449 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   </div>
                 )}
 
-                {/* STEP 2: PRICING & CAPACITY */}
+                {/* STEP 2: PRICING & CAPACITY (DUAL SUB-TAB SYSTEM) */}
                 {currentStep === 2 && (
-                  <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
-                    <div className="flex items-center gap-3 pb-4 border-b border-border/40">
-                      <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-700 flex items-center justify-center font-extrabold">
-                        <Tag className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">Attributes & Pricing Configuration</h3>
-                        <p className="text-xs text-text/60">Set hourly pricing rates and guest seating capacities</p>
-                      </div>
+                  <div className="space-y-6 text-[#2C1810]">
+                    {/* Step 2 Sub-Tabs Navigation */}
+                    <div className="flex items-center gap-2 p-1.5 bg-white rounded-2xl border border-border/60 shadow-2xs w-fit">
+                      <button
+                        type="button"
+                        onClick={() => setStep2SubTab('rates')}
+                        className={cn(
+                          "px-4 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer",
+                          step2SubTab === 'rates' 
+                            ? "bg-[#6F4E37] text-white shadow-2xs" 
+                            : "text-[#6F4E37] hover:bg-[#FFF8F0]"
+                        )}
+                      >
+                        <Tag className="w-3.5 h-3.5" />
+                        <span>Rates & Capacity</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setStep2SubTab('discounts')}
+                        className={cn(
+                          "px-4 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer",
+                          step2SubTab === 'discounts' 
+                            ? "bg-[#6F4E37] text-white shadow-2xs" 
+                            : "text-[#6F4E37] hover:bg-[#FFF8F0]"
+                        )}
+                      >
+                        <BadgePercent className="w-3.5 h-3.5" />
+                        <span>Discounts & Offers</span>
+                        {discountsList.length > 0 && (
+                          <span className={cn(
+                            "px-1.5 py-0.2 text-[10px] font-black rounded-full ml-1",
+                            step2SubTab === 'discounts' ? "bg-amber-400 text-amber-950" : "bg-amber-100 text-amber-800"
+                          )}>
+                            {discountsList.length}
+                          </span>
+                        )}
+                      </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                      <div>
-                        <Label htmlFor="category">Venue Category</Label>
-                        <ModernCategorySelect 
-                          value={currentCategory} 
-                          onChange={(cat) => setValue('category', cat, { shouldDirty: true })}
-                          error={errors.category?.message}
-                          register={register}
-                        />
-                      </div>
+                    {/* SUBTAB 1: RATES & CAPACITY */}
+                    {step2SubTab === 'rates' && (
+                      <div className="space-y-6">
+                        {/* Pricing & Capacity Attributes */}
+                        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
+                          <div className="flex items-center gap-3 pb-4 border-b border-border/40">
+                            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-700 flex items-center justify-center font-extrabold">
+                              <Tag className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <h3 className="text-base font-extrabold text-[#2C1810]">Attributes & Pricing Configuration</h3>
+                              <p className="text-xs text-text/60">Set hourly pricing rates and guest seating capacities</p>
+                            </div>
+                          </div>
 
-                      <div>
-                        <Label htmlFor="price">Hourly Booking Rate (₹/hr) *</Label>
-                        <Input id="price" type="number" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
-                      </div>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div>
+                              <Label htmlFor="category">Venue Category</Label>
+                              <ModernCategorySelect 
+                                value={currentCategory} 
+                                onChange={(cat) => setValue('category', cat, { shouldDirty: true })}
+                                error={errors.category?.message}
+                                register={register}
+                              />
+                            </div>
 
-                      <div>
-                        <Label htmlFor="capacity">Max Seating Capacity (Guests) *</Label>
-                        <Input id="capacity" type="number" {...register('capacity')} error={errors.capacity?.message} placeholder="e.g. 25" />
+                            <div>
+                              <Label htmlFor="price">Hourly Booking Rate (₹/hr) *</Label>
+                              <Input id="price" type="number" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
+                            </div>
+
+                            <div>
+                              <Label htmlFor="capacity">Max Seating Capacity (Guests) *</Label>
+                              <Input id="capacity" type="number" {...register('capacity')} error={errors.capacity?.message} placeholder="e.g. 25" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Event & Party Services */}
+                        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
+                          <div className="flex items-center justify-between pb-4 border-b border-border/40">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-extrabold">
+                                <PartyPopper className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <h3 className="text-base font-extrabold text-[#2C1810]">Event & Party Services</h3>
+                                <p className="text-xs text-text/60">Configure private events, occasion types, and package settings</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label>Does your cafe provide private event & party services?</Label>
+                            <div className="flex flex-wrap items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={() => setValue('provides_event_services', true, { shouldDirty: true })}
+                                className={cn(
+                                  "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
+                                  providesEventServices 
+                                    ? "bg-[#6F4E37] text-white border-[#6F4E37] shadow-xs" 
+                                    : "bg-white text-text/70 border-border/60 hover:border-[#6F4E37]"
+                                )}
+                              >
+                                <CheckCircle2 className="w-4 h-4" />
+                                <span>Yes, We Provide Private Events</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => setValue('provides_event_services', false, { shouldDirty: true })}
+                                className={cn(
+                                  "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
+                                  !providesEventServices 
+                                    ? "bg-stone-200 text-stone-800 border-stone-300" 
+                                    : "bg-white text-text/70 border-border/60 hover:border-stone-400"
+                                )}
+                              >
+                                <span>No Events</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          {providesEventServices && (
+                            <div className="space-y-6 pt-4 border-t border-border/40">
+                              <div className="space-y-3">
+                                <div>
+                                  <Label className="mb-0">Supported Event Types / Occasions *</Label>
+                                  <p className="text-[11px] text-text/60">Select the occasion categories supported by your venue</p>
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                                  {EVENT_TYPES_OPTIONS.map(evt => {
+                                    const isSelected = Array.isArray(selectedEventTypes) && selectedEventTypes.includes(evt.id);
+                                    return (
+                                      <button
+                                        key={evt.id}
+                                        type="button"
+                                        onClick={() => toggleEventType(evt.id)}
+                                        className={cn(
+                                          "p-3 rounded-2xl border text-left text-xs font-bold transition-all flex items-center gap-2 cursor-pointer",
+                                          isSelected
+                                            ? "bg-[#FFF8F0] border-[#6F4E37] text-[#6F4E37] shadow-2xs"
+                                            : "bg-surface/30 border-border/50 text-text/70 hover:bg-surface"
+                                        )}
+                                      >
+                                        <div className={cn(
+                                          "w-4 h-4 rounded-md border flex items-center justify-center shrink-0 text-[10px]",
+                                          isSelected ? "bg-[#6F4E37] border-[#6F4E37] text-white" : "border-stone-300 bg-white"
+                                        )}>
+                                          {isSelected && "✓"}
+                                        </div>
+                                        <span className="truncate">{evt.label}</span>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+
+                              <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div>
+                                  <h4 className="text-xs font-black text-[#2C1810] flex items-center gap-2">
+                                    <Package className="w-4 h-4 text-[#6F4E37]" />
+                                    Event Packages Availability
+                                  </h4>
+                                  <p className="text-[11px] text-text/60 mt-0.5">
+                                    Manage custom event packages (decorations, food menus, minimum guests, tiered pricing)
+                                  </p>
+                                </div>
+
+                                {defaultValues?.id ? (
+                                  <a
+                                    href={`/owner/cafes/${defaultValues.id}/packages`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="px-4 py-2 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all shrink-0 flex items-center gap-1.5"
+                                  >
+                                    <span>Manage Packages</span>
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                  </a>
+                                ) : (
+                                  <span className="text-[11px] text-text/50 italic">Save cafe to configure event packages</span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Third-Party Event Management Switch */}
+                          <div className="pt-4 border-t border-border/40">
+                            <div className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-surface/30 border border-border/60">
+                              <div className="space-y-0.5">
+                                <div className="flex items-center gap-2">
+                                  <Users className="w-4 h-4 text-[#6F4E37]" />
+                                  <h4 className="text-xs font-black text-[#2C1810]">
+                                    Allow 3rd Party Event Management & Decoration Services
+                                  </h4>
+                                </div>
+                                <p className="text-[11px] text-text/60 pl-6">
+                                  External event managers and decorators can offer their services for bookings at this cafe according to Fahara's event workflow.
+                                </p>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => setValue('allow_third_party_decoration', !allowThirdPartyDecoration, { shouldDirty: true })}
+                                className={cn(
+                                  "w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 border mt-1",
+                                  allowThirdPartyDecoration ? "bg-[#6F4E37] border-[#6F4E37]" : "bg-stone-300 border-stone-300"
+                                )}
+                              >
+                                <div className={cn(
+                                  "w-5 h-5 rounded-full bg-white transition-transform shadow-xs absolute top-0.5",
+                                  allowThirdPartyDecoration ? "right-0.5" : "left-0.5"
+                                )} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* SUBTAB 2: DISCOUNTS & OFFERS */}
+                    {step2SubTab === 'discounts' && (
+                      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
+                        <div className="flex items-center justify-between pb-4 border-b border-border/40">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-extrabold">
+                              <BadgePercent className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <h3 className="text-base font-extrabold text-[#2C1810]">Discounts & Promotional Offers</h3>
+                              <p className="text-xs text-text/60">Create and manage customer discounts, weekend specials, and percentage offers</p>
+                            </div>
+                          </div>
+
+                          {!isCreatingOffer && (
+                            <Button 
+                              type="button" 
+                              size="sm" 
+                              onClick={() => {
+                                setEditingOfferIndex(null);
+                                setOfferFormData(defaultOfferState);
+                                setIsCreatingOffer(true);
+                              }}
+                              className="bg-[#6F4E37] hover:bg-[#5a3e2b] text-white"
+                            >
+                              <Plus className="w-4 h-4 mr-1.5" />
+                              Create Offer
+                            </Button>
+                          )}
+                        </div>
+
+                        {isCreatingOffer ? (
+                          <div className="p-5 rounded-2xl bg-[#FFF8F0] border border-[#DDB892] space-y-4">
+                            <h4 className="text-sm font-black text-[#2C1810] flex items-center gap-2">
+                              <Tag className="w-4 h-4 text-[#6F4E37]" />
+                              {editingOfferIndex !== null ? 'Edit Promotional Offer' : 'Create New Promotional Offer'}
+                            </h4>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="md:col-span-2">
+                                <Label htmlFor="offer_title">Offer Title *</Label>
+                                <Input 
+                                  id="offer_title" 
+                                  value={offerFormData.title} 
+                                  onChange={(e) => setOfferFormData(prev => ({ ...prev, title: e.target.value }))}
+                                  placeholder="e.g. Weekend Special or Happy Hour 10% OFF" 
+                                />
+                              </div>
+
+                              <div>
+                                <Label htmlFor="offer_type">Discount Type *</Label>
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => setOfferFormData(prev => ({ ...prev, type: 'PERCENTAGE' }))}
+                                    className={cn(
+                                      "flex-1 py-2.5 px-3 rounded-xl border text-xs font-extrabold cursor-pointer transition-all",
+                                      offerFormData.type === 'PERCENTAGE' ? "bg-[#6F4E37] text-white border-[#6F4E37]" : "bg-white text-text/70 border-border/60"
+                                    )}
+                                  >
+                                    Percentage (%)
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setOfferFormData(prev => ({ ...prev, type: 'FLAT' }))}
+                                    className={cn(
+                                      "flex-1 py-2.5 px-3 rounded-xl border text-xs font-extrabold cursor-pointer transition-all",
+                                      offerFormData.type === 'FLAT' ? "bg-[#6F4E37] text-white border-[#6F4E37]" : "bg-white text-text/70 border-border/60"
+                                    )}
+                                  >
+                                    Flat Amount (₹)
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div>
+                                <Label htmlFor="offer_value">Discount Value * ({offerFormData.type === 'PERCENTAGE' ? '%' : '₹'})</Label>
+                                <Input 
+                                  id="offer_value" 
+                                  type="number"
+                                  value={offerFormData.amount} 
+                                  onChange={(e) => setOfferFormData(prev => ({ ...prev, amount: e.target.value }))}
+                                  placeholder={offerFormData.type === 'PERCENTAGE' ? "e.g. 10" : "e.g. 200"} 
+                                />
+                              </div>
+
+                              <div>
+                                <Label htmlFor="min_booking_amount">Minimum Booking Amount (Optional ₹)</Label>
+                                <Input 
+                                  id="min_booking_amount" 
+                                  type="number"
+                                  value={offerFormData.min_booking_amount} 
+                                  onChange={(e) => setOfferFormData(prev => ({ ...prev, min_booking_amount: e.target.value }))}
+                                  placeholder="e.g. 500" 
+                                />
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <Label htmlFor="valid_from">Valid From</Label>
+                                  <Input 
+                                    id="valid_from" 
+                                    type="date"
+                                    value={offerFormData.valid_from} 
+                                    onChange={(e) => setOfferFormData(prev => ({ ...prev, valid_from: e.target.value }))}
+                                  />
+                                </div>
+
+                                <div>
+                                  <Label htmlFor="valid_until">Valid Until</Label>
+                                  <Input 
+                                    id="valid_until" 
+                                    type="date"
+                                    value={offerFormData.valid_until} 
+                                    onChange={(e) => setOfferFormData(prev => ({ ...prev, valid_until: e.target.value }))}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#DDB892]/40">
+                              <Button 
+                                type="button" 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => setIsCreatingOffer(false)}
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                type="button" 
+                                size="sm" 
+                                onClick={handleSaveOffer}
+                                className="bg-[#6F4E37] text-white hover:bg-[#5a3e2b]"
+                              >
+                                Save Offer
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            {discountsList.length === 0 ? (
+                              <div className="p-8 text-center rounded-2xl bg-surface/30 border border-border/60 space-y-3">
+                                <BadgePercent className="w-10 h-10 text-[#6F4E37] opacity-40 mx-auto" />
+                                <p className="text-xs font-bold text-[#2C1810]">No active offers or discounts created yet.</p>
+                                <p className="text-[11px] text-text/50">Add promotional discounts to attract more customer bookings to your cafe.</p>
+                                <Button 
+                                  type="button" 
+                                  size="sm" 
+                                  onClick={() => {
+                                    setEditingOfferIndex(null);
+                                    setOfferFormData(defaultOfferState);
+                                    setIsCreatingOffer(true);
+                                  }}
+                                  className="bg-[#6F4E37] text-white"
+                                >
+                                  <Plus className="w-4 h-4 mr-1.5" />
+                                  Create First Offer
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {discountsList.map((disc, idx) => (
+                                  <div key={disc.id || idx} className="p-4 rounded-2xl bg-white border border-border/60 shadow-2xs flex flex-col justify-between space-y-3">
+                                    <div>
+                                      <div className="flex items-center justify-between">
+                                        <h4 className="text-xs font-black text-[#2C1810]">{disc.title || disc.name || 'Promotional Offer'}</h4>
+                                        <span className={cn(
+                                          "px-2 py-0.5 text-[10px] font-black rounded-full",
+                                          disc.is_active !== false && disc.status !== 'INACTIVE' ? "bg-emerald-100 text-emerald-800" : "bg-stone-100 text-stone-600"
+                                        )}>
+                                          {disc.is_active !== false && disc.status !== 'INACTIVE' ? 'Active' : 'Disabled'}
+                                        </span>
+                                      </div>
+
+                                      <p className="text-sm font-extrabold text-[#6F4E37] mt-1">
+                                        {disc.type === 'FLAT' ? `₹${disc.amount} OFF` : `${disc.amount}% OFF`}
+                                      </p>
+
+                                      {disc.valid_from && disc.valid_until && (
+                                        <p className="text-[10px] text-text/60 mt-1">
+                                          Valid: {disc.valid_from} – {disc.valid_until}
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    <div className="flex items-center justify-end gap-3 pt-2 border-t border-border/40">
+                                      <button
+                                        type="button"
+                                        onClick={() => handleToggleOfferStatus(idx)}
+                                        className="text-xs font-bold text-stone-600 hover:text-stone-900 cursor-pointer"
+                                      >
+                                        {disc.is_active !== false && disc.status !== 'INACTIVE' ? 'Disable' : 'Enable'}
+                                      </button>
+
+                                      <button
+                                        type="button"
+                                        onClick={() => handleEditOffer(idx)}
+                                        className="text-xs font-bold text-[#6F4E37] hover:underline cursor-pointer"
+                                      >
+                                        Edit
+                                      </button>
+
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteOffer(idx)}
+                                        className="text-xs font-bold text-rose-600 hover:underline cursor-pointer"
+                                      >
+                                        Delete
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 

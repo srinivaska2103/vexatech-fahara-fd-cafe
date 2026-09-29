@@ -27,6 +27,8 @@ export const InclusionsSection = () => {
   const packageLevel = watch('package_level') || 'STANDARD';
   const packageInclusions = watch('package_inclusions') || watch('inclusions_list') || [];
 
+  const [editingIndex, setEditingIndex] = useState(null);
+
   const [incName, setIncName] = useState('');
   const [incCategory, setIncCategory] = useState('Food & Catering');
   const [pricingType, setPricingType] = useState('PER_GUEST');
@@ -42,7 +44,7 @@ export const InclusionsSection = () => {
   const [premiumPrice, setPremiumPrice] = useState('400');
   const [premiumDesc, setPremiumDesc] = useState('Full premium buffet & custom cake setup');
 
-  const handleAddInclusion = (e) => {
+  const handleSaveInclusion = (e) => {
     e.preventDefault();
     if (!incName || !incName.trim()) {
       import('react-hot-toast').then(m => m.default.error('Please enter an Inclusion Name (e.g. Food & Catering)'));
@@ -73,8 +75,8 @@ export const InclusionsSection = () => {
     // Pick active unit price matching current package level
     const currentTier = tiers.find(t => t.tier_name === packageLevel) || tiers[1];
 
-    const newInc = {
-      id: `inc_${Date.now()}`,
+    const updatedInc = {
+      id: editingIndex !== null && packageInclusions[editingIndex]?.id ? packageInclusions[editingIndex].id : `inc_${Date.now()}`,
       name: incName.trim(),
       category: incCategory || incName.trim(),
       description: currentTier.description,
@@ -91,16 +93,74 @@ export const InclusionsSection = () => {
       inclusion_type: inclusionType,
       is_optional: inclusionType === 'OPTIONAL_ADDON',
       is_active: true,
-      display_order: packageInclusions.length,
+      display_order: editingIndex !== null ? (packageInclusions[editingIndex]?.display_order ?? editingIndex) : packageInclusions.length,
     };
 
-    const updated = [...packageInclusions, newInc];
-    setValue('package_inclusions', updated, { shouldDirty: true, shouldValidate: true });
-    setValue('inclusions_list', updated, { shouldDirty: true, shouldValidate: true });
+    let updatedList;
+    if (editingIndex !== null) {
+      updatedList = [...packageInclusions];
+      updatedList[editingIndex] = updatedInc;
+      import('react-hot-toast').then(m => m.default.success(`Updated "${incName.trim()}" successfully!`));
+    } else {
+      updatedList = [...packageInclusions, updatedInc];
+      import('react-hot-toast').then(m => m.default.success(`Added "${incName.trim()}" with Basic, Standard & Premium tiers!`));
+    }
 
-    import('react-hot-toast').then(m => m.default.success(`Added "${incName.trim()}" with Basic, Standard & Premium tiers!`));
+    setValue('package_inclusions', updatedList, { shouldDirty: true, shouldValidate: true });
+    setValue('inclusions_list', updatedList, { shouldDirty: true, shouldValidate: true });
 
-    // Reset input fields
+    // Reset input fields & editing state
+    handleCancelEdit();
+  };
+
+  const handleEditInclusion = (index) => {
+    const inc = packageInclusions[index];
+    if (!inc) return;
+
+    setEditingIndex(index);
+    setIncName(inc.name || '');
+    setIncCategory(inc.category || 'Food & Catering');
+    setPricingType(inc.pricing_type || 'PER_GUEST');
+    setInclusionType(inc.inclusion_type || 'INCLUDED');
+
+    let bPrice = inc.basic_price ?? '';
+    let bDesc = inc.basic_desc ?? '';
+    let sPrice = inc.standard_price ?? '';
+    let sDesc = inc.standard_desc ?? '';
+    let pPrice = inc.premium_price ?? '';
+    let pDesc = inc.premium_desc ?? '';
+
+    if (Array.isArray(inc.tiers)) {
+      const bTier = inc.tiers.find(t => t.tier_name === 'BASIC');
+      const sTier = inc.tiers.find(t => t.tier_name === 'STANDARD');
+      const pTier = inc.tiers.find(t => t.tier_name === 'PREMIUM');
+
+      if (bTier) {
+        if (bPrice === '') bPrice = bTier.unit_price ?? '';
+        if (!bDesc) bDesc = bTier.description ?? '';
+      }
+      if (sTier) {
+        if (sPrice === '') sPrice = sTier.unit_price ?? '';
+        if (!sDesc) sDesc = sTier.description ?? '';
+      }
+      if (pTier) {
+        if (pPrice === '') pPrice = pTier.unit_price ?? '';
+        if (!pDesc) pDesc = pTier.description ?? '';
+      }
+    }
+
+    setBasicPrice(String(bPrice ?? inc.unit_price ?? '100'));
+    setBasicDesc(bDesc || inc.description || 'Basic menu & welcome drinks');
+    setStandardPrice(String(sPrice ?? inc.unit_price ?? '250'));
+    setStandardDesc(sDesc || inc.description || 'Standard buffet & celebration cake');
+    setPremiumPrice(String(pPrice ?? inc.unit_price ?? '400'));
+    setPremiumDesc(pDesc || inc.description || 'Full premium buffet & custom cake setup');
+
+    window.scrollTo({ top: 350, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
     setIncName('');
     setBasicPrice('100');
     setBasicDesc('Basic menu & welcome drinks');
@@ -111,6 +171,9 @@ export const InclusionsSection = () => {
   };
 
   const handleRemoveInclusion = (index) => {
+    if (editingIndex === index) {
+      handleCancelEdit();
+    }
     const updated = packageInclusions.filter((_, idx) => idx !== index);
     setValue('package_inclusions', updated, { shouldDirty: true });
     setValue('inclusions_list', updated, { shouldDirty: true });
@@ -133,14 +196,16 @@ export const InclusionsSection = () => {
         </p>
       </div>
 
-      {/* Add New Tiered Inclusion Form */}
+      {/* Add / Edit Tiered Inclusion Form */}
       <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-wider text-[#6F4E37] block">
-              Add Package Feature & Configure Tier Prices
+              {editingIndex !== null ? 'Edit Package Feature & Tier Prices' : 'Add Package Feature & Configure Tier Prices'}
             </span>
-            <p className="text-[11px] text-text/60 font-medium">Click a preset or specify custom tier-wise pricing below.</p>
+            <p className="text-[11px] text-text/60 font-medium">
+              {editingIndex !== null ? 'Update the details below and click Update.' : 'Click a preset or specify custom tier-wise pricing below.'}
+            </p>
           </div>
           <span className="text-[10px] font-extrabold text-[#6F4E37] bg-[#FFF8F0] px-3 py-1 rounded-full border border-[#DDB892]/50 shrink-0">
             {packageInclusions.length} Feature{packageInclusions.length !== 1 ? 's' : ''} Configured
@@ -332,14 +397,35 @@ export const InclusionsSection = () => {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleAddInclusion}
-          className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5C402E] hover:to-[#8E6747] text-white text-xs font-extrabold shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Save Tiered Feature Inclusion</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleSaveInclusion}
+            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5C402E] hover:to-[#8E6747] text-white text-xs font-extrabold shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
+          >
+            {editingIndex !== null ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Update Tiered Feature Inclusion</span>
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4" />
+                <span>Save Tiered Feature Inclusion</span>
+              </>
+            )}
+          </button>
+
+          {editingIndex !== null && (
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="px-4 py-3 rounded-2xl border border-border/60 bg-surface/40 hover:bg-white text-text/70 text-xs font-bold transition-all cursor-pointer"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Configured Features Grid */}
@@ -356,7 +442,10 @@ export const InclusionsSection = () => {
               return (
                 <div
                   key={index}
-                  className="p-4 rounded-2xl bg-white border border-[#DDB892]/60 shadow-2xs space-y-3"
+                  className={cn(
+                    "p-4 rounded-2xl bg-white border transition-all space-y-3",
+                    editingIndex === index ? "border-[#6F4E37] ring-2 ring-[#6F4E37]/10 shadow-sm" : "border-[#DDB892]/60 shadow-2xs"
+                  )}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
@@ -367,14 +456,24 @@ export const InclusionsSection = () => {
                       <span className="text-[10px] text-text/50 font-bold">({pType === 'PER_GUEST' ? 'Per Guest' : 'Fixed Amount'})</span>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveInclusion(index)}
-                      className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors shrink-0"
-                      title="Remove Inclusion"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleEditInclusion(index)}
+                        className="p-1.5 text-[#6F4E37] hover:bg-[#6F4E37]/10 rounded-xl transition-colors"
+                        title="Edit Inclusion"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveInclusion(index)}
+                        className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                        title="Remove Inclusion"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Tier Comparison Summary Row */}

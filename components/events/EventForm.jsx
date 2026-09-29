@@ -343,6 +343,36 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
     },
   });
 
+  useEffect(() => {
+    if (defaultValues && Object.keys(defaultValues).length > 0) {
+      methods.reset({
+        cafe_id: defaultValues?.cafe_id || defaultValues?.cafe?.id || '',
+        event_type: defaultValues?.event_type || defaultValues?.category || defaultValues?.custom_category || defaultValues?.inclusions?.event_type || 'Birthday Party',
+        package_name: defaultValues?.package_name || '',
+        package_level: defaultValues?.package_level || 'STANDARD',
+        package_inclusions: Array.isArray(parsedInclusions) && parsedInclusions.length > 0 ? parsedInclusions : (defaultValues?.package_inclusions || []),
+        description: defaultValues?.description || '',
+        price: defaultValues?.price !== undefined && defaultValues?.price !== null && defaultValues?.price !== '' ? defaultValues.price : (defaultValues?.base_price || 0),
+        duration_hours: defaultValues?.duration_hours ?? '',
+        minimum_persons: defaultValues?.minimum_persons ?? '',
+        maximum_persons: defaultValues?.maximum_persons ?? '',
+        food: Boolean(defaultValues?.food ?? false),
+        cake: Boolean(defaultValues?.cake ?? false),
+        decoration: Boolean(defaultValues?.decoration ?? false),
+        music: Boolean(defaultValues?.music ?? false),
+        other: Boolean(defaultValues?.other ?? false),
+        other_text: defaultValues?.other_text || '',
+        status: defaultValues?.status || 'DRAFT',
+        cover_image: defaultValues?.cover_image || '',
+        gallery: defaultValues?.gallery || []
+      });
+    }
+  }, [
+    defaultValues?.id,
+    defaultValues?.package_name,
+    defaultValues?.updated_at
+  ]);
+
   const { register, formState: { errors }, handleSubmit, setValue, watch } = methods;
   const currentStatus = watch('status');
   const currentCafeId = watch('cafe_id');

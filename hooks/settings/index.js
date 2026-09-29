@@ -64,7 +64,7 @@ export const useDeleteAccount = () => {
       toast.success('Account deleted successfully');
       if (typeof window !== 'undefined') {
         localStorage.clear();
-        window.location.href = '/login';
+        window.location.href = '/owner/login';
       }
     },
     onError: (error) => {
