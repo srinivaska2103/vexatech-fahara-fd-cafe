@@ -4,6 +4,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cafeSchema } from '@/schemas/cafe.schema';
 import { Input } from '../ui/Input';
+import { DatePicker } from '../ui/DatePicker';
 import { Label } from '../ui/Label';
 import { Button } from '../ui/Button';
 import toast from 'react-hot-toast';
@@ -14,6 +15,12 @@ import { MapPicker } from '../maps/MapPicker';
 import { useAuthStore } from '@/store/auth.store';
 import { 
   MapPin, 
+  Navigation,
+  Loader2,
+  Search,
+  AlertCircle,
+  RotateCcw,
+  Compass,
   Info, 
   Tag, 
   Percent,
@@ -352,10 +359,250 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
   const currentName = watch('name');
   const currentCity = watch('city');
   const currentAddress = watch('address');
+  const currentState = watch('state');
+  const currentCountry = watch('country');
+  const currentPincode = watch('pincode');
   const currentAmenities = watch('amenities') || [];
   const galleryImages = watch('gallery') || [];
 
   const [step2SubTab, setStep2SubTab] = useState('rates'); // 'rates' | 'discounts'
+  const [isGeocodingAddress, setIsGeocodingAddress] = useState(false);
+  const [isReverseGeocoding, setIsReverseGeocoding] = useState(false);
+  const [candidateResults, setCandidateResults] = useState([]);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [hasSearchedLocation, setHasSearchedLocation] = useState(false);
+  const [currentMapZoom, setCurrentMapZoom] = useState(16);
+  
+  const hasValidCoords = Number.isFinite(parseFloat(lat)) && Number.isFinite(parseFloat(lng)) && parseFloat(lat) !== 0 && parseFloat(lng) !== 0;
+  const [isLocationConfirmed, setIsLocationConfirmed] = useState(() => hasValidCoords);
+
+  // Helper to determine map zoom based on Nominatim result type
+  const calculateZoomLevel = (cand) => {
+    if (!cand) return 16;
+    const type = (cand.type || '').toLowerCase();
+    const addresstype = (cand.addresstype || '').toLowerCase();
+    const cls = (cand.class || '').toLowerCase();
+
+    if (type === 'building' || type === 'house' || type === 'house_number' || addresstype === 'building' || addresstype === 'house' || cls === 'building' || cls === 'place') {
+      return 18;
+    }
+    if (type === 'street' || type === 'road' || type === 'residential' || addresstype === 'road' || cls === 'highway') {
+      return 16;
+    }
+    if (type === 'suburb' || type === 'neighbourhood' || type === 'colony' || type === 'hamlet' || addresstype === 'suburb' || addresstype === 'neighbourhood') {
+      return 14;
+    }
+    if (type === 'city' || type === 'town' || type === 'village' || type === 'administrative' || type === 'postcode' || addresstype === 'city') {
+      return 12;
+    }
+    return 16;
+  };
+
+  // Helper to evaluate result confidence
+  const getResultConfidence = (cand) => {
+    if (!cand) return { level: 'approximate', label: 'Approximate location found', badgeClass: 'bg-sky-50 text-sky-700 border-sky-200 shadow-2xs' };
+    const type = (cand.type || '').toLowerCase();
+    const addresstype = (cand.addresstype || '').toLowerCase();
+    const addr = cand.address || {};
+
+    const isBuildingOrHouse = 
+      type === 'building' || type === 'house' || type === 'house_number' || 
+      addresstype === 'building' || addresstype === 'house' ||
+      Boolean(addr.house_number || addr.building);
+
+    if (isBuildingOrHouse) {
+      return { level: 'exact', label: 'Exact address found', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-2xs' };
+    }
+
+    const isNearbyStreetOrSuburb = 
+      type === 'street' || type === 'road' || type === 'residential' || 
+      type === 'suburb' || type === 'neighbourhood' ||
+      addresstype === 'road' || addresstype === 'suburb' || addresstype === 'neighbourhood' ||
+      Boolean(addr.road || addr.suburb || addr.neighbourhood);
+
+    if (isNearbyStreetOrSuburb) {
+      return { level: 'nearby', label: 'Nearby address found', badgeClass: 'bg-amber-50 text-amber-700 border-amber-200 shadow-2xs' };
+    }
+
+    return { level: 'approximate', label: 'Approximate location found', badgeClass: 'bg-sky-50 text-sky-700 border-sky-200 shadow-2xs' };
+  };
+
+  const handleSearchAndLocateAddress = async (showToast = true) => {
+    const rawAddress = currentAddress || '';
+    const city = currentCity || '';
+    const state = currentState || '';
+    const country = currentCountry || '';
+    const pincode = currentPincode || '';
+
+    if (!rawAddress && !city && !pincode) {
+      if (showToast) toast.error("Please enter a street address, city, or pincode to search");
+      return;
+    }
+
+    setIsGeocodingAddress(true);
+    setCandidateResults([]);
+    setSelectedCandidate(null);
+    setHasSearchedLocation(true);
+
+    try {
+      let resultsFound = [];
+
+      // 1. Structured Nominatim Search
+      const structuredParams = new URLSearchParams({
+        format: 'jsonv2',
+        addressdetails: '1',
+        countrycodes: 'in'
+      });
+      if (rawAddress) structuredParams.append('street', rawAddress);
+      if (city) structuredParams.append('city', city);
+      if (state) structuredParams.append('state', state);
+      if (country) structuredParams.append('country', country);
+      if (pincode) structuredParams.append('postalcode', pincode);
+
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?${structuredParams.toString()}&limit=5`,
+          { headers: { 'User-Agent': 'FaharaCafeApp/1.0' } }
+        );
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          resultsFound = data.filter(res => {
+            const latVal = parseFloat(res.lat);
+            const lngVal = parseFloat(res.lon);
+            return Number.isFinite(latVal) && Number.isFinite(lngVal) && latVal >= -90 && latVal <= 90 && lngVal >= -180 && lngVal <= 180;
+          });
+        }
+      } catch (e) {
+        console.warn("Structured Nominatim search error:", e);
+      }
+
+      // 2. Fallbacks if structured query returns 0 results (due to landmark/house number format)
+      if (resultsFound.length === 0) {
+        let cleanedStreet = rawAddress
+          .replace(/^[0-9A-Za-z\/-]+\s+/, '')
+          .replace(/\b(near|opp|opposite|behind|beside)\s+[^,]+/gi, '')
+          .trim();
+
+        const streetTokens = cleanedStreet.split(',').map(s => s.trim()).filter(Boolean);
+
+        const queriesToTry = [];
+        const fullRaw = [rawAddress, city, state, country, pincode].filter(Boolean).join(', ');
+        if (fullRaw) queriesToTry.push(fullRaw);
+
+        const fullClean = [cleanedStreet, city, state, country, pincode].filter(Boolean).join(', ');
+        if (fullClean) queriesToTry.push(fullClean);
+
+        streetTokens.forEach(token => {
+          const tokenQuery = [token, city, state, pincode].filter(Boolean).join(', ');
+          if (tokenQuery) queriesToTry.push(tokenQuery);
+        });
+
+        if (streetTokens.length >= 2) {
+          const pairQuery = [streetTokens.slice(-2).join(', '), city, state].filter(Boolean).join(', ');
+          if (pairQuery) queriesToTry.push(pairQuery);
+        }
+
+        if (pincode && city) queriesToTry.push(`${city} ${pincode}, ${country || 'India'}`);
+        if (pincode) queriesToTry.push(`${pincode}, ${country || 'India'}`);
+        if (city) queriesToTry.push([city, state, country].filter(Boolean).join(', '));
+
+        const uniqueQueries = [...new Set(queriesToTry)];
+
+        for (const query of uniqueQueries) {
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=in&q=${encodeURIComponent(query)}&limit=5`,
+              { headers: { 'User-Agent': 'FaharaCafeApp/1.0' } }
+            );
+            const data = await response.json();
+            if (Array.isArray(data) && data.length > 0) {
+              const valid = data.filter(res => {
+                const latVal = parseFloat(res.lat);
+                const lngVal = parseFloat(res.lon);
+                return Number.isFinite(latVal) && Number.isFinite(lngVal) && latVal >= -90 && latVal <= 90 && lngVal >= -180 && lngVal <= 180;
+              });
+              if (valid.length > 0) {
+                resultsFound = valid;
+                break;
+              }
+            }
+          } catch (e) {}
+        }
+      }
+
+      setCandidateResults(resultsFound);
+
+      if (resultsFound.length > 0) {
+        if (showToast) {
+          toast.success(`Found ${resultsFound.length} location result(s). Please select the best match.`);
+        }
+      } else {
+        if (showToast) toast.error("Couldn't find this address.");
+      }
+    } catch (err) {
+      console.error("Geocoding error:", err);
+      if (showToast) toast.error("Couldn't find this address.");
+    } finally {
+      setIsGeocodingAddress(false);
+    }
+  };
+
+  const handleSelectCandidate = (cand) => {
+    setSelectedCandidate(cand);
+    const newLat = parseFloat(cand.lat);
+    const newLng = parseFloat(cand.lon);
+
+    if (Number.isFinite(newLat) && Number.isFinite(newLng)) {
+      setValue('latitude', newLat, { shouldValidate: true, shouldDirty: true });
+      setValue('longitude', newLng, { shouldValidate: true, shouldDirty: true });
+      const targetZoom = calculateZoomLevel(cand);
+      setCurrentMapZoom(targetZoom);
+      setIsLocationConfirmed(true);
+      toast.success("Location selected! Adjust pin on the map if needed.");
+    }
+  };
+
+  const handleConfirmLocation = () => {
+    setIsLocationConfirmed(true);
+    toast.success("Location saved! Form coordinates updated.");
+  };
+
+  const handleReverseGeocodeFromPin = async () => {
+    if (!hasValidCoords) {
+      toast.error("Please place a valid pin on the map first");
+      return;
+    }
+
+    setIsReverseGeocoding(true);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&addressdetails=1`,
+        { headers: { 'User-Agent': 'FaharaCafeApp/1.0' } }
+      );
+      const data = await response.json();
+      if (data && data.address) {
+        const addr = data.address;
+        const city = addr.city || addr.town || addr.village || addr.suburb || addr.county || '';
+        const state = addr.state || '';
+        const country = addr.country || '';
+        const pincode = addr.postcode || '';
+        const street = addr.road ? `${addr.house_number ? addr.house_number + ' ' : ''}${addr.road}` : (data.display_name.split(',')[0] || '');
+
+        if (street) setValue('address', street, { shouldDirty: true });
+        if (city) setValue('city', city, { shouldDirty: true });
+        if (state) setValue('state', state, { shouldDirty: true });
+        if (country) setValue('country', country, { shouldDirty: true });
+        if (pincode) setValue('pincode', pincode, { shouldDirty: true });
+
+        toast.success("Address fields updated from pin location!");
+      }
+    } catch (err) {
+      console.error("Reverse geocoding error:", err);
+      toast.error("Failed to update address from pin");
+    } finally {
+      setIsReverseGeocoding(false);
+    }
+  };
 
   // Event & Offer Watchers
   const providesEventServices = watch('provides_event_services') ?? defaultValues?.provides_event_services ?? false;
@@ -959,55 +1206,249 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                     </div>
 
                     <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
-                      <div className="flex items-center gap-3 pb-4 border-b border-border/40">
-                        <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-extrabold">
-                          <MapPin className="w-5 h-5" />
+                      {/* Header with Status Indicator */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-extrabold">
+                            <MapPin className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <h3 className="text-base font-extrabold text-[#2C1810]">Location & Address Coordinates</h3>
+                            <p className="text-xs text-text/60">Set the exact location customers will use to navigate to your venue</p>
+                          </div>
                         </div>
+
+                        {/* Location Header */}
                         <div>
-                          <h3 className="text-base font-extrabold text-[#2C1810]">Address & Location Coordinates</h3>
-                          <p className="text-xs text-text/60">Physical address for customer navigation</p>
+                          <h3 className="text-sm font-black text-[#2C1810] uppercase tracking-wider flex items-center gap-2">
+                            <MapPin className="w-4.5 h-4.5 text-[#6F4E37]" />
+                            <span>LOCATION</span>
+                          </h3>
+                          <p className="text-xs text-text/60 font-medium mt-0.5">
+                            Set the exact location customers will use.
+                          </p>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* LEFT COLUMN: ADDRESS INPUTS & SEARCH RESULTS */}
                         <div className="space-y-4">
                           <div>
                             <Label htmlFor="address">Street Address *</Label>
-                            <Input id="address" {...register('address')} error={errors.address?.message} placeholder="e.g. 123 Main Street, Suite 4B" />
+                            <Input 
+                              id="address" 
+                              {...register('address')} 
+                              error={errors.address?.message} 
+                              placeholder="e.g. 4/821A Vaigai Colony Sattamangalam, near Belgium waffle, Anna Nagar" 
+                            />
                           </div>
 
                           <div className="grid grid-cols-2 gap-3">
                             <div>
                               <Label htmlFor="city">City *</Label>
-                              <Input id="city" {...register('city')} error={errors.city?.message} placeholder="e.g. Madurai" />
+                              <Input 
+                                id="city" 
+                                {...register('city')} 
+                                error={errors.city?.message} 
+                                placeholder="e.g. Madurai" 
+                              />
                             </div>
                             <div>
                               <Label htmlFor="state">State</Label>
-                              <Input id="state" {...register('state')} error={errors.state?.message} placeholder="e.g. Tamil Nadu" />
+                              <Input 
+                                id="state" 
+                                {...register('state')} 
+                                error={errors.state?.message} 
+                                placeholder="e.g. Tamil Nadu" 
+                              />
                             </div>
                             <div>
                               <Label htmlFor="country">Country</Label>
-                              <Input id="country" {...register('country')} error={errors.country?.message} placeholder="e.g. India" />
+                              <Input 
+                                id="country" 
+                                {...register('country')} 
+                                error={errors.country?.message} 
+                                placeholder="e.g. India" 
+                              />
                             </div>
                             <div>
                               <Label htmlFor="pincode">Postal Pincode</Label>
-                              <Input id="pincode" {...register('pincode')} error={errors.pincode?.message} placeholder="e.g. 625001" />
+                              <Input 
+                                id="pincode" 
+                                {...register('pincode')} 
+                                error={errors.pincode?.message} 
+                                placeholder="e.g. 625020" 
+                              />
                             </div>
                           </div>
+
+                          {/* SEARCH ADDRESS BUTTON */}
+                          <button
+                            type="button"
+                            onClick={() => handleSearchAndLocateAddress(true)}
+                            disabled={isGeocodingAddress}
+                            className="w-full py-3 px-4 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
+                          >
+                            {isGeocodingAddress ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span>Searching location...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Search className="w-4 h-4" />
+                                <span>Search Address</span>
+                              </>
+                            )}
+                          </button>
+
+                          {/* SEARCH RESULTS PANEL */}
+                          {hasSearchedLocation && (
+                            <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 space-y-3">
+                              <div className="flex items-center justify-between border-b border-[#DDB892]/30 pb-2">
+                                <h4 className="text-xs font-black text-[#2C1810] uppercase tracking-wider flex items-center gap-1.5">
+                                  <span>SEARCH RESULTS</span>
+                                </h4>
+                                {candidateResults.length > 0 && (
+                                  <span className="text-[10px] text-text/50 font-bold">{candidateResults.length} candidate(s) found</span>
+                                )}
+                              </div>
+
+                              {candidateResults.length > 0 ? (
+                                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                                  {candidateResults.map((cand, idx) => {
+                                    const isSelected = selectedCandidate?.place_id === cand.place_id;
+                                    const confidence = getResultConfidence(cand);
+                                    return (
+                                      <div
+                                        key={cand.place_id || idx}
+                                        className={cn(
+                                          "p-3 rounded-xl border text-xs transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3",
+                                          isSelected ? "bg-white border-[#6F4E37] shadow-sm font-bold" : "bg-white/80 border-stone-200 hover:bg-white"
+                                        )}
+                                      >
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex items-center gap-2 mb-1">
+                                            <span className={cn("px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border", confidence.badgeClass)}>
+                                              {confidence.label}
+                                            </span>
+                                          </div>
+                                          <p className="text-xs text-[#2C1810] leading-snug line-clamp-2">{cand.display_name}</p>
+                                        </div>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleSelectCandidate(cand)}
+                                          className={cn(
+                                            "px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all shrink-0 cursor-pointer",
+                                            isSelected
+                                              ? "bg-emerald-600 text-white shadow-2xs"
+                                              : "bg-[#6F4E37] text-white hover:bg-[#5a3e2b]"
+                                          )}
+                                        >
+                                          {isSelected ? "Selected ✓" : "Select"}
+                                        </button>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              ) : (
+                                <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-center space-y-3">
+                                  <p className="text-xs font-bold text-rose-800">Couldn't find this address.</p>
+                                  <div className="flex items-center justify-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleSearchAndLocateAddress(true)}
+                                      className="px-3 py-1.5 rounded-lg bg-white border border-rose-300 text-rose-700 text-xs font-bold hover:bg-rose-100 transition-all flex items-center gap-1.5 cursor-pointer"
+                                    >
+                                      <RotateCcw className="w-3.5 h-3.5" />
+                                      <span>Try Again</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setHasSearchedLocation(false);
+                                        toast.success("Please click or drag the pin on the map to place your cafe location manually.");
+                                      }}
+                                      className="px-3 py-1.5 rounded-lg bg-[#6F4E37] text-white text-xs font-bold hover:bg-[#5a3e2b] transition-all flex items-center gap-1.5 cursor-pointer"
+                                    >
+                                      <MapPin className="w-3.5 h-3.5" />
+                                      <span>Place Pin Manually</span>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+
+                              {selectedCandidate && getResultConfidence(selectedCandidate).level !== 'exact' && (
+                                <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200/80 text-[11px] text-amber-900 flex items-start gap-2">
+                                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                                  <span>Only an approximate location was found. Please select the location or move the pin to the exact cafe.</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
 
-                        <div className="h-64 sm:h-auto min-h-[260px]">
-                          <MapPicker 
-                            latitude={lat} 
-                            longitude={lng}
-                            onLocationSelect={(location) => {
-                              if (location.lat) setValue('latitude', location.lat, { shouldValidate: true, shouldDirty: true });
-                              if (location.lng) setValue('longitude', location.lng, { shouldValidate: true, shouldDirty: true });
-                              if (location.address) setValue('address', location.address, { shouldValidate: true, shouldDirty: true });
-                              if (location.city) setValue('city', location.city, { shouldValidate: true, shouldDirty: true });
-                            }}
-                            className="h-full w-full rounded-2xl overflow-hidden shadow-inner border border-border/50"
-                          />
+                        {/* RIGHT COLUMN: MAP & LOCATION STATUS */}
+                        <div className="flex flex-col h-full min-h-[360px] space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-black text-[#2C1810] uppercase tracking-wider">MAP</span>
+                            <span className="text-[11px] font-bold text-text/50">Drag pin to exact location</span>
+                          </div>
+
+                          <div className="flex-1 rounded-2xl overflow-hidden shadow-inner border border-border/50 relative min-h-[300px]">
+                            <MapPicker 
+                              latitude={lat} 
+                              longitude={lng}
+                              zoom={currentMapZoom}
+                              onLocationSelect={(location) => {
+                                if (location.lat) setValue('latitude', location.lat, { shouldValidate: true, shouldDirty: true });
+                                if (location.lng) setValue('longitude', location.lng, { shouldValidate: true, shouldDirty: true });
+                                setIsLocationConfirmed(true);
+                              }}
+                              className="h-full w-full"
+                            />
+                          </div>
+
+                          {/* Map Reverse Geocode Bar */}
+                          <div className="flex items-center justify-end">
+                            <button
+                              type="button"
+                              onClick={handleReverseGeocodeFromPin}
+                              disabled={isReverseGeocoding || !hasValidCoords}
+                              className="px-3 py-1.5 rounded-xl bg-white border border-stone-200 hover:bg-[#FFF8F0] hover:border-[#DDB892] text-[#6F4E37] text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
+                              title="Update form address text fields from current pin position"
+                            >
+                              {isReverseGeocoding ? <Loader2 className="w-3 h-3 animate-spin" /> : <RotateCcw className="w-3 h-3" />}
+                              <span>Update Address Text from Pin</span>
+                            </button>
+                          </div>
+
+                          {/* LOCATION STATUS BAR */}
+                          <div className="p-4 rounded-2xl bg-surface/60 border border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2 text-xs font-black text-[#2C1810]">
+                                <span className={cn("w-2.5 h-2.5 rounded-full", hasValidCoords ? "bg-emerald-500 animate-pulse" : "bg-amber-500")} />
+                                <span>{hasValidCoords ? "Location Selected" : "Location Not Set"}</span>
+                              </div>
+                              {hasValidCoords ? (
+                                <p className="text-[11px] font-mono text-text/60">
+                                  Latitude: {parseFloat(lat).toFixed(6)} | Longitude: {parseFloat(lng).toFixed(6)}
+                                </p>
+                              ) : (
+                                <p className="text-[11px] text-amber-700">Search address or click on the map to set location.</p>
+                              )}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={handleConfirmLocation}
+                              disabled={!hasValidCoords}
+                              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#6F4E37] text-white text-xs font-black hover:bg-[#5a3e2b] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-2xs"
+                            >
+                              <Save className="w-4 h-4" />
+                              <span>Save Location</span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1142,40 +1583,6 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
 
                           {providesEventServices && (
                             <div className="space-y-6 pt-4 border-t border-border/40">
-                              <div className="space-y-3">
-                                <div>
-                                  <Label className="mb-0">Supported Event Types / Occasions *</Label>
-                                  <p className="text-[11px] text-text/60">Select the occasion categories supported by your venue</p>
-                                </div>
-
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-                                  {EVENT_TYPES_OPTIONS.map(evt => {
-                                    const isSelected = Array.isArray(selectedEventTypes) && selectedEventTypes.includes(evt.id);
-                                    return (
-                                      <button
-                                        key={evt.id}
-                                        type="button"
-                                        onClick={() => toggleEventType(evt.id)}
-                                        className={cn(
-                                          "p-3 rounded-2xl border text-left text-xs font-bold transition-all flex items-center gap-2 cursor-pointer",
-                                          isSelected
-                                            ? "bg-[#FFF8F0] border-[#6F4E37] text-[#6F4E37] shadow-2xs"
-                                            : "bg-surface/30 border-border/50 text-text/70 hover:bg-surface"
-                                        )}
-                                      >
-                                        <div className={cn(
-                                          "w-4 h-4 rounded-md border flex items-center justify-center shrink-0 text-[10px]",
-                                          isSelected ? "bg-[#6F4E37] border-[#6F4E37] text-white" : "border-stone-300 bg-white"
-                                        )}>
-                                          {isSelected && "✓"}
-                                        </div>
-                                        <span className="truncate">{evt.label}</span>
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-
                               <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div>
                                   <h4 className="text-xs font-black text-[#2C1810] flex items-center gap-2">
@@ -1338,21 +1745,20 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
                                   <Label htmlFor="valid_from">Valid From</Label>
-                                  <Input 
+                                  <DatePicker 
                                     id="valid_from" 
-                                    type="date"
                                     value={offerFormData.valid_from} 
-                                    onChange={(e) => setOfferFormData(prev => ({ ...prev, valid_from: e.target.value }))}
+                                    onChange={(e) => setOfferFormData(prev => ({ ...prev, valid_from: e.value || e.target?.value || '' }))}
                                   />
                                 </div>
 
                                 <div>
                                   <Label htmlFor="valid_until">Valid Until</Label>
-                                  <Input 
+                                  <DatePicker 
                                     id="valid_until" 
-                                    type="date"
                                     value={offerFormData.valid_until} 
-                                    onChange={(e) => setOfferFormData(prev => ({ ...prev, valid_until: e.target.value }))}
+                                    onChange={(e) => setOfferFormData(prev => ({ ...prev, valid_until: e.value || e.target?.value || '' }))}
+                                    min={offerFormData.valid_from}
                                   />
                                 </div>
                               </div>

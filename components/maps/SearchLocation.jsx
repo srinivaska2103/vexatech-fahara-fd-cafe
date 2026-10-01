@@ -30,20 +30,43 @@ export const SearchLocation = ({ onSelectLocation, className }) => {
 
       setIsSearching(true);
       try {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-            query
-          )}&addressdetails=1&limit=5`
+        // Try raw query first
+        const rawRes = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`
         );
-        const data = await response.json();
-        setResults(data);
+        let data = await rawRes.json();
+
+        if (!data || data.length === 0) {
+          // If raw query failed, clean query (remove door numbers & landmarks)
+          let cleaned = query
+            .replace(/^[0-9A-Za-z\/-]+\s+/, '')
+            .replace(/\b(near|opp|opposite|behind|beside)\s+[^,]+/gi, '')
+            .trim();
+
+          const tokens = cleaned.split(',').map(s => s.trim()).filter(Boolean);
+          
+          for (const token of tokens) {
+            if (token.length >= 3) {
+              const tokenRes = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(token)}&addressdetails=1&limit=5`
+              );
+              const tokenData = await tokenRes.json();
+              if (tokenData && tokenData.length > 0) {
+                data = tokenData;
+                break;
+              }
+            }
+          }
+        }
+
+        setResults(data || []);
         setIsOpen(true);
       } catch (error) {
         console.error('Error searching location:', error);
       } finally {
         setIsSearching(false);
       }
-    }, 500); // Debounce for 500ms
+    }, 500);
 
     return () => clearTimeout(searchTimeout);
   }, [query]);

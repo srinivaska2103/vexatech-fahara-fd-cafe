@@ -1,28 +1,41 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import { LocationMarker } from './LocationMarker';
 import { SearchLocation } from './SearchLocation';
 import { UserLocationButton } from './UserLocationButton';
 import { cn } from '@/utils/cn';
 import toast from 'react-hot-toast';
 
-const defaultCenter = [40.7128, -74.0060]; // New York Default
+const defaultCenter = [9.9252, 78.1198]; // Default Madurai, Tamil Nadu fallback only when no coordinates exist
 
 // Helper component to center map on coordinate changes
-const MapUpdater = ({ center }) => {
+const MapUpdater = ({ center, zoom = 16 }) => {
   const map = useMap();
   useEffect(() => {
-    if (center) {
-      map.flyTo(center, 15, { duration: 1.5 });
+    if (center && Array.isArray(center) && center.length === 2 && !isNaN(center[0]) && !isNaN(center[1])) {
+      map.flyTo(center, zoom, { duration: 1.2 });
     }
-  }, [center, map]);
+  }, [center, zoom, map]);
+  return null;
+};
+
+// Helper component for click-to-pin functionality
+const MapClickListener = ({ onMapClick }) => {
+  useMapEvents({
+    click(e) {
+      if (onMapClick && e.latlng) {
+        onMapClick(e.latlng);
+      }
+    }
+  });
   return null;
 };
 
 export const MapPicker = ({ 
   latitude, 
   longitude, 
+  zoom = 16,
   onLocationSelect, 
   className 
 }) => {
@@ -36,36 +49,14 @@ export const MapPicker = ({
     return <div className={cn("animate-pulse bg-border/40 rounded-xl", className)}></div>;
   }
 
-  const hasCoordinates = latitude && longitude;
-  const currentCenter = hasCoordinates ? [parseFloat(latitude), parseFloat(longitude)] : defaultCenter;
+  const parsedLat = parseFloat(latitude);
+  const parsedLng = parseFloat(longitude);
+  const hasCoordinates = Number.isFinite(parsedLat) && Number.isFinite(parsedLng) && parsedLat >= -90 && parsedLat <= 90 && parsedLng >= -180 && parsedLng <= 180;
+  
+  const currentCenter = hasCoordinates ? [parsedLat, parsedLng] : defaultCenter;
 
-  const handleDragEnd = async (position) => {
-    try {
-      // Reverse geocode to get address for dragged location
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}&addressdetails=1`
-      );
-      const data = await response.json();
-      
-      const address = data.address || {};
-      const city = address.city || address.town || address.village || address.county || '';
-      const state = address.state || '';
-      const country = address.country || '';
-      const pincode = address.postcode || '';
-      const street = address.road ? `${address.house_number ? address.house_number + ' ' : ''}${address.road}` : '';
-
-      onLocationSelect({
-        lat: position.lat,
-        lng: position.lng,
-        address: street,
-        city,
-        state,
-        country,
-        pincode
-      });
-    } catch (error) {
-      console.error('Error reverse geocoding map drag:', error);
-      // Fallback
+  const handleDragEnd = (position) => {
+    if (position && position.lat && position.lng) {
       onLocationSelect({
         lat: position.lat,
         lng: position.lng
@@ -73,27 +64,34 @@ export const MapPicker = ({
     }
   };
 
+  const handleMapClick = (latlng) => {
+    if (latlng && latlng.lat && latlng.lng) {
+      onLocationSelect({
+        lat: latlng.lat,
+        lng: latlng.lng
+      });
+    }
+  };
+
   return (
-    <div className={cn("flex flex-col gap-4 h-full", className)}>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1">
-          <SearchLocation onSelectLocation={(location) => {
-            onLocationSelect(location);
-          }} />
-        </div>
+    <div className={cn("flex flex-col gap-2 h-full", className)}>
+      <div className="flex items-center justify-between px-1">
+        <span className="text-[11px] font-bold text-text/60">
+          📍 Drag pin or click map to adjust exact position
+        </span>
         <UserLocationButton 
           onLocationFound={(location) => {
             onLocationSelect(location);
-            toast.success("Location found");
+            toast.success("Location updated from device GPS!");
           }} 
           onError={(err) => toast.error(err)}
         />
       </div>
 
-      <div className="relative flex-1 rounded-xl overflow-hidden border border-border/50 z-0 min-h-[300px]">
+      <div className="relative flex-1 rounded-2xl overflow-hidden border border-border/50 z-0 min-h-[300px]">
         <MapContainer
           center={currentCenter}
-          zoom={14}
+          zoom={zoom}
           scrollWheelZoom={true}
           zoomControl={false}
           className="w-full h-full"
@@ -103,13 +101,14 @@ export const MapPicker = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <ZoomControl position="bottomright" />
-          <MapUpdater center={hasCoordinates ? currentCenter : null} />
+          <MapUpdater center={hasCoordinates ? currentCenter : null} zoom={zoom} />
+          <MapClickListener onMapClick={handleMapClick} />
           
           <LocationMarker 
             position={currentCenter} 
             draggable={true} 
             onDragEnd={handleDragEnd} 
-            address="Drag me to pinpoint exact location"
+            address={hasCoordinates ? `Lat: ${parsedLat.toFixed(6)}, Lng: ${parsedLng.toFixed(6)}` : "Click or drag pin to adjust cafe location"}
           />
         </MapContainer>
       </div>

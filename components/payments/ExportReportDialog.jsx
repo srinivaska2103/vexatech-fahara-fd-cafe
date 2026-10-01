@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { exportReportSchema } from '@/schemas/payment.schema';
 import { cn } from '@/utils/cn';
 import { CustomSelect } from '../ui/CustomSelect';
+import { DatePicker } from '../ui/DatePicker';
 
 export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) => {
   const { register, handleSubmit, watch, setValue, formState: { errors }, reset } = useForm({
@@ -91,18 +92,19 @@ export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-text/70 mb-1">Start Date</label>
-                      <input 
-                        type="date" 
-                        {...register('start_date')} 
-                        className={cn("w-full rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20", errors.start_date ? "border-danger" : "border-border")}
+                      <DatePicker 
+                        value={watch('start_date')} 
+                        onChange={(e) => setValue('start_date', e.value || e.target?.value || '')}
+                        error={errors.start_date?.message}
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-text/70 mb-1">End Date</label>
-                      <input 
-                        type="date" 
-                        {...register('end_date')} 
-                        className={cn("w-full rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20", errors.end_date ? "border-danger" : "border-border")}
+                      <DatePicker 
+                        value={watch('end_date')} 
+                        onChange={(e) => setValue('end_date', e.value || e.target?.value || '')}
+                        min={watch('start_date')}
+                        error={errors.end_date?.message}
                       />
                     </div>
                   </div>
