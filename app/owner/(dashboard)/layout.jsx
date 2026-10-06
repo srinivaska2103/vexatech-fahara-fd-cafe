@@ -130,6 +130,7 @@ export default function DashboardLayout({ children }) {
       </div>
       <MobileBottomNav />
       <LiveNotificationListener />
+      <OwnerOnboardingTour />
     </div>
   );
 }

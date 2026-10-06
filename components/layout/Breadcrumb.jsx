@@ -5,14 +5,26 @@ import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
 import { useCafe } from '@/hooks/cafe';
 
+import { useAuthStore } from '@/store/auth.store';
+
 const BreadcrumbItem = ({ path, index, isLast, href, paths }) => {
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+  const isRestaurantOwner = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(path);
   const isCafe = isUUID && paths[index - 1] === 'cafes';
   const { data: cafeData } = useCafe(isCafe ? path : null);
   const cafe = cafeData?.data || cafeData;
 
   let label = path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' ');
-  if (isUUID) {
+  if (path.toLowerCase() === 'cafes' && isRestaurantOwner) {
+    label = 'Restaurants';
+  } else if (isUUID) {
     if (isCafe && cafe?.name) {
       label = cafe.name;
     } else {

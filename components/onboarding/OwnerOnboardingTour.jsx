@@ -51,8 +51,10 @@ export function OwnerOnboardingTour() {
   const [targetRect, setTargetRect] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  const isOwner = role === 'CAFE_OWNER' || role === 'RESTAURANT_OWNER' || role === 'WALKING_CAFE_OWNER' || String(role || '').toUpperCase().includes('OWNER') || String(role || '').toUpperCase().includes('RESTAURANT');
+
   // Fetch real cafe data to compute dynamic profile completion & setup status
-  const { data: cafesResponse } = useCafes({}, { enabled: !!user?.id && role === 'CAFE_OWNER' });
+  const { data: cafesResponse } = useCafes({}, { enabled: !!user?.id && isOwner });
   const cafes = cafesResponse?.data || [];
   const primaryCafe = cafes[0] || null;
 
@@ -142,23 +144,19 @@ export function OwnerOnboardingTour() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Determine whether tour should show automatically
+  // Determine whether tour should show automatically on initial login
   useEffect(() => {
-    if (isAuthenticated && role === 'CAFE_OWNER' && user) {
-      if (!user.owner_onboarding_completed) {
-        setIsOpen(true);
-      }
-    } else {
-      setIsOpen(false);
+    if (isAuthenticated && isOwner && user && !user.owner_onboarding_completed) {
+      setIsOpen(true);
     }
-  }, [isAuthenticated, role, user]);
+  }, [isAuthenticated, isOwner, user]);
 
   // Handle manual restart listener
   useEffect(() => {
     const handleManualRestart = () => {
       setActiveStep(1);
       setIsOpen(true);
-      toast.success('Restarting Cafe Owner Guided Tour!');
+      toast.success('Restarting Partner Guided Tour!');
     };
 
     window.addEventListener('restart-owner-tour', handleManualRestart);

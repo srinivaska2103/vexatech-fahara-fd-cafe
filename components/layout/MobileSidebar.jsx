@@ -258,6 +258,11 @@ export const MobileSidebar = () => {
     }
     if (activeCategory === 'all') return true;
     return tab.category === activeCategory;
+  }).map((tab) => {
+    if (isRestaurantOwner && tab.id === 'cafes') {
+      return { ...tab, label: 'Restaurant Management' };
+    }
+    return tab;
   });
 
   return (

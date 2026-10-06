@@ -15,7 +15,7 @@ export default function LoginPage() {
       <AuthCard>
         <AuthLogo />
         <AuthHeader 
-          title="Walking Cafe & Partner Login" 
+          title="Cafe & Partner Login" 
           subtitle="Sign in to your Cafe Partner Dashboard" 
         />
         <LoginForm 

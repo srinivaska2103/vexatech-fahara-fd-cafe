@@ -314,8 +314,8 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
     google_place_id: defaultValues?.google_place_id ?? '',
     google_rating: defaultValues?.google_rating ?? '',
     google_reviews_link: defaultValues?.google_reviews_link ?? '',
-    provides_event_services: isWalkingCafe ? false : (defaultValues?.provides_event_services ?? false),
-    allow_third_party_decoration: isWalkingCafe ? false : (defaultValues?.allow_third_party_decoration ?? true),
+    provides_event_services: (isWalkingCafe || isRestaurantOwner) ? false : (defaultValues?.provides_event_services ?? false),
+    allow_third_party_decoration: (isWalkingCafe || isRestaurantOwner) ? false : (defaultValues?.allow_third_party_decoration ?? true),
     cover_image: defaultValues?.cover_image ?? '',
     status: defaultValues?.status ?? 'DRAFT',
     amenities: Array.isArray(defaultValues?.amenities) ? defaultValues.amenities : [],
@@ -1508,11 +1508,15 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                             </div>
                             <div>
                               <h3 className="text-base font-extrabold text-[#2C1810]">Attributes & Pricing Configuration</h3>
-                              <p className="text-xs text-text/60">Set hourly pricing rates and guest seating capacities</p>
+                              <p className="text-xs text-text/60">
+                                {isRestaurantOwner || isWalkingCafe 
+                                  ? 'Set guest seating capacity for table reservations' 
+                                  : 'Set hourly pricing rates and guest seating capacities'}
+                              </p>
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                          <div className={cn("grid grid-cols-1 gap-5", (isRestaurantOwner || isWalkingCafe) ? "md:grid-cols-2" : "md:grid-cols-3")}>
                             <div>
                               <Label htmlFor="category">Venue Category</Label>
                               <ModernCategorySelect 
@@ -1523,10 +1527,12 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               />
                             </div>
 
-                            <div>
-                              <Label htmlFor="price">Hourly Booking Rate (₹/hr) *</Label>
-                              <Input id="price" type="number" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
-                            </div>
+                            {!isRestaurantOwner && !isWalkingCafe && (
+                              <div>
+                                <Label htmlFor="price">Hall Charges per Hr (₹/hr) *</Label>
+                                <Input id="price" type="number" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
+                              </div>
+                            )}
 
                             <div>
                               <Label htmlFor="capacity">Max Seating Capacity (Guests) *</Label>
@@ -1535,113 +1541,115 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           </div>
                         </div>
 
-                        {/* Event & Party Services */}
-                        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
-                          <div className="flex items-center justify-between pb-4 border-b border-border/40">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-extrabold">
-                                <PartyPopper className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <h3 className="text-base font-extrabold text-[#2C1810]">Event & Party Services</h3>
-                                <p className="text-xs text-text/60">Configure private events, occasion types, and package settings</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label>Does your cafe provide private event & party services?</Label>
-                            <div className="flex flex-wrap items-center gap-3">
-                              <button
-                                type="button"
-                                onClick={() => setValue('provides_event_services', true, { shouldDirty: true })}
-                                className={cn(
-                                  "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
-                                  providesEventServices 
-                                    ? "bg-[#6F4E37] text-white border-[#6F4E37] shadow-xs" 
-                                    : "bg-white text-text/70 border-border/60 hover:border-[#6F4E37]"
-                                )}
-                              >
-                                <CheckCircle2 className="w-4 h-4" />
-                                <span>Yes, We Provide Private Events</span>
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => setValue('provides_event_services', false, { shouldDirty: true })}
-                                className={cn(
-                                  "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
-                                  !providesEventServices 
-                                    ? "bg-stone-200 text-stone-800 border-stone-300" 
-                                    : "bg-white text-text/70 border-border/60 hover:border-stone-400"
-                                )}
-                              >
-                                <span>No Events</span>
-                              </button>
-                            </div>
-                          </div>
-
-                          {providesEventServices && (
-                            <div className="space-y-6 pt-4 border-t border-border/40">
-                              <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        {/* Event & Party Services (Hidden for Restaurant Owners and Walking Cafes) */}
+                        {!isRestaurantOwner && !isWalkingCafe && (
+                          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
+                            <div className="flex items-center justify-between pb-4 border-b border-border/40">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-extrabold">
+                                  <PartyPopper className="w-5 h-5" />
+                                </div>
                                 <div>
-                                  <h4 className="text-xs font-black text-[#2C1810] flex items-center gap-2">
-                                    <Package className="w-4 h-4 text-[#6F4E37]" />
-                                    Event Packages Availability
-                                  </h4>
-                                  <p className="text-[11px] text-text/60 mt-0.5">
-                                    Manage custom event packages (decorations, food menus, minimum guests, tiered pricing)
+                                  <h3 className="text-base font-extrabold text-[#2C1810]">Event & Party Services</h3>
+                                  <p className="text-xs text-text/60">Configure private events, occasion types, and package settings</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-3">
+                              <Label>Does your cafe provide private event & party services?</Label>
+                              <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => setValue('provides_event_services', true, { shouldDirty: true })}
+                                  className={cn(
+                                    "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
+                                    providesEventServices 
+                                      ? "bg-[#6F4E37] text-white border-[#6F4E37] shadow-xs" 
+                                      : "bg-white text-text/70 border-border/60 hover:border-[#6F4E37]"
+                                  )}
+                                >
+                                  <CheckCircle2 className="w-4 h-4" />
+                                  <span>Yes, We Provide Private Events</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => setValue('provides_event_services', false, { shouldDirty: true })}
+                                  className={cn(
+                                    "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
+                                    !providesEventServices 
+                                      ? "bg-stone-200 text-stone-800 border-stone-300" 
+                                      : "bg-white text-text/70 border-border/60 hover:border-stone-400"
+                                  )}
+                                >
+                                  <span>No Events</span>
+                                </button>
+                              </div>
+                            </div>
+
+                            {providesEventServices && (
+                              <div className="space-y-6 pt-4 border-t border-border/40">
+                                <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                  <div>
+                                    <h4 className="text-xs font-black text-[#2C1810] flex items-center gap-2">
+                                      <Package className="w-4 h-4 text-[#6F4E37]" />
+                                      Event Packages Availability
+                                    </h4>
+                                    <p className="text-[11px] text-text/60 mt-0.5">
+                                      Manage custom event packages (decorations, food menus, minimum guests, tiered pricing)
+                                    </p>
+                                  </div>
+
+                                  {defaultValues?.id ? (
+                                    <a
+                                      href={`/owner/cafes/${defaultValues.id}/packages`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="px-4 py-2 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all shrink-0 flex items-center gap-1.5"
+                                    >
+                                      <span>Manage Packages</span>
+                                      <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                  ) : (
+                                    <span className="text-[11px] text-text/50 italic">Save cafe to configure event packages</span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Third-Party Event Management Switch */}
+                            <div className="pt-4 border-t border-border/40">
+                              <div className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-surface/30 border border-border/60">
+                                <div className="space-y-0.5">
+                                  <div className="flex items-center gap-2">
+                                    <Users className="w-4 h-4 text-[#6F4E37]" />
+                                    <h4 className="text-xs font-black text-[#2C1810]">
+                                      Allow 3rd Party Event Management & Decoration Services
+                                    </h4>
+                                  </div>
+                                  <p className="text-[11px] text-text/60 pl-6">
+                                    External event managers and decorators can offer their services for bookings at this cafe according to Fahara's event workflow.
                                   </p>
                                 </div>
 
-                                {defaultValues?.id ? (
-                                  <a
-                                    href={`/owner/cafes/${defaultValues.id}/packages`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="px-4 py-2 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all shrink-0 flex items-center gap-1.5"
-                                  >
-                                    <span>Manage Packages</span>
-                                    <ExternalLink className="w-3.5 h-3.5" />
-                                  </a>
-                                ) : (
-                                  <span className="text-[11px] text-text/50 italic">Save cafe to configure event packages</span>
-                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => setValue('allow_third_party_decoration', !allowThirdPartyDecoration, { shouldDirty: true })}
+                                  className={cn(
+                                    "w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 border mt-1",
+                                    allowThirdPartyDecoration ? "bg-[#6F4E37] border-[#6F4E37]" : "bg-stone-300 border-stone-300"
+                                  )}
+                                >
+                                  <div className={cn(
+                                    "w-5 h-5 rounded-full bg-white transition-transform shadow-xs absolute top-0.5",
+                                    allowThirdPartyDecoration ? "right-0.5" : "left-0.5"
+                                  )} />
+                                </button>
                               </div>
-                            </div>
-                          )}
-
-                          {/* Third-Party Event Management Switch */}
-                          <div className="pt-4 border-t border-border/40">
-                            <div className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-surface/30 border border-border/60">
-                              <div className="space-y-0.5">
-                                <div className="flex items-center gap-2">
-                                  <Users className="w-4 h-4 text-[#6F4E37]" />
-                                  <h4 className="text-xs font-black text-[#2C1810]">
-                                    Allow 3rd Party Event Management & Decoration Services
-                                  </h4>
-                                </div>
-                                <p className="text-[11px] text-text/60 pl-6">
-                                  External event managers and decorators can offer their services for bookings at this cafe according to Fahara's event workflow.
-                                </p>
-                              </div>
-
-                              <button
-                                type="button"
-                                onClick={() => setValue('allow_third_party_decoration', !allowThirdPartyDecoration, { shouldDirty: true })}
-                                className={cn(
-                                  "w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 border mt-1",
-                                  allowThirdPartyDecoration ? "bg-[#6F4E37] border-[#6F4E37]" : "bg-stone-300 border-stone-300"
-                                )}
-                              >
-                                <div className={cn(
-                                  "w-5 h-5 rounded-full bg-white transition-transform shadow-xs absolute top-0.5",
-                                  allowThirdPartyDecoration ? "right-0.5" : "left-0.5"
-                                )} />
-                              </button>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     )}
 

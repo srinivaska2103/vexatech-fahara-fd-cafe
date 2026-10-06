@@ -88,6 +88,11 @@ export const Sidebar = () => {
       return item.label !== 'Events';
     }
     return true;
+  }).map(item => {
+    if (isRestaurantOwner && item.label === 'Cafe Management') {
+      return { ...item, label: 'Restaurant Management' };
+    }
+    return item;
   });
   const visibleSystemMenuItems = systemMenuItems.filter(item => {
     if (isWalkingCafe) {

@@ -33,7 +33,6 @@ export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
   };
 
   const getRoleLabel = () => {
-    if (selectedRole === 'WALKING_CAFE_OWNER') return 'Walking Cafe Partner';
     if (selectedRole === 'RESTAURANT_OWNER') return 'Restaurant Owner';
     return 'Cafe Owner';
   };
@@ -49,20 +48,7 @@ export const RegisterForm = ({ defaultRole = 'CAFE_OWNER' }) => {
       {/* Account Type Selection */}
       <div className="space-y-1">
         <Label className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Account Type</Label>
-        <div className="grid grid-cols-3 gap-1.5">
-          <button
-            type="button"
-            onClick={() => setSelectedRole('WALKING_CAFE_OWNER')}
-            className={`py-2 px-2 rounded-xl border text-[11px] font-extrabold transition-all flex items-center justify-center gap-1.5 ${
-              selectedRole === 'WALKING_CAFE_OWNER'
-                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
-                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
-            }`}
-          >
-            <Footprints className={`w-3.5 h-3.5 ${selectedRole === 'WALKING_CAFE_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
-            <span>Walking Cafe</span>
-          </button>
-          
+        <div className="grid grid-cols-2 gap-1.5">
           <button
             type="button"
             onClick={() => setSelectedRole('CAFE_OWNER')}

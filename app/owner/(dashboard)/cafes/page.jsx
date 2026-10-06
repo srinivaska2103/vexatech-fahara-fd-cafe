@@ -85,6 +85,13 @@ export default function CafesPage() {
   ];
 
   const userRole = useAuthStore((state) => state.role);
+  const isRestaurantOwner = 
+    userRole === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    user?.user_type === 'RESTAURANT_OWNER' ||
+    String(userRole || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+
   const isWalkingCafeOwner = 
     userRole === 'WALKING_CAFE_OWNER' || 
     user?.role === 'WALKING_CAFE_OWNER' || 
@@ -104,13 +111,17 @@ export default function CafesPage() {
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">My Cafe Venues</h1>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
+                {isRestaurantOwner ? 'My Restaurants' : 'My Cafe Venues'}
+              </h1>
               <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
                 PORTFOLIO
               </span>
             </div>
             <p className="text-xs sm:text-sm text-text/70 mt-0.5">
-              Manage your cafes, update dining capacities, edit pricing, and track venue performance.
+              {isRestaurantOwner 
+                ? 'Manage your restaurants, update dining capacities, edit pricing, and track venue performance.' 
+                : 'Manage your cafes, update dining capacities, edit pricing, and track venue performance.'}
             </p>
           </div>
         </div>
@@ -121,15 +132,15 @@ export default function CafesPage() {
             <div className="flex flex-col items-end gap-1">
               <Button disabled className="py-2.5 px-5 rounded-2xl bg-gray-200 text-gray-500 font-extrabold text-xs flex items-center gap-2 cursor-not-allowed border border-gray-300">
                 <Plus className="w-4 h-4" />
-                <span>Add New Cafe (3/3 Max Limit)</span>
+                <span>Add New {isRestaurantOwner ? 'Restaurant' : 'Cafe'} (3/3 Max Limit)</span>
               </Button>
-              <span className="text-[11px] text-amber-700 font-medium">Maximum 3 cafes allowed per owner</span>
+              <span className="text-[11px] text-amber-700 font-medium">Maximum 3 {isRestaurantOwner ? 'restaurants' : 'cafes'} allowed per owner</span>
             </div>
           ) : (
             <Link href="/owner/cafes/create">
               <Button className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-2 transition-all">
                 <Plus className="w-4 h-4" />
-                <span>Add New Cafe ({cafes.length}/3)</span>
+                <span>Add New {isRestaurantOwner ? 'Restaurant' : 'Cafe'} ({cafes.length}/3)</span>
               </Button>
             </Link>
           )}
@@ -235,7 +246,7 @@ export default function CafesPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#6F4E37] transition-all font-medium" 
-              placeholder="Search cafes by name or city..." 
+              placeholder={isRestaurantOwner ? "Search restaurants by name or city..." : "Search cafes by name or city..."} 
             />
           </div>
 
@@ -266,12 +277,12 @@ export default function CafesPage() {
       ) : filteredCafes.length === 0 ? (
         <EmptyState 
           icon={Store} 
-          title={search ? "No cafes match your filter" : "No Cafes Listed"} 
-          message={search ? "Try adjusting your search query or status filter." : "You haven't registered any cafes yet. Add your first venue to start accepting guest table reservations!"}
+          title={search ? (isRestaurantOwner ? "No restaurants match your filter" : "No cafes match your filter") : (isRestaurantOwner ? "No Restaurants Listed" : "No Cafes Listed")} 
+          message={search ? "Try adjusting your search query or status filter." : (isRestaurantOwner ? "You haven't registered any restaurants yet. Add your first venue to start accepting guest table reservations!" : "You haven't registered any cafes yet. Add your first venue to start accepting guest table reservations!")}
           action={!search && (
             <Link href="/owner/cafes/create">
               <Button className="rounded-2xl font-extrabold bg-[#6F4E37] hover:bg-[#5D3F2B] text-white px-6 py-2.5 shadow-xs">
-                <Plus className="w-4 h-4 mr-1.5" /> Create First Cafe
+                <Plus className="w-4 h-4 mr-1.5" /> {isRestaurantOwner ? "Create First Restaurant" : "Create First Cafe"}
               </Button>
             </Link>
           )}
