@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useAuthStore } from '@/store/auth.store';
+import { getRedirectUrlForRole } from '@/utils/faharaLinks';
 
 export const useRoleRedirect = () => {
   const router = useRouter();
@@ -10,22 +11,24 @@ export const useRoleRedirect = () => {
     const targetRole = forceRole || role;
 
     switch (targetRole) {
-      case 'CUSTOMER':
-        router.push('/customer/dashboard');
-        break;
       case 'CAFE_OWNER':
       case 'WALKING_CAFE_OWNER':
       case 'RESTAURANT_OWNER':
         router.push('/owner/dashboard');
         break;
+      case 'CUSTOMER':
       case 'EVENT_MANAGER':
-        router.push('/event/dashboard');
+      case 'ADMIN': {
+        const dest = getRedirectUrlForRole(targetRole);
+        if (dest.startsWith('http')) {
+          window.location.href = dest;
+        } else {
+          router.push(dest);
+        }
         break;
-      case 'ADMIN':
-        router.push('/admin/dashboard');
-        break;
+      }
       default:
-        // Fallback or unauthorized handling
+        router.push('/owner/login');
         break;
     }
   }, [router, role]);

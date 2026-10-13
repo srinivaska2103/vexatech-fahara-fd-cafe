@@ -28,6 +28,7 @@ import { SidebarGroup } from './SidebarGroup';
 import { SidebarFooter } from './SidebarFooter';
 import { useLayoutStore } from '@/store/layout.store';
 import { useAuthStore } from '@/store/auth.store';
+import { useSubscriptionStore } from '@/store/subscription.store';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
@@ -55,9 +56,10 @@ const financeMenuItems = [
 ];
 
 const systemMenuItems = [
+  { icon: Sparkles, label: 'Subscription', href: '/owner/subscription', color: 'text-amber-600', bg: 'bg-amber-100/70', isUnlockedAlways: true },
   { icon: Bell, label: 'Notifications', href: '/owner/notifications', color: 'text-rose-600', bg: 'bg-rose-100/70' },
   { icon: Settings, label: 'Settings', href: '/owner/settings', color: 'text-slate-600', bg: 'bg-slate-200/80' },
-  { icon: HelpCircle, label: 'Help & Support', href: '/owner/support', color: 'text-teal-600', bg: 'bg-teal-100/70' },
+  { icon: HelpCircle, label: 'Help & Support', href: '/owner/support', color: 'text-teal-600', bg: 'bg-teal-100/70', isUnlockedAlways: true },
 ];
 
 export const Sidebar = () => {
@@ -65,6 +67,13 @@ export const Sidebar = () => {
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
   const role = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
+
+  const { isActive: isSubActive, fetchSubscription } = useSubscriptionStore();
+
+  React.useEffect(() => {
+    fetchSubscription();
+  }, [fetchSubscription]);
+
   const isRestaurantOwner = 
     role === 'RESTAURANT_OWNER' || 
     user?.role === 'RESTAURANT_OWNER' || 
@@ -94,9 +103,10 @@ export const Sidebar = () => {
     }
     return item;
   });
+
   const visibleSystemMenuItems = systemMenuItems.filter(item => {
     if (isWalkingCafe) {
-      return item.label === 'Notifications' || item.label === 'Settings';
+      return item.label === 'Notifications' || item.label === 'Settings' || item.label === 'Subscription';
     }
     if (isRestaurantOwner) {
       return item.label !== 'Analytics' && item.label !== 'Help & Support';
@@ -156,27 +166,27 @@ export const Sidebar = () => {
         <div className="space-y-4">
           <SidebarGroup label="Main Menu">
             {visibleMainMenuItems.map((item) => (
-              <SidebarItem key={item.label} {...item} />
+              <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
             ))}
           </SidebarGroup>
 
           <SidebarGroup label="Marketing">
             {visibleMarketingMenuItems.map((item) => (
-              <SidebarItem key={item.label} {...item} />
+              <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
             ))}
           </SidebarGroup>
 
           {!isRestaurantOwner && !isWalkingCafe && (
             <SidebarGroup label="Finance">
               {financeMenuItems.map((item) => (
-                <SidebarItem key={item.label} {...item} />
+                <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
               ))}
             </SidebarGroup>
           )}
 
           <SidebarGroup label="System">
             {visibleSystemMenuItems.map((item) => (
-              <SidebarItem key={item.label} {...item} />
+              <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
             ))}
           </SidebarGroup>
         </div>

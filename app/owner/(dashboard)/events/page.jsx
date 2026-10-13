@@ -6,32 +6,53 @@ import { Input } from '@/components/ui/Input';
 import { 
   Plus, 
   Search, 
-  Grid, 
-  List as ListIcon, 
-  SlidersHorizontal, 
+  RefreshCw, 
+  Cake, 
+  HeartHandshake, 
+  Briefcase, 
   PartyPopper, 
+  Music, 
   Sparkles, 
-  IndianRupee, 
-  CheckCircle2, 
-  Layers, 
-  RefreshCw 
+  Store,
+  Layers
 } from 'lucide-react';
 import Link from 'next/link';
 import { EventCard } from '@/components/events/EventCard';
-import { EventTable } from '@/components/events/EventTable';
 import { EmptyEventState } from '@/components/events/EmptyEventState';
 import { LoadingSkeleton } from '@/components/events/LoadingSkeleton';
 import { DeleteEventDialog } from '@/components/events/DeleteEventDialog';
 import { useEvents, useDeleteEvent } from '@/hooks/event';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Event Type Metadata Map for Headers & Descriptions
+const EVENT_TYPE_META = {
+  'Birthday': { icon: Cake, subtitle: 'Custom packages for birthday celebrations.' },
+  'Birthday Party': { icon: Cake, subtitle: 'Custom packages for birthday celebrations.' },
+  'Anniversary': { icon: HeartHandshake, subtitle: 'Packages for couples and romantic celebrations.' },
+  'Anniversary & Couples': { icon: HeartHandshake, subtitle: 'Packages for couples and special romantic occasions.' },
+  'Date Night': { icon: HeartHandshake, subtitle: 'Packages for couples and romantic dinner dates.' },
+  'Corporate Meeting': { icon: Briefcase, subtitle: 'Packages for meetings, workshops, and business events.' },
+  'Corporate': { icon: Briefcase, subtitle: 'Packages for meetings and corporate gatherings.' },
+  'Wedding Reception': { icon: PartyPopper, subtitle: 'Comprehensive packages for wedding receptions and functions.' },
+  'Wedding': { icon: PartyPopper, subtitle: 'Comprehensive packages for wedding receptions and functions.' },
+  'Engagement': { icon: HeartHandshake, subtitle: 'Rings and intimate engagement gatherings.' },
+  'Photoshoot': { icon: Sparkles, subtitle: 'Studio space and lighting setups.' },
+  'Baby Shower': { icon: Cake, subtitle: 'Family and baby welcoming setups.' },
+  'Party': { icon: PartyPopper, subtitle: 'General group celebrations.' },
+  'Private Dining Party': { icon: PartyPopper, subtitle: 'Exclusive packages for private dining celebrations.' },
+  'Workshop & Masterclass': { icon: Sparkles, subtitle: 'Packages for interactive workshops, pottery, and classes.' },
+  'Workshop': { icon: Sparkles, subtitle: 'Packages for interactive workshops and masterclasses.' },
+  'Live Music & Concert': { icon: Music, subtitle: 'Custom packages for live music nights and gigs.' },
+  'Other Special Event': { icon: Store, subtitle: 'Flexible packages for custom special events.' },
+  'Other': { icon: Store, subtitle: 'Flexible packages for custom special events.' },
+};
+
 export default function EventsPage() {
-  const [viewMode, setViewMode] = useState('grid');
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [eventToDelete, setEventToDelete] = useState(null);
   
-  const { data: eventsData, isLoading, refetch } = useEvents({ search });
+  const { data: eventsData, isLoading, isError, refetch } = useEvents({ search });
   const deleteMutation = useDeleteEvent();
 
   const events = Array.isArray(eventsData) ? eventsData : (eventsData?.data || eventsData?.events || []);
@@ -44,211 +65,173 @@ export default function EventsPage() {
     }
   };
 
+  // Filter events by Search term & Category filter
   const filteredEvents = events.filter(e => {
     const packageName = (e.package_name || '').toLowerCase();
-    const eventType = (e.event_type || e.category || '').toLowerCase();
+    const eventType = (e.event_type || e.category || 'Special Event').toLowerCase();
     const searchLower = search.toLowerCase();
 
     const matchesSearch = !search || packageName.includes(searchLower) || eventType.includes(searchLower);
     
     let matchesCategory = true;
-    if (categoryFilter !== 'ALL') {
-      const catLower = categoryFilter.toLowerCase();
-      matchesCategory = packageName.includes(catLower) || eventType.includes(catLower);
+    if (selectedCategory !== 'ALL') {
+      matchesCategory = eventType === selectedCategory.toLowerCase();
     }
 
     return matchesSearch && matchesCategory;
   });
 
-  // Calculate dynamic stats
-  const totalCount = events.length;
-  const publishedCount = events.filter(e => (e.status || 'PUBLISHED') === 'PUBLISHED').length;
-  const avgPrice = events.length > 0 
-    ? Math.round(events.reduce((sum, e) => sum + (Number(e.price) || 0), 0) / events.length) 
-    : 0;
+  // Group filtered events by Event Type (Category)
+  const groupedEvents = filteredEvents.reduce((groups, event) => {
+    const type = event.event_type || event.category || 'Other Special Event';
+    if (!groups[type]) {
+      groups[type] = [];
+    }
+    groups[type].push(event);
+    return groups;
+  }, {});
 
-  const categories = [
-    { id: 'ALL', label: 'All Packages' },
-    { id: 'birthday', label: 'Birthday Parties' },
-    { id: 'corporate', label: 'Corporate Events' },
-    { id: 'workshop', label: 'Workshops' },
-    { id: 'music', label: 'Live Music' },
-  ];
+  const eventTypesPresent = Object.keys(groupedEvents);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 text-[#2C1810]">
       
-      {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-        <div className="space-y-1.5 z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>EVENT SERVICES STUDIO</span>
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
-            Event Packages & Parties
+      {/* SaaS Page Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#E8DED5]">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#2C1810] tracking-tight">
+            Event Packages
           </h1>
-          <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Configure special party offerings, birthday setups, and workshop packages across all your cafe venues.
+          <p className="text-xs sm:text-sm text-[#2C1810]/70 mt-1">
+            Create and manage custom packages for the events your cafe offers.
           </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2.5 z-10 shrink-0">
+        {/* Top-Right Header Action */}
+        <div className="flex items-center gap-3 shrink-0">
           <button 
+            type="button"
             onClick={() => refetch()}
-            className="w-10 h-10 rounded-2xl border border-[#DDB892]/60 bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0"
-            title="Refresh Event Packages"
+            className="w-10 h-10 rounded-xl border border-[#E8DED5] bg-white hover:bg-[#FFF8F0] text-[#6F4E37] flex items-center justify-center transition-all shrink-0"
+            title="Refresh Packages"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
 
           <Link href="/owner/events/create">
-            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
+            <Button className="py-2.5 px-5 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-bold shadow-2xs flex items-center gap-2">
               <Plus className="w-4 h-4 text-white" />
-              <span>Create Event Package</span>
+              <span>+ Create Package</span>
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* 3 Dynamic Event Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+      {/* Search & Category Filter Toolbar */}
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8DED5] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
         
-        {/* Total Event Packages */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Offerings</span>
-            <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
-              <PartyPopper className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{totalCount}</p>
-          <p className="text-[10px] text-text/50 font-medium">Configured packages</p>
+        {/* Category Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
+          <button
+            type="button"
+            onClick={() => setSelectedCategory('ALL')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 ${
+              selectedCategory === 'ALL'
+                ? 'bg-[#6F4E37] text-white shadow-2xs'
+                : 'bg-[#FFF8F0] text-[#2C1810] hover:bg-[#E8DED5]'
+            }`}
+          >
+            All Event Types ({events.length})
+          </button>
         </div>
 
-        {/* Active Published */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Active Published</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-bold">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
+        {/* Search Field */}
+        <div className="relative md:w-72">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#2C1810]/40">
+            <Search className="h-4 w-4" />
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{publishedCount}</p>
-          <p className="text-[10px] text-emerald-700/80 font-bold">Visible to diners</p>
-        </div>
-
-        {/* Event Types */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-blue-700 uppercase tracking-wider">Categories</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-bold">
-              <Layers className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">4</p>
-          <p className="text-[10px] text-text/50 font-medium">Party & workshop types</p>
+          <Input 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 h-10 rounded-xl border-[#E8DED5] bg-[#FFF8F0]/40 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-[#2C1810]/40" 
+            placeholder="Search package name..." 
+          />
         </div>
 
       </div>
 
-      {/* Toolbar & Category Filters */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
-            {categories.map((cat) => {
-              const isActive = categoryFilter === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setCategoryFilter(cat.id)}
-                  className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all shrink-0 ${
-                    isActive
-                      ? 'bg-[#6F4E37] text-white shadow-2xs'
-                      : 'bg-surface/50 text-[#2C1810] hover:bg-surface'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search Box & View Mode Toggle */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 md:w-64">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text/40">
-                <Search className="h-4 w-4" />
-              </div>
-              <Input 
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
-                placeholder="Search package name..." 
-              />
-            </div>
-
-            {/* Grid / List View Toggle */}
-            <div className="flex items-center bg-surface/60 p-1 rounded-2xl border border-border/40 shrink-0">
-              <button 
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-xl transition-all ${
-                  viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37] font-bold' : 'text-text/50 hover:text-[#2C1810]'
-                }`}
-                title="Grid View"
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-xl transition-all ${
-                  viewMode === 'list' ? 'bg-white shadow-2xs text-[#6F4E37] font-bold' : 'text-text/50 hover:text-[#2C1810]'
-                }`}
-                title="List View"
-              >
-                <ListIcon className="w-4 h-4" />
-              </button>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-      {/* Main Content View */}
+      {/* Main Content Area */}
       {isLoading ? (
-        <LoadingSkeleton type={viewMode === 'list' ? 'list' : 'card'} />
-      ) : (!filteredEvents || filteredEvents.length === 0) ? (
+        <LoadingSkeleton type="card" />
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-rose-200 text-center space-y-3">
+          <p className="text-sm font-extrabold text-rose-700">Unable to load event packages.</p>
+          <Button onClick={() => refetch()} variant="outline" className="text-xs font-bold border-rose-200 text-rose-700">
+            Try Again
+          </Button>
+        </div>
+      ) : events.length === 0 ? (
         <EmptyEventState search={search} />
+      ) : eventTypesPresent.length === 0 ? (
+        <div className="p-12 text-center text-[#2C1810]/50 text-xs font-medium bg-white rounded-2xl border border-[#E8DED5]">
+          No custom packages found matching "{search}".
+        </div>
       ) : (
-        <motion.div layout>
-          {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <AnimatePresence>
-                {filteredEvents.map((event) => (
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    key={event.id}
-                  >
-                    <EventCard event={event} onDelete={setEventToDelete} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <EventTable events={filteredEvents} onDelete={setEventToDelete} />
-          )}
-        </motion.div>
+        <div className="space-y-10">
+          {eventTypesPresent.map((type) => {
+            const meta = EVENT_TYPE_META[type] || { icon: Layers, subtitle: `Custom packages for ${type}.` };
+            const CategoryIcon = meta.icon;
+            const typePackages = groupedEvents[type];
+
+            return (
+              <section key={type} className="space-y-4">
+                
+                {/* Event Type Section Header */}
+                <div className="bg-[#FFF8F0] p-4 sm:p-5 rounded-2xl border border-[#E8DED5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-[#E8DED5] text-[#6F4E37] flex items-center justify-center shrink-0 shadow-2xs">
+                      <CategoryIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-black text-[#2C1810] flex items-center gap-2">
+                        <span>{type}</span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
+                          {typePackages.length}
+                        </span>
+                      </h2>
+                      <p className="text-xs text-[#2C1810]/70 mt-0.5">{meta.subtitle}</p>
+                    </div>
+                  </div>
+
+                  <Link href={`/owner/events/create?event_type=${encodeURIComponent(type)}`}>
+                    <Button 
+                      variant="outline"
+                      className="py-1.5 px-3.5 rounded-xl border-[#6F4E37]/30 hover:border-[#6F4E37] bg-white text-[#6F4E37] text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-2xs shrink-0"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add {type} Package</span>
+                    </Button>
+                  </Link>
+                </div>
+
+                {/* Event Type Package Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {typePackages.map((pkg) => (
+                    <EventCard 
+                      key={pkg.id} 
+                      event={pkg} 
+                      onDelete={setEventToDelete} 
+                    />
+                  ))}
+                </div>
+
+              </section>
+            );
+          })}
+        </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Dialog */}
       <DeleteEventDialog 
         isOpen={!!eventToDelete}
         onClose={() => setEventToDelete(null)}

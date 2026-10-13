@@ -18,7 +18,7 @@ export default function EditCafePage() {
   const role = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
 
-  const { data: cafeData, isLoading: isFetching } = useCafe(id);
+  const { data: cafeData, isLoading, isPending } = useCafe(id);
   const cafe = cafeData?.data || cafeData;
   const updateMutation = useUpdateCafe();
 
@@ -44,7 +44,7 @@ export default function EditCafePage() {
       category: data.category || (isWalking ? "Coffee Cafe" : ""),
       latitude: (data.latitude !== undefined && data.latitude !== null && data.latitude !== '' && Number.isFinite(Number(data.latitude))) ? Number(data.latitude) : null,
       longitude: (data.longitude !== undefined && data.longitude !== null && data.longitude !== '' && Number.isFinite(Number(data.longitude))) ? Number(data.longitude) : null,
-      price_per_hour: isWalking ? null : (data.price ? Number(data.price) : 0),
+      price_per_hour: (isWalking || Boolean(data.provides_event_services)) ? null : (data.price ? Number(data.price) : null),
       maximum_persons: data.capacity ? Number(data.capacity) : null,
       google_rating: data.google_rating !== "" && data.google_rating !== null && data.google_rating !== undefined ? Number(data.google_rating) : null,
       google_reviews_link: data.google_reviews_link || "",
@@ -81,7 +81,7 @@ export default function EditCafePage() {
     });
   };
 
-  if (isFetching) {
+  if (isLoading || isPending || !id) {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         <LoadingSkeleton type="card" className="h-[120px] rounded-3xl" />

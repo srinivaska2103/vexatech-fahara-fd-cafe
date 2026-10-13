@@ -99,25 +99,30 @@ export default function BookingDetailsPage() {
   const endTime = formatTimeStr(bookingData.endTime || bookingData.end_time);
   const guests = bookingData.guestCount || bookingData.total_persons;
   
-  // Cafe owner amount calculation: sum of itemized CAFE items or stored subtotal/cafe_amount
+  // Cafe owner amount calculation: cafe_earning / cafe_amount or sum of CAFE items
   const allBookingItems = bookingData.booking_items || bookingData.bookingItems || [];
   
   // Sum of itemized CAFE inclusions / package items / cafe charges attached to this booking
-  const cafeItems = allBookingItems.filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'PACKAGE' || it.item_type === 'PACKAGE_BASE');
+  const cafeItems = allBookingItems.filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE');
   const itemizedCafeTotal = cafeItems.reduce((sum, it) => sum + Number(it.amount || (Number(it.unit_price || 0) * (it.pricing_type === 'PER_GUEST' ? Number(guests || 1) : Number(it.quantity || 1)))), 0);
 
-  // Stored subtotal / cafe_amount / subtotal from booking record
-  const storedCafeAmount = Number(bookingData.cafe_amount || 0);
+  // Stored cafe earnings from booking record
+  const storedCafeEarning = Number(bookingData.cafe_earning || bookingData.cafe_amount || 0);
   const storedFoodAmount = Number(bookingData.food_amount || 0);
-  const storedSubtotal = Number(bookingData.total || bookingData.subtotal || 0);
 
   let amount = 0;
-  if (itemizedCafeTotal > 0) {
-    amount = Math.max(itemizedCafeTotal, storedCafeAmount);
-  } else if (storedCafeAmount > 0 || storedFoodAmount > 0) {
-    amount = storedCafeAmount + storedFoodAmount;
+  if (storedCafeEarning > 0) {
+    amount = storedCafeEarning;
+  } else if (itemizedCafeTotal > 0) {
+    amount = itemizedCafeTotal;
+  } else if (storedFoodAmount > 0) {
+    amount = storedFoodAmount;
+  } else if (bookingData.amount !== undefined && bookingData.amount !== null && Number(bookingData.amount) > 0) {
+    amount = Number(bookingData.amount);
   } else {
-    amount = storedSubtotal;
+    const rawSub = Number(bookingData.total || bookingData.subtotal || 0);
+    const evAmt = Number(bookingData.event_service_amount || 0);
+    amount = Math.max(0, rawSub - evAmt);
   }
 
   amount = Math.max(0, Number(amount.toFixed(2)));
@@ -459,46 +464,32 @@ export default function BookingDetailsPage() {
                     {displayInclusions.map((inc, idx) => {
                       const tierKey = String(inc.tierName || inc.tierLevel || '').toUpperCase();
                       const colors = getTierColors(tierKey);
-                      const isPerGuest = String(inc.pricingType || '').toUpperCase() === 'PER_GUEST';
-                      const guestCount = bookingData.total_persons || bookingData.guestCount || 1;
-                      const computedAmount = isPerGuest
-                        ? (inc.unitPrice * Number(guestCount)).toFixed(2)
-                        : inc.amount > 0 ? inc.amount.toFixed(2) : (inc.unitPrice * inc.quantity).toFixed(2);
+                      const displayBadge = (tierKey && !['BASIC', 'STANDARD', 'PREMIUM', 'INCLUDED'].includes(tierKey)) ? tierKey : null;
 
                       return (
-                        <div key={inc.tierId || idx} className={`p-4 rounded-2xl border ${colors.bg} ${colors.border} flex items-start gap-4`}>
-                          <div className={`w-11 h-11 rounded-2xl border flex items-center justify-center shrink-0 font-black text-sm ${colors.bg} ${colors.border} ${colors.text}`}>
-                            {tierKey ? tierKey.charAt(0) : '★'}
-                          </div>
-                          <div className="min-w-0 flex-1 space-y-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h4 className="font-extrabold text-[#2C1810] text-sm">{inc.name}</h4>
-                              {tierKey && (
-                                <span className={`text-[10px] font-black border px-2 py-0.5 rounded-full uppercase tracking-wider ${colors.pill}`}>
-                                  {tierKey}
-                                </span>
-                              )}
-                              <span className="text-[10px] font-bold bg-white border border-border/50 text-text/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                {isPerGuest ? 'Per Guest' : 'Fixed'}
-                              </span>
+                        <div key={inc.tierId || idx} className="p-4 rounded-2xl border bg-white border-stone-200/80 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="flex items-center gap-3.5 min-w-0">
+                            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shrink-0 font-bold">
+                              ✓
                             </div>
-
-                            {inc.description && (
-                              <p className="text-xs text-text/60">{inc.description}</p>
-                            )}
-
-                            <div className="flex flex-wrap gap-3 pt-1 text-xs">
-                              <span className="text-text/60">
-                                Unit Price: <span className="font-bold text-[#2C1810]">₹{inc.unitPrice.toFixed(2)}</span>
-                              </span>
-                              {isPerGuest && (
-                                <span className="text-text/60">
-                                  × <span className="font-bold text-[#2C1810]">{guestCount} guests</span>
-                                </span>
+                            <div className="min-w-0 space-y-0.5">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-extrabold text-[#2C1810] text-xs sm:text-sm truncate">{inc.name}</h4>
+                                {displayBadge && (
+                                  <span className={`text-[10px] font-black border px-2 py-0.5 rounded-full uppercase tracking-wider ${colors.pill}`}>
+                                    {displayBadge}
+                                  </span>
+                                )}
+                              </div>
+                              {inc.description && (
+                                <p className="text-xs text-stone-500 font-medium line-clamp-1">{inc.description}</p>
                               )}
-                              <span className={`font-black ${colors.text}`}>= ₹{computedAmount}</span>
                             </div>
                           </div>
+
+                          <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                            INCLUDED
+                          </span>
                         </div>
                       );
                     })}

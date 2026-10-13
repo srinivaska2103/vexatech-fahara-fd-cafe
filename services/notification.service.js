@@ -1,10 +1,11 @@
 import { axiosInstance } from '@/lib/axios';
+import { ENDPOINTS } from '@/lib/endpoints';
 
 export const notificationService = {
   // Get all notifications
   getNotifications: async (params = {}) => {
     try {
-      const response = await axiosInstance.get('/notifications', { params });
+      const response = await axiosInstance.get(ENDPOINTS.notifications.list, { params });
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) return { data: [] };
@@ -15,7 +16,7 @@ export const notificationService = {
   // Get single notification
   getNotificationById: async (id) => {
     try {
-      const response = await axiosInstance.get(`/notifications/${id}`);
+      const response = await axiosInstance.get(ENDPOINTS.notifications.detail(id));
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) return { data: null };
@@ -25,32 +26,32 @@ export const notificationService = {
 
   // Mark notification as read
   markAsRead: async (id) => {
-    const response = await axiosInstance.patch(`/notifications/${id}/read`);
+    const response = await axiosInstance.patch(ENDPOINTS.notifications.markRead(id));
     return response.data;
   },
 
   // Mark all notifications as read
   markAllAsRead: async () => {
-    const response = await axiosInstance.patch('/notifications/read-all');
+    const response = await axiosInstance.patch(ENDPOINTS.notifications.markAllRead);
     return response.data;
   },
 
   // Delete notification
   deleteNotification: async (id) => {
-    const response = await axiosInstance.delete(`/notifications/${id}`);
+    const response = await axiosInstance.delete(ENDPOINTS.notifications.delete(id));
     return response.data;
   },
 
   // Send message to customers
   sendMessage: async (data) => {
-    const response = await axiosInstance.post('/notifications/send', data);
+    const response = await axiosInstance.post(ENDPOINTS.notifications.send, data);
     return response.data;
   },
 
   // Get notification templates
   getTemplates: async (channel = 'EMAIL') => {
     try {
-      const response = await axiosInstance.get('/notifications/templates', { params: { channel } });
+      const response = await axiosInstance.get(ENDPOINTS.notifications.templates, { params: { channel } });
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) return { data: [] };
@@ -61,7 +62,7 @@ export const notificationService = {
   // Get notification preferences
   getPreferences: async () => {
     try {
-      const response = await axiosInstance.get('/notifications/preferences');
+      const response = await axiosInstance.get(ENDPOINTS.notifications.preferences);
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) return { data: null };
@@ -71,14 +72,14 @@ export const notificationService = {
 
   // Update notification preferences
   updatePreferences: async (data) => {
-    const response = await axiosInstance.put('/notifications/preferences', data);
+    const response = await axiosInstance.put(ENDPOINTS.notifications.preferences, data);
     return response.data;
   },
   
   // Get Notification Stats
   getStats: async () => {
     try {
-      const response = await axiosInstance.get('/notifications/stats');
+      const response = await axiosInstance.get(ENDPOINTS.notifications.stats);
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) return { data: null };

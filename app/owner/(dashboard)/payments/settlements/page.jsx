@@ -35,7 +35,8 @@ export default function SettlementsPage() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedSettlement, setSelectedSettlement] = useState(null);
 
-  const { data, isLoading, refetch } = useSettlements({ search, status: statusFilter, vendor_type: 'CAFE' });
+  // Fetch all settlements for owner so tab pill counts (Settled: 19, Pending: 5) stay accurate when clicking tabs
+  const { data, isLoading, refetch } = useSettlements({ vendor_type: 'CAFE' });
   const { mutate: syncSettlements, isPending: isSyncing } = useSyncSettlements();
   const rawSettlements = (data?.data || []).map(s => {
     const rawSt = s.status || s.settlement_status;
@@ -188,7 +189,15 @@ export default function SettlementsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         
         {/* Total Settled */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1">
+        <div 
+          onClick={() => setStatusFilter(statusFilter === 'Settled' ? 'ALL' : 'Settled')}
+          className={cn(
+            "p-4 sm:p-5 rounded-3xl border shadow-2xs hover:shadow-md transition-all space-y-1 cursor-pointer select-none",
+            statusFilter === 'Settled' 
+              ? "bg-emerald-50/70 border-emerald-400 ring-2 ring-emerald-400/20" 
+              : "bg-white border-border/60 hover:border-emerald-300"
+          )}
+        >
           <div className="flex items-center justify-between">
             <span className="text-[10px] sm:text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Total Settled</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-bold">
@@ -196,11 +205,19 @@ export default function SettlementsPage() {
             </div>
           </div>
           <p className="text-xl sm:text-3xl font-black text-emerald-700">₹{totalSettled.toLocaleString()}</p>
-          <p className="text-[10px] text-emerald-700/70 font-medium">Transferred to bank</p>
+          <p className="text-[10px] text-emerald-700/70 font-medium">Transferred to bank (Click to filter)</p>
         </div>
 
         {/* Pending Settlement */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1">
+        <div 
+          onClick={() => setStatusFilter('Pending')}
+          className={cn(
+            "p-4 sm:p-5 rounded-3xl border shadow-2xs hover:shadow-md transition-all space-y-1 cursor-pointer select-none",
+            statusFilter === 'Pending' 
+              ? "bg-amber-50/70 border-amber-400 ring-2 ring-amber-400/20" 
+              : "bg-white border-border/60 hover:border-amber-300"
+          )}
+        >
           <div className="flex items-center justify-between">
             <span className="text-[10px] sm:text-xs font-extrabold text-amber-700 uppercase tracking-wider">Pending Settlement</span>
             <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold">
@@ -208,7 +225,7 @@ export default function SettlementsPage() {
             </div>
           </div>
           <p className="text-xl sm:text-3xl font-black text-amber-700">₹{pendingSettlement.toLocaleString()}</p>
-          <p className="text-[10px] text-amber-700/70 font-medium">Split settlement pending</p>
+          <p className="text-[10px] text-amber-700/70 font-medium">Split settlement pending (Click to filter)</p>
         </div>
 
         {/* Processing */}

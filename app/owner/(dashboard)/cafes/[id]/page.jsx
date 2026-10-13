@@ -31,12 +31,14 @@ import {
   Tag,
   ExternalLink,
   ChevronRight,
-  Layers
+  Layers,
+  QrCode
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
 import { CafeStatusBadge } from '@/components/cafes/CafeStatusBadge';
+import { CafeQrCard } from '@/components/cafes/CafeQrCard';
 import { MapPreview } from '@/components/maps/MapPreview';
 import { useAuthStore } from '@/store/auth.store';
 import { BackButton } from '@/components/ui/BackButton';
@@ -131,6 +133,7 @@ export default function CafeDetailsPage() {
 
   const tabs = [
     { id: 'overview', label: 'Overview & Info', icon: Coffee },
+    { id: 'qr', label: 'Cafe QR Code', icon: QrCode },
     { id: 'discounts', label: 'Discounts & Offers', icon: Gift, count: discountsList.length },
     { id: 'amenities', label: 'Amenities', icon: CheckCircle2, count: cafe.amenities?.length || 0 },
     { id: 'hours', label: 'Business Hours', icon: Clock },
@@ -215,7 +218,7 @@ export default function CafeDetailsPage() {
 
           {/* Quick Metrics Bar Overlay */}
           <div className="flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/40 shadow-md text-[#2C1810]">
-            {!isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
+            {!cafe?.provides_event_services && !isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
               <div className="px-3 border-r border-border/40">
                 <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Hourly Rate</p>
                 <p className="text-sm font-black text-[#6F4E37]">
@@ -306,7 +309,7 @@ export default function CafeDetailsPage() {
                         <p className="text-[10px] text-text/50 font-bold uppercase">Max Capacity</p>
                         <p className="text-sm font-black text-[#2C1810] mt-0.5">{cafe.maximum_persons || 'N/A'} Guests</p>
                       </div>
-                      {!isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
+                      {!cafe?.provides_event_services && !isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
                         <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                           <p className="text-[10px] text-text/50 font-bold uppercase">Hourly Rate</p>
                           <p className="text-sm font-black text-[#6F4E37] mt-0.5">
@@ -320,6 +323,13 @@ export default function CafeDetailsPage() {
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* TAB: CAFE QR CODE */}
+              {activeTab === 'qr' && (
+                <div className="space-y-6">
+                  <CafeQrCard cafeId={cafe.id} cafeName={cafe.name} />
                 </div>
               )}
 
@@ -560,6 +570,21 @@ export default function CafeDetailsPage() {
             </h4>
 
             <div className="space-y-2.5">
+              <Button 
+                onClick={() => setActiveTab('qr')}
+                className={cn(
+                  "w-full justify-between py-3 px-4 rounded-2xl text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center cursor-pointer",
+                  activeTab === 'qr' 
+                    ? "bg-[#6F4E37] text-white" 
+                    : "bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810]"
+                )}
+              >
+                <span className="flex items-center gap-2">
+                  <QrCode className="w-4 h-4 text-[#6F4E37]" />
+                  <span>View Cafe QR Code</span>
+                </span>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
               {!isWalkingCafe && (
                 <Link href={`/owner/cafes/${id}/tables`} className="block">
                   <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">

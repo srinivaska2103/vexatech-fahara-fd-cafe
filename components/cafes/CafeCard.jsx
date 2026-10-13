@@ -82,7 +82,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
                 <span>Up to {cafe.maximum_persons || 'N/A'} guests</span>
               </div>
 
-              {!isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
+              {!cafe?.provides_event_services && !isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
                 <div className="flex items-center text-sm font-extrabold text-[#2C1810]">
                   <IndianRupee className="w-4 h-4 text-[#6F4E37]" />
                   <span>{cafe.price_per_hour}</span>
@@ -160,7 +160,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Walk-in Cafe</span>
           </div>
-        ) : !isRestaurant && Number(cafe?.price_per_hour) > 0 && (
+        ) : !cafe?.provides_event_services && !isRestaurant && Number(cafe?.price_per_hour) > 0 && (
           <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-white/60 shadow-xs flex items-center gap-0.5 text-xs font-extrabold text-[#2C1810]">
             <IndianRupee className="w-3.5 h-3.5 text-[#6F4E37]" />
             <span>{cafe.price_per_hour}</span>

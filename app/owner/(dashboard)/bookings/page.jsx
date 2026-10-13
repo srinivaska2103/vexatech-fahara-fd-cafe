@@ -85,7 +85,9 @@ export default function BookingsPage() {
   const confirmedCount = rawBookings.filter(b => (b.status || b.booking_status) === 'CONFIRMED').length;
   const totalRevenue = rawBookings.reduce((sum, b) => {
     let rawAmount = 0;
-    if (b.amount !== undefined && b.amount !== null && Number(b.amount) > 0) {
+    if (b.cafe_amount !== undefined && b.cafe_amount !== null && Number(b.cafe_amount) > 0) {
+      rawAmount = Number(b.cafe_amount);
+    } else if (b.amount !== undefined && b.amount !== null && Number(b.amount) > 0) {
       rawAmount = Number(b.amount);
     } else {
       rawAmount = Number(b.cafe_amount || b.subtotal || b.total || 0);

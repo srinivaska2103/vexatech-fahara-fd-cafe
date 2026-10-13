@@ -9,16 +9,21 @@ export const metadata = {
   title: 'Owner Register - Fahara Cafe',
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage({ searchParams }) {
+  const params = await searchParams;
+  const roleParam = params?.role?.toUpperCase();
+  const isRestaurant = roleParam === 'RESTAURANT' || roleParam === 'RESTAURANT_OWNER';
+  const defaultRole = isRestaurant ? 'RESTAURANT_OWNER' : 'CAFE_OWNER';
+
   return (
     <div className="flex flex-col items-center w-full">
       <AuthCard>
         <AuthLogo />
         <AuthHeader 
-          title="Cafe & Partner Registration" 
-          subtitle="Join Fahara as a Cafe Partner" 
+          title={isRestaurant ? "Restaurant Partner Registration" : "Cafe Partner Registration"} 
+          subtitle={isRestaurant ? "Join Fahara as a Restaurant Partner" : "Join Fahara as a Cafe Partner"} 
         />
-        <RegisterForm defaultRole="CAFE_OWNER" loginRoute="/owner/login" />
+        <RegisterForm defaultRole={defaultRole} loginRoute="/owner/login" />
         <AuthFooter 
           text="Already have an account?" 
           linkText="Sign in" 

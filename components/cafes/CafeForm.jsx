@@ -1509,14 +1509,12 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                             <div>
                               <h3 className="text-base font-extrabold text-[#2C1810]">Attributes & Pricing Configuration</h3>
                               <p className="text-xs text-text/60">
-                                {isRestaurantOwner || isWalkingCafe 
-                                  ? 'Set guest seating capacity for table reservations' 
-                                  : 'Set hourly pricing rates and guest seating capacities'}
+                                Select venue category for your cafe
                               </p>
                             </div>
                           </div>
 
-                          <div className={cn("grid grid-cols-1 gap-5", (isRestaurantOwner || isWalkingCafe) ? "md:grid-cols-2" : "md:grid-cols-3")}>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                               <Label htmlFor="category">Venue Category</Label>
                               <ModernCategorySelect 
@@ -1527,17 +1525,23 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               />
                             </div>
 
-                            {!isRestaurantOwner && !isWalkingCafe && (
+                            {!providesEventServices && (
                               <div>
-                                <Label htmlFor="price">Hall Charges per Hr (₹/hr) *</Label>
-                                <Input id="price" type="number" {...register('price')} error={errors.price?.message} placeholder="e.g. 500" />
+                                <Label htmlFor="price">Hourly Seating Rate (₹/hr)</Label>
+                                <div className="relative">
+                                  <DollarSign className="w-4 h-4 text-text/40 absolute left-3 top-1/2 -translate-y-1/2" />
+                                  <Input 
+                                    id="price" 
+                                    type="number" 
+                                    className="pl-9" 
+                                    {...register('price')} 
+                                    error={errors.price?.message} 
+                                    placeholder="e.g. 500" 
+                                  />
+                                </div>
+                                <p className="text-[10px] text-text/50 mt-1">Applies when cafe does not provide event packages.</p>
                               </div>
                             )}
-
-                            <div>
-                              <Label htmlFor="capacity">Max Seating Capacity (Guests) *</Label>
-                              <Input id="capacity" type="number" {...register('capacity')} error={errors.capacity?.message} placeholder="e.g. 25" />
-                            </div>
                           </div>
                         </div>
 

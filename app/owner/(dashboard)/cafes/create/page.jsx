@@ -40,7 +40,7 @@ export default function CreateCafePage() {
       pincode: data.pincode || "",
       latitude: (data.latitude !== undefined && data.latitude !== null && data.latitude !== '' && Number.isFinite(Number(data.latitude))) ? Number(data.latitude) : null,
       longitude: (data.longitude !== undefined && data.longitude !== null && data.longitude !== '' && Number.isFinite(Number(data.longitude))) ? Number(data.longitude) : null,
-      price_per_hour: isWalking ? null : (data.price ? Number(data.price) : 0),
+      price_per_hour: (isWalking || Boolean(data.provides_event_services)) ? null : (data.price ? Number(data.price) : null),
       maximum_persons: data.capacity ? Number(data.capacity) : null,
       google_rating: data.google_rating !== "" && data.google_rating !== null && data.google_rating !== undefined ? Number(data.google_rating) : null,
       google_reviews_link: data.google_reviews_link || "",
@@ -76,18 +76,32 @@ export default function CreateCafePage() {
     });
   };
 
+  const isRestaurantOwner = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    String(role || '').toUpperCase().includes('RESTAURANT');
+
+  const pageTitle = isWalkingCafe 
+    ? "Create Walking Cafe" 
+    : isRestaurantOwner 
+    ? "Create New Restaurant" 
+    : "Create New Cafe";
+
+  const pageSubtitle = isWalkingCafe 
+    ? "Add a new Walk-in Cafe listing to your portfolio for walk-in customer discovery."
+    : isRestaurantOwner
+    ? "Add a new restaurant to your portfolio. You can manage images and dining hours after creating."
+    : "Add a new venue to your portfolio. You can manage images and availability after creating.";
+
   return (
     <PageContainer>
       <div className="mb-6">
-        <BackButton href="/owner/cafes" label="Back to Cafes" />
+        <BackButton href="/owner/cafes" label={isRestaurantOwner ? "Back to Restaurants" : "Back to Cafes"} />
       </div>
 
       <PageHeader 
-        title={isWalkingCafe ? "Create Walking Cafe" : "Create New Cafe"} 
-        subtitle={isWalkingCafe 
-          ? "Add a new Walk-in Cafe listing to your portfolio for walk-in customer discovery."
-          : "Add a new venue to your portfolio. You can manage images and availability after creating."
-        }
+        title={pageTitle} 
+        subtitle={pageSubtitle}
       />
 
       {isLimitReached && (

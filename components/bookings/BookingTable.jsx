@@ -49,7 +49,7 @@ export const BookingTable = ({ bookings = [], onApprove, onReject, onComplete })
               <th className="px-6 py-4">Diner Customer</th>
               <th className="px-6 py-4">Date & Time Slot</th>
               <th className="px-6 py-4">Guests</th>
-              <th className="px-6 py-4">Total Amount</th>
+              <th className="px-6 py-4">Cafe Earnings</th>
               <th className="px-6 py-4">Reservation Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
@@ -62,7 +62,6 @@ export const BookingTable = ({ bookings = [], onApprove, onReject, onComplete })
               const startTime = formatTimeStr(booking.startTime || booking.start_time);
               const endTime = formatTimeStr(booking.endTime || booking.end_time);
               const guests = booking.guestCount || booking.total_persons || booking.guests || 1;
-              const amount = booking.amount || booking.total || booking.total_price || 0;
               const paymentStatus = booking.paymentStatus || booking.payment_status;
               const status = booking.status || booking.booking_status || 'PENDING';
 
@@ -119,28 +118,29 @@ export const BookingTable = ({ bookings = [], onApprove, onReject, onComplete })
                     </span>
                   </td>
 
-                  {/* Amount & Payment Badge */}
+                  {/* Cafe Earnings Net Split & Payment Badge */}
                   <td className="px-6 py-4">
                     {(() => {
                       let cafeNetSplit = 0;
                       let itemizedCafeTotal = 0;
                       if (Array.isArray(booking.booking_items) && booking.booking_items.length > 0) {
                         itemizedCafeTotal = booking.booking_items
-                          .filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE' || it.item_type === 'PACKAGE' || it.item_type === 'PACKAGE_BASE')
+                          .filter(it => it.provider_type === 'CAFE' || it.item_type === 'CAFE_INCLUSION' || it.item_type === 'CAFE_CHARGE')
                           .reduce((sum, item) => sum + Number(item.amount || 0), 0);
                       }
                       
-                      if (booking.amount !== undefined && booking.amount !== null && Number(booking.amount) > 0) {
+                      if (booking.cafe_amount !== undefined && booking.cafe_amount !== null && Number(booking.cafe_amount) > 0) {
+                        cafeNetSplit = Number(booking.cafe_amount);
+                      } else if (booking.amount !== undefined && booking.amount !== null && Number(booking.amount) > 0) {
                         cafeNetSplit = Math.max(Number(booking.amount), itemizedCafeTotal);
+                      } else if (itemizedCafeTotal > 0) {
+                        cafeNetSplit = itemizedCafeTotal;
                       } else {
                         let totalCafeCharges = Number(booking.cafe_amount || 0);
-                        if (totalCafeCharges === 0 && itemizedCafeTotal > 0) {
-                          totalCafeCharges = itemizedCafeTotal;
-                        }
                         if (totalCafeCharges === 0 && (booking.total || booking.subtotal)) {
                           totalCafeCharges = Math.max(0, Number(booking.total || booking.subtotal || 0) - Number(booking.event_service_amount || 0));
                         }
-                        cafeNetSplit = Math.max(0, totalCafeCharges > 0 ? totalCafeCharges : Number(booking.total || booking.subtotal || 0));
+                        cafeNetSplit = Math.max(0, totalCafeCharges);
                       }
 
                       const isFreeReservation = cafeNetSplit === 0;

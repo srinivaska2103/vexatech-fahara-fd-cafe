@@ -5,26 +5,27 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/utils/cn';
 import { useLayoutStore } from '@/store/layout.store';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
-import { CornerDownRight, ChevronRight } from 'lucide-react';
+import { CornerDownRight, ChevronRight, Lock } from 'lucide-react';
 
-export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#6F4E37]', bg = 'bg-[#FFF8F0]' }) => {
+export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#6F4E37]', bg = 'bg-[#FFF8F0]', isLocked = false }) => {
   const pathname = usePathname();
+  const targetHref = isLocked ? '/owner/subscription' : href;
   const isActive = exact 
     ? pathname === href 
     : pathname === href || (pathname.startsWith(`${href}/`) && href !== '/owner/payments');
   const isSidebarCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
   const closeMobileSidebar = useLayoutStore((state) => state.closeMobileSidebar);
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     closeMobileSidebar();
-    if (onClick) onClick();
+    if (onClick) onClick(e);
   };
 
   const tourId = href ? `nav-${href.split('/').pop() || 'dashboard'}` : undefined;
 
   const content = (
     <Link
-      href={href}
+      href={targetHref}
       onClick={handleClick}
       data-tour={tourId}
       className={cn(
@@ -32,6 +33,8 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
         isSidebarCollapsed ? "justify-center px-0 py-1.5" : "px-2.5 py-1.5 gap-2",
         isActive
           ? "bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white font-extrabold shadow-md shadow-[#6F4E37]/20 scale-[1.01]"
+          : isLocked
+          ? "text-stone-400 hover:bg-amber-500/10 hover:text-amber-700 font-bold border border-transparent"
           : "text-[#4A3225]/85 hover:bg-[#FFF8F0] hover:text-[#6F4E37] hover:translate-x-0.5 font-bold border border-transparent hover:border-[#6F4E37]/15"
       )}
     >
@@ -54,7 +57,7 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
       <div 
         className={cn(
           "w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110",
-          isActive ? "bg-white/20 text-white" : `${bg} ${color}`
+          isActive ? "bg-white/20 text-white" : isLocked ? "bg-stone-200/70 text-stone-500" : `${bg} ${color}`
         )}
       >
         <Icon className="w-3.5 h-3.5 stroke-[2]" />
@@ -65,14 +68,18 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
           <span className="text-[11px] font-bold tracking-tight truncate leading-none">
             {label}
           </span>
-          <ChevronRight 
-            className={cn(
-              "w-3 h-3 transition-all duration-200",
-              isActive 
-                ? "text-white/80 translate-x-0.5 opacity-100" 
-                : "text-[#8C6D58]/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:text-[#6F4E37]"
-            )} 
-          />
+          {isLocked ? (
+            <Lock className="w-3 h-3 text-amber-600 shrink-0 ml-1" />
+          ) : (
+            <ChevronRight 
+              className={cn(
+                "w-3 h-3 transition-all duration-200",
+                isActive 
+                  ? "text-white/80 translate-x-0.5 opacity-100" 
+                  : "text-[#8C6D58]/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:text-[#6F4E37]"
+              )} 
+            />
+          )}
         </div>
       )}
     </Link>

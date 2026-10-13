@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { useSubscriptionStore } from './subscription.store';
 
 export const useAuthStore = create(
   persist(
@@ -10,13 +11,18 @@ export const useAuthStore = create(
       role: null,
       isAuthenticated: false,
 
-      setAuth: (accessToken, refreshToken, user, role) => set({
-        accessToken,
-        refreshToken,
-        user,
-        role,
-        isAuthenticated: true,
-      }),
+      setAuth: (accessToken, refreshToken, user, role) => {
+        try {
+          useSubscriptionStore.getState().resetSubscription();
+        } catch (e) {}
+        return set({
+          accessToken,
+          refreshToken,
+          user,
+          role,
+          isAuthenticated: true,
+        });
+      },
 
       setTokens: (accessToken, refreshToken) => set({
         accessToken,
@@ -30,13 +36,18 @@ export const useAuthStore = create(
           user: state.user ? { ...state.user, owner_onboarding_completed: completed } : null,
         })),
 
-      logout: () => set({
-        accessToken: null,
-        refreshToken: null,
-        user: null,
-        role: null,
-        isAuthenticated: false,
-      }),
+      logout: () => {
+        try {
+          useSubscriptionStore.getState().resetSubscription();
+        } catch (e) {}
+        return set({
+          accessToken: null,
+          refreshToken: null,
+          user: null,
+          role: null,
+          isAuthenticated: false,
+        });
+      },
 
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
