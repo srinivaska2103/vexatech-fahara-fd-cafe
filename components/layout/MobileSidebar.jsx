@@ -40,6 +40,17 @@ const menuTabs = [
     activeIconColor: 'text-amber-200'
   },
   {
+    id: 'subscription',
+    category: 'main',
+    label: 'Subscription',
+    href: '/owner/subscription',
+    icon: Sparkles,
+    activeBg: 'bg-gradient-to-br from-amber-600 via-amber-700 to-yellow-700 text-white shadow-md shadow-amber-600/30 border-amber-400/40',
+    inactiveBg: 'bg-amber-500/10 text-amber-900 border-amber-500/20 hover:bg-amber-500/20',
+    iconColor: 'text-amber-600',
+    activeIconColor: 'text-amber-200'
+  },
+  {
     id: 'cafes',
     category: 'main',
     label: 'Cafe Management',
@@ -53,7 +64,7 @@ const menuTabs = [
   {
     id: 'tables',
     category: 'main',
-    label: 'Table Management',
+    label: 'Table Seating',
     href: '/owner/tables',
     icon: Armchair,
     activeBg: 'bg-gradient-to-br from-[#6F4E37] via-[#A67B5B] to-[#DDB892] text-white shadow-md shadow-[#6F4E37]/30 border-[#DDB892]/40',
@@ -84,6 +95,17 @@ const menuTabs = [
     activeIconColor: 'text-purple-200'
   },
   {
+    id: 'campaigns',
+    category: 'marketing',
+    label: 'Campaigns',
+    href: '/owner/campaigns',
+    icon: Megaphone,
+    activeBg: 'bg-gradient-to-br from-fuchsia-600 via-fuchsia-700 to-pink-800 text-white shadow-md shadow-fuchsia-600/30 border-fuchsia-400/40',
+    inactiveBg: 'bg-fuchsia-500/10 text-fuchsia-900 border-fuchsia-500/20 hover:bg-fuchsia-500/20',
+    iconColor: 'text-fuchsia-600',
+    activeIconColor: 'text-fuchsia-200'
+  },
+  {
     id: 'customers',
     category: 'marketing',
     label: 'Customers',
@@ -106,15 +128,15 @@ const menuTabs = [
     activeIconColor: 'text-yellow-200'
   },
   {
-    id: 'campaigns',
+    id: 'analytics',
     category: 'marketing',
-    label: 'Campaigns',
-    href: '/owner/campaigns',
-    icon: Megaphone,
-    activeBg: 'bg-gradient-to-br from-fuchsia-600 via-fuchsia-700 to-pink-800 text-white shadow-md shadow-fuchsia-600/30 border-fuchsia-400/40',
-    inactiveBg: 'bg-fuchsia-500/10 text-fuchsia-900 border-fuchsia-500/20 hover:bg-fuchsia-500/20',
-    iconColor: 'text-fuchsia-600',
-    activeIconColor: 'text-fuchsia-200'
+    label: 'Analytics',
+    href: '/owner/analytics',
+    icon: BarChart3,
+    activeBg: 'bg-gradient-to-br from-violet-600 via-purple-700 to-fuchsia-800 text-white shadow-md shadow-violet-600/30 border-violet-400/40',
+    inactiveBg: 'bg-violet-500/10 text-violet-900 border-violet-500/20 hover:bg-violet-500/20',
+    iconColor: 'text-violet-600',
+    activeIconColor: 'text-violet-200'
   },
   {
     id: 'payments',
@@ -160,17 +182,6 @@ const menuTabs = [
     inactiveBg: 'bg-cyan-500/10 text-cyan-900 border-cyan-500/20 hover:bg-cyan-500/20',
     iconColor: 'text-cyan-600',
     activeIconColor: 'text-cyan-200'
-  },
-  {
-    id: 'analytics',
-    category: 'marketing',
-    label: 'Analytics',
-    href: '/owner/analytics',
-    icon: BarChart3,
-    activeBg: 'bg-gradient-to-br from-violet-600 via-purple-700 to-fuchsia-800 text-white shadow-md shadow-violet-600/30 border-violet-400/40',
-    inactiveBg: 'bg-violet-500/10 text-violet-900 border-violet-500/20 hover:bg-violet-500/20',
-    iconColor: 'text-violet-600',
-    activeIconColor: 'text-violet-200'
   },
   {
     id: 'notifications',
@@ -236,8 +247,11 @@ export const MobileSidebar = () => {
   const isRestaurantOwner = 
     role === 'RESTAURANT_OWNER' || 
     user?.role === 'RESTAURANT_OWNER' || 
+    user?.user_type === 'RESTAURANT_OWNER' ||
+    user?.roles?.name === 'RESTAURANT_OWNER' ||
     String(role || '').toUpperCase().includes('RESTAURANT') ||
-    String(user?.role || '').toUpperCase().includes('RESTAURANT');
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.user_type || '').toUpperCase().includes('RESTAURANT');
 
   const isWalkingCafe = 
     role === 'WALKING_CAFE_OWNER' || 
@@ -247,12 +261,12 @@ export const MobileSidebar = () => {
 
   const filteredTabs = menuTabs.filter((tab) => {
     if (isWalkingCafe) {
-      if (tab.id === 'events' || tab.id === 'tables' || tab.id === 'bookings' || tab.category === 'finance' || tab.id === 'support') {
+      if (tab.id === 'events' || tab.id === 'tables' || tab.id === 'bookings' || tab.category === 'finance' || tab.id === 'support' || tab.id === 'analytics') {
         return false;
       }
     }
     if (isRestaurantOwner) {
-      if (tab.id === 'events' || tab.id === 'analytics' || tab.id === 'support' || tab.category === 'finance') {
+      if (tab.id === 'events') {
         return false;
       }
     }
@@ -309,7 +323,8 @@ export const MobileSidebar = () => {
             {[
               { id: 'all', label: 'All Tabs' },
               { id: 'main', label: 'Main' },
-              ...(!isWalkingCafe && !isRestaurantOwner ? [{ id: 'finance', label: 'Finance' }] : []),
+              { id: 'marketing', label: 'Marketing' },
+              ...(!isWalkingCafe ? [{ id: 'finance', label: 'Finance' }] : []),
               { id: 'system', label: 'System' }
             ].map((cat) => (
               <button
@@ -328,7 +343,7 @@ export const MobileSidebar = () => {
         </div>
 
         {/* Menu Tabs 2-Column Row-Wise Grid */}
-        <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-2 content-start custom-scrollbar max-h-[50vh]">
+        <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-2 content-start custom-scrollbar max-h-[60vh]">
           {filteredTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.exact 
@@ -341,19 +356,19 @@ export const MobileSidebar = () => {
                 href={tab.href}
                 onClick={closeMobileSidebar}
                 data-tour={`nav-${tab.id}`}
-                className={`flex flex-col justify-between p-3 rounded-2xl border transition-all duration-200 min-h-[76px] relative overflow-hidden ${
+                className={`flex flex-col justify-between p-2.5 rounded-2xl border transition-all duration-200 min-h-[88px] relative overflow-hidden ${
                   isActive ? tab.activeBg : tab.inactiveBg
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className={`p-2 rounded-xl shrink-0 ${isActive ? 'bg-white/20' : 'bg-white/80 shadow-2xs'}`}>
-                    <Icon className={`w-4.5 h-4.5 ${isActive ? tab.activeIconColor : tab.iconColor}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? tab.activeIconColor : tab.iconColor}`} />
                   </div>
                   {isActive && (
                     <span className="w-2 h-2 rounded-full bg-white shadow-xs animate-pulse shrink-0" />
                   )}
                 </div>
-                <span className="truncate text-xs font-extrabold leading-tight tracking-tight mt-2">{tab.label}</span>
+                <span className="text-[11px] font-extrabold leading-snug tracking-tight mt-1 line-clamp-2 break-words">{tab.label}</span>
               </Link>
             );
           })}

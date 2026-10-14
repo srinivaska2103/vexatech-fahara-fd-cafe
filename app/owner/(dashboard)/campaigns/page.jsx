@@ -52,9 +52,19 @@ export default function CampaignsPage() {
   const totalDelivered = totalCampaigns * totalAudience;
 
   const handleDuplicateCampaign = (item) => {
-    const subject = encodeURIComponent(item.title || item.subject || '');
+    // If title has cafe prefix like "Special Offers from The Hunger Heist - 50% Off", extract clean subject
+    let rawSubject = item.title || item.subject || '';
+    if (rawSubject.includes(' - ')) {
+      const parts = rawSubject.split(' - ');
+      rawSubject = parts.slice(1).join(' - ');
+    } else if (rawSubject.startsWith('[') && rawSubject.includes('] ')) {
+      rawSubject = rawSubject.split('] ')[1];
+    }
+
+    const subject = encodeURIComponent(rawSubject);
     const content = encodeURIComponent(item.message || item.content || '');
-    router.push(`/owner/notifications/compose?subject=${subject}&content=${content}`);
+    const cafeId = encodeURIComponent(item.cafe_id || '');
+    router.push(`/owner/notifications/compose?subject=${subject}&content=${content}&cafe_id=${cafeId}`);
   };
 
   return (
@@ -285,16 +295,27 @@ export default function CampaignsPage() {
 
                   {/* Footer Metadata Bar */}
                   <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2 text-[#6F4E37] font-bold">
-                      <div className="w-6 h-6 rounded-lg bg-[#6F4E37]/10 flex items-center justify-center shrink-0">
-                        <Users className="w-3.5 h-3.5 text-[#6F4E37]" />
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex items-center gap-2 text-[#6F4E37] font-bold">
+                        <div className="w-6 h-6 rounded-lg bg-[#6F4E37]/10 flex items-center justify-center shrink-0">
+                          <Users className="w-3.5 h-3.5 text-[#6F4E37]" />
+                        </div>
+                        <span>Audience: <span className="font-extrabold text-[#2C1810]">All Registered Diners</span></span>
                       </div>
-                      <span>Audience Target: <span className="font-extrabold text-[#2C1810]">All Registered Diners</span></span>
+
+                      <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-[#FFF8F0] border border-[#DDB892] text-[11px] font-bold text-[#6F4E37]">
+                        <span>☕ Sender:</span>
+                        <span className="font-black text-[#2C1810]">
+                          {(item.title && item.title.startsWith('[') && item.title.includes(']'))
+                            ? item.title.split(']')[0].replace('[', '')
+                            : (item.cafe_name || 'Default Cafe')}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-1.5 text-[11px] font-semibold text-stone-500">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Verified Sender: <span className="font-bold text-[#6F4E37]">noreply@vexatech.in</span></span>
+                      <span>Verified: <span className="font-bold text-[#6F4E37]">noreply@vexatech.in</span></span>
                     </div>
                   </div>
 

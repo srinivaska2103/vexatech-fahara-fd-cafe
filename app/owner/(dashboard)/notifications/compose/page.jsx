@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { composeMessageSchema } from '@/schemas/notification.schema';
 import { useSendMessage } from '@/hooks/notification';
 import { useCustomers } from '@/hooks/customer';
+import { useCafes } from '@/hooks/cafe';
+import { useAuthStore } from '@/store/auth.store';
 import { RecipientSelector } from '@/components/notifications/RecipientSelector';
 import { MessageEditor } from '@/components/notifications/MessageEditor';
 import { Button } from '@/components/ui/Button';
@@ -15,9 +17,17 @@ import { motion } from 'framer-motion';
 function ComposeFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const user = useAuthStore((state) => state.user);
   
   const initialSubject = searchParams.get('subject') || '';
   const initialContent = searchParams.get('content') || '';
+  const initialCafeId = searchParams.get('cafe_id') || '';
+
+  // Fetch cafe list for this owner to select default sending cafe
+  const { data: cafesData } = useCafes();
+  const cafes = Array.isArray(cafesData?.data) ? cafesData.data : (Array.isArray(cafesData) ? cafesData : []);
+  const matchingCafe = cafes.find(c => c.id === initialCafeId);
+  const defaultCafe = matchingCafe || cafes[0] || null;
 
   // Fetch customers to use as recipients
   const { data: customersData, isLoading: loadingCustomers } = useCustomers();
@@ -31,19 +41,30 @@ function ComposeFormContent() {
       recipients: [],
       channel: 'EMAIL',
       subject: initialSubject,
-      message: initialContent
+      message: initialContent,
+      cafe_id: initialCafeId || '',
+      cafe_name: ''
     }
   });
 
   useEffect(() => {
+    if (defaultCafe?.id) {
+      setValue('cafe_id', defaultCafe.id);
+      setValue('cafe_name', defaultCafe.name);
+    }
+  }, [defaultCafe, setValue]);
+
+  useEffect(() => {
     if (initialSubject) setValue('subject', initialSubject);
     if (initialContent) setValue('message', initialContent);
-  }, [initialSubject, initialContent]);
+  }, [initialSubject, initialContent, setValue]);
 
   const onSubmit = (data) => {
     // If no recipients selected, default to all registered diners
     const payload = {
       ...data,
+      cafe_id: data.cafe_id || defaultCafe?.id,
+      cafe_name: data.cafe_name || defaultCafe?.name || user?.name,
       recipients: data.recipients.length > 0 ? data.recipients : ['all-diners']
     };
 
@@ -109,7 +130,14 @@ function ComposeFormContent() {
         </div>
 
         {/* Editor Section */}
-        <MessageEditor register={register} errors={errors} watch={watch} setValue={setValue} />
+        <MessageEditor 
+          register={register} 
+          errors={errors} 
+          watch={watch} 
+          setValue={setValue}
+          cafes={cafes}
+          defaultCafe={defaultCafe}
+        />
 
         {/* Actions Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border/40">
