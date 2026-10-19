@@ -187,35 +187,35 @@ export default function EventsPage() {
               <section key={type} className="space-y-4">
                 
                 {/* Event Type Section Header */}
-                <div className="bg-[#FFF8F0] p-4 sm:p-5 rounded-2xl border border-[#E8DED5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="bg-white/80 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-[#E8DED5] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-[#E8DED5] text-[#6F4E37] flex items-center justify-center shrink-0 shadow-2xs">
-                      <CategoryIcon className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                      <CategoryIcon className="w-4 h-4 stroke-[2.2]" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-black text-[#2C1810] flex items-center gap-2">
+                      <h2 className="text-base font-black text-[#2C1810] flex items-center gap-2 leading-none">
                         <span>{type}</span>
-                        <span className="px-2 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
+                        <span className="px-2 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[11px] font-black">
                           {typePackages.length}
                         </span>
                       </h2>
-                      <p className="text-xs text-[#2C1810]/70 mt-0.5">{meta.subtitle}</p>
+                      <p className="text-[11px] text-[#2C1810]/60 mt-0.5">{meta.subtitle}</p>
                     </div>
                   </div>
 
                   <Link href={`/owner/events/create?event_type=${encodeURIComponent(type)}`}>
-                    <Button 
-                      variant="outline"
-                      className="py-1.5 px-3.5 rounded-xl border-[#6F4E37]/30 hover:border-[#6F4E37] bg-white text-[#6F4E37] text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-2xs shrink-0"
+                    <button 
+                      type="button"
+                      className="py-1.5 px-3 rounded-xl border border-[#6F4E37]/30 hover:border-[#6F4E37] bg-white hover:bg-[#FFF8F0] text-[#6F4E37] text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs shrink-0 cursor-pointer"
                     >
-                      <Plus className="w-3.5 h-3.5" />
+                      <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                       <span>Add {type} Package</span>
-                    </Button>
+                    </button>
                   </Link>
                 </div>
 
                 {/* Event Type Package Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {typePackages.map((pkg) => (
                     <EventCard 
                       key={pkg.id} 

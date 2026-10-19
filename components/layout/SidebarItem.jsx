@@ -7,12 +7,14 @@ import { useLayoutStore } from '@/store/layout.store';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
 import { CornerDownRight, ChevronRight, Lock } from 'lucide-react';
 
-export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#6F4E37]', bg = 'bg-[#FFF8F0]', isLocked = false }) => {
+export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#6F4E37]', bg = 'bg-[#FFF8F0]', isLocked = false, badge }) => {
   const pathname = usePathname();
   const targetHref = isLocked ? '/owner/subscription' : href;
   const isActive = exact 
     ? pathname === href 
-    : pathname === href || (pathname.startsWith(`${href}/`) && href !== '/owner/payments');
+    : href === '/owner/bookings'
+      ? pathname === '/owner/bookings'
+      : pathname === href || (pathname.startsWith(`${href}/`) && href !== '/owner/payments');
   const isSidebarCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
   const closeMobileSidebar = useLayoutStore((state) => state.closeMobileSidebar);
 
@@ -56,11 +58,14 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
       {/* Icon Badge Container */}
       <div 
         className={cn(
-          "w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110",
+          "relative w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110",
           isActive ? "bg-white/20 text-white" : isLocked ? "bg-stone-200/70 text-stone-500" : `${bg} ${color}`
         )}
       >
         <Icon className="w-3.5 h-3.5 stroke-[2]" />
+        {isSidebarCollapsed && badge > 0 && (
+          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white" />
+        )}
       </div>
       
       {!isSidebarCollapsed && (
@@ -68,18 +73,30 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
           <span className="text-[11px] font-bold tracking-tight truncate leading-none">
             {label}
           </span>
-          {isLocked ? (
-            <Lock className="w-3 h-3 text-amber-600 shrink-0 ml-1" />
-          ) : (
-            <ChevronRight 
-              className={cn(
-                "w-3 h-3 transition-all duration-200",
+          <div className="flex items-center gap-1.5 shrink-0 ml-1">
+            {badge !== undefined && badge !== null && Number(badge) > 0 && (
+              <span className={cn(
+                "px-1.5 py-0.5 text-[9px] font-black rounded-full leading-none",
                 isActive 
-                  ? "text-white/80 translate-x-0.5 opacity-100" 
-                  : "text-[#8C6D58]/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:text-[#6F4E37]"
-              )} 
-            />
-          )}
+                  ? "bg-white text-[#6F4E37]" 
+                  : "bg-rose-500 text-white"
+              )}>
+                {badge > 99 ? '99+' : badge}
+              </span>
+            )}
+            {isLocked ? (
+              <Lock className={cn("w-3 h-3 shrink-0", isActive ? "text-[#E6C5A8]" : "text-amber-600/80")} />
+            ) : (
+              <ChevronRight 
+                className={cn(
+                  "w-3 h-3 transition-all duration-200",
+                  isActive 
+                    ? "text-white/80 translate-x-0.5 opacity-100" 
+                    : "text-[#8C6D58]/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:text-[#6F4E37]"
+                )} 
+              />
+            )}
+          </div>
         </div>
       )}
     </Link>

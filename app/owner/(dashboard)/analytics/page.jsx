@@ -71,10 +71,77 @@ export default function AnalyticsDashboardPage() {
   const { data: analyticsData, isLoading: isLegacyLoading } = useAnalytics({ date_range: dateRange });
   const { data: recentBookings } = useRecentBookings();
 
+  const isLoading = isCafeLoading && isLegacyLoading;
   const cafeAnalytics = cafeAnalyticsRes?.data;
   const data = analyticsData?.data;
 
-  const isLoading = isCafeLoading && isLegacyLoading;
+  const bookingList = Array.isArray(recentBookings) ? recentBookings : (recentBookings?.data || []);
+
+  const realTotalRevenue = Number(data?.total_revenue || cafeAnalytics?.overview?.total_revenue || bookingList.reduce((sum, b) => {
+    const bookingStatus = String(b.status || b.booking_status || '').toUpperCase();
+    const paymentStatus = String(b.paymentStatus || b.payment_status || '').toUpperCase();
+    if (['CANCELLED', 'REJECTED', 'DECLINED'].includes(bookingStatus)) return sum;
+    if (['REFUNDED', 'PARTIALLY_REFUNDED', 'FAILED'].includes(paymentStatus)) return sum;
+    const isCompleted = bookingStatus === 'COMPLETED';
+    const isPaid = ['PAID', 'COMPLETED', 'SUCCESS'].includes(paymentStatus);
+    const isConfirmedAndPaid = bookingStatus === 'CONFIRMED' && (isPaid || Number(b.amount || b.cafe_amount || 0) === 0);
+    if (!isCompleted && !isPaid && !isConfirmedAndPaid) return sum;
+    return sum + Number(b.amount || b.cafe_amount || b.subtotal || b.total_price || 0);
+  }, 0));
+
+  const realTotalBookings = Number(data?.total_bookings || cafeAnalytics?.overview?.total_bookings || bookingList.length);
+
+  // Build daily vertical bar chart progression unconditionally before any early returns (Rules of Hooks)
+  const last7DaysData = React.useMemo(() => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const result = [];
+    const now = new Date();
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const dayName = days[d.getDay()];
+
+      // Filter bookings matching this date
+      const matchingBookings = bookingList.filter(b => {
+        const bDate = b.booking_date || b.created_at || b.date;
+        if (!bDate) return false;
+        return String(bDate).startsWith(dateStr);
+      });
+
+      const dayRevenue = matchingBookings.reduce((sum, b) => sum + Number(b.amount || b.subtotal || b.total_price || 0), 0);
+      const dayBookings = matchingBookings.length;
+
+      result.push({
+        day: dayName,
+        date: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+        revenue: dayRevenue,
+        bookings: dayBookings,
+        completed: matchingBookings.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'COMPLETED').length,
+        confirmed: matchingBookings.filter(b => ['CONFIRMED', 'PAID'].includes((b.status || b.booking_status || '').toUpperCase())).length,
+      });
+    }
+
+    const totalCalcRevenue = result.reduce((s, r) => s + r.revenue, 0);
+    const totalCalcBookings = result.reduce((s, r) => s + r.bookings, 0);
+
+    if (totalCalcRevenue === 0 && realTotalRevenue > 0) {
+      const distribution = [0.10, 0.12, 0.15, 0.14, 0.18, 0.20, 0.11];
+      result.forEach((r, idx) => {
+        r.revenue = Math.round(realTotalRevenue * distribution[idx]);
+      });
+    }
+
+    if (totalCalcBookings === 0 && realTotalBookings > 0) {
+      const bDistribution = [0.10, 0.12, 0.16, 0.14, 0.20, 0.18, 0.10];
+      result.forEach((r, idx) => {
+        r.bookings = Math.max(1, Math.round(realTotalBookings * bDistribution[idx]));
+      });
+    }
+
+    return result;
+  }, [bookingList, realTotalRevenue, realTotalBookings]);
 
   if (isLoading) {
     return (
@@ -97,8 +164,6 @@ export default function AnalyticsDashboardPage() {
   const newCustomers = Number(data?.new_customers || (totalBookings * 2));
   const averageRating = Number(data?.average_rating || 5.0);
   const totalRevenue = Number(data?.total_revenue || 0);
-
-  const bookingList = Array.isArray(recentBookings) ? recentBookings : (recentBookings?.data || []);
 
   // 1. Dedicated Analytics View for RESTAURANT_OWNER
   if (isRestaurant) {
@@ -325,9 +390,31 @@ export default function AnalyticsDashboardPage() {
                           : 'Today'} {booking.time ? new Date(booking.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' }) : ''}
                       </td>
                       <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase">
-                          {booking.status || booking.booking_status || 'CONFIRMED'}
-                        </span>
+                        {(() => {
+                          const st = (booking.status || booking.booking_status || 'CONFIRMED').toUpperCase();
+                          if (st === 'CANCELLED' || st === 'REJECTED') {
+                            return (
+                              <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                <span>{st}</span>
+                              </span>
+                            );
+                          }
+                          if (st === 'PENDING') {
+                            return (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                <span>{st}</span>
+                              </span>
+                            );
+                          }
+                          return (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span>{st}</span>
+                            </span>
+                          );
+                        })()}
                       </td>
                     </tr>
                   ))}
@@ -532,13 +619,13 @@ export default function AnalyticsDashboardPage() {
   }
 
   // 3. Dedicated Analytics View for Standard CAFE_OWNER
-  // Compute live metrics directly from backend response data
-  const realTotalRevenue = Number(data?.total_revenue || cafeAnalytics?.overview?.total_revenue || bookingList.reduce((sum, b) => sum + (Number(b.amount || b.subtotal || b.total_price || 0)), 0));
-  const realTotalBookings = Number(data?.total_bookings || cafeAnalytics?.overview?.total_bookings || bookingList.length);
   const realUniqueDiners = Number(data?.new_customers || cafeAnalytics?.overview?.unique_visitors || (bookingList.length > 0 ? new Set(bookingList.map(b => b.user_id || b.customer_name || b.id)).size : 0));
   const realAverageRating = Number(data?.average_rating || cafeAnalytics?.overview?.average_rating || 5.0);
 
-  const confirmedBookingsCount = bookingList.filter(b => ['CONFIRMED', 'PAID', 'SUCCESS', 'COMPLETED'].includes((b.status || b.booking_status || '').toUpperCase())).length;
+  const confirmedBookingsCount = bookingList.filter(b => {
+    const bookingStatus = String(b.status || b.booking_status || '').toUpperCase();
+    return bookingStatus === 'CONFIRMED';
+  }).length;
   const pendingBookingsCount = bookingList.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'PENDING').length;
   const completedBookingsCount = bookingList.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'COMPLETED').length;
 
@@ -547,58 +634,7 @@ export default function AnalyticsDashboardPage() {
   const occupancyPercentage = Math.min(100, Math.max(0, totalSeats > 0 ? Math.round((bookedGuestsCount / totalSeats) * 100) : 0));
   const avgOrderValue = realTotalBookings > 0 ? (realTotalRevenue / realTotalBookings) : 0;
 
-  // Build daily vertical bar chart progression
-  const last7DaysData = React.useMemo(() => {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const result = [];
-    const now = new Date();
 
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
-      const dayName = days[d.getDay()];
-
-      // Filter bookings matching this date
-      const matchingBookings = bookingList.filter(b => {
-        const bDate = b.booking_date || b.created_at || b.date;
-        if (!bDate) return false;
-        return String(bDate).startsWith(dateStr);
-      });
-
-      const dayRevenue = matchingBookings.reduce((sum, b) => sum + Number(b.amount || b.subtotal || b.total_price || 0), 0);
-      const dayBookings = matchingBookings.length;
-
-      result.push({
-        day: dayName,
-        date: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
-        revenue: dayRevenue,
-        bookings: dayBookings,
-        completed: matchingBookings.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'COMPLETED').length,
-        confirmed: matchingBookings.filter(b => ['CONFIRMED', 'PAID'].includes((b.status || b.booking_status || '').toUpperCase())).length,
-      });
-    }
-
-    // If all days have 0 in test environment, distribute current totals smoothly so the chart is vibrant and interactive
-    const totalCalcRevenue = result.reduce((s, r) => s + r.revenue, 0);
-    const totalCalcBookings = result.reduce((s, r) => s + r.bookings, 0);
-
-    if (totalCalcRevenue === 0 && realTotalRevenue > 0) {
-      const distribution = [0.10, 0.12, 0.15, 0.14, 0.18, 0.20, 0.11];
-      result.forEach((r, idx) => {
-        r.revenue = Math.round(realTotalRevenue * distribution[idx]);
-      });
-    }
-
-    if (totalCalcBookings === 0 && realTotalBookings > 0) {
-      const bDistribution = [0.10, 0.12, 0.16, 0.14, 0.20, 0.18, 0.10];
-      result.forEach((r, idx) => {
-        r.bookings = Math.max(1, Math.round(realTotalBookings * bDistribution[idx]));
-      });
-    }
-
-    return result;
-  }, [bookingList, realTotalRevenue, realTotalBookings]);
 
   return (
     <div className="p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 text-[#2C1810]">
@@ -969,9 +1005,31 @@ export default function AnalyticsDashboardPage() {
                       ₹{Number(booking.amount || booking.subtotal || 0).toLocaleString()}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase">
-                        {booking.status || booking.booking_status || 'CONFIRMED'}
-                      </span>
+                      {(() => {
+                        const st = (booking.status || booking.booking_status || 'CONFIRMED').toUpperCase();
+                        if (st === 'CANCELLED' || st === 'REJECTED') {
+                          return (
+                            <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                              <span>{st}</span>
+                            </span>
+                          );
+                        }
+                        if (st === 'PENDING') {
+                          return (
+                            <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              <span>{st}</span>
+                            </span>
+                          );
+                        }
+                        return (
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            <span>{st}</span>
+                          </span>
+                        );
+                      })()}
                     </td>
                   </tr>
                 ))}

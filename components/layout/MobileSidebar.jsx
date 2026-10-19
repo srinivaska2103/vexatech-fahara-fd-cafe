@@ -20,7 +20,11 @@ import {
   X,
   Sparkles,
   Armchair,
-  Megaphone
+  Megaphone,
+  Crown,
+  Utensils,
+  Receipt,
+  Tag
 } from 'lucide-react';
 import { useLayoutStore } from '@/store/layout.store';
 import { useAuthStore } from '@/store/auth.store';
@@ -34,9 +38,9 @@ const menuTabs = [
     label: 'Dashboard',
     href: '/owner/dashboard',
     icon: LayoutDashboard,
-    activeBg: 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-800 text-white shadow-md shadow-amber-600/30 border-amber-400/40',
-    inactiveBg: 'bg-amber-500/10 text-amber-900 border-amber-500/20 hover:bg-amber-500/20',
-    iconColor: 'text-amber-600',
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -44,10 +48,10 @@ const menuTabs = [
     category: 'main',
     label: 'Subscription',
     href: '/owner/subscription',
-    icon: Sparkles,
-    activeBg: 'bg-gradient-to-br from-amber-600 via-amber-700 to-yellow-700 text-white shadow-md shadow-amber-600/30 border-amber-400/40',
-    inactiveBg: 'bg-amber-500/10 text-amber-900 border-amber-500/20 hover:bg-amber-500/20',
-    iconColor: 'text-amber-600',
+    icon: Crown,
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -56,10 +60,10 @@ const menuTabs = [
     label: 'Cafe Management',
     href: '/owner/cafes',
     icon: Store,
-    activeBg: 'bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-800 text-white shadow-md shadow-indigo-600/30 border-indigo-400/40',
-    inactiveBg: 'bg-indigo-500/10 text-indigo-900 border-indigo-500/20 hover:bg-indigo-500/20',
-    iconColor: 'text-indigo-600',
-    activeIconColor: 'text-indigo-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'tables',
@@ -67,10 +71,10 @@ const menuTabs = [
     label: 'Table Seating',
     href: '/owner/tables',
     icon: Armchair,
-    activeBg: 'bg-gradient-to-br from-[#6F4E37] via-[#A67B5B] to-[#DDB892] text-white shadow-md shadow-[#6F4E37]/30 border-[#DDB892]/40',
-    inactiveBg: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#6F4E37]/20 hover:bg-[#6F4E37]/20',
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
     iconColor: 'text-[#6F4E37]',
-    activeIconColor: 'text-[#DDB892]'
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'bookings',
@@ -78,10 +82,21 @@ const menuTabs = [
     label: 'Bookings',
     href: '/owner/bookings',
     icon: CalendarCheck,
-    activeBg: 'bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-md shadow-emerald-600/30 border-emerald-400/40',
-    inactiveBg: 'bg-emerald-500/10 text-emerald-900 border-emerald-500/20 hover:bg-emerald-500/20',
-    iconColor: 'text-emerald-600',
-    activeIconColor: 'text-emerald-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'calendar',
+    category: 'main',
+    label: 'Availability',
+    href: '/owner/bookings/calendar',
+    icon: CalendarDays,
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'events',
@@ -89,10 +104,10 @@ const menuTabs = [
     label: 'Events',
     href: '/owner/events',
     icon: CalendarDays,
-    activeBg: 'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white shadow-md shadow-purple-600/30 border-purple-400/40',
-    inactiveBg: 'bg-purple-500/10 text-purple-900 border-purple-500/20 hover:bg-purple-500/20',
-    iconColor: 'text-purple-600',
-    activeIconColor: 'text-purple-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'campaigns',
@@ -100,10 +115,10 @@ const menuTabs = [
     label: 'Campaigns',
     href: '/owner/campaigns',
     icon: Megaphone,
-    activeBg: 'bg-gradient-to-br from-fuchsia-600 via-fuchsia-700 to-pink-800 text-white shadow-md shadow-fuchsia-600/30 border-fuchsia-400/40',
-    inactiveBg: 'bg-fuchsia-500/10 text-fuchsia-900 border-fuchsia-500/20 hover:bg-fuchsia-500/20',
-    iconColor: 'text-fuchsia-600',
-    activeIconColor: 'text-fuchsia-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'customers',
@@ -111,10 +126,10 @@ const menuTabs = [
     label: 'Customers',
     href: '/owner/customers',
     icon: Users,
-    activeBg: 'bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white shadow-md shadow-blue-600/30 border-blue-400/40',
-    inactiveBg: 'bg-blue-500/10 text-blue-900 border-blue-500/20 hover:bg-blue-500/20',
-    iconColor: 'text-blue-600',
-    activeIconColor: 'text-blue-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'reviews',
@@ -122,10 +137,10 @@ const menuTabs = [
     label: 'Reviews',
     href: '/owner/reviews',
     icon: Star,
-    activeBg: 'bg-gradient-to-br from-yellow-500 via-amber-600 to-orange-600 text-white shadow-md shadow-yellow-500/30 border-yellow-300/40',
-    inactiveBg: 'bg-yellow-500/10 text-yellow-900 border-yellow-500/20 hover:bg-yellow-500/20',
-    iconColor: 'text-amber-500',
-    activeIconColor: 'text-yellow-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'analytics',
@@ -133,10 +148,10 @@ const menuTabs = [
     label: 'Analytics',
     href: '/owner/analytics',
     icon: BarChart3,
-    activeBg: 'bg-gradient-to-br from-violet-600 via-purple-700 to-fuchsia-800 text-white shadow-md shadow-violet-600/30 border-violet-400/40',
-    inactiveBg: 'bg-violet-500/10 text-violet-900 border-violet-500/20 hover:bg-violet-500/20',
-    iconColor: 'text-violet-600',
-    activeIconColor: 'text-violet-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'payments',
@@ -145,10 +160,10 @@ const menuTabs = [
     href: '/owner/payments',
     exact: true,
     icon: CreditCard,
-    activeBg: 'bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-800 text-white shadow-md shadow-indigo-600/30 border-indigo-400/40',
-    inactiveBg: 'bg-indigo-500/10 text-indigo-900 border-indigo-500/20 hover:bg-indigo-500/20',
-    iconColor: 'text-indigo-600',
-    activeIconColor: 'text-indigo-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'settlements',
@@ -156,10 +171,10 @@ const menuTabs = [
     label: 'Settlements',
     href: '/owner/payments/settlements',
     icon: ArrowRightLeft,
-    activeBg: 'bg-gradient-to-br from-teal-600 via-teal-700 to-emerald-800 text-white shadow-md shadow-teal-600/30 border-teal-400/40',
-    inactiveBg: 'bg-teal-500/10 text-teal-900 border-teal-500/20 hover:bg-teal-500/20',
-    iconColor: 'text-teal-600',
-    activeIconColor: 'text-teal-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'refunds',
@@ -167,10 +182,10 @@ const menuTabs = [
     label: 'Refunds',
     href: '/owner/payments/refunds',
     icon: RefreshCw,
-    activeBg: 'bg-gradient-to-br from-rose-600 via-rose-700 to-pink-800 text-white shadow-md shadow-rose-600/30 border-rose-400/40',
-    inactiveBg: 'bg-rose-500/10 text-rose-900 border-rose-500/20 hover:bg-rose-500/20',
-    iconColor: 'text-rose-600',
-    activeIconColor: 'text-rose-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'account',
@@ -178,10 +193,10 @@ const menuTabs = [
     label: 'Payment Account',
     href: '/owner/payments/account',
     icon: ShieldCheck,
-    activeBg: 'bg-gradient-to-br from-cyan-600 via-cyan-700 to-blue-800 text-white shadow-md shadow-cyan-600/30 border-cyan-400/40',
-    inactiveBg: 'bg-cyan-500/10 text-cyan-900 border-cyan-500/20 hover:bg-cyan-500/20',
-    iconColor: 'text-cyan-600',
-    activeIconColor: 'text-cyan-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'notifications',
@@ -189,10 +204,10 @@ const menuTabs = [
     label: 'Notifications',
     href: '/owner/notifications',
     icon: Bell,
-    activeBg: 'bg-gradient-to-br from-orange-600 via-orange-700 to-amber-700 text-white shadow-md shadow-orange-600/30 border-orange-400/40',
-    inactiveBg: 'bg-orange-500/10 text-orange-900 border-orange-500/20 hover:bg-orange-500/20',
-    iconColor: 'text-orange-600',
-    activeIconColor: 'text-orange-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'settings',
@@ -200,10 +215,10 @@ const menuTabs = [
     label: 'Settings',
     href: '/owner/settings',
     icon: Settings,
-    activeBg: 'bg-gradient-to-br from-slate-700 via-slate-800 to-zinc-900 text-white shadow-md shadow-slate-700/30 border-slate-400/40',
-    inactiveBg: 'bg-slate-500/10 text-slate-900 border-slate-500/20 hover:bg-slate-500/20',
-    iconColor: 'text-slate-600',
-    activeIconColor: 'text-slate-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   },
   {
     id: 'support',
@@ -211,10 +226,10 @@ const menuTabs = [
     label: 'Help & Support',
     href: '/owner/support',
     icon: HelpCircle,
-    activeBg: 'bg-gradient-to-br from-sky-600 via-sky-700 to-blue-700 text-white shadow-md shadow-sky-600/30 border-sky-400/40',
-    inactiveBg: 'bg-sky-500/10 text-sky-900 border-sky-500/20 hover:bg-sky-500/20',
-    iconColor: 'text-sky-600',
-    activeIconColor: 'text-sky-200'
+    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
+    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
+    iconColor: 'text-[#6F4E37]',
+    activeIconColor: 'text-amber-200'
   }
 ];
 
@@ -343,7 +358,7 @@ export const MobileSidebar = () => {
         </div>
 
         {/* Menu Tabs 2-Column Row-Wise Grid */}
-        <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-2 content-start custom-scrollbar max-h-[60vh]">
+        <div className="flex-1 overflow-y-auto p-3.5 grid grid-cols-2 gap-2.5 content-start custom-scrollbar max-h-[60vh] bg-[#FFF8F0]/30">
           {filteredTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.exact 
@@ -356,19 +371,29 @@ export const MobileSidebar = () => {
                 href={tab.href}
                 onClick={closeMobileSidebar}
                 data-tour={`nav-${tab.id}`}
-                className={`flex flex-col justify-between p-2.5 rounded-2xl border transition-all duration-200 min-h-[88px] relative overflow-hidden ${
+                className={`flex flex-col justify-between p-3.5 rounded-2xl border transition-all duration-200 min-h-[96px] relative overflow-hidden group ${
                   isActive ? tab.activeBg : tab.inactiveBg
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
-                  <div className={`p-2 rounded-xl shrink-0 ${isActive ? 'bg-white/20' : 'bg-white/80 shadow-2xs'}`}>
-                    <Icon className={`w-4 h-4 ${isActive ? tab.activeIconColor : tab.iconColor}`} />
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
+                    isActive 
+                      ? 'bg-white/20 text-white shadow-2xs' 
+                      : 'bg-[#FFF8F0] border border-[#DDB892]/60 text-[#6F4E37] shadow-2xs'
+                  }`}>
+                    <Icon className="w-4 h-4 stroke-[2.2]" />
                   </div>
-                  {isActive && (
-                    <span className="w-2 h-2 rounded-full bg-white shadow-xs animate-pulse shrink-0" />
+                  {isActive ? (
+                    <span className="w-2 h-2 rounded-full bg-amber-300 shadow-xs animate-pulse shrink-0" />
+                  ) : (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E8DED5] group-hover:bg-[#A67B5B] transition-colors shrink-0" />
                   )}
                 </div>
-                <span className="text-[11px] font-extrabold leading-snug tracking-tight mt-1 line-clamp-2 break-words">{tab.label}</span>
+                <span className={`text-xs font-black tracking-tight mt-2.5 line-clamp-2 leading-tight ${
+                  isActive ? 'text-white' : 'text-[#2C1810]'
+                }`}>
+                  {tab.label}
+                </span>
               </Link>
             );
           })}

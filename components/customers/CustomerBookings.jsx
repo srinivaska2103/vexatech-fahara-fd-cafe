@@ -39,9 +39,9 @@ export const CustomerBookings = ({ bookings }) => {
                 <td className="px-6 py-4 text-text/70">{new Date(booking.booking_date || booking.created_at).toLocaleDateString()}</td>
                 <td className="px-6 py-4 text-center">
                   <span className={`inline-flex px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                    (booking.booking_status || booking.status) === 'COMPLETED' ? 'bg-green-100 text-green-700' :
-                    (booking.booking_status || booking.status) === 'CANCELLED' ? 'bg-danger/10 text-danger' :
-                    'bg-amber-100 text-amber-700'
+                    (booking.booking_status || booking.status) === 'COMPLETED' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
+                    (booking.booking_status || booking.status) === 'CANCELLED' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                    'bg-amber-50 text-amber-800 border border-amber-200'
                   }`}>
                     {booking.booking_status || booking.status || 'PENDING'}
                   </span>

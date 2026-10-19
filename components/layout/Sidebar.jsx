@@ -29,6 +29,7 @@ import { SidebarFooter } from './SidebarFooter';
 import { useLayoutStore } from '@/store/layout.store';
 import { useAuthStore } from '@/store/auth.store';
 import { useSubscriptionStore } from '@/store/subscription.store';
+import { useNotifications } from '@/hooks/notification';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
@@ -37,6 +38,7 @@ const mainMenuItems = [
   { icon: Store, label: 'Cafe Management', href: '/owner/cafes', color: 'text-indigo-600', bg: 'bg-indigo-100/70' },
   { icon: Armchair, label: 'Table Seating', href: '/owner/tables', color: 'text-amber-700', bg: 'bg-amber-100/70' },
   { icon: CalendarCheck, label: 'Bookings', href: '/owner/bookings', color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
+  { icon: CalendarDays, label: 'Availability Calendar', href: '/owner/bookings/calendar', color: 'text-amber-700', bg: 'bg-amber-100/70' },
   { icon: CalendarDays, label: 'Events', href: '/owner/events', color: 'text-cyan-600', bg: 'bg-cyan-100/70' },
 ];
 
@@ -69,6 +71,13 @@ export const Sidebar = () => {
   const user = useAuthStore((state) => state.user);
 
   const { isActive: isSubActive, fetchSubscription } = useSubscriptionStore();
+  const { data: notifData } = useNotifications({ limit: 10 });
+  const rawNotifs = Array.isArray(notifData?.data) 
+    ? notifData.data 
+    : (Array.isArray(notifData?.data?.data) 
+        ? notifData.data.data 
+        : (Array.isArray(notifData) ? notifData : []));
+  const unreadNotifCount = rawNotifs.filter(n => !n.is_read && n.status !== 'READ').length;
 
   React.useEffect(() => {
     fetchSubscription();
@@ -112,6 +121,11 @@ export const Sidebar = () => {
       return item.label !== 'Analytics' && item.label !== 'Help & Support';
     }
     return true;
+  }).map(item => {
+    if (item.label === 'Notifications' && unreadNotifCount > 0) {
+      return { ...item, badge: unreadNotifCount };
+    }
+    return item;
   });
 
   const visibleMarketingMenuItems = marketingMenuItems.filter(item => {

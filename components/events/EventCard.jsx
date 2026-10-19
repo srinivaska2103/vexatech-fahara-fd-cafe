@@ -102,21 +102,19 @@ export const EventCard = ({ event, onDelete }) => {
 
   return (
     <div className={cn(
-      "bg-white rounded-3xl border overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full text-[#2C1810] relative group",
+      "bg-white rounded-2xl border transition-all duration-300 flex flex-col justify-between text-[#2C1810] relative group hover:-translate-y-1 hover:shadow-xl shadow-xs overflow-hidden",
       theme.border
     )}>
-      {/* Dynamic Colored Header Banner */}
-      <div className={cn("p-5 pb-4 bg-gradient-to-br border-b border-stone-100 flex items-center justify-between relative overflow-hidden", theme.bg)}>
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none" />
-
-        <div className={cn("inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border shadow-2xs backdrop-blur-xs", theme.badge)}>
-          <Icon className={cn("w-4 h-4", theme.iconColor)} />
-          <span className="truncate max-w-[170px]">{eventType}</span>
+      {/* Top Accent Gradient Bar */}
+      <div className={cn("px-4 py-3 bg-gradient-to-r border-b border-stone-100 flex items-center justify-between relative", theme.bg)}>
+        <div className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider border shadow-2xs backdrop-blur-xs", theme.badge)}>
+          <Icon className={cn("w-3.5 h-3.5 stroke-[2.5]", theme.iconColor)} />
+          <span className="truncate max-w-[140px]">{eventType}</span>
         </div>
 
         {event.status && (
           <span className={cn(
-            "text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border shadow-2xs flex items-center gap-1.5",
+            "text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider border shadow-2xs flex items-center gap-1",
             event.status === 'PUBLISHED' || event.status === 'ACTIVE' || event.is_active !== false
               ? "bg-emerald-500 text-white border-emerald-600"
               : "bg-amber-500 text-white border-amber-600"
@@ -127,69 +125,69 @@ export const EventCard = ({ event, onDelete }) => {
         )}
       </div>
 
-      {/* Main Content Body */}
-      <div className="p-6 flex flex-col flex-1 space-y-4">
+      {/* Card Content Body */}
+      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3.5">
         
-        {/* Package Title & Price */}
-        <div className="space-y-1">
-          <h3 className="text-lg font-black text-[#2C1810] line-clamp-1 leading-snug group-hover:text-[#6F4E37] transition-colors">
-            {packageName}
-          </h3>
+        {/* Header: Title, Description, and Price Strip */}
+        <div className="space-y-2">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-base font-black text-[#2C1810] line-clamp-1 leading-snug group-hover:text-[#6F4E37] transition-colors">
+              {packageName}
+            </h3>
+            <div className="text-right shrink-0">
+              <span className="text-xl font-black text-[#6F4E37] tracking-tight">
+                ₹{price.toLocaleString('en-IN')}
+              </span>
+              <span className="text-[10px] font-bold text-stone-400 block -mt-0.5">/package</span>
+            </div>
+          </div>
 
-          <div className="flex items-baseline gap-1 pt-1">
-            <span className="text-3xl font-black text-[#6F4E37] tracking-tight">
-              ₹{price.toLocaleString('en-IN')}
-            </span>
-            <span className="text-xs font-bold text-stone-500">/ package</span>
+          <p className="text-[11px] text-stone-500 line-clamp-2 leading-relaxed font-medium">
+            {event.description || 'Custom tailored event celebration package for your guests.'}
+          </p>
+
+          {/* Quick Specs Badges: Guests & Hours */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+            {maxGuests && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50/80 border border-amber-200/60 text-amber-900 text-[11px] font-bold">
+                <Users className="w-3 h-3 text-amber-700 stroke-[2.2]" />
+                <span>Up to {maxGuests} Guests</span>
+              </span>
+            )}
+
+            {durationText && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50/80 border border-sky-200/60 text-sky-900 text-[11px] font-bold">
+                <Clock className="w-3 h-3 text-sky-700 stroke-[2.2]" />
+                <span>{durationText}</span>
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Capacity & Duration Badges */}
-        <div className="flex flex-wrap items-center gap-2">
-          {maxGuests && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-extrabold shadow-2xs">
-              <Users className="w-3.5 h-3.5 text-amber-700" />
-              <span>Up to {maxGuests} Guests</span>
-            </div>
-          )}
-
-          {durationText && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-50 border border-cyan-200/80 text-cyan-900 text-xs font-extrabold shadow-2xs">
-              <Clock className="w-3.5 h-3.5 text-cyan-700" />
-              <span>{durationText}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Package Description */}
-        <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed font-medium">
-          {event.description || 'Custom tailored event celebration package for your guests.'}
-        </p>
-
-        {/* Custom Inclusions Showcase */}
+        {/* Inclusions Compact Strip */}
         {inclusionsList.length > 0 && (
-          <div className="pt-3 border-t border-stone-100 space-y-2.5 flex-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black text-[#6F4E37] uppercase tracking-wider flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-600" />
-                <span>Package Inclusions ({inclusionsList.length})</span>
+          <div className="pt-2.5 border-t border-stone-100/80 space-y-1.5">
+            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-stone-400">
+              <span className="flex items-center gap-1">
+                <Package className="w-3 h-3 text-[#6F4E37]" />
+                <span>Inclusions ({inclusionsList.length})</span>
               </span>
             </div>
 
-            <div className="space-y-2">
-              {displayedInclusions.map((inc, index) => {
+            <div className="space-y-1">
+              {displayedInclusions.slice(0, 2).map((inc, index) => {
                 const incName = typeof inc === 'string' ? inc : inc.name || inc.inclusion_name || inc.category;
                 const qtyText = (inc.quantity && inc.unit) ? `${inc.quantity} ${inc.unit}` : null;
 
                 return (
-                  <div key={inc.id || index} className="flex items-center justify-between p-2 rounded-xl bg-stone-50/80 border border-stone-100 text-xs font-bold text-stone-800">
-                    <div className="flex items-center gap-2 truncate">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div key={inc.id || index} className="flex items-center justify-between px-2.5 py-1 rounded-lg bg-stone-50 border border-stone-100 text-[11px] font-medium text-stone-700">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                       <span className="truncate">{incName}</span>
                     </div>
 
                     {qtyText && (
-                      <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-white border border-stone-200 text-[#6F4E37] shrink-0">
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-white border border-stone-200 text-[#6F4E37] shrink-0 ml-1">
                         {qtyText}
                       </span>
                     )}
@@ -197,46 +195,45 @@ export const EventCard = ({ event, onDelete }) => {
                 );
               })}
 
-              {remainingInclusionsCount > 0 && (
-                <p className="text-[11px] font-extrabold text-[#6F4E37] pl-1">
-                  + {remainingInclusionsCount} more inclusions...
-                </p>
+              {inclusionsList.length > 2 && (
+                <span className="text-[10px] font-bold text-[#6F4E37] pl-1 block">
+                  +{inclusionsList.length - 2} more item{inclusionsList.length - 2 > 1 ? 's' : ''}
+                </span>
               )}
             </div>
           </div>
         )}
 
-        {/* Card Action Controls */}
-        <div className="pt-4 border-t border-stone-100 flex items-center justify-between gap-2.5">
+        {/* Interactive Action Footer */}
+        <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
           <Link href={`/owner/events/${event.id}/edit`} className="flex-1">
-            <Button 
+            <button 
               type="button"
-              variant="outline"
-              className="w-full py-2.5 px-4 rounded-xl border-stone-200 hover:border-[#6F4E37] text-xs font-extrabold text-stone-800 hover:text-[#6F4E37] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+              className="w-full py-2 px-3 rounded-xl border border-stone-200 hover:border-[#6F4E37] hover:bg-[#FFF8F0] text-xs font-bold text-stone-700 hover:text-[#6F4E37] flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs"
             >
-              <Edit2 className="w-3.5 h-3.5" />
+              <Edit2 className="w-3 h-3" />
               <span>Edit</span>
-            </Button>
+            </button>
           </Link>
 
           <Link href={`/owner/events/${event.id}`} className="flex-1">
-            <Button 
+            <button 
               type="button"
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] via-[#593E2B] to-[#452718] hover:from-[#593E2B] hover:to-[#2C1810] text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md shadow-[#6F4E37]/20 cursor-pointer"
+              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#593E2B] hover:brightness-105 active:scale-[0.98] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
             >
-              <Eye className="w-3.5 h-3.5 text-amber-300" />
+              <Eye className="w-3 h-3 text-amber-200" />
               <span>Manage</span>
-            </Button>
+            </button>
           </Link>
 
           {onDelete && (
             <button
               type="button"
               onClick={() => onDelete(event)}
-              className="w-9 h-9 rounded-xl border border-rose-200 hover:bg-rose-50 text-rose-600 flex items-center justify-center transition-all shrink-0 cursor-pointer"
+              className="w-8 h-8 rounded-xl border border-rose-200 hover:bg-rose-50 text-rose-600 flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-2xs"
               title="Delete Package"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
             </button>
           )}
         </div>

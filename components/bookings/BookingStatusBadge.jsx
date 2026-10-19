@@ -16,7 +16,7 @@ export const BookingStatusBadge = ({ status, className }) => {
       break;
     case 'REJECTED':
     case 'CANCELLED':
-      badgeColor = 'bg-danger/10 text-danger border-danger/20';
+      badgeColor = 'bg-rose-50 text-rose-700 border-rose-200';
       break;
     case 'PENDING':
       badgeColor = 'bg-warning/10 text-warning border-warning/20';

@@ -13,7 +13,7 @@ export const NotificationBadge = ({ type, className }) => {
       label = "Booking";
       break;
     case 'BOOKING_CANCELLED':
-      badgeClasses = "bg-danger/10 text-danger";
+      badgeClasses = "bg-rose-50 text-rose-700 border border-rose-200";
       label = "Cancelled";
       break;
     case 'NEW_REVIEW':

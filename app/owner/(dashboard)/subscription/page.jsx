@@ -497,8 +497,8 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
-        {/* Single Plan Card or Applicable Plan */}
-        <div className="max-w-xl mx-auto">
+        {/* Compact, Modern & Interactive Plan Card */}
+        <div className="max-w-md mx-auto">
           {allPlans
             .filter((plan) => plan.role === currentRole)
             .map((plan) => {
@@ -508,102 +508,86 @@ export default function SubscriptionPage() {
             return (
               <div 
                 key={plan.id}
-                className={`relative flex flex-col justify-between rounded-3xl p-6 sm:p-7 transition-all duration-300 ${
-                  isUserPlan 
-                    ? 'bg-white border-2 border-[#6F4E37] shadow-lg ring-4 ring-[#6F4E37]/10' 
-                    : 'bg-white/80 border border-[#E8DED5] opacity-85 hover:opacity-100 shadow-xs'
-                }`}
+                className="relative bg-white/95 backdrop-blur-xl border border-[#DDB892]/70 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-1"
               >
-                {/* Highlight Badge */}
-                {isUserPlan && (
-                  <div className="absolute -top-3.5 left-6 px-3.5 py-0.5 rounded-full bg-[#6F4E37] text-white text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-[#DDB892]" />
-                    <span>Your Plan</span>
+                {/* Modern Pill Badge */}
+                <div className="flex items-center justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                      <PlanIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-[#2C1810] leading-none">{plan.title}</h3>
+                      <span className="text-[10px] text-stone-500 font-medium">Billed monthly · Cancel anytime</span>
+                    </div>
                   </div>
-                )}
 
-                <div className="space-y-5">
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between gap-4 pt-1">
-                    <div className="space-y-1">
-                      <div className="w-10 h-10 rounded-2xl bg-[#FFF8F0] border border-[#E8DED5] text-[#6F4E37] flex items-center justify-center shrink-0">
-                        <PlanIcon className="w-5 h-5 stroke-[2.2]" />
+                  <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
+                    <Sparkles className="w-2.5 h-2.5 text-red-500" />
+                    <span>Popular</span>
+                  </span>
+                </div>
+
+                {/* Price Strip */}
+                <div className="flex items-baseline justify-between p-3 rounded-xl bg-[#FFF8F0] border border-[#DDB892]/40 mb-4">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-black text-[#2C1810]">₹{plan.price}</span>
+                    <span className="text-xs font-semibold text-stone-500">/mo</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#6F4E37] bg-white px-2 py-0.5 rounded-md border border-[#DDB892]/60 shadow-2xs">
+                    Full Platform Access
+                  </span>
+                </div>
+
+                {/* Compact Interactive Feature List */}
+                <div className="space-y-1.5 mb-5">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
+                    What's Included:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-stone-700">
+                    {plan.features.slice(0, 6).map((feat, fIdx) => (
+                      <div key={fIdx} className="flex items-center gap-1.5 py-1 px-2 rounded-lg bg-stone-50 hover:bg-[#FFF8F0] transition-colors border border-transparent hover:border-[#DDB892]/40">
+                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
+                        <span className="text-[11px] font-medium truncate">{feat}</span>
                       </div>
-                      <h3 className="text-lg font-black text-[#2C1810] pt-2">{plan.title}</h3>
-                      <p className="text-[11px] text-stone-500 font-medium leading-relaxed">
-                        {plan.tagline}
-                      </p>
-                    </div>
-
-                    <span className="px-2.5 py-1 rounded-md bg-[#FFF8F0] text-[#6F4E37] text-[10px] font-bold border border-[#E8DED5] shrink-0">
-                      {plan.badge}
-                    </span>
-                  </div>
-
-                  {/* Price Block */}
-                  <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#E8DED5]/80">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-black text-[#6F4E37]">₹{plan.price}</span>
-                      <span className="text-xs font-bold text-stone-500"> / month</span>
-                    </div>
-                    <span className="text-[10px] text-stone-500 font-medium block mt-0.5">
-                      Recurring monthly billing • No hidden fees
-                    </span>
-                  </div>
-
-                  {/* Feature Checklist */}
-                  <div className="space-y-2.5 pt-1">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-[#6F4E37] block">
-                      Included Features:
-                    </span>
-                    <ul className="space-y-2 text-xs text-stone-700">
-                      {plan.features.map((feat, fIdx) => (
-                        <li key={fIdx} className="flex items-start gap-2">
-                          <Check className="w-4 h-4 text-[#6F4E37] shrink-0 mt-0.5 stroke-[3]" />
-                          <span className="leading-snug">{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    ))}
                   </div>
                 </div>
 
-                {/* Card CTA Button */}
-                <div className="pt-6 mt-6 border-t border-[#E8DED5]">
-                  {isUserPlan ? (
-                    isActive ? (
-                      <div className="w-full py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black text-center flex items-center justify-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span>Currently Active</span>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={handleSubscribe}
-                        disabled={submitting}
-                        className="w-full py-3.5 px-4 rounded-xl bg-[#6F4E37] hover:bg-[#593E2B] text-white text-xs sm:text-sm font-black shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
-                      >
-                        {submitting ? (
-                          <>
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                            <span>Processing...</span>
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="w-3.5 h-3.5" />
-                            <span>{status === 'EXPIRED' ? `Renew Subscription (₹${plan.price}/mo)` : `Subscribe Now (₹${plan.price}/mo)`}</span>
-                          </>
-                        )}
-                      </button>
-                    )
+                {/* Action CTA */}
+                {isUserPlan ? (
+                  isActive ? (
+                    <div className="w-full py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-2xs">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>Plan Active & Verified</span>
+                    </div>
                   ) : (
                     <button
-                      disabled
-                      title="Partner type is assigned by your verified account role"
-                      className="w-full py-3 rounded-xl bg-stone-100 text-stone-400 text-xs font-bold text-center cursor-not-allowed border border-stone-200"
+                      onClick={handleSubscribe}
+                      disabled={submitting}
+                      className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-500 via-rose-500 to-red-600 hover:brightness-105 active:scale-[0.99] text-white text-xs font-extrabold shadow-sm hover:shadow-md transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                     >
-                      Different Partner Role
+                      {submitting ? (
+                        <>
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          <span>Processing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="w-3.5 h-3.5" />
+                          <span>{status === 'EXPIRED' ? `Renew for ₹${plan.price}/month` : `Subscribe for ₹${plan.price}/month`}</span>
+                        </>
+                      )}
                     </button>
-                  )}
-                </div>
+                  )
+                ) : (
+                  <button
+                    disabled
+                    className="w-full py-2 rounded-xl bg-stone-100 text-stone-400 text-xs font-bold text-center cursor-not-allowed border border-stone-200"
+                  >
+                    Different Partner Role
+                  </button>
+                )}
               </div>
             );
           })}

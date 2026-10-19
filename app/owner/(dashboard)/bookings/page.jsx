@@ -16,7 +16,12 @@ import {
   Users, 
   Sparkles,
   RefreshCw,
-  CalendarDays
+  CalendarDays,
+  ShieldCheck,
+  Shield,
+  ShieldAlert,
+  Timer,
+  AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { BookingTable } from '@/components/bookings/BookingTable';
@@ -84,6 +89,28 @@ export default function BookingsPage() {
   const pendingCount = rawBookings.filter(b => (b.status || b.booking_status) === 'PENDING').length;
   const confirmedCount = rawBookings.filter(b => (b.status || b.booking_status) === 'CONFIRMED').length;
   const totalRevenue = rawBookings.reduce((sum, b) => {
+    const bookingStatus = String(b.status || b.booking_status || '').toUpperCase();
+    const paymentStatus = String(b.paymentStatus || b.payment_status || '').toUpperCase();
+
+    // CANCELLED, REJECTED, DECLINED must never contribute to Total Revenue
+    if (['CANCELLED', 'REJECTED', 'DECLINED'].includes(bookingStatus)) {
+      return sum;
+    }
+
+    // REFUNDED bookings must not be counted as earned revenue
+    if (['REFUNDED', 'PARTIALLY_REFUNDED', 'FAILED'].includes(paymentStatus)) {
+      return sum;
+    }
+
+    // Must be COMPLETED or paid/confirmed to qualify as earned revenue. Unpaid PENDING bookings are excluded.
+    const isCompleted = bookingStatus === 'COMPLETED';
+    const isPaid = ['PAID', 'COMPLETED', 'SUCCESS'].includes(paymentStatus);
+    const isConfirmedAndPaid = bookingStatus === 'CONFIRMED' && (isPaid || Number(b.amount || b.cafe_amount || 0) === 0);
+
+    if (!isCompleted && !isPaid && !isConfirmedAndPaid) {
+      return sum;
+    }
+
     let rawAmount = 0;
     if (b.cafe_amount !== undefined && b.cafe_amount !== null && Number(b.cafe_amount) > 0) {
       rawAmount = Number(b.cafe_amount);
@@ -165,21 +192,22 @@ export default function BookingsPage() {
   };
 
   const handleExport = () => {
-    let csv = 'Booking Ref,Customer Name,Email,Phone,Date,Time,Guests,Amount,Status\n';
+    let csv = 'Booking Ref,Customer Name,Email,Phone,Date,Time,Guests,Amount,Payment Status,Reservation Status\n';
     
     if (bookings && bookings.length > 0) {
       bookings.forEach(b => {
         const ref = b.booking_number || (b.id ? b.id.substring(0, 8) : 'N/A');
-        const name = b.customerName || b.users?.name || 'Guest';
-        const email = b.customerEmail || b.users?.email || 'N/A';
-        const phone = b.customerPhone || b.users?.phone || 'N/A';
+        const name = (b.customerName || b.users?.name || 'Guest').replace(/"/g, '""');
+        const email = (b.customerEmail || b.users?.email || 'N/A').replace(/"/g, '""');
+        const phone = (b.customerPhone || b.users?.phone || 'N/A').replace(/"/g, '""');
         const date = b.date || b.bookingDate ? new Date(b.date || b.bookingDate).toLocaleDateString() : 'N/A';
         const time = formatTimeStr(b.startTime || b.start_time);
         const guests = b.guests || b.guestCount || 1;
-        const amount = b.amount || b.total || b.total_price || 0;
+        const amount = b.amount !== undefined ? b.amount : (b.cafe_amount || b.total || 0);
+        const pStatus = b.paymentStatus || b.payment_status || 'PENDING';
         const status = b.status || b.booking_status || 'PENDING';
         
-        csv += `"${ref}","${name}","${email}","${phone}","${date}","${time}","${guests}","${amount}","${status}"\n`;
+        csv += `"${ref}","${name}","${email}","${phone}","${date}","${time}","${guests}","${amount}","${pStatus}","${status}"\n`;
       });
     }
 
@@ -237,6 +265,36 @@ export default function BookingsPage() {
               <span>Calendar View</span>
             </Button>
           </Link>
+        </div>
+      </div>
+
+      {/* 3-Hour Booking Cancellation Protection Banner */}
+      <div className="bg-gradient-to-r from-red-50 via-rose-50/90 to-red-50/60 border-2 border-red-200/90 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 transition-all relative overflow-hidden">
+        {/* Subtle decorative alert accent glow */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-red-500/5 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="flex items-start sm:items-center gap-3.5 z-10">
+          <div className="w-11 h-11 rounded-2xl bg-white border border-red-200 text-red-600 flex items-center justify-center shrink-0 shadow-xs mt-0.5 sm:mt-0 ring-4 ring-red-100/60">
+            <ShieldAlert className="w-6 h-6 stroke-[2.2]" />
+          </div>
+          <div className="space-y-0.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-xs sm:text-sm font-black text-red-950 tracking-tight flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-red-600 shrink-0" />
+                <span>Protect Your Booking from Last-Minute Cancellations</span>
+              </h2>
+            </div>
+            <p className="text-xs font-semibold text-red-900/80 leading-relaxed max-w-3xl">
+              To help prevent last-minute cancellations, customer cancellation is restricted during the final 3 hours before the scheduled booking time. Review and manage incoming booking requests promptly.
+            </p>
+          </div>
+        </div>
+
+        <div className="shrink-0 self-start sm:self-auto pl-14 sm:pl-0 z-10">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-red-300 text-red-700 text-[11px] font-black tracking-wide shadow-2xs hover:bg-red-50 transition-colors">
+            <Timer className="w-3.5 h-3.5 text-red-600 stroke-[2.5]" />
+            <span>3-Hour Cancellation Policy</span>
+          </span>
         </div>
       </div>
 

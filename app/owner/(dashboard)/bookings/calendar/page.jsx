@@ -1,20 +1,34 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/Button';
 import { List, ArrowLeft, Calendar as CalendarIcon, Sparkles, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BookingCalendar } from '@/components/bookings/BookingCalendar';
+import { AvailabilityCalendarView } from '@/components/bookings/AvailabilityCalendarView';
 import { useBookingCalendar } from '@/hooks/booking';
+import { useCafes } from '@/hooks/cafe';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
 
 export default function BookingsCalendarPage() {
   const router = useRouter();
-  const { data: bookingsData, isLoading, refetch } = useBookingCalendar();
-  
-  // Safely extract array
+  const { data: bookingsData, isLoading: isBookingsLoading, refetch } = useBookingCalendar();
+  const { data: cafesData, isLoading: isCafesLoading } = useCafes();
+
+  const [selectedCafeId, setSelectedCafeId] = useState('');
+
+  // Safely extract arrays
   const bookings = Array.isArray(bookingsData) ? bookingsData : (bookingsData?.data || bookingsData?.bookings || []);
+  const cafes = Array.isArray(cafesData?.data) ? cafesData.data : (Array.isArray(cafesData) ? cafesData : (cafesData?.cafes || []));
+
+  // Auto-select first cafe if not selected
+  React.useEffect(() => {
+    if (!selectedCafeId && cafes.length > 0 && cafes[0]?.id) {
+      setSelectedCafeId(cafes[0].id);
+    }
+  }, [selectedCafeId, cafes]);
+
+  const activeCafeId = selectedCafeId || cafes[0]?.id || '';
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
@@ -24,7 +38,7 @@ export default function BookingsCalendarPage() {
         <div className="flex items-center gap-3.5 z-10">
           <button 
             onClick={() => router.push('/owner/bookings')}
-            className="w-10 h-10 rounded-2xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0"
+            className="w-10 h-10 rounded-2xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0 cursor-pointer"
             title="Back to List View"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -33,14 +47,14 @@ export default function BookingsCalendarPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
-                Visual Booking Calendar
+                Availability & Bookings Calendar
               </h1>
               <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
-                CALENDAR
+                VENDOR CALENDAR
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-text/70 mt-0.5">
-              Interactive timeline view to track table reservations and daily peak dining slots.
+            <p className="text-xs sm:text-sm text-stone-600 mt-0.5">
+              Control cafe availability, declare maintenance closures, and monitor real-time dining reservations.
             </p>
           </div>
         </div>
@@ -49,7 +63,7 @@ export default function BookingsCalendarPage() {
         <div className="flex items-center gap-2 z-10">
           <button 
             onClick={() => refetch()}
-            className="w-10 h-10 rounded-2xl border border-[#DDB892]/60 bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0"
+            className="w-10 h-10 rounded-2xl border border-[#DDB892]/60 bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0 cursor-pointer"
             title="Refresh Calendar Data"
           >
             <RefreshCw className="w-4 h-4" />
@@ -66,15 +80,21 @@ export default function BookingsCalendarPage() {
 
       {/* Main Interactive Calendar Section */}
       <div>
-        {isLoading ? (
+        {isBookingsLoading || isCafesLoading ? (
           <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs h-[720px]">
             <LoadingSkeleton type="card" className="h-full rounded-2xl" />
           </div>
         ) : (
-          <BookingCalendar bookings={bookings} />
+          <AvailabilityCalendarView 
+            bookings={bookings} 
+            cafes={cafes}
+            selectedCafeId={activeCafeId}
+            onCafeChange={(id) => setSelectedCafeId(id)}
+          />
         )}
       </div>
 
     </div>
   );
 }
+
