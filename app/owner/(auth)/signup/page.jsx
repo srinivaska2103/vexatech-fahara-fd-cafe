@@ -6,7 +6,7 @@ import { AuthLogo } from '@/components/auth/AuthLogo';
 import { RegisterForm } from '@/components/auth/RegisterForm';
 
 export const metadata = {
-  title: 'Owner Register - Fahara Cafe',
+  title: 'Owner Register - Grab2GO Cafe',
 };
 
 export default async function RegisterPage({ searchParams }) {
@@ -21,7 +21,7 @@ export default async function RegisterPage({ searchParams }) {
         <AuthLogo />
         <AuthHeader 
           title={isRestaurant ? "Restaurant Partner Registration" : "Cafe Partner Registration"} 
-          subtitle={isRestaurant ? "Join Fahara as a Restaurant Partner" : "Join Fahara as a Cafe Partner"} 
+          subtitle={isRestaurant ? "Join Grab2GO as a Restaurant Partner" : "Join Grab2GO as a Cafe Partner"} 
         />
         <RegisterForm defaultRole={defaultRole} loginRoute="/owner/login" />
         <AuthFooter 

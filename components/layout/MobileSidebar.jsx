@@ -24,7 +24,13 @@ import {
   Crown,
   Utensils,
   Receipt,
-  Tag
+  Tag,
+  ShoppingBag,
+  UtensilsCrossed,
+  BadgePercent,
+  Bike,
+  SlidersHorizontal,
+  ExternalLink
 } from 'lucide-react';
 import { useLayoutStore } from '@/store/layout.store';
 import { useAuthStore } from '@/store/auth.store';
@@ -38,9 +44,9 @@ const menuTabs = [
     label: 'Dashboard',
     href: '/owner/dashboard',
     icon: LayoutDashboard,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -49,9 +55,9 @@ const menuTabs = [
     label: 'Subscription',
     href: '/owner/subscription',
     icon: Crown,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -60,9 +66,9 @@ const menuTabs = [
     label: 'Cafe Management',
     href: '/owner/cafes',
     icon: Store,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -71,9 +77,9 @@ const menuTabs = [
     label: 'Table Seating',
     href: '/owner/tables',
     icon: Armchair,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -82,9 +88,9 @@ const menuTabs = [
     label: 'Bookings',
     href: '/owner/bookings',
     icon: CalendarCheck,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -93,9 +99,9 @@ const menuTabs = [
     label: 'Availability',
     href: '/owner/bookings/calendar',
     icon: CalendarDays,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -104,9 +110,75 @@ const menuTabs = [
     label: 'Events',
     href: '/owner/events',
     icon: CalendarDays,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'orders',
+    category: 'orders',
+    label: 'Food Orders',
+    href: '/owner/orders',
+    icon: ShoppingBag,
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'menu',
+    category: 'orders',
+    label: 'Menu Management',
+    href: '/owner/menu',
+    icon: UtensilsCrossed,
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'offers',
+    category: 'orders',
+    label: 'Discounts & Offers',
+    href: '/owner/offers',
+    icon: BadgePercent,
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'delivery-staff',
+    category: 'orders',
+    label: 'Delivery Staff',
+    href: '/owner/delivery-staff',
+    icon: Bike,
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'fulfilment',
+    category: 'orders',
+    label: 'Fulfilment Settings',
+    href: '/owner/fulfilment',
+    icon: SlidersHorizontal,
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
+    activeIconColor: 'text-amber-200'
+  },
+  {
+    id: 'driver-portal',
+    category: 'orders',
+    label: 'Driver App Portal',
+    href: '/delivery',
+    icon: ExternalLink,
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -115,9 +187,9 @@ const menuTabs = [
     label: 'Campaigns',
     href: '/owner/campaigns',
     icon: Megaphone,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -126,9 +198,9 @@ const menuTabs = [
     label: 'Customers',
     href: '/owner/customers',
     icon: Users,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -137,9 +209,9 @@ const menuTabs = [
     label: 'Reviews',
     href: '/owner/reviews',
     icon: Star,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -148,9 +220,9 @@ const menuTabs = [
     label: 'Analytics',
     href: '/owner/analytics',
     icon: BarChart3,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -160,9 +232,9 @@ const menuTabs = [
     href: '/owner/payments',
     exact: true,
     icon: CreditCard,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -171,9 +243,9 @@ const menuTabs = [
     label: 'Settlements',
     href: '/owner/payments/settlements',
     icon: ArrowRightLeft,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -182,9 +254,9 @@ const menuTabs = [
     label: 'Refunds',
     href: '/owner/payments/refunds',
     icon: RefreshCw,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -193,9 +265,9 @@ const menuTabs = [
     label: 'Payment Account',
     href: '/owner/payments/account',
     icon: ShieldCheck,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -204,9 +276,9 @@ const menuTabs = [
     label: 'Notifications',
     href: '/owner/notifications',
     icon: Bell,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -215,9 +287,9 @@ const menuTabs = [
     label: 'Settings',
     href: '/owner/settings',
     icon: Settings,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
   {
@@ -226,9 +298,9 @@ const menuTabs = [
     label: 'Help & Support',
     href: '/owner/support',
     icon: HelpCircle,
-    activeBg: 'bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white shadow-md shadow-[#6F4E37]/25 border-[#6F4E37]',
-    inactiveBg: 'bg-white hover:bg-[#FFF8F0] text-[#2C1810] border-[#E8DED5] hover:border-[#6F4E37]/30 shadow-2xs',
-    iconColor: 'text-[#6F4E37]',
+    activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
+    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   }
 ];
@@ -306,38 +378,39 @@ export const MobileSidebar = () => {
 
       {/* Bottom Sheet Drawer coming up from down */}
       <aside
-        className={`fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] w-full bg-[#FFF8F0] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl rounded-t-3xl border-t-2 border-[#DDB892]/60 ${
+        className={`fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] w-full bg-[#FFF5F5] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl rounded-t-3xl border-t-2 border-[#EF5350]/60 ${
           isMobileSidebarOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
         {/* Drag Handle Top Bar */}
-        <div className="w-12 h-1.5 rounded-full bg-[#6F4E37]/30 mx-auto my-2.5 shrink-0" />
+        <div className="w-12 h-1.5 rounded-full bg-[#E50914]/30 mx-auto my-2.5 shrink-0" />
 
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-4 pb-3 border-b border-[#6F4E37]/15 bg-[#FFF8F0] shrink-0">
+        <div className="flex items-center justify-between px-4 pb-3 border-b border-[#E50914]/15 bg-[#FFF5F5] shrink-0">
           <Link href="/owner/dashboard" onClick={closeMobileSidebar} className="flex items-center gap-3">
-            <div className="flex items-center justify-center shrink-0 w-9 h-9 rounded-2xl overflow-hidden bg-gradient-to-br from-[#6F4E37]/10 to-surface shadow-xs border border-[#6F4E37]/20 p-0.5">
-              <img src="/logo.jpeg" alt="Fahara Logo" className="w-full h-full object-cover rounded-xl" />
+            <div className="flex items-center justify-center shrink-0 w-9 h-9 rounded-2xl overflow-hidden bg-gradient-to-br from-[#E50914]/10 to-surface shadow-xs border border-[#E50914]/20 p-0.5">
+              <img src="/grab-it-logo.png" alt="Grab2GO Logo" className="w-full h-full object-cover rounded-xl" />
             </div>
             <div className="flex flex-col">
-              <span className="text-base font-extrabold text-[#2C1810] tracking-tight leading-none">Fahara</span>
-              <span className="text-[9px] font-bold text-[#6F4E37] uppercase tracking-widest leading-none mt-0.5">Owner Portal Navigation</span>
+              <span className="text-base font-extrabold text-[#252525] tracking-tight leading-none">Grab2GO</span>
+              <span className="text-[9px] font-bold text-[#E50914] uppercase tracking-widest leading-none mt-0.5">Owner Portal Navigation</span>
             </div>
           </Link>
           <button 
             onClick={closeMobileSidebar}
-            className="p-1.5 text-[#2C1810]/60 hover:text-[#6F4E37] hover:bg-[#6F4E37]/10 rounded-2xl transition-colors"
+            className="p-1.5 text-[#252525]/60 hover:text-[#E50914] hover:bg-[#E50914]/10 rounded-2xl transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Category Filter Tabs */}
-        <div className="px-3 pt-3 pb-2 border-b border-[#6F4E37]/10 bg-white/70 shrink-0">
+        <div className="px-3 pt-3 pb-2 border-b border-[#E50914]/10 bg-white/70 shrink-0">
           <div className="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1">
             {[
               { id: 'all', label: 'All Tabs' },
               { id: 'main', label: 'Main' },
+              { id: 'orders', label: 'Orders & Delivery' },
               { id: 'marketing', label: 'Marketing' },
               ...(!isWalkingCafe ? [{ id: 'finance', label: 'Finance' }] : []),
               { id: 'system', label: 'System' }
@@ -347,8 +420,8 @@ export const MobileSidebar = () => {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${
                   activeCategory === cat.id
-                    ? 'bg-[#6F4E37] text-white shadow-sm'
-                    : 'bg-[#6F4E37]/10 text-[#6F4E37] hover:bg-[#6F4E37]/20'
+                    ? 'bg-[#E50914] text-white shadow-sm'
+                    : 'bg-[#E50914]/10 text-[#E50914] hover:bg-[#E50914]/20'
                 }`}
               >
                 {cat.label}
@@ -358,7 +431,7 @@ export const MobileSidebar = () => {
         </div>
 
         {/* Menu Tabs 2-Column Row-Wise Grid */}
-        <div className="flex-1 overflow-y-auto p-3.5 grid grid-cols-2 gap-2.5 content-start custom-scrollbar max-h-[60vh] bg-[#FFF8F0]/30">
+        <div className="flex-1 overflow-y-auto p-3.5 grid grid-cols-2 gap-2.5 content-start custom-scrollbar max-h-[60vh] bg-[#FFF5F5]/30">
           {filteredTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.exact 
@@ -379,18 +452,18 @@ export const MobileSidebar = () => {
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
                     isActive 
                       ? 'bg-white/20 text-white shadow-2xs' 
-                      : 'bg-[#FFF8F0] border border-[#DDB892]/60 text-[#6F4E37] shadow-2xs'
+                      : 'bg-[#FFF5F5] border border-[#EF5350]/60 text-[#E50914] shadow-2xs'
                   }`}>
                     <Icon className="w-4 h-4 stroke-[2.2]" />
                   </div>
                   {isActive ? (
                     <span className="w-2 h-2 rounded-full bg-amber-300 shadow-xs animate-pulse shrink-0" />
                   ) : (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#E8DED5] group-hover:bg-[#A67B5B] transition-colors shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FEE2E2] group-hover:bg-[#B71C1C] transition-colors shrink-0" />
                   )}
                 </div>
                 <span className={`text-xs font-black tracking-tight mt-2.5 line-clamp-2 leading-tight ${
-                  isActive ? 'text-white' : 'text-[#2C1810]'
+                  isActive ? 'text-white' : 'text-[#252525]'
                 }`}>
                   {tab.label}
                 </span>
@@ -400,7 +473,7 @@ export const MobileSidebar = () => {
         </div>
 
         {/* Drawer Footer Logout */}
-        <div className="p-3 border-t border-[#6F4E37]/15 bg-white shrink-0 pb-6">
+        <div className="p-3 border-t border-[#E50914]/15 bg-white shrink-0 pb-6">
           <button
             onClick={handleLogout}
             className="flex items-center justify-between w-full p-3 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-extrabold transition-all"

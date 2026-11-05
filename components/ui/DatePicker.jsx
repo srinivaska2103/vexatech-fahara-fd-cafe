@@ -193,19 +193,19 @@ export const DatePicker = React.forwardRef(({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={cn(
           "flex h-11 w-full items-center justify-between rounded-xl border bg-white px-3.5 py-2 text-sm transition-all duration-200 cursor-pointer shadow-xs select-none",
-          isOpen ? "border-[#6F4E37] ring-2 ring-[#6F4E37]/20 bg-[#FFF8F0]/30" : "border-border hover:border-[#6F4E37]/50 hover:bg-neutral-50/50",
+          isOpen ? "border-[#E50914] ring-2 ring-[#E50914]/20 bg-[#FFF5F5]/30" : "border-border hover:border-[#E50914]/50 hover:bg-neutral-50/50",
           disabled && "opacity-50 cursor-not-allowed bg-neutral-100",
           error && "border-danger ring-danger/20",
           className
         )}
       >
-        <div className="flex items-center gap-2 text-[#2C1810]">
+        <div className="flex items-center gap-2 text-[#252525]">
           <span className={cn("font-medium", !selectedDate && "text-text/40 font-normal")}>
             {selectedDate ? formatDisplayValue(selectedDate) : placeholder}
           </span>
         </div>
 
-        <div className="flex items-center gap-1 text-[#6F4E37]">
+        <div className="flex items-center gap-1 text-[#E50914]">
           {selectedDate && !disabled && (
             <button
               type="button"
@@ -216,20 +216,20 @@ export const DatePicker = React.forwardRef(({
               <X className="w-3.5 h-3.5" />
             </button>
           )}
-          <CalendarIcon className="w-4 h-4 text-[#6F4E37] transition-transform duration-200 hover:scale-110" />
+          <CalendarIcon className="w-4 h-4 text-[#E50914] transition-transform duration-200 hover:scale-110" />
         </div>
       </div>
 
       {/* Modern Popover Calendar UI */}
       {isOpen && (
-        <div className="absolute left-0 z-50 mt-2 w-72 sm:w-80 rounded-2xl border border-[#DDB892]/40 bg-white p-4 shadow-2xl shadow-[#6F4E37]/15 backdrop-blur-md transition-all animate-in fade-in slide-in-from-top-2">
+        <div className="absolute left-0 z-50 mt-2 w-72 sm:w-80 rounded-2xl border border-[#EF5350]/40 bg-white p-4 shadow-2xl shadow-[#E50914]/15 backdrop-blur-md transition-all animate-in fade-in slide-in-from-top-2">
           {/* Header Bar */}
           <div className="flex items-center justify-between pb-3 mb-3 border-b border-neutral-100">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-[#2C1810] text-base">
+              <span className="font-extrabold text-[#252525] text-base">
                 {MONTH_NAMES[viewMonth]}
               </span>
-              <span className="text-[#6F4E37] font-semibold text-sm bg-[#FFF8F0] px-2 py-0.5 rounded-lg border border-[#DDB892]/30">
+              <span className="text-[#E50914] font-semibold text-sm bg-[#FFF5F5] px-2 py-0.5 rounded-lg border border-[#EF5350]/30">
                 {viewYear}
               </span>
             </div>
@@ -238,7 +238,7 @@ export const DatePicker = React.forwardRef(({
               <button
                 type="button"
                 onClick={handlePrevMonth}
-                className="p-1.5 rounded-xl border border-neutral-200/80 hover:bg-[#FFF8F0] hover:border-[#DDB892] text-[#6F4E37] transition-all"
+                className="p-1.5 rounded-xl border border-neutral-200/80 hover:bg-[#FFF5F5] hover:border-[#EF5350] text-[#E50914] transition-all"
                 title="Previous Month"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -246,7 +246,7 @@ export const DatePicker = React.forwardRef(({
               <button
                 type="button"
                 onClick={handleNextMonth}
-                className="p-1.5 rounded-xl border border-neutral-200/80 hover:bg-[#FFF8F0] hover:border-[#DDB892] text-[#6F4E37] transition-all"
+                className="p-1.5 rounded-xl border border-neutral-200/80 hover:bg-[#FFF5F5] hover:border-[#EF5350] text-[#E50914] transition-all"
                 title="Next Month"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -261,7 +261,7 @@ export const DatePicker = React.forwardRef(({
                 key={day} 
                 className={cn(
                   "text-xs font-bold py-1 text-text/50 uppercase tracking-wider",
-                  (idx === 0 || idx === 6) && "text-[#6F4E37]/70"
+                  (idx === 0 || idx === 6) && "text-[#E50914]/70"
                 )}
               >
                 {day}
@@ -285,15 +285,15 @@ export const DatePicker = React.forwardRef(({
                   className={cn(
                     "h-9 w-full rounded-xl text-xs font-semibold flex items-center justify-center transition-all relative group",
                     !isCurrentMonth && "text-neutral-300 font-normal",
-                    isCurrentMonth && !selected && !isTodayDay && "text-[#2C1810] hover:bg-[#FFF8F0] hover:text-[#6F4E37] hover:scale-105",
-                    isTodayDay && !selected && "border-2 border-[#6F4E37] text-[#6F4E37] font-bold bg-[#FFF8F0]/50",
-                    selected && "bg-gradient-to-tr from-[#6F4E37] to-[#8B5E3C] text-white font-black shadow-md shadow-[#6F4E37]/30 scale-105",
+                    isCurrentMonth && !selected && !isTodayDay && "text-[#252525] hover:bg-[#FFF5F5] hover:text-[#E50914] hover:scale-105",
+                    isTodayDay && !selected && "border-2 border-[#E50914] text-[#E50914] font-bold bg-[#FFF5F5]/50",
+                    selected && "bg-gradient-to-tr from-[#E50914] to-[#8B5E3C] text-white font-black shadow-md shadow-[#E50914]/30 scale-105",
                     disabledDay && "opacity-25 cursor-not-allowed hover:bg-transparent hover:scale-100"
                   )}
                 >
                   {dayNum}
                   {isTodayDay && !selected && (
-                    <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#6F4E37]" />
+                    <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#E50914]" />
                   )}
                 </button>
               );
@@ -314,9 +314,9 @@ export const DatePicker = React.forwardRef(({
             <button
               type="button"
               onClick={handleToday}
-              className="text-[#6F4E37] font-bold hover:underline flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FFF8F0] border border-[#DDB892]/30 hover:bg-[#DDB892]/20 transition-all"
+              className="text-[#E50914] font-bold hover:underline flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FFF5F5] border border-[#EF5350]/30 hover:bg-[#EF5350]/20 transition-all"
             >
-              <Sparkles className="w-3 h-3 text-[#6F4E37]" />
+              <Sparkles className="w-3 h-3 text-[#E50914]" />
               Today
             </button>
           </div>

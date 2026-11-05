@@ -31,14 +31,14 @@ export default function BookingsCalendarPage() {
   const activeCafeId = selectedCafeId || cafes[0]?.id || '';
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-5 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 z-10">
           <button 
             onClick={() => router.push('/owner/bookings')}
-            className="w-10 h-10 rounded-2xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0 cursor-pointer"
+            className="w-10 h-10 rounded-2xl bg-white border border-[#EF5350]/60 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0 cursor-pointer"
             title="Back to List View"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -46,10 +46,10 @@ export default function BookingsCalendarPage() {
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#252525] tracking-tight">
                 Availability & Bookings Calendar
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-extrabold">
                 VENDOR CALENDAR
               </span>
             </div>
@@ -63,14 +63,14 @@ export default function BookingsCalendarPage() {
         <div className="flex items-center gap-2 z-10">
           <button 
             onClick={() => refetch()}
-            className="w-10 h-10 rounded-2xl border border-[#DDB892]/60 bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0 cursor-pointer"
+            className="w-10 h-10 rounded-2xl border border-[#EF5350]/60 bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0 cursor-pointer"
             title="Refresh Calendar Data"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
 
           <Link href="/owner/bookings">
-            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
+            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
               <List className="w-4 h-4 text-white" />
               <span>List View</span>
             </Button>

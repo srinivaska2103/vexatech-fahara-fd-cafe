@@ -7,7 +7,7 @@ import { cn } from '@/utils/cn';
 import { Button } from '../ui/Button';
 import { X, Calendar as CalendarIcon } from 'lucide-react';
 
-// Custom styles mapping to Fahara design system
+// Custom styles mapping to Grab2GO design system
 const customClassNames = {
   root: 'p-4 bg-white border border-border rounded-xl shadow-sm w-full max-w-sm mx-auto',
   months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',

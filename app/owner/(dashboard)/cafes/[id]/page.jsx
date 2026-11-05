@@ -103,11 +103,11 @@ export default function CafeDetailsPage() {
   if (!cafe) {
     return (
       <div className="p-12 text-center space-y-4 max-w-lg mx-auto bg-white rounded-3xl border border-border/60 shadow-xs mt-10">
-        <MapPin className="w-12 h-12 text-[#6F4E37] opacity-40 mx-auto" />
-        <h3 className="text-lg font-extrabold text-[#2C1810]">Venue Not Found</h3>
+        <MapPin className="w-12 h-12 text-[#E50914] opacity-40 mx-auto" />
+        <h3 className="text-lg font-extrabold text-[#252525]">Venue Not Found</h3>
         <p className="text-xs text-text/60">The cafe venue you are looking for does not exist or has been removed.</p>
         <Link href="/owner/cafes">
-          <Button className="bg-[#6F4E37] text-white font-extrabold text-xs rounded-xl px-6 py-2.5">
+          <Button className="bg-[#E50914] text-white font-extrabold text-xs rounded-xl px-6 py-2.5">
             Back to All Cafes
           </Button>
         </Link>
@@ -142,7 +142,7 @@ export default function CafeDetailsPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Top Bar Header with Navigation */}
       <div className="flex flex-col gap-3">
@@ -153,11 +153,11 @@ export default function CafeDetailsPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">{cafe.name}</h1>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#252525] tracking-tight">{cafe.name}</h1>
               <CafeStatusBadge status={cafe.status} />
             </div>
             <p className="text-xs text-text/60 flex items-center gap-1.5 mt-0.5">
-              <MapPin className="w-3.5 h-3.5 text-[#6F4E37] shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-[#E50914] shrink-0" />
               <span>{cafe.address ? `${cafe.address}, ${cafe.city || ''} ${cafe.pincode || ''}` : (cafe.city || 'Address N/A')}</span>
             </p>
           </div>
@@ -167,15 +167,15 @@ export default function CafeDetailsPage() {
             {!isWalkingCafe && (
               <>
                 <Link href={`/owner/cafes/${id}/tables`} className="col-span-1">
-                  <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-[11px] sm:text-xs font-extrabold shadow-xs hover:shadow-md flex items-center justify-center gap-1.5 transition-all">
+                  <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-[11px] sm:text-xs font-extrabold shadow-xs hover:shadow-md flex items-center justify-center gap-1.5 transition-all">
                     <Layers className="w-4 h-4 text-white shrink-0" />
                     <span className="whitespace-nowrap">Manage Tables</span>
                   </Button>
                 </Link>
 
                 <Link href={`/owner/bookings?cafe_id=${cafe.id}`} className="col-span-1">
-                  <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-[11px] sm:text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all">
-                    <Calendar className="w-4 h-4 text-[#6F4E37] shrink-0" />
+                  <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 text-[#252525] text-[11px] sm:text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all">
+                    <Calendar className="w-4 h-4 text-[#E50914] shrink-0" />
                     <span className="whitespace-nowrap">View Bookings</span>
                   </Button>
                 </Link>
@@ -183,8 +183,8 @@ export default function CafeDetailsPage() {
             )}
 
             <Link href={`/owner/cafes/${id}/edit`} className={!isWalkingCafe ? "col-span-1" : "col-span-3 sm:col-span-1"}>
-              <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-[11px] sm:text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all">
-                <Edit2 className="w-4 h-4 text-[#6F4E37] shrink-0" />
+              <Button className="w-full sm:w-auto py-2.5 px-3 sm:px-4 rounded-xl bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 text-[#252525] text-[11px] sm:text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all">
+                <Edit2 className="w-4 h-4 text-[#E50914] shrink-0" />
                 <span className="whitespace-nowrap">Edit Details</span>
               </Button>
             </Link>
@@ -193,12 +193,12 @@ export default function CafeDetailsPage() {
       </div>
 
       {/* Hero Showcase Banner */}
-      <div className="relative rounded-3xl overflow-hidden shadow-xs border border-[#DDB892]/60 bg-white group min-h-[260px] sm:min-h-[320px] flex flex-col justify-end">
+      <div className="relative rounded-3xl overflow-hidden shadow-xs border border-[#EF5350]/60 bg-white group min-h-[260px] sm:min-h-[320px] flex flex-col justify-end">
         <div className="absolute inset-0 z-0">
           {heroImage ? (
             <img src={heroImage} alt={cafe.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[#FFF8F0] via-[#FFF0E0] to-[#F5E6D3]" />
+            <div className="w-full h-full bg-gradient-to-br from-[#FFF5F5] via-[#FFF0E0] to-[#F5E6D3]" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
         </div>
@@ -217,11 +217,11 @@ export default function CafeDetailsPage() {
           </div>
 
           {/* Quick Metrics Bar Overlay */}
-          <div className="flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/40 shadow-md text-[#2C1810]">
+          <div className="flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/40 shadow-md text-[#252525]">
             {!cafe?.provides_event_services && !isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
               <div className="px-3 border-r border-border/40">
                 <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Hourly Rate</p>
-                <p className="text-sm font-black text-[#6F4E37]">
+                <p className="text-sm font-black text-[#E50914]">
                   ₹{cafe.price_per_hour}<span className="text-[10px] font-normal text-text/50">/hr</span>
                 </p>
               </div>
@@ -230,7 +230,7 @@ export default function CafeDetailsPage() {
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">
                 {isWalkingCafe ? 'Seating Capacity' : 'Max Capacity'}
               </p>
-              <p className="text-sm font-black text-[#2C1810]">{cafe.maximum_persons || 'N/A'} Guests</p>
+              <p className="text-sm font-black text-[#252525]">{cafe.maximum_persons || 'N/A'} Guests</p>
             </div>
           </div>
         </div>
@@ -248,8 +248,8 @@ export default function CafeDetailsPage() {
               className={cn(
                 "px-4 py-2.5 rounded-2xl text-xs font-black transition-all flex items-center gap-2 shrink-0 cursor-pointer",
                 isActive 
-                  ? "bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white shadow-md" 
-                  : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
+                  ? "bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white shadow-md" 
+                  : "text-text/60 hover:text-[#E50914] hover:bg-surface/60"
               )}
             >
               <Icon className="w-4 h-4" />
@@ -285,41 +285,41 @@ export default function CafeDetailsPage() {
                   {/* About Dining Space */}
                   <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-4">
                     <div className="flex items-center gap-3 pb-3 border-b border-border/40">
-                      <div className="w-9 h-9 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold">
+                      <div className="w-9 h-9 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-extrabold">
                         <Coffee className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">About the Dining Space</h3>
+                        <h3 className="text-base font-extrabold text-[#252525]">About the Dining Space</h3>
                         <p className="text-[11px] text-text/60">Venue description & dining experience details</p>
                       </div>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-[#2C1810]/85 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-xs sm:text-sm text-[#252525]/85 leading-relaxed whitespace-pre-wrap">
                       {cafe.description || 'No detailed description provided for this venue yet. Click "Edit Details" to add a comprehensive bio.'}
                     </p>
                   </div>
 
                   {/* Highlights Card */}
-                  <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 rounded-3xl border border-[#DDB892]/60 shadow-2xs space-y-4">
-                    <h4 className="text-xs font-extrabold text-[#2C1810] uppercase tracking-wider flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#6F4E37]" /> Venue Highlights & Capacity Specs
+                  <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 rounded-3xl border border-[#EF5350]/60 shadow-2xs space-y-4">
+                    <h4 className="text-xs font-extrabold text-[#252525] uppercase tracking-wider flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#E50914]" /> Venue Highlights & Capacity Specs
                     </h4>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                         <p className="text-[10px] text-text/50 font-bold uppercase">Max Capacity</p>
-                        <p className="text-sm font-black text-[#2C1810] mt-0.5">{cafe.maximum_persons || 'N/A'} Guests</p>
+                        <p className="text-sm font-black text-[#252525] mt-0.5">{cafe.maximum_persons || 'N/A'} Guests</p>
                       </div>
                       {!cafe?.provides_event_services && !isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
                         <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                           <p className="text-[10px] text-text/50 font-bold uppercase">Hourly Rate</p>
-                          <p className="text-sm font-black text-[#6F4E37] mt-0.5">
+                          <p className="text-sm font-black text-[#E50914] mt-0.5">
                             ₹{cafe.price_per_hour}/hr
                           </p>
                         </div>
                       )}
                       <div className="p-3 bg-white rounded-2xl border border-border/40 text-center">
                         <p className="text-[10px] text-text/50 font-bold uppercase">Location City</p>
-                        <p className="text-sm font-black text-[#2C1810] mt-0.5 truncate">{cafe.city || 'N/A'}</p>
+                        <p className="text-sm font-black text-[#252525] mt-0.5 truncate">{cafe.city || 'N/A'}</p>
                       </div>
                     </div>
                   </div>
@@ -342,13 +342,13 @@ export default function CafeDetailsPage() {
                         <Gift className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">Active Promotional Discounts & Offers</h3>
+                        <h3 className="text-base font-extrabold text-[#252525]">Active Promotional Discounts & Offers</h3>
                         <p className="text-[11px] text-text/60">Special discount offers enabled for venue customers</p>
                       </div>
                     </div>
 
                     <Link href={`/owner/cafes/${id}/edit`}>
-                      <Button className="py-2 px-3.5 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold flex items-center gap-1.5">
+                      <Button className="py-2 px-3.5 rounded-xl bg-[#E50914] text-white text-xs font-extrabold flex items-center gap-1.5">
                         <Edit2 className="w-3.5 h-3.5" />
                         Manage Discounts
                       </Button>
@@ -356,14 +356,14 @@ export default function CafeDetailsPage() {
                   </div>
 
                   {discountsList.length === 0 ? (
-                    <div className="text-center py-10 space-y-3 bg-[#FFF8F0]/50 rounded-2xl border border-dashed border-[#DDB892]/60">
+                    <div className="text-center py-10 space-y-3 bg-[#FFF5F5]/50 rounded-2xl border border-dashed border-[#EF5350]/60">
                       <Sparkles className="w-10 h-10 text-amber-500/50 mx-auto" />
-                      <p className="text-xs font-bold text-[#2C1810]">No Promotional Discounts Configured</p>
+                      <p className="text-xs font-bold text-[#252525]">No Promotional Discounts Configured</p>
                       <p className="text-[11px] text-text/50 max-w-sm mx-auto">
                         Boost your venue bookings by adding flat or percentage-based discount offers.
                       </p>
                       <Link href={`/owner/cafes/${id}/edit`}>
-                        <Button className="bg-[#6F4E37] text-white font-extrabold text-xs rounded-xl px-4 py-2 mt-2">
+                        <Button className="bg-[#E50914] text-white font-extrabold text-xs rounded-xl px-4 py-2 mt-2">
                           + Add Discount Offers
                         </Button>
                       </Link>
@@ -371,7 +371,7 @@ export default function CafeDetailsPage() {
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {discountsList.map((disc, idx) => (
-                        <div key={idx} className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF8F0] via-white to-[#FFF5EA] border border-[#DDB892]/60 shadow-2xs space-y-3">
+                        <div key={idx} className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF5F5] via-white to-[#FFF5F5] border border-[#EF5350]/60 shadow-2xs space-y-3">
                           <div className="flex items-center justify-between">
                             <span className="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-800 text-[10px] font-black uppercase">
                               Promotional Offer #{idx + 1}
@@ -379,8 +379,8 @@ export default function CafeDetailsPage() {
                             <Sparkles className="w-4 h-4 text-amber-600" />
                           </div>
                           <div>
-                            <h4 className="text-sm font-extrabold text-[#2C1810]">{disc.title || disc.name || 'Special Discount'}</h4>
-                            <p className="text-lg font-black text-[#6F4E37] mt-1">
+                            <h4 className="text-sm font-extrabold text-[#252525]">{disc.title || disc.name || 'Special Discount'}</h4>
+                            <p className="text-lg font-black text-[#E50914] mt-1">
                               {disc.discountType === 'PERCENT' ? `${disc.amount || 0}% OFF` : `₹${disc.amount || 0} OFF`}
                             </p>
                           </div>
@@ -399,7 +399,7 @@ export default function CafeDetailsPage() {
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-extrabold text-[#2C1810]">Available Venue Amenities</h3>
+                      <h3 className="text-base font-extrabold text-[#252525]">Available Venue Amenities</h3>
                       <p className="text-[11px] text-text/60">Features and dining facilities enabled for this venue</p>
                     </div>
                   </div>
@@ -412,10 +412,10 @@ export default function CafeDetailsPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {AMENITIES_LIST.filter(a => cafe.amenities.includes(a.id)).map(({ id, label, icon: Icon }) => (
                         <div key={id} className="flex items-center gap-3 p-3.5 rounded-2xl bg-surface/40 border border-border/50">
-                          <div className="w-8 h-8 rounded-xl bg-white text-[#6F4E37] flex items-center justify-center shrink-0 shadow-2xs">
+                          <div className="w-8 h-8 rounded-xl bg-white text-[#E50914] flex items-center justify-center shrink-0 shadow-2xs">
                             <Icon className="w-4 h-4" />
                           </div>
-                          <span className="text-xs font-bold text-[#2C1810]">{label}</span>
+                          <span className="text-xs font-bold text-[#252525]">{label}</span>
                         </div>
                       ))}
                     </div>
@@ -431,7 +431,7 @@ export default function CafeDetailsPage() {
                       <Clock className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-extrabold text-[#2C1810]">Weekly Operating Schedule</h3>
+                      <h3 className="text-base font-extrabold text-[#252525]">Weekly Operating Schedule</h3>
                       <p className="text-[11px] text-text/60">Venue opening & closing hours for diner bookings</p>
                     </div>
                   </div>
@@ -480,11 +480,11 @@ export default function CafeDetailsPage() {
 
                         return (
                           <div key={idx} className="flex items-center justify-between py-3">
-                            <span className="text-xs font-bold text-[#2C1810] capitalize">{hour.day_of_week}</span>
+                            <span className="text-xs font-bold text-[#252525] capitalize">{hour.day_of_week}</span>
                             {hour.is_closed ? (
                               <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg">Closed</span>
                             ) : (
-                              <span className="text-xs font-semibold text-[#6F4E37] bg-[#6F4E37]/10 px-2.5 py-1 rounded-lg">
+                              <span className="text-xs font-semibold text-[#E50914] bg-[#E50914]/10 px-2.5 py-1 rounded-lg">
                                 {formatTime(hour.open_time)} - {formatTime(hour.close_time)}
                               </span>
                             )}
@@ -505,13 +505,13 @@ export default function CafeDetailsPage() {
                         <ImageIcon className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">Venue Photo Gallery</h3>
+                        <h3 className="text-base font-extrabold text-[#252525]">Venue Photo Gallery</h3>
                         <p className="text-[11px] text-text/60">{galleryImages.length} uploaded photo{galleryImages.length === 1 ? '' : 's'}</p>
                       </div>
                     </div>
 
                     <Link href={`/owner/cafes/${id}/edit`}>
-                      <Button variant="outline" size="sm" className="rounded-xl text-xs font-bold border-border/60 text-[#6F4E37] hover:bg-[#6F4E37]/10">
+                      <Button variant="outline" size="sm" className="rounded-xl text-xs font-bold border-border/60 text-[#E50914] hover:bg-[#E50914]/10">
                         Upload Photos
                       </Button>
                     </Link>
@@ -541,7 +541,7 @@ export default function CafeDetailsPage() {
                       <Map className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-extrabold text-[#2C1810]">Location & Interactive Map</h3>
+                      <h3 className="text-base font-extrabold text-[#252525]">Location & Interactive Map</h3>
                       <p className="text-[11px] text-text/60">{cafe.address ? `${cafe.address}, ${cafe.city}` : 'GPS venue location'}</p>
                     </div>
                   </div>
@@ -564,9 +564,9 @@ export default function CafeDetailsPage() {
         {/* Right Sidebar Action Card (4 columns) */}
         <div className="lg:col-span-4 space-y-4 sticky top-6">
           <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-            <h4 className="text-xs font-extrabold text-[#2C1810] uppercase tracking-wider pb-2 border-b border-border/40 flex items-center justify-between">
+            <h4 className="text-xs font-extrabold text-[#252525] uppercase tracking-wider pb-2 border-b border-border/40 flex items-center justify-between">
               <span>Quick Venue Actions</span>
-              <Sparkles className="w-4 h-4 text-[#6F4E37]" />
+              <Sparkles className="w-4 h-4 text-[#E50914]" />
             </h4>
 
             <div className="space-y-2.5">
@@ -575,19 +575,19 @@ export default function CafeDetailsPage() {
                 className={cn(
                   "w-full justify-between py-3 px-4 rounded-2xl text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center cursor-pointer",
                   activeTab === 'qr' 
-                    ? "bg-[#6F4E37] text-white" 
-                    : "bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810]"
+                    ? "bg-[#E50914] text-white" 
+                    : "bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 text-[#252525]"
                 )}
               >
                 <span className="flex items-center gap-2">
-                  <QrCode className="w-4 h-4 text-[#6F4E37]" />
+                  <QrCode className="w-4 h-4 text-[#E50914]" />
                   <span>View Cafe QR Code</span>
                 </span>
                 <ChevronRight className="w-4 h-4" />
               </Button>
               {!isWalkingCafe && (
                 <Link href={`/owner/cafes/${id}/tables`} className="block">
-                  <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">
+                  <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:from-[#5c402d] hover:to-[#8c674b] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center">
                     <span className="flex items-center gap-2">
                       <Layers className="w-4 h-4" />
                       <span>Manage Seating Tables</span>
@@ -598,23 +598,23 @@ export default function CafeDetailsPage() {
               )}
 
               <Link href={`/owner/cafes/${id}/edit`} className="block">
-                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
+                <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 text-[#252525] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
                   <span className="flex items-center gap-2">
-                    <Edit2 className="w-4 h-4 text-[#6F4E37]" />
+                    <Edit2 className="w-4 h-4 text-[#E50914]" />
                     <span>Edit Venue Profile</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-[#6F4E37]" />
+                  <ChevronRight className="w-4 h-4 text-[#E50914]" />
                 </Button>
               </Link>
 
               {!isWalkingCafe && (
                 <Link href={`/owner/bookings?cafe_id=${cafe.id}`} className="block">
-                  <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
+                  <Button className="w-full justify-between py-3 px-4 rounded-2xl bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 text-[#252525] text-xs font-extrabold shadow-2xs hover:shadow-xs transition-all flex items-center">
                     <span className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-[#6F4E37]" />
+                      <Calendar className="w-4 h-4 text-[#E50914]" />
                       <span>Manage Bookings</span>
                     </span>
-                    <ChevronRight className="w-4 h-4 text-[#6F4E37]" />
+                    <ChevronRight className="w-4 h-4 text-[#E50914]" />
                   </Button>
                 </Link>
               )}

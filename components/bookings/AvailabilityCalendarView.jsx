@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 const localizer = momentLocalizer(moment);
 
 const FILTERS = [
-  { id: 'ALL', label: 'All Events', color: '#6F4E37' },
+  { id: 'ALL', label: 'All Events', color: '#E50914' },
   { id: 'BOOKED', label: 'Bookings', color: '#059669' },
   { id: 'BLOCKED', label: 'Blocked / Closures', color: '#B91C1C' },
   { id: 'PRIVATE_EVENT', label: 'Private Events', color: '#7C3AED' },
@@ -209,9 +209,9 @@ export const AvailabilityCalendarView = ({
 
   // Color & badge styling for events
   const eventStyleGetter = (event) => {
-    let backgroundColor = '#FFF8F0';
-    let color = '#6F4E37';
-    let border = '1px solid #DDB892';
+    let backgroundColor = '#FFF5F5';
+    let color = '#E50914';
+    let border = '1px solid #EF5350';
 
     if (event.type === 'BOOKING') {
       const statusUpper = (event.status || '').toUpperCase();
@@ -293,27 +293,27 @@ export const AvailabilityCalendarView = ({
   }, [calendarEvents, date]);
 
   return (
-    <div className="space-y-6 text-[#2C1810]">
+    <div className="space-y-6 text-[#252525]">
 
       {/* Top Bar Summary & Filter Controls */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
         {/* 1. Cafe Selector & Availability Action Card */}
-        <div className="lg:col-span-8 bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col justify-between gap-4">
+        <div className="lg:col-span-8 bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-5 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-black uppercase tracking-wider">
+                <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-black uppercase tracking-wider">
                   Availability Engine
                 </span>
                 {isLoadingAvailability && (
-                  <RefreshCw className="w-3.5 h-3.5 text-[#A67B5B] animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 text-[#B71C1C] animate-spin" />
                 )}
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-[#2C1810] tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-[#252525] tracking-tight">
                 Vendor Availability & Bookings Calendar
               </h2>
-              <p className="text-xs text-[#A67B5B] font-medium">
+              <p className="text-xs text-[#B71C1C] font-medium">
                 Manage business open slots, declare holiday blocks, and monitor dining table reservations in real-time.
               </p>
             </div>
@@ -324,7 +324,7 @@ export const AvailabilityCalendarView = ({
                 setSelectedBlock(null);
                 setIsModalOpen(true);
               }}
-              className="px-4 py-2.5 bg-gradient-to-r from-[#6F4E37] to-[#4A2C11] hover:brightness-105 active:scale-98 text-white rounded-2xl text-xs font-black shadow-sm flex items-center justify-center gap-2 cursor-pointer shrink-0 transition-all"
+              className="px-4 py-2.5 bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:brightness-105 active:scale-98 text-white rounded-2xl text-xs font-black shadow-sm flex items-center justify-center gap-2 cursor-pointer shrink-0 transition-all"
             >
               <Plus className="w-4 h-4" />
               <span>Add Block</span>
@@ -332,15 +332,15 @@ export const AvailabilityCalendarView = ({
           </div>
 
           {/* Filter Chips & Cafe Selector Bar */}
-          <div className="pt-3 border-t border-[#E8DED5] flex flex-wrap items-center justify-between gap-3">
+          <div className="pt-3 border-t border-[#FEE2E2] flex flex-wrap items-center justify-between gap-3">
             {/* Cafe Picker (if multi-cafe owner) */}
             {cafes.length > 1 && (
               <div className="flex items-center gap-2">
-                <Coffee className="w-3.5 h-3.5 text-[#6F4E37]" />
+                <Coffee className="w-3.5 h-3.5 text-[#E50914]" />
                 <select
                   value={currentCafeId}
                   onChange={(e) => onCafeChange && onCafeChange(e.target.value)}
-                  className="px-3 py-1.5 bg-white border border-[#DDB892] rounded-xl text-xs font-bold text-[#2C1810] focus:outline-none cursor-pointer"
+                  className="px-3 py-1.5 bg-white border border-[#EF5350] rounded-xl text-xs font-bold text-[#252525] focus:outline-none cursor-pointer"
                 >
                   {cafes.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -374,13 +374,13 @@ export const AvailabilityCalendarView = ({
                     onClick={() => setActiveFilter(f.id)}
                     className={`px-3 py-1.5 rounded-xl text-[11px] font-black transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
                       isActive
-                        ? 'bg-[#6F4E37] text-white shadow-sm ring-2 ring-[#6F4E37]/30'
-                        : 'bg-white border border-[#E8DED5] text-[#2C1810] hover:bg-[#FFF8F0] hover:border-[#DDB892]'
+                        ? 'bg-[#E50914] text-white shadow-sm ring-2 ring-[#E50914]/30'
+                        : 'bg-white border border-[#FEE2E2] text-[#252525] hover:bg-[#FFF5F5] hover:border-[#EF5350]'
                     }`}
                   >
                     <span>{f.label}</span>
                     <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-extrabold ${
-                      isActive ? 'bg-white/25 text-white' : 'bg-stone-100 text-[#6F4E37]'
+                      isActive ? 'bg-white/25 text-white' : 'bg-stone-100 text-[#E50914]'
                     }`}>
                       {count}
                     </span>
@@ -392,23 +392,23 @@ export const AvailabilityCalendarView = ({
         </div>
 
         {/* 2. Today & Upcoming Availability Snapshot Card */}
-        <div className="lg:col-span-4 bg-white p-5 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between border-b border-[#E8DED5] pb-3">
+        <div className="lg:col-span-4 bg-white p-5 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-[#FEE2E2] pb-3">
             <div className="flex items-center gap-2">
-              <CalendarDays className="w-4 h-4 text-[#6F4E37]" />
-              <h3 className="text-xs font-black uppercase tracking-wider text-[#2C1810]">
+              <CalendarDays className="w-4 h-4 text-[#E50914]" />
+              <h3 className="text-xs font-black uppercase tracking-wider text-[#252525]">
                 Today & Upcoming Pulse
               </h3>
             </div>
-            <span className="text-[10px] font-bold text-[#A67B5B]">
+            <span className="text-[10px] font-bold text-[#B71C1C]">
               {moment().format('MMM D, YYYY')}
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 my-3">
-            <div className="bg-[#FFF8F0] p-3 rounded-2xl border border-[#DDB892]/40 text-center">
-              <p className="text-[10px] uppercase font-black text-[#A67B5B]">Today's Bookings</p>
-              <p className="text-xl font-black text-[#6F4E37] mt-0.5">
+            <div className="bg-[#FFF5F5] p-3 rounded-2xl border border-[#EF5350]/40 text-center">
+              <p className="text-[10px] uppercase font-black text-[#B71C1C]">Today's Bookings</p>
+              <p className="text-xl font-black text-[#E50914] mt-0.5">
                 {summary?.todayBookingsCount ?? summary?.today_bookings_count ?? 0}
               </p>
             </div>
@@ -445,16 +445,16 @@ export const AvailabilityCalendarView = ({
                             setSelectedBlock(ub);
                             setIsModalOpen(true);
                           }}
-                          className="text-[11px] p-2 rounded-xl bg-stone-50 hover:bg-[#FFF8F0] border border-stone-200/70 hover:border-[#DDB892] flex items-center justify-between cursor-pointer transition-all hover:translate-x-0.5 group"
+                          className="text-[11px] p-2 rounded-xl bg-stone-50 hover:bg-[#FFF5F5] border border-stone-200/70 hover:border-[#EF5350] flex items-center justify-between cursor-pointer transition-all hover:translate-x-0.5 group"
                           title="Click to view or edit this closure"
                         >
                           <div className="flex items-center gap-1.5 min-w-0">
                             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
-                            <span className="font-bold text-[#2C1810] group-hover:text-[#6F4E37] truncate max-w-[140px] transition-colors">
+                            <span className="font-bold text-[#252525] group-hover:text-[#E50914] truncate max-w-[140px] transition-colors">
                               {ub.title || 'Blocked Slot'}
                             </span>
                           </div>
-                          <span className="text-[10px] font-bold text-[#6F4E37] bg-white px-2 py-0.5 rounded-md border border-[#DDB892]/40 shrink-0">
+                          <span className="text-[10px] font-bold text-[#E50914] bg-white px-2 py-0.5 rounded-md border border-[#EF5350]/40 shrink-0">
                             {moment(ub.start_at || ub.startAt).format('MMM D')}
                           </span>
                         </div>
@@ -472,11 +472,11 @@ export const AvailabilityCalendarView = ({
       </div>
 
       {/* Main Big Calendar Container */}
-      <div className="bg-white p-4 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-2xs calendar-wrapper text-[#2C1810]">
+      <div className="bg-white p-4 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-2xs calendar-wrapper text-[#252525]">
         
         {/* Color Legend Header */}
-        <div className="mb-4 pb-3 border-b border-[#E8DED5] flex flex-wrap items-center justify-between gap-3 text-[11px] font-bold">
-          <span className="text-[#A67B5B] uppercase text-[10px] font-black tracking-wider">Legend:</span>
+        <div className="mb-4 pb-3 border-b border-[#FEE2E2] flex flex-wrap items-center justify-between gap-3 text-[11px] font-bold">
+          <span className="text-[#B71C1C] uppercase text-[10px] font-black tracking-wider">Legend:</span>
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
@@ -517,38 +517,38 @@ export const AvailabilityCalendarView = ({
             padding: 6px 14px;
             font-size: 12px;
             font-weight: 700;
-            color: #2C1810;
+            color: #252525;
             transition: all 0.2s ease;
           }
           .calendar-wrapper .rbc-toolbar button:hover {
-            background-color: #FFF8F0;
-            color: #6F4E37;
-            border-color: #DDB892;
+            background-color: #FFF5F5;
+            color: #E50914;
+            border-color: #EF5350;
           }
           .calendar-wrapper .rbc-toolbar button.rbc-active {
-            background-color: #6F4E37 !important;
+            background-color: #E50914 !important;
             color: #ffffff !important;
-            border-color: #6F4E37 !important;
+            border-color: #E50914 !important;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
           }
           .calendar-wrapper .rbc-toolbar-label {
             font-size: 16px;
             font-weight: 900;
-            color: #2C1810;
+            color: #252525;
           }
           .calendar-wrapper .rbc-header {
             padding: 12px 0;
             font-size: 11px;
             font-weight: 800;
-            color: #6F4E37;
+            color: #E50914;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 1px solid #E8DED5;
+            border-bottom: 1px solid #FEE2E2;
             background-color: #FFFDFB;
           }
           .calendar-wrapper .rbc-month-view, .calendar-wrapper .rbc-time-view {
             border-radius: 16px;
-            border: 1px solid #E8DED5;
+            border: 1px solid #FEE2E2;
             overflow: hidden;
             background-color: #ffffff;
           }
@@ -557,10 +557,10 @@ export const AvailabilityCalendarView = ({
             transition: background-color 0.15s ease;
           }
           .calendar-wrapper .rbc-day-bg:hover {
-            background-color: #FFF8F0/60 !important;
+            background-color: #FFF5F5/60 !important;
           }
           .calendar-wrapper .rbc-today {
-            background-color: #FFF5EA !important;
+            background-color: #FFF5F5 !important;
           }
           .calendar-wrapper .rbc-day-bg + .rbc-day-bg {
             border-left: 1px solid #F3EDE6;
@@ -572,10 +572,10 @@ export const AvailabilityCalendarView = ({
             padding: 6px 8px;
             font-weight: 800;
             font-size: 12px;
-            color: #2C1810;
+            color: #252525;
           }
           .calendar-wrapper .rbc-date-cell.rbc-now {
-            color: #6F4E37;
+            color: #E50914;
             font-weight: 900;
           }
           .calendar-wrapper .rbc-event {
@@ -611,13 +611,13 @@ export const AvailabilityCalendarView = ({
       </div>
 
       {/* Mobile Schedule Section for screens under 768px */}
-      <div className="block lg:hidden bg-white p-5 rounded-3xl border border-[#DDB892]/60 shadow-xs space-y-3">
-        <div className="flex items-center justify-between border-b border-[#E8DED5] pb-2.5">
-          <h4 className="text-xs font-black uppercase tracking-wider text-[#2C1810] flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-[#6F4E37]" />
+      <div className="block lg:hidden bg-white p-5 rounded-3xl border border-[#EF5350]/60 shadow-xs space-y-3">
+        <div className="flex items-center justify-between border-b border-[#FEE2E2] pb-2.5">
+          <h4 className="text-xs font-black uppercase tracking-wider text-[#252525] flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#E50914]" />
             <span>Selected Day Timeline ({moment(date).format('MMM D, YYYY')})</span>
           </h4>
-          <span className="text-[10px] font-extrabold text-[#6F4E37] bg-[#FFF8F0] px-2 py-0.5 rounded-full border border-[#DDB892]/40">
+          <span className="text-[10px] font-extrabold text-[#E50914] bg-[#FFF5F5] px-2 py-0.5 rounded-full border border-[#EF5350]/40">
             {selectedDayEvents.length} Items
           </span>
         </div>
@@ -633,17 +633,17 @@ export const AvailabilityCalendarView = ({
                 key={evt.id} 
                 onClick={() => evt.type === 'BLOCK' && handleSelectEvent(evt)}
                 className={`p-3 rounded-2xl border flex items-center justify-between text-xs transition-all ${
-                  evt.type === 'BLOCK' ? 'bg-[#FFF8F0] border-[#DDB892] cursor-pointer hover:shadow-xs' : 'bg-emerald-50/70 border-emerald-200'
+                  evt.type === 'BLOCK' ? 'bg-[#FFF5F5] border-[#EF5350] cursor-pointer hover:shadow-xs' : 'bg-emerald-50/70 border-emerald-200'
                 }`}
               >
                 <div>
-                  <p className="font-extrabold text-[#2C1810]">{evt.title}</p>
+                  <p className="font-extrabold text-[#252525]">{evt.title}</p>
                   <p className="text-[10px] font-semibold text-stone-500 mt-0.5">
                     {moment(evt.start).format('h:mm A')} - {moment(evt.end).format('h:mm A')}
                   </p>
                 </div>
                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
-                  evt.type === 'BLOCK' ? 'bg-[#6F4E37] text-white' : 'bg-emerald-600 text-white'
+                  evt.type === 'BLOCK' ? 'bg-[#E50914] text-white' : 'bg-emerald-600 text-white'
                 }`}>
                   {evt.type === 'BLOCK' ? (evt.reason || 'BLOCKED') : 'BOOKING'}
                 </span>

@@ -69,8 +69,8 @@ export const QuickActionsGrid = ({ isWalkingCafe = false }) => {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-[#2C1810]">Quick Operations</h3>
-            <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-[#FFF8F0] text-[#6F4E37] border border-[#DDB892]/60">
+            <h3 className="text-base sm:text-lg font-bold text-[#252525]">Quick Operations</h3>
+            <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-[#FFF5F5] text-[#E50914] border border-[#EF5350]/60">
               <Sparkles className="w-3 h-3 text-amber-500" />
               <span>Shortcuts</span>
             </span>
@@ -99,7 +99,7 @@ export const QuickActionsGrid = ({ isWalkingCafe = false }) => {
                 <span className="text-[10px] font-black uppercase tracking-wider opacity-60">
                   {act.badge}
                 </span>
-                <h4 className="text-xs sm:text-sm font-bold text-[#2C1810] leading-tight">
+                <h4 className="text-xs sm:text-sm font-bold text-[#252525] leading-tight">
                   {act.title}
                 </h4>
               </div>

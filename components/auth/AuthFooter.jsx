@@ -5,7 +5,7 @@ export const AuthFooter = ({ text, linkText, href }) => {
   return (
     <div className="mt-6 text-center text-sm text-text/70">
       {text}{' '}
-      <Link href={href} className="font-medium text-primary hover:text-secondary transition-colors">
+      <Link href={href} className="font-medium text-[#E50914] hover:text-[#B71C1C] transition-colors">
         {linkText}
       </Link>
     </div>

@@ -1,11 +1,7 @@
-import React from 'react';
-import { PageContainer } from '@/components/layout/PageContainer';
-import { DashboardOverviewSkeleton } from '@/components/common/FaharaLoadingSystem';
+'use client';
 
-export default function DashboardLoading() {
-  return (
-    <PageContainer>
-      <DashboardOverviewSkeleton statCount={4} />
-    </PageContainer>
-  );
+import FoodLoadingScreen from '@/components/common/FoodLoadingScreen';
+
+export default function Loading() {
+  return <FoodLoadingScreen message="Loading your dashboard..." fullScreen={true} />;
 }

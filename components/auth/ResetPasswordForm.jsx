@@ -29,18 +29,18 @@ export const ResetPasswordForm = ({ identifier, email }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.1 }}
       onSubmit={handleSubmit(onSubmit, (err) => console.log('Form validation errors:', err))} 
-      className="space-y-4 text-[#2C1810]"
+      className="space-y-4 text-[#252525]"
     >
       {effectiveIdentifier ? (
         <input type="hidden" {...register('email')} />
       ) : (
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Email Address</Label>
+          <Label htmlFor="email" className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider">Email Address</Label>
           <Input
             id="email"
             type="email"
             placeholder="Enter your email"
-            className="h-12 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-sm font-medium text-[#2C1810]"
+            className="h-12 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-sm font-medium text-[#252525]"
             {...register('email')}
             error={errors.email?.message}
           />
@@ -52,19 +52,19 @@ export const ResetPasswordForm = ({ identifier, email }) => {
       )}
 
       <div className="space-y-1.5">
-        <Label htmlFor="otp" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">6-Digit Reset OTP</Label>
+        <Label htmlFor="otp" className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider">6-Digit Reset OTP</Label>
         <Input
           id="otp"
           placeholder="000000"
           maxLength={6}
-          className="h-12 rounded-2xl border-border/60 bg-surface/30 focus:bg-white tracking-widest text-center text-lg font-black text-[#2C1810]"
+          className="h-12 rounded-2xl border-border/60 bg-surface/30 focus:bg-white tracking-widest text-center text-lg font-black text-[#252525]"
           {...register('otp')}
           error={errors.otp?.message}
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="newPassword" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">New Password</Label>
+        <Label htmlFor="newPassword" className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider">New Password</Label>
         <PasswordInput
           id="newPassword"
           placeholder="Enter new strong password"
@@ -79,7 +79,7 @@ export const ResetPasswordForm = ({ identifier, email }) => {
         whileTap={{ scale: 0.98 }}
         type="submit" 
         disabled={resetPasswordMutation.isPending}
-        className="w-full mt-6 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] hover:from-[#5D3F2B] hover:to-[#6F4E37] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
+        className="w-full mt-6 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] hover:from-[#E50914] hover:to-[#E50914] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
       >
         {resetPasswordMutation.isPending ? (
           <>

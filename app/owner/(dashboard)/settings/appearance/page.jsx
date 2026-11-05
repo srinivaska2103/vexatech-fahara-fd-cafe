@@ -15,7 +15,7 @@ export default function AppearanceSettingsPage() {
     <div className="space-y-8 max-w-4xl">
       <div>
         <h2 className="text-xl font-bold text-text">Appearance & Locale</h2>
-        <p className="text-sm text-text/60">Customize how Fahara looks and feels for your team.</p>
+        <p className="text-sm text-text/60">Customize how Grab2GO looks and feels for your team.</p>
       </div>
 
       <div className="bg-white p-6 md:p-8 rounded-3xl border border-border shadow-sm space-y-8">
@@ -31,7 +31,7 @@ export default function AppearanceSettingsPage() {
                >
                   <Sun className={`w-6 h-6 mb-3 ${theme === 'light' ? 'text-primary' : 'text-text/40'}`} />
                   <h4 className="font-semibold text-text">Light Mode</h4>
-                  <p className="text-xs text-text/60 mt-1">Fahara Coffee theme</p>
+                  <p className="text-xs text-text/60 mt-1">Grab2GO Coffee theme</p>
                </button>
 
                <button 

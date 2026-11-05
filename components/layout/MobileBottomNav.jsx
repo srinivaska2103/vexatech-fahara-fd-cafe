@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
+  ShoppingBag,
+  Bike,
+  UtensilsCrossed,
+  Download,
   LayoutDashboard, 
   CalendarCheck, 
   Store, 
@@ -34,18 +38,54 @@ export const MobileBottomNav = () => {
 
   const quickActions = [
     {
-      title: 'Add New Cafe',
-      description: 'Create a cafe profile to receive customer bookings',
+      title: 'Install Grab2GO Mobile App',
+      description: 'Add app directly to home screen for fast mobile access',
+      action: () => {
+        if (typeof window !== 'undefined') {
+          // Trigger click on navbar install button or prompt
+          const installBtn = document.querySelector('button[title="Install Grab2GO Partner App"]');
+          if (installBtn) {
+            installBtn.click();
+          }
+        }
+      },
+      icon: Download,
+      color: 'bg-gradient-to-r from-red-600 to-[#B71C1C] text-white',
+    },
+    {
+      title: 'Food Orders',
+      description: 'Live orders, preparation and delivery statuses',
+      href: '/owner/orders',
+      icon: ShoppingBag,
+      color: 'bg-[#E50914] text-white',
+    },
+    {
+      title: 'Delivery Staff',
+      description: 'Manage riders and delivery fleet assignments',
+      href: '/owner/delivery-staff',
+      icon: Bike,
+      color: 'bg-emerald-600 text-white',
+    },
+    {
+      title: 'Menu Management',
+      description: 'Update dishes, prices, categories and availability',
+      href: '/owner/menu',
+      icon: UtensilsCrossed,
+      color: 'bg-orange-600 text-white',
+    },
+    {
+      title: 'Add New Venue',
+      description: 'Create a venue profile to receive customer bookings',
       href: '/owner/cafes/create',
       icon: Building2,
-      color: 'bg-[#6F4E37] text-white',
+      color: 'bg-indigo-600 text-white',
     },
     {
       title: 'Create Event Package',
       description: 'Setup special occasion event offerings',
       href: '/owner/events/create',
       icon: Sparkles,
-      color: 'bg-[#A67B5B] text-white',
+      color: 'bg-[#B71C1C] text-white',
     },
     {
       title: 'View Active Bookings',
@@ -59,7 +99,7 @@ export const MobileBottomNav = () => {
       description: 'Verify bank details for automatic Razorpay payouts',
       href: '/owner/payments/account',
       icon: CreditCard,
-      color: 'bg-indigo-600 text-white',
+      color: 'bg-blue-600 text-white',
     },
   ];
 
@@ -117,22 +157,22 @@ export const MobileBottomNav = () => {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-              className="relative z-10 bg-[#FFF8F0] border-t-2 border-[#DDB892]/60 rounded-t-3xl p-5 shadow-2xl space-y-4 max-h-[80vh] overflow-y-auto"
+              className="relative z-10 bg-[#FFF5F5] border-t-2 border-[#EF5350]/60 rounded-t-3xl p-5 shadow-2xl space-y-4 max-h-[80vh] overflow-y-auto"
             >
-              <div className="flex items-center justify-between border-b border-[#6F4E37]/15 pb-3">
+              <div className="flex items-center justify-between border-b border-[#E50914]/15 pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 flex items-center justify-center text-[#6F4E37]">
+                  <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 flex items-center justify-center text-[#E50914]">
                     <Plus className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#2C1810]">Owner Quick Actions</h3>
-                    <p className="text-[11px] text-[#2C1810]/60">Fast portal shortcuts and operations</p>
+                    <h3 className="text-base font-extrabold text-[#252525]">Owner Quick Actions</h3>
+                    <p className="text-[11px] text-[#252525]/60">Fast portal shortcuts and operations</p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setIsQuickActionsOpen(false)}
-                  className="p-1.5 rounded-full text-[#2C1810]/50 hover:bg-[#6F4E37]/10 transition-colors"
+                  className="p-1.5 rounded-full text-[#252525]/50 hover:bg-[#E50914]/10 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -145,18 +185,18 @@ export const MobileBottomNav = () => {
                     <button
                       key={idx}
                       onClick={() => handleActionClick(item)}
-                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#DDB892]/40 hover:border-[#6F4E37]/40 shadow-xs hover:shadow-sm text-left transition-all active:scale-[0.98]"
+                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#EF5350]/40 hover:border-[#E50914]/40 shadow-xs hover:shadow-sm text-left transition-all active:scale-[0.98]"
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center shrink-0 shadow-xs`}>
                           <Icon className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="text-xs font-extrabold text-[#2C1810]">{item.title}</h4>
-                          <p className="text-[10px] text-[#2C1810]/60 mt-0.5">{item.description}</p>
+                          <h4 className="text-xs font-extrabold text-[#252525]">{item.title}</h4>
+                          <p className="text-[10px] text-[#252525]/60 mt-0.5">{item.description}</p>
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-[#2C1810]/40 shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-[#252525]/40 shrink-0" />
                     </button>
                   );
                 })}
@@ -167,17 +207,17 @@ export const MobileBottomNav = () => {
       </AnimatePresence>
 
       {/* Fixed Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#FFF8F0]/95 backdrop-blur-md border-t border-[#DDB892]/60 rounded-t-3xl sm:rounded-t-[32px] shadow-[0_-8px_30px_rgba(44,24,16,0.15)] px-3 py-2">
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#FFF5F5]/95 backdrop-blur-md border-t border-[#EF5350]/60 rounded-t-3xl sm:rounded-t-[32px] shadow-[0_-8px_30px_rgba(44,24,16,0.15)] px-3 py-2">
         <div className="flex items-center justify-between max-w-md mx-auto relative">
           
           {/* Dashboard Item */}
           <Link
             href="/owner/dashboard"
             className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-              pathname === '/owner/dashboard' ? 'text-[#6F4E37] font-extrabold' : 'text-[#2C1810]/60 hover:text-[#6F4E37]'
+              pathname === '/owner/dashboard' ? 'text-[#E50914] font-extrabold' : 'text-[#252525]/60 hover:text-[#E50914]'
             }`}
           >
-            <LayoutDashboard className={`w-5 h-5 ${pathname === '/owner/dashboard' ? 'text-[#6F4E37] scale-110' : ''}`} />
+            <LayoutDashboard className={`w-5 h-5 ${pathname === '/owner/dashboard' ? 'text-[#E50914] scale-110' : ''}`} />
             <span className="text-[10px] tracking-tight mt-0.5">Dashboard</span>
           </Link>
 
@@ -186,7 +226,7 @@ export const MobileBottomNav = () => {
             <Link
               href="/owner/analytics"
               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-                pathname.startsWith('/owner/analytics') ? 'text-amber-700 font-extrabold' : 'text-[#2C1810]/60 hover:text-amber-700'
+                pathname.startsWith('/owner/analytics') ? 'text-amber-700 font-extrabold' : 'text-[#252525]/60 hover:text-amber-700'
               }`}
             >
               <TrendingUp className={`w-5 h-5 ${pathname.startsWith('/owner/analytics') ? 'text-amber-700 scale-110' : ''}`} />
@@ -196,7 +236,7 @@ export const MobileBottomNav = () => {
             <Link
               href="/owner/bookings"
               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-                pathname.startsWith('/owner/bookings') ? 'text-emerald-700 font-extrabold' : 'text-[#2C1810]/60 hover:text-emerald-700'
+                pathname.startsWith('/owner/bookings') ? 'text-emerald-700 font-extrabold' : 'text-[#252525]/60 hover:text-emerald-700'
               }`}
             >
               <CalendarCheck className={`w-5 h-5 ${pathname.startsWith('/owner/bookings') ? 'text-emerald-700 scale-110' : ''}`} />
@@ -208,29 +248,41 @@ export const MobileBottomNav = () => {
           <div className="flex flex-col items-center justify-center flex-1 relative">
             <button
               onClick={() => setIsQuickActionsOpen(!isQuickActionsOpen)}
-              className="absolute -top-6 w-13 h-13 rounded-full bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white flex items-center justify-center shadow-lg shadow-[#6F4E37]/40 ring-4 ring-[#FFF8F0] active:scale-95 transition-all"
+              className="absolute -top-6 w-13 h-13 rounded-full bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white flex items-center justify-center shadow-lg shadow-[#E50914]/40 ring-4 ring-[#FFF5F5] active:scale-95 transition-all"
               title="Quick Actions"
             >
               <Plus className={`w-7 h-7 transition-transform duration-300 ${isQuickActionsOpen ? 'rotate-45' : ''}`} />
             </button>
-            <span className="text-[10px] font-extrabold text-[#6F4E37] tracking-tight mt-7">Actions</span>
+            <span className="text-[10px] font-extrabold text-[#E50914] tracking-tight mt-7">Actions</span>
           </div>
 
-          {/* Cafes Item */}
-          <Link
-            href="/owner/cafes"
-            className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-              pathname.startsWith('/owner/cafes') ? 'text-[#6F4E37] font-extrabold' : 'text-[#2C1810]/60 hover:text-[#6F4E37]'
-            }`}
-          >
-            <Store className={`w-5 h-5 ${pathname.startsWith('/owner/cafes') ? 'text-[#6F4E37] scale-110' : ''}`} />
-            <span className="text-[10px] tracking-tight mt-0.5">Cafes</span>
-          </Link>
+          {/* Cafes / Restaurants or Food Orders Item */}
+          {isRestaurant ? (
+            <Link
+              href="/owner/orders"
+              className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
+                pathname.startsWith('/owner/orders') ? 'text-[#E50914] font-extrabold' : 'text-[#252525]/60 hover:text-[#E50914]'
+              }`}
+            >
+              <ShoppingBag className={`w-5 h-5 ${pathname.startsWith('/owner/orders') ? 'text-[#E50914] scale-110' : ''}`} />
+              <span className="text-[10px] tracking-tight mt-0.5">Orders</span>
+            </Link>
+          ) : (
+            <Link
+              href="/owner/cafes"
+              className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
+                pathname.startsWith('/owner/cafes') ? 'text-[#E50914] font-extrabold' : 'text-[#252525]/60 hover:text-[#E50914]'
+              }`}
+            >
+              <Store className={`w-5 h-5 ${pathname.startsWith('/owner/cafes') ? 'text-[#E50914] scale-110' : ''}`} />
+              <span className="text-[10px] tracking-tight mt-0.5">Cafes</span>
+            </Link>
+          )}
 
           {/* Menu Drawer Toggle */}
           <button
             onClick={openMobileSidebar}
-            className="flex flex-col items-center justify-center flex-1 py-1 text-[#2C1810]/60 hover:text-[#6F4E37] transition-all"
+            className="flex flex-col items-center justify-center flex-1 py-1 text-[#252525]/60 hover:text-[#E50914] transition-all"
           >
             <Menu className="w-5 h-5" />
             <span className="text-[10px] tracking-tight mt-0.5">Menu</span>

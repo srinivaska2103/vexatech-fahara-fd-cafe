@@ -37,7 +37,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
     : [...customers].sort((a, b) => (Number(b.total_bookings) || 0) - (Number(a.total_bookings) || 0)).slice(0, 5);
 
   return (
-    <div className="space-y-6 text-[#2C1810]">
+    <div className="space-y-6 text-[#252525]">
       
       {/* 4 Dynamic Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
@@ -46,11 +46,11 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Customers</span>
-            <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-bold">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{totalCustomers}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{totalCustomers}</p>
           <p className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1">
             <span>+{retentionPercentage}% Retention</span>
           </p>
@@ -64,7 +64,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
               <UserPlus className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{newCustomers}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{newCustomers}</p>
           <p className="text-[10px] text-text/50 font-medium">Acquired in {now.toLocaleString('default', { month: 'short' })}</p>
         </div>
 
@@ -76,7 +76,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{returningRate}%</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{returningRate}%</p>
           <p className="text-[10px] text-emerald-700/80 font-bold">{repeatCount} Repeat regular diners</p>
         </div>
 
@@ -88,7 +88,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
               <CreditCard className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{Number(averageSpend).toLocaleString()}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#E50914]">₹{Number(averageSpend).toLocaleString()}</p>
           <p className="text-[10px] text-text/50 font-medium">Average LTV revenue</p>
         </div>
 
@@ -105,7 +105,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
                 <Crown className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-[#2C1810]">Top LTV Guests</h3>
+                <h3 className="text-base font-extrabold text-[#252525]">Top LTV Guests</h3>
                 <p className="text-xs text-text/60">Highest spending diner customer accounts</p>
               </div>
             </div>
@@ -126,14 +126,14 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
                   <div 
                     key={c.id || i}
                     onClick={() => c.id && router.push(`/owner/customers/${c.id}`)}
-                    className="p-3 rounded-2xl border border-border/40 hover:bg-[#FFF8F0] hover:border-[#DDB892]/60 transition-all flex items-center justify-between gap-3 cursor-pointer group"
+                    className="p-3 rounded-2xl border border-border/40 hover:bg-[#FFF5F5] hover:border-[#EF5350]/60 transition-all flex items-center justify-between gap-3 cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] font-black text-xs flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] font-black text-xs flex items-center justify-center shrink-0">
                         #{i + 1}
                       </div>
                       <div>
-                        <p className="text-xs font-extrabold text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">
+                        <p className="text-xs font-extrabold text-[#252525] group-hover:text-[#E50914] transition-colors">
                           {name}
                         </p>
                         <p className="text-[10px] text-text/50">
@@ -143,7 +143,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
                     </div>
 
                     <div className="text-right">
-                      <p className="text-xs font-black text-[#6F4E37]">₹{spend.toLocaleString()}</p>
+                      <p className="text-xs font-black text-[#E50914]">₹{spend.toLocaleString()}</p>
                       <span className="text-[9px] text-text/40 font-bold uppercase">Lifetime Value</span>
                     </div>
                   </div>
@@ -161,7 +161,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
                 <Activity className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-[#2C1810]">Most Frequent Diners</h3>
+                <h3 className="text-base font-extrabold text-[#252525]">Most Frequent Diners</h3>
                 <p className="text-xs text-text/60">Guests with highest booking frequency</p>
               </div>
             </div>
@@ -188,7 +188,7 @@ export const CustomerAnalytics = ({ analytics, customers = [] }) => {
                         {name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-xs font-extrabold text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">
+                        <p className="text-xs font-extrabold text-[#252525] group-hover:text-[#E50914] transition-colors">
                           {name}
                         </p>
                         <p className="text-[10px] text-text/50">

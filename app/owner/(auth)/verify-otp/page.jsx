@@ -5,7 +5,7 @@ import { AuthLogo } from '@/components/auth/AuthLogo';
 import { VerifyOtpForm } from '@/components/auth/VerifyOtpForm';
 
 export const metadata = {
-  title: 'Verify OTP - Fahara Cafe',
+  title: 'Verify OTP - Grab2GO Cafe',
 };
 
 export default async function VerifyOtpPage({ searchParams }) {

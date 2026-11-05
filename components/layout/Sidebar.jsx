@@ -3,6 +3,12 @@ import React from 'react';
 import { 
   ChevronLeft, 
   ChevronRight, 
+  UtensilsCrossed,
+  BadgePercent,
+  ShoppingBag,
+  Bike,
+  SlidersHorizontal,
+  ExternalLink,
   LayoutDashboard, 
   Store, 
   CalendarCheck, 
@@ -40,6 +46,15 @@ const mainMenuItems = [
   { icon: CalendarCheck, label: 'Bookings', href: '/owner/bookings', color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
   { icon: CalendarDays, label: 'Availability Calendar', href: '/owner/bookings/calendar', color: 'text-amber-700', bg: 'bg-amber-100/70' },
   { icon: CalendarDays, label: 'Events', href: '/owner/events', color: 'text-cyan-600', bg: 'bg-cyan-100/70' },
+];
+
+const foodOrderMenuItems = [
+  { icon: ShoppingBag, label: 'Food Orders', href: '/owner/orders', color: 'text-rose-600', bg: 'bg-rose-100/70' },
+  { icon: UtensilsCrossed, label: 'Menu Management', href: '/owner/menu', color: 'text-[#E50914]', bg: 'bg-[#FFF5F5]' },
+  { icon: BadgePercent, label: 'Discounts & Offers', href: '/owner/offers', color: 'text-[#FF6B00]', bg: 'bg-[#FFF5F5]' },
+  { icon: Bike, label: 'Delivery Staff', href: '/owner/delivery-staff', color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
+  { icon: SlidersHorizontal, label: 'Fulfilment Settings', href: '/owner/fulfilment', color: 'text-blue-600', bg: 'bg-blue-100/70' },
+  { icon: ExternalLink, label: 'Driver App Portal', href: '/delivery', color: 'text-purple-600', bg: 'bg-purple-100/70' },
 ];
 
 const marketingMenuItems = [
@@ -111,7 +126,9 @@ export const Sidebar = () => {
       return { ...item, label: 'Restaurant Management' };
     }
     return item;
-  });
+  });
+
+  const visibleFoodOrderMenuItems = foodOrderMenuItems;
 
   const visibleSystemMenuItems = systemMenuItems.filter(item => {
     if (isWalkingCafe) {
@@ -147,17 +164,17 @@ export const Sidebar = () => {
       {/* Logo Area */}
       <div className="flex items-center h-16 px-4 border-b border-border/60 shrink-0">
         <Link href="/owner/dashboard" className="flex items-center gap-3 overflow-hidden">
-          <div className="flex items-center justify-center shrink-0 w-10 h-10 rounded-2xl overflow-hidden bg-[#FAF0E6] shadow-2xs border border-[#DDB892]/70 p-0.5">
+          <div className="flex items-center justify-center shrink-0 w-10 h-10 rounded-2xl overflow-hidden bg-[#FFF5F5] shadow-2xs border border-[#EF5350]/70 p-0.5">
             <img 
-              src="/logo.jpeg" 
-              alt="Fahara Logo" 
+              src="/grab-it-logo.png" 
+              alt="Grab2GO Logo" 
               className="w-full h-full object-contain rounded-xl" 
             />
           </div>
           {!isSidebarCollapsed && (
             <div className="flex flex-col justify-center">
-              <span className="text-base font-black text-[#2C1810] tracking-tight truncate leading-none">Fahara</span>
-              <span className="text-[9px] font-extrabold text-[#6F4E37] uppercase tracking-widest leading-none mt-1">
+              <span className="text-base font-black text-[#252525] tracking-tight truncate leading-none">Grab2GO</span>
+              <span className="text-[9px] font-extrabold text-[#E50914] uppercase tracking-widest leading-none mt-1">
                 {partnerBadge}
               </span>
             </div>
@@ -175,11 +192,17 @@ export const Sidebar = () => {
       </button>
 
       {/* Strictly Non-Scrollable Navigation Area filling full height */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 flex flex-col justify-between space-y-4">
+      <div className="flex-1 overflow-y-auto scrollbar-none p-3 flex flex-col justify-between space-y-4">
         
         <div className="space-y-4">
           <SidebarGroup label="Main Menu">
             {visibleMainMenuItems.map((item) => (
+              <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
+            ))}
+          </SidebarGroup>
+
+          <SidebarGroup label="Orders & Delivery">
+            {visibleFoodOrderMenuItems.map((item) => (
               <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
             ))}
           </SidebarGroup>
@@ -207,11 +230,11 @@ export const Sidebar = () => {
 
         {/* Bottom Modern Live Venue Health Card (when expanded) */}
         {!isSidebarCollapsed && (
-          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] border border-[#DDB892]/60 shadow-2xs space-y-2 shrink-0">
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border border-[#EF5350]/60 shadow-2xs space-y-2 shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#6F4E37]" />
-                <span className="text-[11px] font-extrabold text-[#2C1810]">Venue Operations</span>
+                <Sparkles className="w-3.5 h-3.5 text-[#E50914]" />
+                <span className="text-[11px] font-extrabold text-[#252525]">Venue Operations</span>
               </div>
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-500/30 text-[9px] font-extrabold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
@@ -225,7 +248,7 @@ export const Sidebar = () => {
 
             <Link 
               href="/owner/analytics" 
-              className="block w-full py-1.5 text-center rounded-xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892]/60 text-[10px] font-extrabold transition-all shadow-2xs"
+              className="block w-full py-1.5 text-center rounded-xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350]/60 text-[10px] font-extrabold transition-all shadow-2xs"
             >
               View Analytics Overview →
             </Link>

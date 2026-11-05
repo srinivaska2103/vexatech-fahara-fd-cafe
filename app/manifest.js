@@ -1,22 +1,22 @@
 export default function manifest() {
   return {
-    name: 'Fahara Cafe',
-    short_name: 'Fahara Cafe',
-    description: 'Fahara Cafe Management & Booking Platform',
-    start_url: '/',
+    name: 'Grab2GO Partner Portal',
+    short_name: 'Grab2GO Partner',
+    description: 'Grab2GO Partner Management & Food Orders Platform',
+    start_url: '/owner/dashboard',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#1a1a1a',
+    background_color: '#FFF5F5',
+    theme_color: '#E50914',
     icons: [
       {
-        src: '/logo.jpeg',
+        src: '/grab-it-logo.png',
         sizes: '192x192',
-        type: 'image/jpeg',
+        type: 'image/png',
       },
       {
-        src: '/logo.jpeg',
+        src: '/grab-it-logo.png',
         sizes: '512x512',
-        type: 'image/jpeg',
+        type: 'image/png',
       },
     ],
   };

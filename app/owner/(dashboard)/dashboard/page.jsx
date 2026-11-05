@@ -233,16 +233,16 @@ export default function DashboardPage() {
 
         {/* Customer Interest & Traffic Analytics (Walking Cafes & Live Insights) */}
         {isWalkingCafe && (
-          <motion.div variants={itemVariants} className="bg-gradient-to-br from-[#FFF8F0] via-white to-[#FAF0E6] border border-[#DDB892]/70 rounded-3xl p-5 sm:p-6 shadow-xs space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#DDB892]/30 pb-4">
+          <motion.div variants={itemVariants} className="bg-gradient-to-br from-[#FFF5F5] via-white to-[#FFF5F5] border border-[#EF5350]/70 rounded-3xl p-5 sm:p-6 shadow-xs space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EF5350]/30 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-black shadow-md shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-black shadow-md shrink-0">
                   <Eye className="w-5 h-5 text-amber-200" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base sm:text-lg font-black text-[#2C1810] tracking-tight">Footfall & Customer Discovery</h3>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-[#6F4E37] border border-amber-300 text-[10px] font-black uppercase tracking-wider">Live</span>
+                    <h3 className="text-base sm:text-lg font-black text-[#252525] tracking-tight">Footfall & Customer Discovery</h3>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-[#E50914] border border-amber-300 text-[10px] font-black uppercase tracking-wider">Live</span>
                   </div>
                   <p className="text-xs text-text/60">Real-time visitor views, route clicks, inquiries, and wishlist adds.</p>
                 </div>
@@ -259,7 +259,7 @@ export default function DashboardPage() {
                     type="button"
                     onClick={() => setVisitorPeriod(tab.key)}
                     className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      visitorPeriod === tab.key ? 'bg-[#6F4E37] text-white shadow-xs' : 'text-text/60 hover:text-[#6F4E37]'
+                      visitorPeriod === tab.key ? 'bg-[#E50914] text-white shadow-xs' : 'text-text/60 hover:text-[#E50914]'
                     }`}
                   >
                     {tab.label}
@@ -270,11 +270,11 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between text-xs font-bold text-[#6F4E37] uppercase">
+                <div className="flex items-center justify-between text-xs font-bold text-[#E50914] uppercase">
                   <span>Cafe Views</span>
                   <Eye className="w-3.5 h-3.5 text-amber-600" />
                 </div>
-                <div className="text-xl sm:text-2xl font-black text-[#2C1810]">{overview.total_views.toLocaleString()}</div>
+                <div className="text-xl sm:text-2xl font-black text-[#252525]">{overview.total_views.toLocaleString()}</div>
               </div>
 
               <div className="bg-white p-4 rounded-2xl border border-blue-200/80 shadow-2xs space-y-1">

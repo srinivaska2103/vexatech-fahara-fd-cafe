@@ -17,6 +17,13 @@ export const useCustomer = (id) => {
   });
 };
 
+export const useCustomerFoodOrders = (id) => {
+  return useQuery({
+    queryKey: ['customer-food-orders', id],
+    queryFn: () => customerService.getCustomerFoodOrders(id),
+    enabled: !!id,
+  });
+};
 export const useCustomerBookings = (id) => {
   return useQuery({
     queryKey: ['customer-bookings', id],

@@ -93,8 +93,8 @@ export default function EditCafePage() {
   if (!cafe) {
     return (
       <div className="p-12 text-center space-y-4 max-w-lg mx-auto bg-white rounded-3xl border border-border/60 shadow-xs mt-10">
-        <Store className="w-12 h-12 text-[#6F4E37] opacity-40 mx-auto" />
-        <h3 className="text-lg font-extrabold text-[#2C1810]">Venue Not Found</h3>
+        <Store className="w-12 h-12 text-[#E50914] opacity-40 mx-auto" />
+        <h3 className="text-lg font-extrabold text-[#252525]">Venue Not Found</h3>
         <p className="text-xs text-text/60">The requested cafe venue does not exist or you do not have permission to edit it.</p>
         <Button onClick={() => router.push('/owner/cafes')}>Back to Cafes</Button>
       </div>
@@ -104,10 +104,10 @@ export default function EditCafePage() {
   const isWalking = isWalkingOwner || cafe?.is_walking_cafe === true;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Modern Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-4 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-4 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 z-10 min-w-0">
           <div className="shrink-0">
             <BackButton href={`/owner/cafes/${id}`} label="Back to Details" />
@@ -115,10 +115,10 @@ export default function EditCafePage() {
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-lg sm:text-2xl font-extrabold text-[#2C1810] tracking-tight truncate max-w-full">
+              <h1 className="text-lg sm:text-2xl font-extrabold text-[#252525] tracking-tight truncate max-w-full">
                 Edit {cafe?.name || 'Cafe Venue'}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold shrink-0">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-extrabold shrink-0">
                 {isWalking ? 'WALKING CAFE ONBOARDING' : 'WIZARD'}
               </span>
             </div>

@@ -5,7 +5,7 @@ import { renderToString } from 'react-dom/server';
 import { MapPin } from 'lucide-react';
 
 // Create a custom icon using a Lucide React icon rendered to HTML
-const createCustomIcon = (color = '#6F4E37') => {
+const createCustomIcon = (color = '#E50914') => {
   const iconHtml = renderToString(
     <div style={{ color: color, filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.3))' }}>
       <MapPin size={40} fill="white" strokeWidth={1.5} />

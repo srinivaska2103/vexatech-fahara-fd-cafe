@@ -161,22 +161,22 @@ export default function PaymentAccountPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-1.5 z-10">
           <div className="flex items-center gap-2">
             <Link href="/owner/payments">
               <button 
                 type="button"
-                className="px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold flex items-center gap-1 hover:bg-[#6F4E37] hover:text-white transition-all cursor-pointer"
+                className="px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold flex items-center gap-1 hover:bg-[#E50914] hover:text-white transition-all cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Back to Payments</span>
               </button>
             </Link>
             <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• BANK VERIFICATION</span>
-          </div>          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
+          </div>          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#252525] tracking-tight">
             Payment Account & Bank Verification
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
@@ -189,7 +189,7 @@ export default function PaymentAccountPage() {
           <button 
             type="button"
             onClick={() => refetch()}
-            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-2 transition-all cursor-pointer"
           >
             <RefreshCw className="w-4 h-4 text-white" />
             <span>Refresh Status</span>
@@ -201,19 +201,19 @@ export default function PaymentAccountPage() {
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-6 md:p-8 border border-[#DDB892]/40 shadow-sm mb-8 relative overflow-hidden"
+        className="bg-white rounded-3xl p-6 md:p-8 border border-[#EF5350]/40 shadow-sm mb-8 relative overflow-hidden"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-start md:items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center shrink-0 shadow-inner">
+            <div className="w-14 h-14 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center shrink-0 shadow-inner">
               <ShieldCheck className="w-8 h-8" />
             </div>
             <div>
               <div className="flex items-center gap-3 flex-wrap mb-1">
-                <h2 className="text-xl font-bold text-[#2C1810]">Vendor Payment Account</h2>
+                <h2 className="text-xl font-bold text-[#252525]">Vendor Payment Account</h2>
                 {renderStatusBadge(bankStatus)}
               </div>
-              <p className="text-sm text-[#2C1810]/70 max-w-xl">
+              <p className="text-sm text-[#252525]/70 max-w-xl">
                 Direct split settlement transfers are routed strictly to your verified bank account.
               </p>
             </div>
@@ -223,7 +223,7 @@ export default function PaymentAccountPage() {
             <button 
               type="button"
               onClick={() => setIsEditing(true)} 
-              className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+              className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             >
               <Edit3 className="w-4 h-4" />
               <span>Edit Bank Details</span>
@@ -240,20 +240,20 @@ export default function PaymentAccountPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="lg:col-span-2 bg-white rounded-3xl p-6 md:p-8 border border-[#DDB892]/40 shadow-sm space-y-6"
+          className="lg:col-span-2 bg-white rounded-3xl p-6 md:p-8 border border-[#EF5350]/40 shadow-sm space-y-6"
         >
-          <div className="flex items-center justify-between border-b border-[#DDB892]/30 pb-4">
+          <div className="flex items-center justify-between border-b border-[#EF5350]/30 pb-4">
             <div className="flex items-center gap-3">
-              <Building2 className="w-6 h-6 text-[#6F4E37]" />
+              <Building2 className="w-6 h-6 text-[#E50914]" />
               <div>
-                <h3 className="text-lg font-bold text-[#2C1810]">
+                <h3 className="text-lg font-bold text-[#252525]">
                   {updateAccountMutation.isPending 
                     ? 'Verifying your bank account...' 
                     : isEditing 
                     ? 'Enter Bank Account Details' 
                     : 'Verified Settlement Destination'}
                 </h3>
-                <p className="text-xs text-[#2C1810]/60">
+                <p className="text-xs text-[#252525]/60">
                   {isEditing ? 'Fill in all required fields to initiate bank account validation' : 'Bank account linked to your Vendor ID'}
                 </p>
               </div>
@@ -275,7 +275,7 @@ export default function PaymentAccountPage() {
                   
                   {/* Account Holder Name */}
                   <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-bold text-[#2C1810]/80 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
                       Account Holder Name <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -285,14 +285,14 @@ export default function PaymentAccountPage() {
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
                       placeholder="Enter Account Holder Name"
-                      className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-medium text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-medium text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
                       required
                     />
                   </div>
 
                   {/* Bank Account Number */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#2C1810]/80 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
                       Bank Account Number <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -302,14 +302,14 @@ export default function PaymentAccountPage() {
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
                       placeholder="Enter Bank Account Number"
-                      className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-mono text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-mono text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
                       required
                     />
                   </div>
 
                   {/* Confirm Bank Account Number */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#2C1810]/80 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
                       Confirm Bank Account Number <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -319,14 +319,14 @@ export default function PaymentAccountPage() {
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
                       placeholder="Re-enter Bank Account Number"
-                      className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-mono text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-mono text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
                       required
                     />
                   </div>
 
                   {/* IFSC Code */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#2C1810]/80 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
                       IFSC Code <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -336,14 +336,14 @@ export default function PaymentAccountPage() {
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
                       placeholder="Enter IFSC Code"
-                      className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-mono uppercase text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-mono uppercase text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
                       required
                     />
                   </div>
 
                   {/* Phone Number */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#2C1810]/80 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
                       Phone Number <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -353,14 +353,14 @@ export default function PaymentAccountPage() {
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
                       placeholder="Enter 10-digit Mobile Number"
-                      className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-medium text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-medium text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
                       required
                     />
                   </div>
 
                   {/* Email Address */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#2C1810]/80 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
                       Email Address <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -370,14 +370,14 @@ export default function PaymentAccountPage() {
                       onChange={handleChange}
                       disabled={updateAccountMutation.isPending}
                       placeholder="Enter Email Address"
-                      className="w-full px-4 py-3 bg-[#FFF8F0]/40 border border-[#DDB892] rounded-xl text-sm font-medium text-[#2C1810] focus:outline-none focus:border-[#6F4E37] disabled:opacity-50 transition-colors"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-medium text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
                       required
                     />
                   </div>
 
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#DDB892]/30">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#EF5350]/30">
                   {bankStatus === 'FAILED' && (
                     <div className="flex items-center gap-2 text-xs text-rose-700 font-medium">
                       <AlertTriangle className="w-4 h-4 shrink-0" />
@@ -394,7 +394,7 @@ export default function PaymentAccountPage() {
                     <Button 
                       type="submit" 
                       disabled={updateAccountMutation.isPending} 
-                      className="w-full sm:w-auto bg-[#6F4E37] hover:bg-[#5a3f2c] text-white shadow-md font-semibold px-8 py-3 rounded-xl transition-all"
+                      className="w-full sm:w-auto bg-[#E50914] hover:bg-[#5a3f2c] text-white shadow-md font-semibold px-8 py-3 rounded-xl transition-all"
                     >
                       {updateAccountMutation.isPending ? (
                         <>
@@ -423,8 +423,8 @@ export default function PaymentAccountPage() {
                   <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#2C1810]">✓ Bank Account Verified</h4>
-                      <p className="text-xs text-[#2C1810]/70 mt-0.5">
+                      <h4 className="font-bold text-[#252525]">✓ Bank Account Verified</h4>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">
                         Bank account validation complete. Automated payouts are active.
                       </p>
                     </div>
@@ -433,8 +433,8 @@ export default function PaymentAccountPage() {
                   <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#2C1810]">Bank Details Not Configured</h4>
-                      <p className="text-xs text-[#2C1810]/70 mt-0.5">
+                      <h4 className="font-bold text-[#252525]">Bank Details Not Configured</h4>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">
                         Please click "Edit Bank Details" to link your settlement bank account.
                       </p>
                     </div>
@@ -442,20 +442,20 @@ export default function PaymentAccountPage() {
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
-                    <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Account Holder Name</p>
-                    <p className="text-base font-semibold text-[#2C1810]">
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">Account Holder Name</p>
+                    <p className="text-base font-semibold text-[#252525]">
                       {accountInfo.accountHolderName && accountInfo.accountHolderName !== 'Not Configured' 
                         ? accountInfo.accountHolderName.toUpperCase() 
                         : 'Not Configured'}
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
-                    <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Masked Bank Account</p>
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">Masked Bank Account</p>
                     <div className="flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-[#6F4E37]" />
-                      <p className="text-base font-bold text-[#2C1810] tracking-widest font-mono">
+                      <CreditCard className="w-4 h-4 text-[#E50914]" />
+                      <p className="text-base font-bold text-[#252525] tracking-widest font-mono">
                         {accountInfo.bankAccountLast4 
                           ? `XXXX XXXX ${accountInfo.bankAccountLast4}` 
                           : (accountInfo.maskedBankAccount && accountInfo.maskedBankAccount !== 'Not Configured' ? accountInfo.maskedBankAccount : 'Not Configured')}
@@ -463,27 +463,27 @@ export default function PaymentAccountPage() {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
-                    <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">IFSC Code</p>
-                    <p className="text-base font-semibold text-[#2C1810] font-mono">
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">IFSC Code</p>
+                    <p className="text-base font-semibold text-[#252525] font-mono">
                       {accountInfo.ifsc && accountInfo.ifsc !== 'Not Configured' 
                         ? accountInfo.ifsc 
                         : 'Not Configured'}
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1">
-                    <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Beneficiary Email</p>
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">Beneficiary Email</p>
                     <div className="flex items-center gap-2 truncate">
-                      <Mail className="w-4 h-4 text-[#6F4E37] shrink-0" />
-                      <p className="text-base font-semibold text-[#2C1810] truncate">
+                      <Mail className="w-4 h-4 text-[#E50914] shrink-0" />
+                      <p className="text-base font-semibold text-[#252525] truncate">
                         {accountInfo.email || 'Not Configured'}
                       </p>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#FFF8F0]/60 border border-[#DDB892]/40 space-y-1 sm:col-span-2">
-                    <p className="text-xs text-[#2C1810]/50 font-bold uppercase tracking-wider">Settlement Capability</p>
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1 sm:col-span-2">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">Settlement Capability</p>
                     {bankStatus === 'VERIFIED' ? (
                       <p className="text-base font-semibold text-emerald-700 flex items-center gap-1.5">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -504,36 +504,36 @@ export default function PaymentAccountPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="lg:col-span-1 bg-white rounded-3xl p-6 border border-[#DDB892]/40 shadow-sm flex flex-col justify-between"
+          className="lg:col-span-1 bg-white rounded-3xl p-6 border border-[#EF5350]/40 shadow-sm flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <FileCheck className="w-5 h-5 text-[#6F4E37]" />
-              <h3 className="text-lg font-bold text-[#2C1810]">Verification Status</h3>
+              <FileCheck className="w-5 h-5 text-[#E50914]" />
+              <h3 className="text-lg font-bold text-[#252525]">Verification Status</h3>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-                <span className="text-xs font-semibold text-[#2C1810]/80">Bank Account Status</span>
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF5F5]/70 border border-[#EF5350]/30">
+                <span className="text-xs font-semibold text-[#252525]/80">Bank Account Status</span>
                 {renderStatusBadge(bankStatus)}
               </div>
 
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-                <span className="text-xs font-semibold text-[#2C1810]/80">Vendor ID</span>
-                <span className="text-xs font-mono font-bold text-[#6F4E37] max-w-[140px] truncate">
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF5F5]/70 border border-[#EF5350]/30">
+                <span className="text-xs font-semibold text-[#252525]/80">Vendor ID</span>
+                <span className="text-xs font-mono font-bold text-[#E50914] max-w-[140px] truncate">
                   {accountInfo.cashfreeVendorId || '✓ Active'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-                <span className="text-xs font-semibold text-[#2C1810]/80">Vendor Gateway Status</span>
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF5F5]/70 border border-[#EF5350]/30">
+                <span className="text-xs font-semibold text-[#252525]/80">Vendor Gateway Status</span>
                 <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">
                   <CheckCircle2 className="w-3.5 h-3.5" /> ✓ Active
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-                <span className="text-xs font-semibold text-[#2C1810]/80">Settlement Status</span>
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FFF5F5]/70 border border-[#EF5350]/30">
+                <span className="text-xs font-semibold text-[#252525]/80">Settlement Status</span>
                 <span className={`text-xs font-bold ${settlementCapability === 'ENABLED' ? 'text-emerald-700' : 'text-amber-700'}`}>
                   {settlementCapability === 'ENABLED' ? '✓ Enabled' : 'Disabled'}
                 </span>
@@ -541,8 +541,8 @@ export default function PaymentAccountPage() {
             </div>
           </div>
 
-          <div className="mt-8 pt-4 border-t border-[#DDB892]/30 flex items-center gap-2 text-xs text-[#2C1810]/60">
-            <Lock className="w-4 h-4 text-[#6F4E37] shrink-0" />
+          <div className="mt-8 pt-4 border-t border-[#EF5350]/30 flex items-center gap-2 text-xs text-[#252525]/60">
+            <Lock className="w-4 h-4 text-[#E50914] shrink-0" />
             <span>Security Protocol Encrypted</span>
           </div>
         </motion.div>

@@ -6,7 +6,7 @@ export const RevenueBreakdown = ({ data }) => {
 
   const chartData = [data.bookings || 0, data.events || 0, data.food || 0, data.other || 0];
   const labels = ['Space Bookings', 'Event Tickets', 'F&B Orders', 'Other'];
-  const colors = ['#6F4E37', '#A67B5B', '#DDB892', '#EFEAE2'];
+  const colors = ['#E50914', '#B71C1C', '#EF5350', '#EFEAE2'];
 
   return (
     <div className="bg-white p-6 md:p-8 rounded-3xl border border-border shadow-sm h-full">

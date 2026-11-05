@@ -67,7 +67,7 @@ export default function SupportPage() {
       steps: [
         'Go to Sidebar → Finance → Payment Account.',
         'Enter Account Holder Name, Bank Account Number, and IFSC Code accurately.',
-        'Submit details securely. Fahara transmits your details to Razorpay for bank verification.',
+        'Submit details securely. Grab2GO transmits your details to Razorpay for bank verification.',
         'Monitor verification status: Verified (ready for payouts), Pending (in review), or Failed.',
         'If failed, verify your account details match official bank records and resubmit.'
       ],
@@ -140,13 +140,13 @@ export default function SupportPage() {
         'Track your average rating on the Dashboard to measure guest satisfaction.',
         'Use Sidebar → System → Analytics to monitor revenue trends and peak booking hours.'
       ],
-      tip: 'Cafes with ratings above 4.5 stars get featured on the Fahara homepage banner!'
+      tip: 'Cafes with ratings above 4.5 stars get featured on the Grab2GO homepage banner!'
     }
   ];
 
   const faqs = [
     { 
-      q: "How do I start using the Fahara Owner Portal?", 
+      q: "How do I start using the Grab2GO Owner Portal?", 
       a: "Simply follow our 9-step guided tour! Click the 'Start Guided Tour' button above to launch the interactive walkthrough directly on your screen.",
       cat: "getting-started"
     },
@@ -191,7 +191,7 @@ export default function SupportPage() {
       title: 'Owner Support Email', 
       desc: 'vexatech.connect@gmail.com', 
       action: 'Email Support Desk', 
-      color: 'bg-[#6F4E37] text-white', 
+      color: 'bg-[#E50914] text-white', 
       href: 'mailto:vexatech.connect@gmail.com' 
     }
   ];
@@ -215,7 +215,7 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 text-[#2C1810] animate-fade-in">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 text-[#252525] animate-fade-in">
       
       {/* Page Title Header */}
       <PageHeader 
@@ -228,7 +228,7 @@ export default function SupportPage() {
         initial={{ opacity: 0, y: 15 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.4 }}
-        className="bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-[#DDB892]/30"
+        className="bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-[#EF5350]/30"
       >
         {/* Glow Blobs */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
@@ -244,7 +244,7 @@ export default function SupportPage() {
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-            New to Fahara? Take the Interactive Guided Tour!
+            New to Grab2GO? Take the Interactive Guided Tour!
           </h2>
 
           <p className="text-white/90 text-xs sm:text-sm lg:text-base leading-relaxed max-w-2xl">
@@ -254,9 +254,9 @@ export default function SupportPage() {
           <div className="pt-2 flex flex-wrap items-center gap-3">
             <button 
               onClick={() => window.dispatchEvent(new CustomEvent('restart-owner-tour'))}
-              className="bg-[#FFF8F0] hover:bg-white text-[#6F4E37] px-6 py-3 rounded-2xl text-xs sm:text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center gap-2 active:scale-95"
+              className="bg-[#FFF5F5] hover:bg-white text-[#E50914] px-6 py-3 rounded-2xl text-xs sm:text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center gap-2 active:scale-95"
             >
-              <PlayCircle className="w-5 h-5 text-[#6F4E37]" /> Start Guided Tour →
+              <PlayCircle className="w-5 h-5 text-[#E50914]" /> Start Guided Tour →
             </button>
           </div>
         </div>
@@ -274,7 +274,7 @@ export default function SupportPage() {
             placeholder="Search guides, topics, or FAQs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-border/60 bg-surface/30 text-xs font-medium focus:outline-none focus:border-[#6F4E37] transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-border/60 bg-surface/30 text-xs font-medium focus:outline-none focus:border-[#E50914] transition-colors"
           />
         </div>
 
@@ -292,7 +292,7 @@ export default function SupportPage() {
               onClick={() => setActiveCategory(cat.id)}
               className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 activeCategory === cat.id
-                  ? 'bg-[#6F4E37] text-white shadow-xs'
+                  ? 'bg-[#E50914] text-white shadow-xs'
                   : 'bg-surface/50 text-text/70 hover:bg-surface hover:text-text'
               }`}
             >
@@ -311,10 +311,10 @@ export default function SupportPage() {
           {/* User Guide Cards Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37]">
+              <div className="p-2 rounded-xl bg-[#E50914]/10 text-[#E50914]">
                 <BookOpen className="w-5 h-5" />
               </div>
-              <h3 className="text-lg sm:text-xl font-extrabold text-[#2C1810]">Step-by-Step User Guides</h3>
+              <h3 className="text-lg sm:text-xl font-extrabold text-[#252525]">Step-by-Step User Guides</h3>
             </div>
             <span className="text-xs font-semibold text-text/50">{filteredGuides.length} Guides Found</span>
           </div>
@@ -332,23 +332,23 @@ export default function SupportPage() {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-4">
                     <div className="flex items-start gap-3.5">
-                      <div className="p-3 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] shrink-0 mt-0.5">
+                      <div className="p-3 rounded-2xl bg-[#E50914]/10 text-[#E50914] shrink-0 mt-0.5">
                         <Icon className="w-6 h-6" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] border border-[#6F4E37]/20">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] border border-[#E50914]/20">
                             {guide.badge}
                           </span>
                         </div>
-                        <h4 className="text-base sm:text-lg font-extrabold text-[#2C1810] mt-1">{guide.title}</h4>
+                        <h4 className="text-base sm:text-lg font-extrabold text-[#252525] mt-1">{guide.title}</h4>
                         <p className="text-xs sm:text-sm text-text/70 mt-0.5">{guide.description}</p>
                       </div>
                     </div>
 
                     <button
                       onClick={() => router.push(guide.shortcutPath)}
-                      className="self-start sm:self-center py-2 px-3.5 rounded-xl bg-[#6F4E37]/10 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white text-xs font-bold transition-all shrink-0 flex items-center gap-1.5"
+                      className="self-start sm:self-center py-2 px-3.5 rounded-xl bg-[#E50914]/10 hover:bg-[#E50914] text-[#E50914] hover:text-white text-xs font-bold transition-all shrink-0 flex items-center gap-1.5"
                     >
                       {guide.shortcutText} <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -356,11 +356,11 @@ export default function SupportPage() {
 
                   {/* Execution Steps */}
                   <div className="space-y-2 pt-1">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#6F4E37]">Step-by-Step Workflow:</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#E50914]">Step-by-Step Workflow:</p>
                     <div className="space-y-2">
                       {guide.steps.map((step, idx) => (
                         <div key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-text/80 bg-surface/20 p-2.5 rounded-2xl border border-border/40">
-                          <span className="w-5 h-5 rounded-full bg-[#6F4E37] text-white font-extrabold text-[11px] flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                          <span className="w-5 h-5 rounded-full bg-[#E50914] text-white font-extrabold text-[11px] flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                             {idx + 1}
                           </span>
                           <span className="leading-relaxed">{step}</span>
@@ -371,8 +371,8 @@ export default function SupportPage() {
 
                   {/* Pro Tip Box */}
                   {guide.tip && (
-                    <div className="flex items-start gap-2.5 bg-[#FFF8F0] border border-[#DDB892]/60 p-3.5 rounded-2xl text-xs text-[#2C1810]">
-                      <Zap className="w-4 h-4 text-[#6F4E37] shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-2.5 bg-[#FFF5F5] border border-[#EF5350]/60 p-3.5 rounded-2xl text-xs text-[#252525]">
+                      <Zap className="w-4 h-4 text-[#E50914] shrink-0 mt-0.5" />
                       <span><strong>Pro Tip:</strong> {guide.tip}</span>
                     </div>
                   )}
@@ -384,11 +384,11 @@ export default function SupportPage() {
           {/* Expandable FAQs Accordion Section */}
           <div className="bg-white rounded-3xl p-5 sm:p-7 border border-border/60 shadow-xs space-y-5">
             <div className="flex items-center gap-2 border-b border-border/40 pb-4">
-              <div className="p-2 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37]">
+              <div className="p-2 rounded-xl bg-[#E50914]/10 text-[#E50914]">
                 <HelpCircle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-extrabold text-[#2C1810]">Frequently Asked Questions</h3>
+                <h3 className="text-lg font-extrabold text-[#252525]">Frequently Asked Questions</h3>
                 <p className="text-xs text-text/60">Quick answers to common cafe owner questions</p>
               </div>
             </div>
@@ -403,10 +403,10 @@ export default function SupportPage() {
                   >
                     <button
                       onClick={() => toggleFaq(idx)}
-                      className="w-full p-4 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-[#2C1810]"
+                      className="w-full p-4 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-[#252525]"
                     >
                       <span>{faq.q}</span>
-                      <ChevronDown className={`w-4 h-4 text-[#6F4E37] shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-[#E50914] shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                     </button>
 
                     <AnimatePresence>
@@ -434,8 +434,8 @@ export default function SupportPage() {
           {/* Quick Action Card */}
           <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-xs space-y-4">
             <div className="flex items-center gap-2">
-              <PlayCircle className="w-5 h-5 text-[#6F4E37]" />
-              <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#6F4E37]">Quick Tour Actions</h3>
+              <PlayCircle className="w-5 h-5 text-[#E50914]" />
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#E50914]">Quick Tour Actions</h3>
             </div>
 
             <p className="text-xs text-text/70 leading-relaxed">
@@ -444,7 +444,7 @@ export default function SupportPage() {
             
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('restart-owner-tour'))}
-              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:shadow-md text-white text-xs font-extrabold transition-all flex items-center justify-center gap-2 active:scale-95"
+              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:shadow-md text-white text-xs font-extrabold transition-all flex items-center justify-center gap-2 active:scale-95"
             >
               <PlayCircle className="w-4 h-4" /> Restart Interactive Tour
             </button>
@@ -485,7 +485,7 @@ export default function SupportPage() {
                       <Icon className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-extrabold text-xs text-[#2C1810]">{method.title}</h4>
+                      <h4 className="font-extrabold text-xs text-[#252525]">{method.title}</h4>
                       <p className="text-[11px] text-text/60 mt-0.5">{method.desc}</p>
                     </div>
                   </div>
@@ -493,7 +493,7 @@ export default function SupportPage() {
                     href={method.href} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 border-2 border-border/60 hover:border-[#6F4E37] text-text/80 hover:text-[#6F4E37] text-xs font-extrabold rounded-2xl transition-all text-center block"
+                    className="w-full py-2.5 border-2 border-border/60 hover:border-[#E50914] text-text/80 hover:text-[#E50914] text-xs font-extrabold rounded-2xl transition-all text-center block"
                   >
                     {method.action}
                   </a>

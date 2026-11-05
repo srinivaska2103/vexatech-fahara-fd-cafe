@@ -165,7 +165,7 @@ export default function CafeSpecificTablesPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Back Button & Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -173,8 +173,8 @@ export default function CafeSpecificTablesPage() {
           <BackButton href={`/owner/cafes/${cafeId}`} label="Back to Cafe" />
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">{cafe?.name || 'Cafe'} Tables</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#252525] tracking-tight">{cafe?.name || 'Cafe'} Tables</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-extrabold">
                 TABLE MANAGEMENT
               </span>
             </div>
@@ -184,7 +184,7 @@ export default function CafeSpecificTablesPage() {
 
         <Button
           onClick={handleOpenCreateModal}
-          className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-2 transition-all cursor-pointer"
+          className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-2 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Table</span>
@@ -207,8 +207,8 @@ export default function CafeSpecificTablesPage() {
               onClick={() => setSelectedStatus(st)}
               className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
                 selectedStatus === st
-                  ? 'bg-[#6F4E37] text-white shadow-2xs'
-                  : 'bg-surface/60 text-text/65 hover:bg-surface hover:text-[#2C1810]'
+                  ? 'bg-[#E50914] text-white shadow-2xs'
+                  : 'bg-surface/60 text-text/65 hover:bg-surface hover:text-[#252525]'
               }`}
             >
               {st === 'ALL' ? 'All Tables' : st.charAt(0) + st.slice(1).toLowerCase()}
@@ -218,12 +218,12 @@ export default function CafeSpecificTablesPage() {
 
         <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
           <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6F4E37]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#E50914]" />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#6F4E37] transition-all font-medium"
+              className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#E50914] transition-all font-medium"
               placeholder="Search table number..."
             />
           </div>
@@ -232,7 +232,7 @@ export default function CafeSpecificTablesPage() {
             <button
               onClick={() => setViewMode('grid')}
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 cursor-pointer ${
-                viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37]' : 'text-text/50 hover:text-[#2C1810]'
+                viewMode === 'grid' ? 'bg-white shadow-2xs text-[#E50914]' : 'text-text/50 hover:text-[#252525]'
               }`}
             >
               <Grid className="w-3.5 h-3.5" />
@@ -253,7 +253,7 @@ export default function CafeSpecificTablesPage() {
           title={search ? "No tables match your filter" : "No tables added yet"}
           message={search ? "Try adjusting search query." : "Create your first table for this cafe to start managing guest seating."}
           action={!search && (
-            <Button onClick={handleOpenCreateModal} className="bg-[#6F4E37] text-white font-extrabold rounded-2xl px-6 py-2.5 shadow-xs">
+            <Button onClick={handleOpenCreateModal} className="bg-[#E50914] text-white font-extrabold rounded-2xl px-6 py-2.5 shadow-xs">
               <Plus className="w-4 h-4 mr-1.5" /> + Add Table
             </Button>
           )}

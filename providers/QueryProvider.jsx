@@ -29,11 +29,9 @@ export const QueryProvider = ({ children }) => {
           duration: 4000,
           style: {
             background: '#FFFFFF',
-            color: '#2C1810',
-            border: '1.5px solid #DDB892',
+            color: '#252525',
             borderRadius: '16px',
             padding: '14px 20px',
-            boxShadow: '0 20px 25px -5px rgba(44, 24, 16, 0.15), 0 8px 10px -6px rgba(44, 24, 16, 0.1)',
             fontSize: '13px',
             fontWeight: '800',
             maxWidth: '500px',
@@ -41,14 +39,26 @@ export const QueryProvider = ({ children }) => {
             wordBreak: 'break-word',
           },
           success: {
+            style: {
+              background: '#FFFFFF',
+              color: '#065F46',
+              border: '1.5px solid #10B981',
+              boxShadow: '0 20px 25px -5px rgba(16, 185, 129, 0.15), 0 8px 10px -6px rgba(16, 185, 129, 0.1)',
+            },
             iconTheme: {
-              primary: '#6F4E37',
+              primary: '#10B981', // Pure Green
               secondary: '#FFFFFF',
             },
           },
           error: {
+            style: {
+              background: '#FFFFFF',
+              color: '#991B1B',
+              border: '1.5px solid #EF4444',
+              boxShadow: '0 20px 25px -5px rgba(239, 68, 68, 0.15), 0 8px 10px -6px rgba(239, 68, 68, 0.1)',
+            },
             iconTheme: {
-              primary: '#E11D48',
+              primary: '#EF4444', // Pure Red
               secondary: '#FFFFFF',
             },
           },

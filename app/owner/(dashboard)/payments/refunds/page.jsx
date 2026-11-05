@@ -112,15 +112,15 @@ export default function RefundsPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-1.5 z-10">
           <div className="flex items-center gap-2">
             <button 
               onClick={() => router.push('/owner/payments')}
-              className="px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold flex items-center gap-1 hover:bg-[#6F4E37] hover:text-white transition-all cursor-pointer"
+              className="px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold flex items-center gap-1 hover:bg-[#E50914] hover:text-white transition-all cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Payments</span>
@@ -128,7 +128,7 @@ export default function RefundsPage() {
             <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• FINANCIAL ADJUSTMENTS</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#252525] tracking-tight">
             Customer Refunds & Adjustments
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
@@ -141,7 +141,7 @@ export default function RefundsPage() {
           <button 
             type="button"
             onClick={handleExportCSV}
-            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>Export CSV</span>
@@ -150,7 +150,7 @@ export default function RefundsPage() {
           <button 
             type="button"
             onClick={() => refetch()}
-            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <RefreshCw className="w-4 h-4 text-white" />
             <span>Sync Refunds</span>
@@ -193,7 +193,7 @@ export default function RefundsPage() {
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{processedCount}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{processedCount}</p>
           <p className="text-[10px] text-emerald-700/70 font-bold">Successful refunds</p>
         </div>
 
@@ -205,7 +205,7 @@ export default function RefundsPage() {
               <XCircle className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{failedCount}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{failedCount}</p>
           <p className="text-[10px] text-text/50 font-medium">Rejected claims</p>
         </div>
 
@@ -227,14 +227,14 @@ export default function RefundsPage() {
                   className={cn(
                     "px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0",
                     isActive
-                      ? "bg-[#6F4E37] text-white shadow-2xs"
-                      : "bg-surface/50 text-[#2C1810] hover:bg-surface"
+                      ? "bg-[#E50914] text-white shadow-2xs"
+                      : "bg-surface/50 text-[#252525] hover:bg-surface"
                   )}
                 >
                   <span>{tab.label}</span>
                   <span className={cn(
                     "px-1.5 py-0.2 rounded-full text-[10px]",
-                    isActive ? "bg-white/20 text-white" : "bg-white text-[#6F4E37]"
+                    isActive ? "bg-white/20 text-white" : "bg-white text-[#E50914]"
                   )}>
                     {tab.count}
                   </span>
@@ -251,7 +251,7 @@ export default function RefundsPage() {
             <Input 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
+              className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#252525] placeholder:text-text/40" 
               placeholder="Search Booking ID, Customer..." 
             />
           </div>
@@ -265,7 +265,7 @@ export default function RefundsPage() {
           <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-700 flex items-center justify-center mx-auto font-bold">
             <RotateCcw className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-extrabold text-[#2C1810]">No Refund Records Found</h3>
+          <h3 className="text-base font-extrabold text-[#252525]">No Refund Records Found</h3>
           <p className="text-xs text-text/60 max-w-sm mx-auto">
             No customer refund adjustments match your current search and status filters.
           </p>
@@ -274,7 +274,7 @@ export default function RefundsPage() {
         <div className="w-full overflow-hidden bg-white border border-border/60 rounded-3xl shadow-2xs">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left text-xs whitespace-nowrap">
-              <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#6F4E37] border-b border-border/50 tracking-wider">
+              <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#E50914] border-b border-border/50 tracking-wider">
                 <tr>
                   <th className="px-6 py-4">Booking ID</th>
                   <th className="px-6 py-4">Customer Diner</th>
@@ -288,10 +288,10 @@ export default function RefundsPage() {
               <tbody className="divide-y divide-border/30">
                 {filteredRefunds.map((item) => (
                   <tr key={item.id} className="hover:bg-surface/40 transition-colors">
-                    <td className="px-6 py-4 font-mono font-extrabold text-[#2C1810]">
+                    <td className="px-6 py-4 font-mono font-extrabold text-[#252525]">
                       {item.bookingId || item.booking_id}
                     </td>
-                    <td className="px-6 py-4 font-extrabold text-[#2C1810]">
+                    <td className="px-6 py-4 font-extrabold text-[#252525]">
                       {item.customer || item.customer_name || 'Guest Diner'}
                     </td>
                     <td className="px-6 py-4 text-right font-black text-rose-600 text-sm">

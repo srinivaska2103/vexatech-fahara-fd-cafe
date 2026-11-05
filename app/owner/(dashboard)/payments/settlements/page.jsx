@@ -50,9 +50,9 @@ export default function SettlementsPage() {
     };
   }).filter(s => 
     (s.vendor_type === 'CAFE' || !s.vendor_type) &&
-    s.cashfreeRef !== 'FAHARA_PLATFORM' && 
-    s.cashfree_reference !== 'FAHARA_PLATFORM' &&
-    s.vendor_type !== 'FAHARA' &&
+    s.cashfreeRef !== 'Grab2GO_PLATFORM' && 
+    s.cashfree_reference !== 'Grab2GO_PLATFORM' &&
+    s.vendor_type !== 'Grab2GO' &&
     s.vendor_type !== 'EVENT_MANAGER' &&
     !['REFUNDED', 'PARTIALLY_REFUNDED', 'REVERSED', 'CANCELLED'].includes(String(s.status || s.settlement_status || '').toUpperCase())
   );
@@ -121,8 +121,8 @@ export default function SettlementsPage() {
         )}
 
         {!isCompleted && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-[#6F4E37]/10 text-[#6F4E37] border border-[#DDB892]/60 shadow-2xs">
-            <Sparkles className="w-2.5 h-2.5 text-[#6F4E37]" /> {tag || 'Date as Expected'}
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-[#E50914]/10 text-[#E50914] border border-[#EF5350]/60 shadow-2xs">
+            <Sparkles className="w-2.5 h-2.5 text-[#E50914]" /> {tag || 'Date as Expected'}
           </span>
         )}
       </div>
@@ -138,15 +138,15 @@ export default function SettlementsPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-1.5 z-10">
           <div className="flex items-center gap-2">
             <button 
               onClick={() => router.push('/owner/payments')}
-              className="px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold flex items-center gap-1 hover:bg-[#6F4E37] hover:text-white transition-all cursor-pointer"
+              className="px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold flex items-center gap-1 hover:bg-[#E50914] hover:text-white transition-all cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Payments</span>
@@ -154,7 +154,7 @@ export default function SettlementsPage() {
             <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• BANK SETTLEMENTS</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#252525] tracking-tight">
             Bank Payout Settlements
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
@@ -167,7 +167,7 @@ export default function SettlementsPage() {
           <button 
             type="button"
             onClick={handleExportCSV}
-            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>Export CSV</span>
@@ -177,7 +177,7 @@ export default function SettlementsPage() {
             type="button"
             disabled={isSyncing}
             onClick={() => syncSettlements({ vendor_type: 'CAFE' })}
-            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-60"
+            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-60"
           >
             <RefreshCw className={cn("w-4 h-4 text-white", isSyncing && "animate-spin")} />
             <span>{isSyncing ? 'Syncing...' : 'Sync Settlements'}</span>
@@ -269,14 +269,14 @@ export default function SettlementsPage() {
                   className={cn(
                     "px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0",
                     isActive
-                      ? "bg-[#6F4E37] text-white shadow-2xs"
-                      : "bg-surface/50 text-[#2C1810] hover:bg-surface"
+                      ? "bg-[#E50914] text-white shadow-2xs"
+                      : "bg-surface/50 text-[#252525] hover:bg-surface"
                   )}
                 >
                   <span>{tab.label}</span>
                   <span className={cn(
                     "px-1.5 py-0.2 rounded-full text-[10px]",
-                    isActive ? "bg-white/20 text-white" : "bg-white text-[#6F4E37]"
+                    isActive ? "bg-white/20 text-white" : "bg-white text-[#E50914]"
                   )}>
                     {tab.count}
                   </span>
@@ -293,7 +293,7 @@ export default function SettlementsPage() {
             <Input 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
+              className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#252525] placeholder:text-text/40" 
               placeholder="Search Booking ID, Reference..." 
             />
           </div>
@@ -304,10 +304,10 @@ export default function SettlementsPage() {
       {/* Settlement Table / Cards */}
       {filteredSettlements.length === 0 ? (
         <div className="p-12 text-center bg-white rounded-3xl border border-border/60 shadow-2xs space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center mx-auto font-bold">
+          <div className="w-12 h-12 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center mx-auto font-bold">
             <ArrowRightLeft className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-extrabold text-[#2C1810]">No Settlement Records Found</h3>
+          <h3 className="text-base font-extrabold text-[#252525]">No Settlement Records Found</h3>
           <p className="text-xs text-text/60 max-w-sm mx-auto">
             No bank split settlement entries match your current search and status filters.
           </p>
@@ -316,7 +316,7 @@ export default function SettlementsPage() {
         <div className="w-full overflow-hidden bg-white border border-border/60 rounded-3xl shadow-2xs">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left text-xs whitespace-nowrap">
-              <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#6F4E37] border-b border-border/50 tracking-wider">
+              <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#E50914] border-b border-border/50 tracking-wider">
                 <tr>
                   <th className="px-6 py-4">Booking ID</th>
                   <th className="px-6 py-4">Settlement Date</th>
@@ -333,23 +333,23 @@ export default function SettlementsPage() {
                     onClick={() => setSelectedSettlement(item)}
                     className="hover:bg-surface/40 transition-colors cursor-pointer group"
                   >
-                    <td className="px-6 py-4 font-mono font-extrabold text-[#2C1810]">
+                    <td className="px-6 py-4 font-mono font-extrabold text-[#252525]">
                       {item.bookingId || item.booking_id}
                     </td>
                     <td className="px-6 py-4 text-text/60">
                       {item.date ? format(new Date(item.date), 'MMM dd, yyyy · hh:mm a') : 'N/A'}
                     </td>
-                    <td className="px-6 py-4 text-right font-black text-[#6F4E37] text-sm">
+                    <td className="px-6 py-4 text-right font-black text-[#E50914] text-sm">
                       ₹{Number(item.amount || item.settled_amount || 0).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {getStatusBadge(item.status || item.settlement_status, item.tag)}
                     </td>
-                    <td className="px-6 py-4 font-mono text-xs text-[#6F4E37] font-bold">
+                    <td className="px-6 py-4 font-mono text-xs text-[#E50914] font-bold">
                       {item.razorpayRef || item.cashfreeRef || item.cashfree_reference || item.razorpay_reference || 'RZP_SPLIT_REF'}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] group-hover:bg-[#6F4E37] group-hover:text-white transition-all inline-flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] group-hover:bg-[#E50914] group-hover:text-white transition-all inline-flex items-center justify-center">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </td>
@@ -374,7 +374,7 @@ export default function SettlementsPage() {
               exit={{ x: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 220 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md bg-white h-[88vh] sm:h-full max-h-[90vh] sm:max-h-none rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 overflow-y-auto custom-scrollbar flex flex-col justify-between text-[#2C1810]"
+              className="w-full max-w-md bg-white h-[88vh] sm:h-full max-h-[90vh] sm:max-h-none rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 overflow-y-auto custom-scrollbar flex flex-col justify-between text-[#252525]"
             >
               <div>
                 {/* Mobile Drawer Touch Handle */}
@@ -383,7 +383,7 @@ export default function SettlementsPage() {
                 {/* Header */}
                 <div className="flex items-start justify-between pb-4 border-b border-border/50 mb-5 gap-3">
                   <div>
-                    <h3 className="text-lg font-black text-[#2C1810]">Settlement Details</h3>
+                    <h3 className="text-lg font-black text-[#252525]">Settlement Details</h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="text-[11px] text-text/50 font-mono truncate max-w-[170px] sm:max-w-[220px]">
                         ID: {selectedSettlement.id}
@@ -394,7 +394,7 @@ export default function SettlementsPage() {
                           navigator.clipboard.writeText(selectedSettlement.id);
                           toast.success('Settlement ID copied!');
                         }}
-                        className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer"
+                        className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#E50914] transition-all cursor-pointer"
                         title="Copy Settlement ID"
                       >
                         <Copy className="w-3 h-3" />
@@ -404,7 +404,7 @@ export default function SettlementsPage() {
 
                   <button 
                     onClick={() => setSelectedSettlement(null)}
-                    className="w-9 h-9 rounded-2xl bg-surface/50 hover:bg-[#6F4E37] text-text/60 hover:text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    className="w-9 h-9 rounded-2xl bg-surface/50 hover:bg-[#E50914] text-text/60 hover:text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
                     title="Close"
                   >
                     <X className="w-5 h-5" />
@@ -413,14 +413,14 @@ export default function SettlementsPage() {
 
                 <div className="space-y-5">
                   {/* Payout Overview Card */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] border border-[#DDB892]/60 shadow-2xs flex items-center justify-between">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border border-[#EF5350]/60 shadow-2xs flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block mb-1">Status</span>
+                      <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block mb-1">Status</span>
                       {getStatusBadge(selectedSettlement.status || selectedSettlement.settlement_status, selectedSettlement.tag)}
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block mb-1">Net Cafe Split</span>
-                      <span className="text-xl font-black text-[#6F4E37]">
+                      <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block mb-1">Net Cafe Split</span>
+                      <span className="text-xl font-black text-[#E50914]">
                         ₹{Number(selectedSettlement.amount || selectedSettlement.settled_amount || 0).toLocaleString()}
                       </span>
                     </div>
@@ -433,7 +433,7 @@ export default function SettlementsPage() {
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Booking ID</span>
                       <div className="flex items-center gap-1 min-w-0">
-                        <span className="font-mono font-extrabold text-[#2C1810] truncate max-w-[160px] sm:max-w-[200px]">
+                        <span className="font-mono font-extrabold text-[#252525] truncate max-w-[160px] sm:max-w-[200px]">
                           {selectedSettlement.bookingId || selectedSettlement.booking_id}
                         </span>
                         <button
@@ -442,7 +442,7 @@ export default function SettlementsPage() {
                             navigator.clipboard.writeText(selectedSettlement.bookingId || selectedSettlement.booking_id);
                             toast.success('Booking ID copied!');
                           }}
-                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
+                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#E50914] transition-all cursor-pointer shrink-0"
                           title="Copy Booking ID"
                         >
                           <Copy className="w-3 h-3" />
@@ -454,7 +454,7 @@ export default function SettlementsPage() {
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Razorpay Reference</span>
                       <div className="flex items-center gap-1 min-w-0">
-                        <span className="font-mono font-bold text-[#6F4E37] truncate max-w-[150px] sm:max-w-[190px]">
+                        <span className="font-mono font-bold text-[#E50914] truncate max-w-[150px] sm:max-w-[190px]">
                           {selectedSettlement.razorpayRef || selectedSettlement.cashfreeRef || selectedSettlement.cashfree_reference || selectedSettlement.razorpay_reference || 'N/A'}
                         </span>
                         <button
@@ -463,7 +463,7 @@ export default function SettlementsPage() {
                             navigator.clipboard.writeText(selectedSettlement.razorpayRef || selectedSettlement.cashfreeRef || selectedSettlement.cashfree_reference || selectedSettlement.razorpay_reference || 'N/A');
                             toast.success('Razorpay Ref copied!');
                           }}
-                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
+                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#E50914] transition-all cursor-pointer shrink-0"
                           title="Copy Razorpay Reference"
                         >
                           <Copy className="w-3 h-3" />
@@ -474,7 +474,7 @@ export default function SettlementsPage() {
                     {/* Settlement Date */}
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Settlement Date</span>
-                      <span className="font-medium text-[#2C1810] text-right truncate">
+                      <span className="font-medium text-[#252525] text-right truncate">
                         {selectedSettlement.date ? format(new Date(selectedSettlement.date), 'MMMM dd, yyyy · hh:mm a') : 'N/A'}
                       </span>
                     </div>
@@ -482,7 +482,7 @@ export default function SettlementsPage() {
                     {/* Destination Bank */}
                     <div className="flex items-center justify-between py-1.5 gap-2">
                       <span className="text-text/60 shrink-0">Destination Bank</span>
-                      <span className="font-extrabold text-[#2C1810] truncate">
+                      <span className="font-extrabold text-[#252525] truncate">
                         Direct Bank Split (Verified Account)
                       </span>
                     </div>
@@ -494,7 +494,7 @@ export default function SettlementsPage() {
               {/* Drawer Footer Action */}
               <div className="pt-5 border-t border-border/50 mt-6 shrink-0">
                 <Button 
-                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:opacity-95 text-white font-extrabold text-xs shadow-md active:scale-[0.98] transition-all cursor-pointer" 
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:opacity-95 text-white font-extrabold text-xs shadow-md active:scale-[0.98] transition-all cursor-pointer" 
                   onClick={() => setSelectedSettlement(null)}
                 >
                   Close Settlement Panel

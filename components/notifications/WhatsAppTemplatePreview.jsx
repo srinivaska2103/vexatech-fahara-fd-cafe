@@ -25,7 +25,7 @@ export const WhatsAppTemplatePreview = ({ template }) => {
                <span className="text-[#008069] font-bold text-xs">FC</span>
              </div>
              <div>
-               <div className="font-semibold text-sm">Fahara Cafe <span className="inline-block ml-1 w-3 h-3 bg-green-400 rounded-full text-transparent">v</span></div>
+               <div className="font-semibold text-sm">Grab2GO Cafe <span className="inline-block ml-1 w-3 h-3 bg-green-400 rounded-full text-transparent">v</span></div>
                <div className="text-[10px] text-white/80">Business Account</div>
              </div>
           </div>

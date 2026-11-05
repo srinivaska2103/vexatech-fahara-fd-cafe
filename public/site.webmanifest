@@ -1,7 +1,7 @@
 {
-  "name": "Fahara Cafe",
-  "short_name": "Fahara Cafe",
-  "description": "Fahara Cafe Management & Booking Platform",
+  "name": "GRAB IT Cafe",
+  "short_name": "GRAB IT Cafe",
+  "description": "GRAB IT Cafe Management & Booking Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

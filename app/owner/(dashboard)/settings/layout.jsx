@@ -8,7 +8,7 @@ export default function SettingsLayout({ children }) {
   const pathname = usePathname();
 
   return (
-    <div className="p-3 sm:p-5 max-w-5xl mx-auto space-y-4 text-[#2C1810]">
+    <div className="p-3 sm:p-5 max-w-5xl mx-auto space-y-4 text-[#252525]">
       {/* Settings Header */}
       <div className="border-b border-border/40 pb-4">
         <PageHeader 

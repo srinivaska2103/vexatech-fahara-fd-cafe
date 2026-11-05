@@ -13,9 +13,9 @@ export const CustomerHeader = ({ customer, onToggleVip, onBlock, isTogglingVip }
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
           <div className="relative shrink-0">
             {customer.profile_image ? (
-              <img src={customer.profile_image} alt={customer.name} className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-[#6F4E37]/10" />
+              <img src={customer.profile_image} alt={customer.name} className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-[#E50914]/10" />
             ) : (
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-[#6F4E37]/10 flex items-center justify-center text-[#6F4E37] font-extrabold text-xl sm:text-3xl border-4 border-[#6F4E37]/10">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-[#E50914]/10 flex items-center justify-center text-[#E50914] font-extrabold text-xl sm:text-3xl border-4 border-[#E50914]/10">
                 {customer.name?.charAt(0) || 'C'}
               </div>
             )}
@@ -28,14 +28,14 @@ export const CustomerHeader = ({ customer, onToggleVip, onBlock, isTogglingVip }
           
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-lg sm:text-2xl font-black text-[#2C1810]">{customer.name || 'Anonymous Customer'}</h2>
+              <h2 className="text-lg sm:text-2xl font-black text-[#252525]">{customer.name || 'Anonymous Customer'}</h2>
               <VIPBadge isVip={customer.is_vip} />
             </div>
             
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-1.5 sm:gap-4 text-xs text-text/60 font-medium">
-              <span className="flex items-center gap-1.5 truncate"><Mail className="w-3.5 h-3.5 text-[#6F4E37] shrink-0" /> {customer.email || 'No email provided'}</span>
-              <span className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-[#6F4E37] shrink-0" /> {customer.phone || 'No phone provided'}</span>
-              <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-[#6F4E37] shrink-0" /> Joined {new Date(customer.created_at).toLocaleDateString()}</span>
+              <span className="flex items-center gap-1.5 truncate"><Mail className="w-3.5 h-3.5 text-[#E50914] shrink-0" /> {customer.email || 'No email provided'}</span>
+              <span className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-[#E50914] shrink-0" /> {customer.phone || 'No phone provided'}</span>
+              <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-[#E50914] shrink-0" /> Joined {new Date(customer.created_at).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
@@ -66,21 +66,21 @@ export const CustomerHeader = ({ customer, onToggleVip, onBlock, isTogglingVip }
       {/* Quick Location / Preferred details */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border/50">
         <div className="flex items-center gap-3 p-3 sm:p-4 bg-surface/50 rounded-2xl border border-border/40">
-          <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-[#6F4E37] shadow-2xs shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-[#E50914] shadow-2xs shrink-0">
             <MapPin className="w-4 h-4" />
           </div>
           <div className="min-w-0">
             <div className="text-[10px] uppercase font-extrabold text-text/40 tracking-wider">Favorite Cafe</div>
-            <div className="font-bold text-xs sm:text-sm text-[#2C1810] truncate">{customer.favorite_cafe || 'None yet'}</div>
+            <div className="font-bold text-xs sm:text-sm text-[#252525] truncate">{customer.favorite_cafe || 'None yet'}</div>
           </div>
         </div>
         <div className="flex items-center gap-3 p-3 sm:p-4 bg-surface/50 rounded-2xl border border-border/40">
-          <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-[#6F4E37] shadow-2xs shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-[#E50914] shadow-2xs shrink-0">
             <Map className="w-4 h-4" />
           </div>
           <div className="min-w-0">
             <div className="text-[10px] uppercase font-extrabold text-text/40 tracking-wider">Preferred Event Type</div>
-            <div className="font-bold text-xs sm:text-sm text-[#2C1810] truncate">{customer.preferred_event || 'General'}</div>
+            <div className="font-bold text-xs sm:text-sm text-[#252525] truncate">{customer.preferred_event || 'General'}</div>
           </div>
         </div>
       </div>

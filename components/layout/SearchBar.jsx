@@ -76,7 +76,7 @@ export const SearchBar = () => {
     <div className="relative w-full max-w-xs lg:max-w-sm hidden md:block" ref={containerRef}>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-          <Search className="w-4 h-4 text-[#6F4E37]/70" />
+          <Search className="w-4 h-4 text-[#E50914]/70" />
         </div>
         <input
           ref={inputRef}
@@ -88,19 +88,19 @@ export const SearchBar = () => {
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Search bookings, cafes, customers..."
-          className="w-full pl-9.5 pr-14 py-2 h-9 text-xs rounded-full bg-[#FFF8F0]/70 border border-[#DDB892]/60 text-[#2C1810] placeholder:text-[#2C1810]/40 hover:bg-white hover:border-[#6F4E37]/40 focus:bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-4 focus:ring-[#6F4E37]/10 transition-all duration-200 shadow-2xs font-medium"
+          className="w-full pl-9.5 pr-14 py-2 h-9 text-xs rounded-full bg-[#FFF5F5]/70 border border-[#EF5350]/60 text-[#252525] placeholder:text-[#252525]/40 hover:bg-white hover:border-[#E50914]/40 focus:bg-white focus:outline-none focus:border-[#E50914] focus:ring-4 focus:ring-[#E50914]/10 transition-all duration-200 shadow-2xs font-medium"
         />
         {query ? (
           <button
             type="button"
             onClick={() => setQuery('')}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#2C1810]/40 hover:text-[#2C1810]"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#252525]/40 hover:text-[#252525]"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         ) : (
           <div className="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none">
-            <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 text-[9px] font-bold text-[#6F4E37] bg-white border border-[#DDB892]/60 rounded-md shadow-2xs font-mono">
+            <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 text-[9px] font-bold text-[#E50914] bg-white border border-[#EF5350]/60 rounded-md shadow-2xs font-mono">
               ⌘K
             </kbd>
           </div>
@@ -109,71 +109,71 @@ export const SearchBar = () => {
 
       {/* Live Global Search Dropdown */}
       {isOpen && cleanQuery && (
-        <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-[#DDB892]/60 overflow-hidden z-50 p-2 text-xs space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+        <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-[#EF5350]/60 overflow-hidden z-50 p-2 text-xs space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
           {!hasResults ? (
-            <div className="p-4 text-center text-[#2C1810]/60">
+            <div className="p-4 text-center text-[#252525]/60">
               No matching bookings, cafes, or customers found.
             </div>
           ) : (
             <>
               {filteredBookings.length > 0 && (
                 <div>
-                  <div className="px-3 py-1 text-[10px] font-black uppercase text-[#6F4E37] tracking-wider flex items-center gap-1.5">
+                  <div className="px-3 py-1 text-[10px] font-black uppercase text-[#E50914] tracking-wider flex items-center gap-1.5">
                     <CalendarCheck className="w-3 h-3" /> Bookings
                   </div>
                   {filteredBookings.map((b) => (
                     <button
                       key={b.id}
                       onClick={() => handleSelect(`/owner/bookings`)}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FFF8F0] flex items-center justify-between text-[#2C1810] group transition-colors"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FFF5F5] flex items-center justify-between text-[#252525] group transition-colors"
                     >
                       <div className="truncate">
                         <span className="font-extrabold">{b.booking_number || b.id.substring(0, 8)}</span>
-                        <span className="text-[#2C1810]/60 ml-2 font-medium">{b.customerName || 'Guest'}</span>
+                        <span className="text-[#252525]/60 ml-2 font-medium">{b.customerName || 'Guest'}</span>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#6F4E37] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#E50914] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
                     </button>
                   ))}
                 </div>
               )}
 
               {filteredCafes.length > 0 && (
-                <div className="pt-1 border-t border-[#DDB892]/30">
-                  <div className="px-3 py-1 text-[10px] font-black uppercase text-[#6F4E37] tracking-wider flex items-center gap-1.5">
+                <div className="pt-1 border-t border-[#EF5350]/30">
+                  <div className="px-3 py-1 text-[10px] font-black uppercase text-[#E50914] tracking-wider flex items-center gap-1.5">
                     <Store className="w-3 h-3" /> Cafes
                   </div>
                   {filteredCafes.map((c) => (
                     <button
                       key={c.id}
                       onClick={() => handleSelect(`/owner/cafes/${c.id}`)}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FFF8F0] flex items-center justify-between text-[#2C1810] group transition-colors"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FFF5F5] flex items-center justify-between text-[#252525] group transition-colors"
                     >
                       <div className="truncate">
                         <span className="font-extrabold">{c.name}</span>
-                        <span className="text-[#2C1810]/60 ml-2 font-medium">{c.city}</span>
+                        <span className="text-[#252525]/60 ml-2 font-medium">{c.city}</span>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#6F4E37] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#E50914] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
                     </button>
                   ))}
                 </div>
               )}
 
               {filteredCustomers.length > 0 && (
-                <div className="pt-1 border-t border-[#DDB892]/30">
-                  <div className="px-3 py-1 text-[10px] font-black uppercase text-[#6F4E37] tracking-wider flex items-center gap-1.5">
+                <div className="pt-1 border-t border-[#EF5350]/30">
+                  <div className="px-3 py-1 text-[10px] font-black uppercase text-[#E50914] tracking-wider flex items-center gap-1.5">
                     <Users className="w-3 h-3" /> Customers
                   </div>
                   {filteredCustomers.map((c) => (
                     <button
                       key={c.id || c.email}
                       onClick={() => handleSelect(`/owner/customers`)}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FFF8F0] flex items-center justify-between text-[#2C1810] group transition-colors"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-[#FFF5F5] flex items-center justify-between text-[#252525] group transition-colors"
                     >
                       <div className="truncate">
                         <span className="font-extrabold">{c.name || 'Customer'}</span>
-                        <span className="text-[#2C1810]/60 ml-2 font-medium">{c.email || c.phone}</span>
+                        <span className="text-[#252525]/60 ml-2 font-medium">{c.email || c.phone}</span>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#6F4E37] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#E50914] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
                     </button>
                   ))}
                 </div>

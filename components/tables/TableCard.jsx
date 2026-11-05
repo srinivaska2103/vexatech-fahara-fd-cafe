@@ -33,9 +33,9 @@ export const TableCard = ({
 
   const getLocationBadge = (location) => {
     const locLower = (location || 'indoor').toLowerCase();
-    let icon = <Home className="w-3.5 h-3.5 text-[#6F4E37]" />;
+    let icon = <Home className="w-3.5 h-3.5 text-[#E50914]" />;
     let label = location || 'Indoor';
-    let badgeStyle = 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#6F4E37]/20';
+    let badgeStyle = 'bg-[#E50914]/10 text-[#E50914] border-[#E50914]/20';
 
     if (locLower.includes('outdoor')) {
       icon = <Sun className="w-3.5 h-3.5 text-amber-600" />;
@@ -103,7 +103,7 @@ export const TableCard = ({
   const renderVisualSeatingGraphic = (capacity) => {
     const seatsCount = capacity || 2;
     return (
-      <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#6F4E37] via-[#A67B5B] to-[#DDB892] text-white flex flex-col items-center justify-center font-black text-sm shadow-md shrink-0 border border-white/40">
+      <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#E50914] via-[#B71C1C] to-[#EF5350] text-white flex flex-col items-center justify-center font-black text-sm shadow-md shrink-0 border border-white/40">
         <span className="text-xs font-extrabold tracking-tight drop-shadow-xs">{table.table_number}</span>
         {/* Dynamic dots for chairs */}
         <div className="flex items-center gap-0.5 mt-0.5">
@@ -121,8 +121,8 @@ export const TableCard = ({
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ duration: 0.2 }}
       className={`bg-white rounded-3xl border ${
-        isInactive ? 'border-border/60 bg-gray-50/70' : 'border-[#DDB892]/70 hover:border-[#6F4E37]'
-      } p-5 shadow-xs hover:shadow-lg transition-all relative flex flex-col justify-between space-y-4 text-[#2C1810] overflow-hidden`}
+        isInactive ? 'border-border/60 bg-gray-50/70' : 'border-[#EF5350]/70 hover:border-[#E50914]'
+      } p-5 shadow-xs hover:shadow-lg transition-all relative flex flex-col justify-between space-y-4 text-[#252525] overflow-hidden`}
     >
       {/* Card Header: Seating Graphic, Table Number, & Status */}
       <div className="flex items-start justify-between gap-3">
@@ -130,7 +130,7 @@ export const TableCard = ({
           {renderVisualSeatingGraphic(table.capacity)}
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="text-lg font-black text-[#2C1810] tracking-tight leading-none">Table {table.table_number}</h4>
+              <h4 className="text-lg font-black text-[#252525] tracking-tight leading-none">Table {table.table_number}</h4>
             </div>
             <p className="text-xs text-text/65 font-bold mt-1">{table.table_type || `${table.capacity} Seater Table`}</p>
           </div>
@@ -142,7 +142,7 @@ export const TableCard = ({
           <div className="relative">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="p-1.5 rounded-xl hover:bg-surface text-text/60 hover:text-[#2C1810] transition-colors cursor-pointer"
+              className="p-1.5 rounded-xl hover:bg-surface text-text/60 hover:text-[#252525] transition-colors cursor-pointer"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
@@ -156,19 +156,19 @@ export const TableCard = ({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute right-0 top-8 z-20 w-48 bg-white rounded-2xl border border-[#DDB892] shadow-xl p-1.5 space-y-0.5 text-xs font-extrabold text-[#2C1810]"
+                    className="absolute right-0 top-8 z-20 w-48 bg-white rounded-2xl border border-[#EF5350] shadow-xl p-1.5 space-y-0.5 text-xs font-extrabold text-[#252525]"
                   >
                     <button
                       onClick={() => { setShowMenu(false); onEdit(table); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#FFF8F0] hover:text-[#6F4E37] transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#FFF5F5] hover:text-[#E50914] transition-colors cursor-pointer"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-[#6F4E37]" /> Edit Table Details
+                      <Edit2 className="w-3.5 h-3.5 text-[#E50914]" /> Edit Table Details
                     </button>
 
                     {table.is_combinable && (
                       <button
                         onClick={() => { setShowMenu(false); onManageCombinations(table); }}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#FFF8F0] hover:text-[#6F4E37] transition-colors cursor-pointer"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#FFF5F5] hover:text-[#E50914] transition-colors cursor-pointer"
                       >
                         <Layers className="w-3.5 h-3.5 text-indigo-600" /> Configure Combinations
                       </button>
@@ -199,9 +199,9 @@ export const TableCard = ({
       </div>
 
       {/* Details Row: Interactive Seat Pill & Location Pill */}
-      <div className="grid grid-cols-2 gap-2.5 py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-[#FFF8F0] to-[#FFF5EA] border border-[#DDB892]/50 text-xs">
-        <div className="flex items-center gap-2 text-[#2C1810] font-black">
-          <div className="w-6 h-6 rounded-lg bg-[#6F4E37]/10 flex items-center justify-center text-[#6F4E37] shrink-0">
+      <div className="grid grid-cols-2 gap-2.5 py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-[#FFF5F5] to-[#FFF5F5] border border-[#EF5350]/50 text-xs">
+        <div className="flex items-center gap-2 text-[#252525] font-black">
+          <div className="w-6 h-6 rounded-lg bg-[#E50914]/10 flex items-center justify-center text-[#E50914] shrink-0">
             <Users className="w-3.5 h-3.5" />
           </div>
           <span>👥 {table.capacity} Seats</span>
@@ -222,7 +222,7 @@ export const TableCard = ({
             <Layers className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
             Can combine with:
           </span>
-          <span className="font-black text-[#2C1810] bg-white px-2 py-0.5 rounded-lg border border-indigo-200 shadow-2xs">
+          <span className="font-black text-[#252525] bg-white px-2 py-0.5 rounded-lg border border-indigo-200 shadow-2xs">
             {table.combined_with && table.combined_with.length > 0
               ? table.combined_with.map(c => c.table_number).join(', ')
               : 'Configure'}
@@ -243,9 +243,9 @@ export const TableCard = ({
           variant="outline"
           size="sm"
           onClick={() => onEdit(table)}
-          className="rounded-2xl border-border/60 text-xs font-extrabold text-[#6F4E37] hover:bg-[#FFF8F0] px-3.5 py-2 flex-1"
+          className="rounded-2xl border-border/60 text-xs font-extrabold text-[#E50914] hover:bg-[#FFF5F5] px-3.5 py-2 flex-1"
         >
-          <Edit2 className="w-3.5 h-3.5 mr-1 text-[#6F4E37]" /> Edit
+          <Edit2 className="w-3.5 h-3.5 mr-1 text-[#E50914]" /> Edit
         </Button>
 
         <Button

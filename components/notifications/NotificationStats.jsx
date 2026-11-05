@@ -11,7 +11,7 @@ export const NotificationStats = ({ stats, notifications = [] }) => {
   const whatsappBroadcasts = stats?.whatsappSent ?? stats?.whatsapp_sent ?? notifications.filter(n => n.channel === 'WHATSAPP' || n.type === 'WHATSAPP').length ?? 0;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-[#2C1810]">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-[#252525]">
       
       {/* Total Notifications */}
       <motion.div 
@@ -22,12 +22,12 @@ export const NotificationStats = ({ stats, notifications = [] }) => {
       >
         <div className="flex items-center justify-between">
           <span className="text-[10px] sm:text-xs font-bold text-text/50 uppercase tracking-wider">Total Alerts</span>
-          <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center shrink-0">
             <BellRing className="w-4 h-4" />
           </div>
         </div>
         <div className="mt-3">
-          <p className="text-xl sm:text-2xl font-extrabold text-[#2C1810]">{totalAlerts}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-[#252525]">{totalAlerts}</p>
           <span className="text-[10px] font-semibold text-text/50">All received alerts</span>
         </div>
       </motion.div>

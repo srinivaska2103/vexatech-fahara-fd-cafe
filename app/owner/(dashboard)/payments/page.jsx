@@ -131,16 +131,16 @@ export default function PaymentsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-1.5 z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>FINANCIAL & SETTLEMENT STUDIO</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#252525] tracking-tight">
             Payments & Finances
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
@@ -153,7 +153,7 @@ export default function PaymentsPage() {
           <button 
             type="button"
             onClick={handleExportCSV}
-            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>Export CSV</span>
@@ -162,7 +162,7 @@ export default function PaymentsPage() {
           <Link href="/owner/payments/account">
             <button 
               type="button"
-              className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+              className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             >
               <ShieldCheck className="w-4 h-4 text-white" />
               <span>Payment Account</span>
@@ -172,7 +172,7 @@ export default function PaymentsPage() {
           <Link href="/owner/payments/settlements">
             <button 
               type="button"
-              className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+              className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             >
               <ArrowRightLeft className="w-4 h-4" />
               <span>Settlements</span>
@@ -183,7 +183,7 @@ export default function PaymentsPage() {
 
       {/* Date Filter Toolbar */}
       <div className="bg-white p-3 px-5 rounded-3xl border border-border/60 shadow-2xs flex items-center justify-between overflow-x-auto custom-scrollbar">
-        <span className="text-xs font-extrabold text-[#6F4E37] uppercase tracking-wider shrink-0 mr-4">Filter Period:</span>
+        <span className="text-xs font-extrabold text-[#E50914] uppercase tracking-wider shrink-0 mr-4">Filter Period:</span>
         <div className="flex items-center gap-2">
           {[
             { id: 'TODAY', label: 'Today' },
@@ -198,8 +198,8 @@ export default function PaymentsPage() {
               className={cn(
                 "px-3.5 py-1.5 rounded-2xl text-xs font-extrabold transition-all shrink-0",
                 dateFilter === item.id 
-                  ? "bg-[#6F4E37] text-white shadow-2xs" 
-                  : "bg-surface/50 text-[#2C1810] hover:bg-surface"
+                  ? "bg-[#E50914] text-white shadow-2xs" 
+                  : "bg-surface/50 text-[#252525] hover:bg-surface"
               )}
             >
               {item.label}
@@ -215,7 +215,7 @@ export default function PaymentsPage() {
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1">
           <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Booking Value</span>
           <div>
-            <p className="text-xl sm:text-2xl font-black text-[#2C1810]">
+            <p className="text-xl sm:text-2xl font-black text-[#252525]">
               ₹{Number(totalBookingValue).toLocaleString()}
             </p>
             <p className="text-[10px] text-text/50 font-medium mt-0.5">Gross customer payments</p>
@@ -224,9 +224,9 @@ export default function PaymentsPage() {
 
         {/* Your Earnings */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1">
-          <span className="text-[10px] sm:text-xs font-extrabold text-[#6F4E37] uppercase tracking-wider">Your Net Earnings</span>
+          <span className="text-[10px] sm:text-xs font-extrabold text-[#E50914] uppercase tracking-wider">Your Net Earnings</span>
           <div>
-            <p className="text-xl sm:text-2xl font-black text-[#6F4E37]">
+            <p className="text-xl sm:text-2xl font-black text-[#E50914]">
               ₹{Number(yourEarnings).toLocaleString()}
             </p>
             <p className="text-[10px] text-text/50 font-medium mt-0.5">After platform adjustments</p>
@@ -279,7 +279,7 @@ export default function PaymentsPage() {
             <Input 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
+              className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#252525] placeholder:text-text/40" 
               placeholder="Search transaction ID, booking ID, diner name..." 
             />
           </div>
@@ -289,7 +289,7 @@ export default function PaymentsPage() {
             
             <button 
               onClick={() => refetch()}
-              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0"
+              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0"
               title="Refresh Payments"
             >
               <RefreshCw className="w-4 h-4" />
@@ -319,7 +319,7 @@ export default function PaymentsPage() {
         <div className="w-full overflow-hidden bg-white border border-border/60 rounded-3xl shadow-2xs">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left text-xs whitespace-nowrap">
-              <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#6F4E37] border-b border-border/50 tracking-wider">
+              <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#E50914] border-b border-border/50 tracking-wider">
                 <tr>
                   <th className="px-6 py-4">Booking ID</th>
                   <th className="px-6 py-4">Customer Diner</th>
@@ -344,16 +344,16 @@ export default function PaymentsPage() {
                       onClick={() => setSelectedPayment(p)}
                       className="hover:bg-surface/40 transition-colors cursor-pointer group"
                     >
-                      <td className="px-6 py-4 font-mono font-extrabold text-[#2C1810]">
+                      <td className="px-6 py-4 font-mono font-extrabold text-[#252525]">
                         {bookingId}
                       </td>
-                      <td className="px-6 py-4 font-extrabold text-[#2C1810]">
+                      <td className="px-6 py-4 font-extrabold text-[#252525]">
                         {customerName}
                       </td>
                       <td className="px-6 py-4 text-text/60">
                         {p.booking_date || p.bookingDate || p.date ? format(new Date(p.booking_date || p.bookingDate || p.date), 'MMM dd, yyyy') : 'N/A'}
                       </td>
-                      <td className="px-6 py-4 text-right font-black text-[#6F4E37] text-sm">
+                      <td className="px-6 py-4 text-right font-black text-[#E50914] text-sm">
                         ₹{cafeAmount.toLocaleString()}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -363,7 +363,7 @@ export default function PaymentsPage() {
                         {getStatusBadge(settlementStatus)}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] group-hover:bg-[#6F4E37] group-hover:text-white transition-all inline-flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] group-hover:bg-[#E50914] group-hover:text-white transition-all inline-flex items-center justify-center">
                           <ArrowUpRight className="w-4 h-4" />
                         </div>
                       </td>
@@ -389,7 +389,7 @@ export default function PaymentsPage() {
               exit={{ x: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 220 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg bg-white h-[90vh] sm:h-full max-h-[92vh] sm:max-h-none rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 overflow-y-auto custom-scrollbar flex flex-col justify-between text-[#2C1810]"
+              className="w-full max-w-lg bg-white h-[90vh] sm:h-full max-h-[92vh] sm:max-h-none rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 overflow-y-auto custom-scrollbar flex flex-col justify-between text-[#252525]"
             >
               <div>
                 {/* Mobile Drawer Touch Handle */}
@@ -398,7 +398,7 @@ export default function PaymentsPage() {
                 {/* Header */}
                 <div className="flex items-start justify-between pb-4 border-b border-border/50 mb-5 gap-3">
                   <div>
-                    <h3 className="text-lg font-black text-[#2C1810]">Payment Details</h3>
+                    <h3 className="text-lg font-black text-[#252525]">Payment Details</h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="text-[11px] text-text/50 font-mono truncate max-w-[180px] sm:max-w-[240px]">
                         ID: {selectedPayment.id}
@@ -409,7 +409,7 @@ export default function PaymentsPage() {
                           navigator.clipboard.writeText(selectedPayment.id);
                           toast.success('Payment ID copied!');
                         }}
-                        className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer"
+                        className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#E50914] transition-all cursor-pointer"
                         title="Copy Payment ID"
                       >
                         <Copy className="w-3 h-3" />
@@ -419,7 +419,7 @@ export default function PaymentsPage() {
 
                   <button 
                     onClick={() => setSelectedPayment(null)}
-                    className="w-9 h-9 rounded-2xl bg-surface/50 hover:bg-[#6F4E37] text-text/60 hover:text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    className="w-9 h-9 rounded-2xl bg-surface/50 hover:bg-[#E50914] text-text/60 hover:text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
                     title="Close"
                   >
                     <X className="w-5 h-5" />
@@ -428,13 +428,13 @@ export default function PaymentsPage() {
 
                 <div className="space-y-5">
                   {/* Statuses Header */}
-                  <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-gradient-to-br from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] border border-[#DDB892]/60 shadow-2xs">
+                  <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border border-[#EF5350]/60 shadow-2xs">
                     <div>
-                      <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block mb-1.5">Payment Status</span>
+                      <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block mb-1.5">Payment Status</span>
                       {getStatusBadge(selectedPayment.paymentStatus || selectedPayment.status)}
                     </div>
                     <div>
-                      <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block mb-1.5">Settlement Status</span>
+                      <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block mb-1.5">Settlement Status</span>
                       {getStatusBadge(selectedPayment.settlementStatus || selectedPayment.settlement_status || 'Pending')}
                     </div>
                   </div>
@@ -442,18 +442,18 @@ export default function PaymentsPage() {
                   {/* Financial Breakdown Section */}
                   <div className="space-y-3 bg-white p-4 sm:p-5 rounded-2xl border border-border/60 shadow-2xs">
                     <div className="flex items-center justify-between pb-2 border-b border-border/40">
-                      <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#6F4E37] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[#6F4E37]" />
+                      <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#E50914] flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#E50914]" />
                         <span>Split Settlement Breakdown</span>
                       </h4>
-                      <span className="text-[10px] font-bold text-[#6F4E37] bg-[#6F4E37]/10 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold text-[#E50914] bg-[#E50914]/10 px-2 py-0.5 rounded-full">
                         T+1 Split
                       </span>
                     </div>
                     
                     <div className="flex items-center justify-between text-xs py-1.5">
                       <span className="text-text/70">Customer Total Paid</span>
-                      <span className="font-extrabold text-[#2C1810]">
+                      <span className="font-extrabold text-[#252525]">
                         ₹{Number(selectedPayment.bookingAmount || selectedPayment.amount || 0).toLocaleString()}
                       </span>
                     </div>
@@ -465,9 +465,9 @@ export default function PaymentsPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-sm py-2.5 font-black text-[#6F4E37] border-t border-border/40 pt-2.5 mt-1 bg-[#FFF8F0]/60 p-2.5 rounded-xl">
+                    <div className="flex items-center justify-between text-sm py-2.5 font-black text-[#E50914] border-t border-border/40 pt-2.5 mt-1 bg-[#FFF5F5]/60 p-2.5 rounded-xl">
                       <span>Final Cafe Settlement Amount</span>
-                      <span className="text-base font-black text-[#6F4E37]">
+                      <span className="text-base font-black text-[#E50914]">
                         ₹{Number(selectedPayment.cafeAmount || selectedPayment.amount || 0).toLocaleString()}
                       </span>
                     </div>
@@ -480,7 +480,7 @@ export default function PaymentsPage() {
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Booking ID</span>
                       <div className="flex items-center gap-1 min-w-0">
-                        <span className="font-mono font-extrabold text-[#2C1810] truncate max-w-[170px] sm:max-w-[220px]">
+                        <span className="font-mono font-extrabold text-[#252525] truncate max-w-[170px] sm:max-w-[220px]">
                           {selectedPayment.bookingId || selectedPayment.booking_id}
                         </span>
                         <button
@@ -489,7 +489,7 @@ export default function PaymentsPage() {
                             navigator.clipboard.writeText(selectedPayment.bookingId || selectedPayment.booking_id);
                             toast.success('Booking ID copied!');
                           }}
-                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
+                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#E50914] transition-all cursor-pointer shrink-0"
                           title="Copy Booking ID"
                         >
                           <Copy className="w-3 h-3" />
@@ -500,7 +500,7 @@ export default function PaymentsPage() {
                     {/* Customer Diner */}
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Customer Diner</span>
-                      <span className="font-bold text-[#2C1810] truncate">
+                      <span className="font-bold text-[#252525] truncate">
                         {selectedPayment.customerName || selectedPayment.customer_name || 'Guest'}
                       </span>
                     </div>
@@ -508,7 +508,7 @@ export default function PaymentsPage() {
                     {/* Payment Method */}
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Payment Method</span>
-                      <span className="font-bold text-[#2C1810] truncate">
+                      <span className="font-bold text-[#252525] truncate">
                         {selectedPayment.paymentMethod || selectedPayment.method || 'UPI Gateway'}
                       </span>
                     </div>
@@ -517,7 +517,7 @@ export default function PaymentsPage() {
                     <div className="flex items-center justify-between py-1.5 border-b border-border/30 gap-2">
                       <span className="text-text/60 shrink-0">Reference ID</span>
                       <div className="flex items-center gap-1 min-w-0">
-                        <span className="font-mono text-xs text-[#6F4E37] font-bold truncate max-w-[160px] sm:max-w-[200px]">
+                        <span className="font-mono text-xs text-[#E50914] font-bold truncate max-w-[160px] sm:max-w-[200px]">
                           {selectedPayment.razorpayRef || selectedPayment.cashfreeRef || selectedPayment.cashfree_reference || selectedPayment.razorpay_reference || 'SPLIT_SETTLED'}
                         </span>
                         <button
@@ -526,7 +526,7 @@ export default function PaymentsPage() {
                             navigator.clipboard.writeText(selectedPayment.razorpayRef || selectedPayment.cashfreeRef || selectedPayment.cashfree_reference || selectedPayment.razorpay_reference || 'SPLIT_SETTLED');
                             toast.success('Reference ID copied!');
                           }}
-                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
+                          className="p-1 rounded-lg hover:bg-white text-text/50 hover:text-[#E50914] transition-all cursor-pointer shrink-0"
                           title="Copy Reference ID"
                         >
                           <Copy className="w-3 h-3" />
@@ -537,7 +537,7 @@ export default function PaymentsPage() {
                     {/* Payment Date */}
                     <div className="flex items-center justify-between py-1.5 gap-2">
                       <span className="text-text/60 shrink-0">Payment Date</span>
-                      <span className="font-medium text-[#2C1810] text-right truncate">
+                      <span className="font-medium text-[#252525] text-right truncate">
                         {selectedPayment.paymentDate || selectedPayment.date ? format(new Date(selectedPayment.paymentDate || selectedPayment.date), 'MMMM dd, yyyy · hh:mm a') : 'N/A'}
                       </span>
                     </div>
@@ -549,7 +549,7 @@ export default function PaymentsPage() {
               {/* Drawer Footer Action */}
               <div className="pt-5 border-t border-border/50 mt-6 shrink-0">
                 <Button 
-                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:opacity-95 text-white font-extrabold text-xs shadow-md active:scale-[0.98] transition-all cursor-pointer" 
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:opacity-95 text-white font-extrabold text-xs shadow-md active:scale-[0.98] transition-all cursor-pointer" 
                   onClick={() => setSelectedPayment(null)}
                 >
                   Close Payment Panel

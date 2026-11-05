@@ -18,7 +18,7 @@ export const InvoicePreview = ({ invoice }) => {
     <div className="bg-white rounded-3xl border border-border shadow-sm overflow-hidden h-full flex flex-col">
       <div className="p-8 bg-surface/30 border-b border-border/50 flex justify-between items-start">
          <div>
-           <div className="text-2xl font-bold text-primary mb-1">{invoice.cafe_name || 'Fahara Cafe'}</div>
+           <div className="text-2xl font-bold text-primary mb-1">{invoice.cafe_name || 'Grab2GO Cafe'}</div>
            <div className="text-sm text-text/60 max-w-[200px]">{invoice.cafe_address || '123 Coffee Street, Tech Hub, City, 10001'}</div>
          </div>
          <div className="text-right">

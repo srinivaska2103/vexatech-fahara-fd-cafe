@@ -77,7 +77,7 @@ export const PaymentDetails = ({ payment }) => {
                <Building2 className="w-4 h-4 text-text/60" />
              </div>
              <div>
-               <div className="text-sm font-medium text-text">{payment.cafe_name || 'Fahara Cafe'}</div>
+               <div className="text-sm font-medium text-text">{payment.cafe_name || 'Grab2GO Cafe'}</div>
                <div className="text-xs text-text/50">
                  {payment.booking_id ? `Booking #${payment.booking_id.substring(0,8)}` : 'Direct Sale'}
                </div>

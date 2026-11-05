@@ -5,7 +5,7 @@ import { AuthLogo } from '@/components/auth/AuthLogo';
 import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
 
 export const metadata = {
-  title: 'Reset Password - Fahara Cafe',
+  title: 'Reset Password - Grab2GO Cafe',
 };
 
 export default async function ResetPasswordPage({ searchParams }) {

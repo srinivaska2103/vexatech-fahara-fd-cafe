@@ -36,17 +36,25 @@ export const useSubscriptionStore = create((set, get) => ({
   },
 
   fetchSubscription: async (force = false) => {
-    // Check if auth user has changed
+    // Only attempt fetch if user is authenticated
     let authUserId = null;
+    let hasToken = false;
     try {
       if (typeof window !== 'undefined') {
         const storedAuth = localStorage.getItem('fahara-auth-storage');
         if (storedAuth) {
           const parsed = JSON.parse(storedAuth);
           authUserId = parsed?.state?.user?.id || null;
+          hasToken = Boolean(parsed?.state?.accessToken);
         }
       }
     } catch (e) {}
+
+    // If unauthenticated or no access token exists, silently skip API call
+    if (!hasToken) {
+      set({ isLoading: false, status: 'INACTIVE', isActive: false, hasFetched: true, error: null });
+      return { isActive: false, status: 'INACTIVE' };
+    }
 
     const state = get();
 
@@ -78,7 +86,10 @@ export const useSubscriptionStore = create((set, get) => ({
       });
       return data;
     } catch (err) {
-      console.error('Fetch Subscription Error:', err);
+      // Don't clutter console on standard unauthenticated/token refresh states
+      if (err.response?.status !== 401) {
+        console.warn('Fetch Subscription Note:', err.message || err);
+      }
       const isServerError = err.response?.status >= 500 || !err.response;
       const errorMsg = err.response?.data?.message || err.message || 'Failed to verify subscription status';
 

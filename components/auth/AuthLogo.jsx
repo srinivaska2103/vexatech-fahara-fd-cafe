@@ -10,22 +10,19 @@ export const AuthLogo = () => {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className="flex justify-center mb-4"
     >
-      <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-2xl border border-[#DDB892]/50 shadow-2xs">
-        <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FAF0E6] border border-[#DDB892]/60 p-0.5 shrink-0">
+      <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-2xl border border-[#FEE2E2] shadow-xs">
+        <div className="w-10 h-10 rounded-xl overflow-hidden bg-white border border-[#FEE2E2] p-1 shrink-0 flex items-center justify-center">
           <img 
-            src="/logo.jpeg" 
-            alt="Fahara Logo" 
-            className="w-full h-full object-contain rounded-lg" 
+            src="/grab-it-logo.png" 
+            alt="Grab2GO Logo" 
+            className="w-full h-full object-contain" 
           />
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-base font-black text-[#2C1810] tracking-wider leading-none">FAHARA</span>
-          <span className="text-[10px] font-bold text-[#6F4E37]/75 leading-none mt-1">Cafe & Event Booking</span>
+          <span className="text-base font-black text-[#252525] tracking-wider leading-none">Grab2GO</span>
+          <span className="text-[10px] font-bold text-[#E50914] leading-none mt-1">Cafe & Event Booking</span>
         </div>
       </div>
     </motion.div>
   );
 };
-
-
-

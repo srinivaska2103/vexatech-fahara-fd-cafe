@@ -250,32 +250,32 @@ export default function AvailabilityBlockModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs select-none">
       <div 
-        className="relative w-full max-w-xl bg-[#FFFDFB] rounded-3xl border border-[#DDB892]/80 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] flex flex-col text-[#2C1810]"
+        className="relative w-full max-w-xl bg-[#FFFDFB] rounded-3xl border border-[#EF5350]/80 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] flex flex-col text-[#252525]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with Fahara Warm Gradients */}
-        <div className="px-5 sm:px-6 py-4 bg-gradient-to-r from-[#FFF8F0] via-[#FFF3E3] to-[#FFF5EA] border-b border-[#E8DED5] flex items-center justify-between shrink-0">
+        {/* Header with Grab2GO Warm Gradients */}
+        <div className="px-5 sm:px-6 py-4 bg-gradient-to-r from-[#FFF5F5] via-[#FFF3E3] to-[#FFF5F5] border-b border-[#FEE2E2] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#4A2C11] text-white flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E50914] to-[#B71C1C] text-white flex items-center justify-center shadow-xs">
               <CalendarIcon className="w-5 h-5 text-amber-200" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-black text-[#2C1810] tracking-tight">
+                <h2 className="text-base sm:text-lg font-black text-[#252525] tracking-tight">
                   {isEditing ? 'Edit Availability Block' : 'Add Availability Block'}
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#6F4E37]/10 text-[#6F4E37]">
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#E50914]/10 text-[#E50914]">
                   {isEditing ? 'Update Slot' : 'Instant Block'}
                 </span>
               </div>
-              <p className="text-[11px] text-[#A67B5B] font-semibold">
+              <p className="text-[11px] text-[#B71C1C] font-semibold">
                 Restrict table reservations & bookings for maintenance, events, or holidays
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-2xl bg-white border border-[#E8DED5] text-stone-400 hover:text-[#2C1810] hover:bg-[#FFF8F0] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+            className="w-9 h-9 rounded-2xl bg-white border border-[#FEE2E2] text-stone-400 hover:text-[#252525] hover:bg-[#FFF5F5] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
             title="Close modal"
           >
             <X className="w-4 h-4" />
@@ -323,14 +323,14 @@ export default function AvailabilityBlockModal({
           {/* Cafe Selection (if user owns multiple cafes) */}
           {cafes.length > 1 && (
             <div>
-              <label className="block text-[11px] font-black text-[#2C1810] mb-1.5 uppercase tracking-wider">
+              <label className="block text-[11px] font-black text-[#252525] mb-1.5 uppercase tracking-wider">
                 Cafe Branch <span className="text-rose-500">*</span>
               </label>
               <select
                 value={cafeId}
                 onChange={(e) => setCafeId(e.target.value)}
                 disabled={isEditing}
-                className="w-full px-3.5 py-2.5 bg-white border border-[#E8DED5] rounded-xl text-xs sm:text-sm font-bold text-[#2C1810] focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#DDB892]/30 transition-all cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs sm:text-sm font-bold text-[#252525] focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#EF5350]/30 transition-all cursor-pointer"
               >
                 {cafes.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -344,11 +344,11 @@ export default function AvailabilityBlockModal({
           {/* Interactive Block Reason Cards */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[11px] font-black text-[#2C1810] uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-[11px] font-black text-[#252525] uppercase tracking-wider flex items-center gap-1.5">
                 <span>Select Closure Reason</span>
                 <span className="text-rose-500">*</span>
               </label>
-              <span className="text-[10px] font-extrabold text-[#6F4E37] bg-[#FFF8F0] px-2 py-0.5 rounded-full border border-[#DDB892]/50">
+              <span className="text-[10px] font-extrabold text-[#E50914] bg-[#FFF5F5] px-2 py-0.5 rounded-full border border-[#EF5350]/50">
                 {selectedReasonObj.label}
               </span>
             </div>
@@ -370,8 +370,8 @@ export default function AvailabilityBlockModal({
                     }}
                     className={`relative p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between h-[82px] group ${
                       isSelected 
-                        ? 'border-[#6F4E37] bg-[#FFF8F0] shadow-sm ring-2 ring-[#6F4E37]/25 scale-[1.02]' 
-                        : 'bg-white border-[#E8DED5] hover:border-[#DDB892] hover:bg-stone-50/60'
+                        ? 'border-[#E50914] bg-[#FFF5F5] shadow-sm ring-2 ring-[#E50914]/25 scale-[1.02]' 
+                        : 'bg-white border-[#FEE2E2] hover:border-[#EF5350] hover:bg-stone-50/60'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
@@ -382,11 +382,11 @@ export default function AvailabilityBlockModal({
                         <IconComponent className="w-3.5 h-3.5" />
                       </div>
                       {isSelected && (
-                        <CheckCircle2 className="w-4 h-4 text-[#6F4E37]" />
+                        <CheckCircle2 className="w-4 h-4 text-[#E50914]" />
                       )}
                     </div>
                     <div>
-                      <p className={`text-xs font-black truncate ${isSelected ? 'text-[#6F4E37]' : 'text-[#2C1810]'}`}>
+                      <p className={`text-xs font-black truncate ${isSelected ? 'text-[#E50914]' : 'text-[#252525]'}`}>
                         {r.label}
                       </p>
                       <p className="text-[9.5px] text-stone-500 line-clamp-1 leading-tight">
@@ -401,7 +401,7 @@ export default function AvailabilityBlockModal({
 
           {/* Block Title + Quick Suggestions */}
           <div>
-            <label className="block text-[11px] font-black text-[#2C1810] mb-1.5 uppercase tracking-wider">
+            <label className="block text-[11px] font-black text-[#252525] mb-1.5 uppercase tracking-wider">
               Block Title <span className="text-rose-500">*</span>
             </label>
             <input
@@ -410,21 +410,21 @@ export default function AvailabilityBlockModal({
               placeholder="e.g. Diwali Public Holiday, Kitchen Renovation..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border border-[#E8DED5] rounded-xl text-xs sm:text-sm font-bold text-[#2C1810] placeholder:text-stone-400 focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#DDB892]/30 transition-all shadow-2xs"
+              className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs sm:text-sm font-bold text-[#252525] placeholder:text-stone-400 focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#EF5350]/30 transition-all shadow-2xs"
             />
             
             {/* Quick Interactive Title Suggestion Chips */}
             {selectedReasonObj.sampleTitles && (
               <div className="flex flex-wrap items-center gap-1.5 mt-2">
                 <span className="text-[10px] font-black text-stone-400 uppercase tracking-wider flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-[#A67B5B]" /> Quick:
+                  <Zap className="w-3 h-3 text-[#B71C1C]" /> Quick:
                 </span>
                 {selectedReasonObj.sampleTitles.map((st) => (
                   <button
                     key={st}
                     type="button"
                     onClick={() => setTitle(st)}
-                    className="text-[10.5px] font-bold px-2 py-0.5 rounded-lg bg-stone-100 hover:bg-[#FFF8F0] hover:text-[#6F4E37] text-stone-600 transition-all cursor-pointer border border-transparent hover:border-[#DDB892]/60 active:scale-95"
+                    className="text-[10.5px] font-bold px-2 py-0.5 rounded-lg bg-stone-100 hover:bg-[#FFF5F5] hover:text-[#E50914] text-stone-600 transition-all cursor-pointer border border-transparent hover:border-[#EF5350]/60 active:scale-95"
                   >
                     + {st}
                   </button>
@@ -438,18 +438,18 @@ export default function AvailabilityBlockModal({
             onClick={() => handleAllDayToggle(!isAllDay)}
             className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
               isAllDay 
-                ? 'bg-[#FFF8F0] border-[#6F4E37] shadow-xs' 
-                : 'bg-white border-[#E8DED5] hover:border-[#DDB892]'
+                ? 'bg-[#FFF5F5] border-[#E50914] shadow-xs' 
+                : 'bg-white border-[#FEE2E2] hover:border-[#EF5350]'
             }`}
           >
             <div className="flex items-center gap-3">
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                isAllDay ? 'bg-[#6F4E37] text-white' : 'bg-stone-100 text-stone-500'
+                isAllDay ? 'bg-[#E50914] text-white' : 'bg-stone-100 text-stone-500'
               }`}>
                 <Clock className="w-4 h-4" />
               </div>
               <div>
-                <span className="text-xs font-black text-[#2C1810] block">All-Day Block</span>
+                <span className="text-xs font-black text-[#252525] block">All-Day Block</span>
                 <span className="text-[10.5px] text-stone-500">Close reservations for the entire 24-hour business day</span>
               </div>
             </div>
@@ -457,7 +457,7 @@ export default function AvailabilityBlockModal({
             {/* Custom Interactive Toggle Pill */}
             <div 
               className={`w-12 h-6 rounded-full transition-colors relative flex items-center p-0.5 ${
-                isAllDay ? 'bg-[#6F4E37]' : 'bg-stone-300'
+                isAllDay ? 'bg-[#E50914]' : 'bg-stone-300'
               }`}
             >
               <div 
@@ -479,8 +479,8 @@ export default function AvailabilityBlockModal({
                 onClick={() => applyQuickPreset('2h')}
                 className={`text-[10.5px] font-black px-2.5 py-1 rounded-xl transition-all cursor-pointer ${
                   activeDurationPreset === '2h'
-                    ? 'bg-[#6F4E37] text-white shadow-2xs'
-                    : 'bg-stone-100 hover:bg-[#FFF8F0] text-stone-700 border border-stone-200'
+                    ? 'bg-[#E50914] text-white shadow-2xs'
+                    : 'bg-stone-100 hover:bg-[#FFF5F5] text-stone-700 border border-stone-200'
                 }`}
               >
                 2 Hours
@@ -490,8 +490,8 @@ export default function AvailabilityBlockModal({
                 onClick={() => applyQuickPreset('4h')}
                 className={`text-[10.5px] font-black px-2.5 py-1 rounded-xl transition-all cursor-pointer ${
                   activeDurationPreset === '4h'
-                    ? 'bg-[#6F4E37] text-white shadow-2xs'
-                    : 'bg-stone-100 hover:bg-[#FFF8F0] text-stone-700 border border-stone-200'
+                    ? 'bg-[#E50914] text-white shadow-2xs'
+                    : 'bg-stone-100 hover:bg-[#FFF5F5] text-stone-700 border border-stone-200'
                 }`}
               >
                 4 Hours
@@ -501,8 +501,8 @@ export default function AvailabilityBlockModal({
                 onClick={() => applyQuickPreset('evening')}
                 className={`text-[10.5px] font-black px-2.5 py-1 rounded-xl transition-all cursor-pointer ${
                   activeDurationPreset === 'evening'
-                    ? 'bg-[#6F4E37] text-white shadow-2xs'
-                    : 'bg-stone-100 hover:bg-[#FFF8F0] text-stone-700 border border-stone-200'
+                    ? 'bg-[#E50914] text-white shadow-2xs'
+                    : 'bg-stone-100 hover:bg-[#FFF5F5] text-stone-700 border border-stone-200'
                 }`}
               >
                 Evening (6 PM - 11 PM)
@@ -553,8 +553,8 @@ export default function AvailabilityBlockModal({
 
           {/* Repeat Option */}
           <div>
-            <label className="block text-[11px] font-black text-[#2C1810] mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-              <Repeat className="w-3.5 h-3.5 text-[#6F4E37]" />
+            <label className="block text-[11px] font-black text-[#252525] mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+              <Repeat className="w-3.5 h-3.5 text-[#E50914]" />
               <span>Repeat Recurrence</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -567,11 +567,11 @@ export default function AvailabilityBlockModal({
                     onClick={() => setRecurrence(rc.value)}
                     className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                       isSelected 
-                        ? 'bg-[#FFF8F0] border-[#6F4E37] shadow-xs ring-1 ring-[#6F4E37]/30' 
-                        : 'bg-white border-[#E8DED5] hover:border-[#DDB892] text-stone-600'
+                        ? 'bg-[#FFF5F5] border-[#E50914] shadow-xs ring-1 ring-[#E50914]/30' 
+                        : 'bg-white border-[#FEE2E2] hover:border-[#EF5350] text-stone-600'
                     }`}
                   >
-                    <span className={`block text-xs font-black ${isSelected ? 'text-[#6F4E37]' : 'text-[#2C1810]'}`}>
+                    <span className={`block text-xs font-black ${isSelected ? 'text-[#E50914]' : 'text-[#252525]'}`}>
                       {rc.label}
                     </span>
                     <span className="text-[9px] text-stone-400 block mt-0.5 line-clamp-1">
@@ -585,7 +585,7 @@ export default function AvailabilityBlockModal({
 
           {/* Internal Notes */}
           <div>
-            <label className="block text-[11px] font-black text-[#2C1810] mb-1.5 uppercase tracking-wider">
+            <label className="block text-[11px] font-black text-[#252525] mb-1.5 uppercase tracking-wider">
               Internal Notes (Optional)
             </label>
             <textarea
@@ -593,16 +593,16 @@ export default function AvailabilityBlockModal({
               placeholder="e.g. Booking reserved for Sharma family party. Deep cleaning contractor coming at 2 PM."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2 bg-white border border-[#E8DED5] rounded-xl text-xs font-medium text-[#2C1810] placeholder:text-stone-400 focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#DDB892]/30 resize-none shadow-2xs"
+              className="w-full px-3.5 py-2 bg-white border border-[#FEE2E2] rounded-xl text-xs font-medium text-[#252525] placeholder:text-stone-400 focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#EF5350]/30 resize-none shadow-2xs"
             />
             <p className="text-[10px] text-stone-500 mt-1 flex items-center gap-1">
-              <Info className="w-3 h-3 text-[#A67B5B]" />
+              <Info className="w-3 h-3 text-[#B71C1C]" />
               Internal notes are only visible to your cafe staff and will not be seen by customers.
             </p>
           </div>
 
           {/* Actions & Delete Confirmation */}
-          <div className="pt-3 border-t border-[#E8DED5] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="pt-3 border-t border-[#FEE2E2] flex flex-col sm:flex-row items-center justify-between gap-3">
             {isEditing ? (
               confirmDelete ? (
                 <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -638,14 +638,14 @@ export default function AvailabilityBlockModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 bg-white border border-[#E8DED5] text-[#2C1810] hover:bg-[#FFF8F0] rounded-xl text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-none shadow-2xs"
+                className="px-4 py-2.5 bg-white border border-[#FEE2E2] text-[#252525] hover:bg-[#FFF5F5] rounded-xl text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-none shadow-2xs"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#6F4E37] to-[#4A2C11] hover:brightness-105 active:scale-95 text-white rounded-xl text-xs font-black shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-none disabled:opacity-50"
+                className="px-6 py-2.5 bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:brightness-105 active:scale-95 text-white rounded-xl text-xs font-black shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-none disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <span>Saving...</span>

@@ -23,23 +23,23 @@ function CreateEventContent() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Page Header */}
-      <div className="flex items-center gap-3.5 pb-4 border-b border-[#E8DED5]">
+      <div className="flex items-center gap-3.5 pb-4 border-b border-[#FEE2E2]">
         <button 
           onClick={() => router.push('/owner/events')}
-          className="w-10 h-10 rounded-xl bg-white border border-[#E8DED5] hover:bg-[#FFF8F0] text-[#6F4E37] flex items-center justify-center shadow-2xs transition-all shrink-0"
+          className="w-10 h-10 rounded-xl bg-white border border-[#FEE2E2] hover:bg-[#FFF5F5] text-[#E50914] flex items-center justify-center shadow-2xs transition-all shrink-0"
           title="Back to Event Packages"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-[#2C1810] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-[#252525] tracking-tight">
             Create Custom Event Package
           </h1>
-          <p className="text-xs sm:text-sm text-[#2C1810]/70 mt-0.5">
+          <p className="text-xs sm:text-sm text-[#252525]/70 mt-0.5">
             Build a custom package with flexible pricing, guest limits, duration, and inclusions.
           </p>
         </div>
@@ -59,7 +59,7 @@ function CreateEventContent() {
 
 export default function CreateEventPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs font-bold text-[#2C1810]/50">Loading Package Builder...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs font-bold text-[#252525]/50">Loading Package Builder...</div>}>
       <CreateEventContent />
     </Suspense>
   );

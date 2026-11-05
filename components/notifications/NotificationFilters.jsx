@@ -11,22 +11,36 @@ export const NotificationFilters = ({ filters, setFilters }) => {
 
   const priorityOptions = [
     { label: 'All Priorities', value: '' },
+    { label: 'Critical Priority', value: 'CRITICAL' },
     { label: 'High Priority', value: 'HIGH' },
     { label: 'Medium Priority', value: 'MEDIUM' },
     { label: 'Low Priority', value: 'LOW' },
   ];
 
-  const typeOptions = [
-    { label: 'All Types', value: '' },
-    { label: 'Booking', value: 'BOOKING' },
-    { label: 'Events', value: 'EVENT' },
-    { label: 'Payments', value: 'PAYMENT' },
-    { label: 'Reviews', value: 'REVIEW' },
-    { label: 'System', value: 'SYSTEM' },
+  const categoryOptions = [
+    { label: 'All Categories', value: '' },
+    { label: '🍔 Food Orders', value: 'FOOD_ORDER' },
+    { label: '📅 Bookings & Tables', value: 'BOOKING' },
+    { label: '💳 Payments & Finance', value: 'PAYMENT' },
+    { label: '⭐ Reviews & Ratings', value: 'REVIEW' },
+    { label: '👥 Customers', value: 'CUSTOMER' },
+    { label: '🛵 Delivery & Operations', value: 'DELIVERY' },
+    { label: '👑 Subscription', value: 'SUBSCRIPTION' },
+    { label: '🔔 System Alerts', value: 'SYSTEM' },
   ];
 
   return (
     <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
+      {/* Category Filter */}
+      <CustomSelect
+        options={categoryOptions}
+        value={filters.category || filters.type || ''}
+        onChange={(val) => setFilters({ ...filters, category: val, type: val })}
+        placeholder="All Categories"
+        icon={Filter}
+        className="w-38 sm:w-44 shrink-0 text-xs"
+      />
+
       {/* Read Status Filter */}
       <CustomSelect
         options={statusOptions}
@@ -34,7 +48,7 @@ export const NotificationFilters = ({ filters, setFilters }) => {
         onChange={(val) => setFilters({ ...filters, status: val })}
         placeholder="All Statuses"
         icon={Filter}
-        className="w-32 sm:w-36 shrink-0 text-xs"
+        className="w-32 sm:w-34 shrink-0 text-xs"
       />
 
       {/* Priority Filter */}
@@ -44,17 +58,7 @@ export const NotificationFilters = ({ filters, setFilters }) => {
         onChange={(val) => setFilters({ ...filters, priority: val })}
         placeholder="All Priorities"
         icon={Filter}
-        className="w-34 sm:w-38 shrink-0 text-xs"
-      />
-
-      {/* Type Filter */}
-      <CustomSelect
-        options={typeOptions}
-        value={filters.type || ''}
-        onChange={(val) => setFilters({ ...filters, type: val })}
-        placeholder="All Types"
-        icon={Filter}
-        className="w-32 sm:w-36 shrink-0 text-xs"
+        className="w-34 sm:w-36 shrink-0 text-xs"
       />
     </div>
   );

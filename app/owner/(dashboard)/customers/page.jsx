@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { useCustomers } from '@/hooks/customer';
+import { useCustomers, useCustomerAnalytics } from '@/hooks/customer';
 import { CustomerTable } from '@/components/customers/CustomerTable';
 import { CustomerCard } from '@/components/customers/CustomerCard';
 import { EmptyCustomerState } from '@/components/customers/EmptyCustomerState';
@@ -17,7 +17,10 @@ import {
   IndianRupee, 
   UserCheck, 
   Download, 
-  RefreshCw 
+  RefreshCw,
+  ShoppingBag,
+  Utensils,
+  Filter
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,300 +32,306 @@ export default function CustomersPage() {
   const router = useRouter();
   const [viewMode, setViewMode] = useState('list');
   const [search, setSearch] = useState('');
-  const [segmentFilter, setSegmentFilter] = useState('ALL');
+  const [sourceFilter, setSourceFilter] = useState('ALL'); // ALL | FOOD_ORDER | TABLE_BOOKING | MULTIPLE | REPEAT | VIP
+  const [spendingFilter, setSpendingFilter] = useState('ALL'); // ALL | HIGH | MEDIUM | LOW
 
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
   const { data: cafesData } = useCafes();
   const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
 
-  const isRestaurant = 
-    userRole === 'RESTAURANT_OWNER' || 
-    user?.role === 'RESTAURANT_OWNER' || 
-    String(userRole || '').toUpperCase().includes('RESTAURANT') ||
-    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
-    cafeList.some(c => (c.category || '').toLowerCase().includes('restaurant'));
-
-  const isWalkingCafe = 
-    userRole === 'WALKING_CAFE_OWNER' || 
-    user?.role === 'WALKING_CAFE_OWNER' || 
-    String(userRole || '').toUpperCase().includes('WALKING') ||
-    String(user?.role || '').toUpperCase().includes('WALKING') ||
-    cafeList.some(c => c.is_walking_cafe === true || (c.category || '').toLowerCase().includes('walking'));
-
-  const hideMonetaryStats = isRestaurant || isWalkingCafe;
+  const isRestaurant = true; // Grab2GO is unified for all food & table partners
 
   const { data: customerRes, isLoading, isError, error, refetch } = useCustomers({ search });
+  const { data: analyticsRes } = useCustomerAnalytics();
   const rawCustomers = Array.isArray(customerRes?.data) ? customerRes.data : (Array.isArray(customerRes) ? customerRes : []);
+  const analyticsData = analyticsRes?.data || null;
 
-  // Filter customers based on segment & search
+  // Filter customers based on source, spending & search
   const customers = rawCustomers.filter(c => {
     const searchLower = search.toLowerCase();
     const matchesSearch = !search || 
       (c.name || '').toLowerCase().includes(searchLower) ||
       (c.email || '').toLowerCase().includes(searchLower) ||
-      (c.phone || '').toLowerCase().includes(searchLower);
+      (c.phone || '').toLowerCase().includes(searchLower) ||
+      (c.id || '').toLowerCase().includes(searchLower);
 
-    let matchesSegment = true;
-    if (segmentFilter === 'REPEAT') {
-      matchesSegment = (c.total_bookings || 0) > 1;
-    } else if (segmentFilter === 'VIP') {
-      matchesSegment = Boolean(c.is_vip);
-    } else if (segmentFilter === 'BLOCKED') {
-      matchesSegment = c.status === 'BLOCKED';
+    let matchesSource = true;
+    if (sourceFilter === 'FOOD_ORDER') {
+      matchesSource = c.customer_source === 'FOOD_ORDER' || (c.total_food_orders || 0) > 0;
+    } else if (sourceFilter === 'TABLE_BOOKING') {
+      matchesSource = c.customer_source === 'TABLE_BOOKING' || (c.total_bookings || 0) > 0;
+    } else if (sourceFilter === 'MULTIPLE') {
+      matchesSource = c.customer_source === 'MULTIPLE' || ((c.total_food_orders || 0) > 0 && (c.total_bookings || 0) > 0);
+    } else if (sourceFilter === 'REPEAT') {
+      matchesSource = ((c.total_bookings || 0) + (c.total_food_orders || 0)) > 1;
+    } else if (sourceFilter === 'VIP') {
+      matchesSource = Boolean(c.is_vip);
     }
 
-    return matchesSearch && matchesSegment;
+    let matchesSpending = true;
+    const spend = Number(c.total_spend || 0);
+    if (spendingFilter === 'HIGH') {
+      matchesSpending = spend >= 2000;
+    } else if (spendingFilter === 'MEDIUM') {
+      matchesSpending = spend >= 500 && spend < 2000;
+    } else if (spendingFilter === 'LOW') {
+      matchesSpending = spend > 0 && spend < 500;
+    }
+
+    return matchesSearch && matchesSource && matchesSpending;
   });
 
-  // Dynamic stats
+  // Dynamic KPI counts
   const totalCount = rawCustomers.length;
-  const repeatCount = rawCustomers.filter(c => (c.total_bookings || 0) > 1).length;
-  const totalSpend = rawCustomers.reduce((sum, c) => sum + (Number(c.total_spend) || 0), 0);
-  const avgSpend = totalCount > 0 ? Math.round(totalSpend / totalCount) : 0;
+  const foodCustomersCount = analyticsData?.foodCustomers ?? rawCustomers.filter(c => (c.total_food_orders || 0) > 0).length;
+  const bookingCustomersCount = analyticsData?.bookingCustomers ?? rawCustomers.filter(c => (c.total_bookings || 0) > 0).length;
+  const repeatCount = analyticsData?.returningCount ?? rawCustomers.filter(c => ((c.total_bookings || 0) + (c.total_food_orders || 0)) > 1).length;
+  const totalSpend = analyticsData?.totalSpend ?? rawCustomers.reduce((sum, c) => sum + (Number(c.total_spend) || 0), 0);
 
   const handleExportCSV = () => {
-    let csv = 'Customer Name,Email,Phone,Total Bookings,Total Spend,Joined Date,Status\n';
+    let csv = 'Customer Name,Email,Phone,Customer Source,Food Orders,Bookings,Food Spend,Booking Spend,Total Spend,Last Activity\n';
     
     if (customers && customers.length > 0) {
       customers.forEach(c => {
         const name = c.name || 'Guest Diner';
         const email = c.email || 'N/A';
         const phone = c.phone || 'N/A';
+        const source = c.customer_source || 'OTHER';
+        const foodOrders = c.total_food_orders || 0;
         const bookings = c.total_bookings || 0;
-        const spend = c.total_spend || 0;
-        const joined = c.created_at ? new Date(c.created_at).toLocaleDateString() : 'N/A';
-        const status = c.status || 'ACTIVE';
+        const foodSpend = c.food_spend || 0;
+        const bookingSpend = c.booking_spend || 0;
+        const totalSpend = c.total_spend || 0;
+        const lastAct = c.last_interaction ? new Date(c.last_interaction).toLocaleDateString() : 'N/A';
         
-        csv += `"${name}","${email}","${phone}","${bookings}","${spend}","${joined}","${status}"\n`;
+        csv += `"${name}","${email}","${phone}","${source}","${foodOrders}","${bookings}","${foodSpend}","${bookingSpend}","${totalSpend}","${lastAct}"\n`;
       });
     }
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = window.URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `fahara_customers_export_${new Date().toISOString().substring(0, 10)}.csv`);
+    link.setAttribute('download', `Grab2GO_Customers_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
-    link.parentNode.removeChild(link);
+    document.body.removeChild(link);
   };
 
-  const segments = [
-    { id: 'ALL', label: 'All Diners', count: totalCount },
-    { id: 'REPEAT', label: 'Repeat Regulars', count: repeatCount },
-    { id: 'VIP', label: 'VIP Diners', count: rawCustomers.filter(c => c.is_vip).length },
-    { id: 'BLOCKED', label: 'Blocked', count: rawCustomers.filter(c => c.status === 'BLOCKED').length },
-  ];
-
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 font-sans">
       
-      {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-        <div className="space-y-1.5 z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>CUSTOMER RELATIONSHIP STUDIO</span>
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
-            Customer Management
+      {/* ── TOP HEADER ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight flex items-center gap-2">
+            <span>Customer Management</span>
+            <span className="text-xs font-black bg-[#FFF5F5] text-[#E50914] border border-[#FEE2E2] px-2.5 py-0.5 rounded-full">
+              {totalCount} Total
+            </span>
           </h1>
-          <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Track guest reservation histories, diner profiles, lifetime value (LTV), and repeat loyalty engagements.
+          <p className="text-xs sm:text-sm text-stone-500 font-medium mt-1">
+            Unified directory of diners ordering food and booking tables at your restaurant
           </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2.5 z-10 shrink-0">
-          <button 
-            type="button"
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <Button
+            variant="outline"
             onClick={handleExportCSV}
-            className="py-2.5 px-4 rounded-xl bg-[#FFF8F0] hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892]/60 text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="rounded-2xl border-[#FEE2E2] hover:bg-[#FFF5F5] text-[#252525] hover:text-[#E50914] text-xs font-black gap-2 shadow-2xs"
           >
-            <Download className="w-4 h-4" />
-            <span>Export CSV</span>
-          </button>
+            <Download className="w-3.5 h-3.5" /> Export CSV
+          </Button>
 
-          <Button 
-            onClick={() => router.push('/owner/customers/analytics')}
-            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all"
+          <Button
+            variant="outline"
+            onClick={() => refetch()}
+            className="rounded-2xl border-[#FEE2E2] hover:bg-[#FFF5F5] text-[#E50914] text-xs font-black gap-1.5 shadow-2xs"
           >
-            <BarChart3 className="w-4 h-4 text-white" />
-            <span>Customer Analytics</span>
+            <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </Button>
         </div>
       </div>
 
-      {/* Dynamic Customer Metric Cards */}
-      <div className={`grid grid-cols-2 ${hideMonetaryStats ? 'lg:grid-cols-2 max-w-2xl' : 'lg:grid-cols-4'} gap-3.5 sm:gap-4`}>
+      {/* ── UNIFIED CUSTOMER KPI CARDS (Matches Requirements) ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
         
-        {/* Total Diners */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Registered Diners</span>
-            <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
+        {/* 1. Total Customers */}
+        <div className="p-4 sm:p-5 rounded-3xl bg-white border border-[#FEE2E2] shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-stone-400 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Total Customers</span>
+            <div className="w-8 h-8 rounded-xl bg-stone-100 flex items-center justify-center text-[#252525]">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{totalCount}</p>
-          <p className="text-[10px] text-text/50 font-medium">All recorded customer accounts</p>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              {totalCount}
+            </div>
+            <p className="text-[10px] text-stone-400 font-medium mt-0.5">Across all food &amp; bookings</p>
+          </div>
         </div>
 
-        {/* Repeat Regulars */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold text-emerald-700 uppercase tracking-wider">Repeat Visitors</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-bold">
+        {/* 2. Food Customers */}
+        <div className="p-4 sm:p-5 rounded-3xl bg-[#FFF5F5] border border-[#FEE2E2] shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#E50914] mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#E50914]">Food Customers</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-[#FEE2E2] flex items-center justify-center text-[#E50914]">
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#E50914] tracking-tight">
+              {foodCustomersCount}
+            </div>
+            <p className="text-[10px] text-stone-500 font-medium mt-0.5">Placed takeaway/delivery orders</p>
+          </div>
+        </div>
+
+        {/* 3. Booking Customers */}
+        <div className="p-4 sm:p-5 rounded-3xl bg-white border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-stone-500 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Booking Customers</span>
+            <div className="w-8 h-8 rounded-xl bg-stone-100 flex items-center justify-center text-stone-700">
+              <Utensils className="w-4 h-4" />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              {bookingCustomersCount}
+            </div>
+            <p className="text-[10px] text-stone-400 font-medium mt-0.5">Reserved tables at venue</p>
+          </div>
+        </div>
+
+        {/* 4. Returning Customers */}
+        <div className="p-4 sm:p-5 rounded-3xl bg-white border border-[#FEE2E2] shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#E50914] mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Returning Diners</span>
+            <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] flex items-center justify-center text-[#E50914]">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{repeatCount}</p>
-          <p className="text-[10px] text-emerald-700/80 font-bold">Multiple cafe visits</p>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              {repeatCount}
+            </div>
+            <p className="text-[10px] text-emerald-700 font-bold mt-0.5">
+              {totalCount > 0 ? `${Math.round((repeatCount / totalCount) * 100)}% retention rate` : '0% retention rate'}
+            </p>
+          </div>
         </div>
-
-        {/* Total Diner Spend (LTV) - Hidden for Restaurants and Walking Cafes */}
-        {!hideMonetaryStats && (
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-xs font-extrabold text-purple-700 uppercase tracking-wider">Total LTV Spend</span>
-              <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-bold">
-                <IndianRupee className="w-4 h-4" />
-              </div>
-            </div>
-            <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{totalSpend.toLocaleString()}</p>
-            <p className="text-[10px] text-text/50 font-medium">Gross customer revenue</p>
-          </div>
-        )}
-
-        {/* Avg Spend / Diner - Hidden for Restaurants and Walking Cafes */}
-        {!hideMonetaryStats && (
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-xs font-extrabold text-blue-700 uppercase tracking-wider">Avg Spend / Diner</span>
-              <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-bold">
-                <IndianRupee className="w-4 h-4" />
-              </div>
-            </div>
-            <p className="text-xl sm:text-3xl font-black text-[#2C1810]">₹{avgSpend.toLocaleString()}</p>
-            <p className="text-[10px] text-text/50 font-medium">Average lifetime value</p>
-          </div>
-        )}
 
       </div>
 
-      {/* Toolbar & Segment Filters */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* ── SEARCH & FILTER CONTROLS BAR ── */}
+      <div className="p-4 rounded-3xl bg-white border border-[#FEE2E2] shadow-xs space-y-3">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           
-          {/* Segment Tabs */}
-          <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
-            {segments.map((seg) => {
-              const isActive = segmentFilter === seg.id;
-              return (
-                <button
-                  key={seg.id}
-                  onClick={() => setSegmentFilter(seg.id)}
-                  className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 ${
-                    isActive
-                      ? 'bg-[#6F4E37] text-white shadow-2xs'
-                      : 'bg-surface/50 text-[#2C1810] hover:bg-surface'
-                  }`}
-                >
-                  <span>{seg.label}</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-white text-[#6F4E37]'
-                  }`}>
-                    {seg.count}
-                  </span>
-                </button>
-              );
-            })}
+          {/* Search Box */}
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Search by customer name, phone, email or customer ID..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200/90 text-xs font-bold text-[#252525] focus:outline-none focus:ring-2 focus:ring-[#E50914]/30 focus:border-[#E50914] transition-all"
+            />
           </div>
 
-          {/* Search & View Mode Toggle */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 md:w-64">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text/40">
-                <Search className="h-4 w-4" />
-              </div>
-              <Input 
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
-                placeholder="Search name, email, phone..." 
-              />
-            </div>
-
-            {/* Grid / List View Toggle */}
-            <div className="flex items-center bg-surface/60 p-1 rounded-2xl border border-border/40 shrink-0">
-              <button 
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-xl transition-all ${
-                  viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37] font-bold' : 'text-text/50 hover:text-[#2C1810]'
+          {/* Source Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+            {[
+              { id: 'ALL', label: 'All Customers' },
+              { id: 'FOOD_ORDER', label: 'Food Orders' },
+              { id: 'TABLE_BOOKING', label: 'Table Bookings' },
+              { id: 'MULTIPLE', label: 'Both' },
+              { id: 'REPEAT', label: 'Returning' },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setSourceFilter(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
+                  sourceFilter === tab.id
+                    ? 'bg-[#E50914] text-white shadow-2xs'
+                    : 'bg-white hover:bg-[#FFF5F5] text-stone-600 border border-stone-200'
                 }`}
-                title="Grid View"
               >
-                <Grid className="w-4 h-4" />
+                {tab.label}
               </button>
-              <button 
+            ))}
+          </div>
+
+          {/* Spending Filter Dropdown */}
+          <div className="flex items-center gap-2">
+            <select
+              value={spendingFilter}
+              onChange={(e) => setSpendingFilter(e.target.value)}
+              aria-label="Filter customers by spending"
+              className="px-3 py-2 rounded-2xl bg-white border border-stone-200 text-xs font-black text-stone-700 focus:outline-none focus:border-[#E50914]"
+            >
+              <option value="ALL">All Spending</option>
+              <option value="HIGH">High Spender (&gt; ₹2,000)</option>
+              <option value="MEDIUM">Medium Spender (₹500 - ₹2,000)</option>
+              <option value="LOW">Low Spender (&lt; ₹500)</option>
+            </select>
+
+            {/* View Mode Toggle */}
+            <div className="flex items-center border border-stone-200 rounded-2xl p-0.5 bg-stone-50">
+              <button
+                type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-xl transition-all ${
-                  viewMode === 'list' ? 'bg-white shadow-2xs text-[#6F4E37] font-bold' : 'text-text/50 hover:text-[#2C1810]'
+                className={`p-1.5 rounded-xl transition-all cursor-pointer ${
+                  viewMode === 'list' ? 'bg-white text-[#E50914] shadow-xs' : 'text-stone-400'
                 }`}
-                title="List View"
+                title="Table View"
+                aria-label="Table View"
               >
                 <ListIcon className="w-4 h-4" />
               </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('grid')}
+                className={`p-1.5 rounded-xl transition-all cursor-pointer ${
+                  viewMode === 'grid' ? 'bg-white text-[#E50914] shadow-xs' : 'text-stone-400'
+                }`}
+                title="Card Grid View"
+                aria-label="Card Grid View"
+              >
+                <Grid className="w-4 h-4" />
+              </button>
             </div>
-
-            <button 
-              onClick={() => refetch()}
-              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0"
-              title="Refresh Customers"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
           </div>
 
         </div>
       </div>
 
-      {/* Main Content List / Grid / Empty State */}
+      {/* ── CUSTOMER TABLE OR GRID ── */}
       {isLoading ? (
-        <LoadingSkeleton type={viewMode === 'grid' ? 'card' : 'table'} />
-      ) : isError ? (
-        <div className="bg-rose-500/10 text-rose-700 p-6 rounded-3xl border border-rose-500/20 text-center text-xs">
-          <p className="font-extrabold text-sm mb-1">Unable to Load Customers</p>
-          <p>{error?.message || 'Please check backend connection and retry.'}</p>
-        </div>
-      ) : customers.length === 0 ? (
+        <LoadingSkeleton />
+      ) : customers.length > 0 ? (
+        viewMode === 'list' ? (
+          <CustomerTable customers={customers} isRestaurant={isRestaurant} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {customers.map((customer) => (
+              <CustomerCard key={customer.id} customer={customer} isRestaurant={isRestaurant} />
+            ))}
+          </div>
+        )
+      ) : (
         <EmptyCustomerState 
-          showClear={Boolean(search || segmentFilter !== 'ALL')}
-          onClear={() => {
+          hasFilter={!!search || sourceFilter !== 'ALL' || spendingFilter !== 'ALL'}
+          onReset={() => {
             setSearch('');
-            setSegmentFilter('ALL');
+            setSourceFilter('ALL');
+            setSpendingFilter('ALL');
           }}
         />
-      ) : (
-        <motion.div
-          key={viewMode}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {viewMode === 'list' ? (
-            <CustomerTable customers={customers} isRestaurant={hideMonetaryStats} />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              <AnimatePresence>
-                {customers.map(customer => (
-                  <CustomerCard key={customer.id} customer={customer} isRestaurant={hideMonetaryStats} />
-                ))}
-              </AnimatePresence>
-            </div>
-          )}
-        </motion.div>
       )}
 
     </div>

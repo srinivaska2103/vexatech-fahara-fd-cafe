@@ -29,7 +29,7 @@ export default function PayoutsPage() {
           </Button>
           <PageHeader 
             title="Payouts & Settlements" 
-            description="Track funds transferred from Fahara to your bank account."
+            description="Track funds transferred from Grab2GO to your bank account."
           />
         </div>
       </div>

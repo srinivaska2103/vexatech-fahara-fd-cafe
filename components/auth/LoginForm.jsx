@@ -49,22 +49,22 @@ export const LoginForm = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.1 }}
       onSubmit={handleSubmit(onSubmit)} 
-      className="space-y-4 text-[#2C1810]"
+      className="space-y-4 text-[#252525]"
     >
       {/* Account Type Selection */}
       <div className="space-y-1">
-        <Label className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Account Type</Label>
+        <Label className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider">Account Type</Label>
         <div className="grid grid-cols-2 gap-1.5">
           <button
             type="button"
             onClick={() => setSelectedRole('CAFE_OWNER')}
             className={`py-2 px-2 rounded-xl border text-[11px] font-extrabold transition-all flex items-center justify-center gap-1.5 ${
               selectedRole === 'CAFE_OWNER'
-                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
-                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
+                ? 'bg-[#E50914] text-white border-[#E50914] shadow-sm'
+                : 'bg-white text-[#252525]/70 border-[#FEE2E2] hover:bg-[#FFF5F5]/50'
             }`}
           >
-            <Coffee className={`w-3.5 h-3.5 ${selectedRole === 'CAFE_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
+            <Coffee className={`w-3.5 h-3.5 ${selectedRole === 'CAFE_OWNER' ? 'text-amber-200' : 'text-[#E50914]'}`} />
             <span>Cafe Owner</span>
           </button>
 
@@ -73,23 +73,23 @@ export const LoginForm = ({
             onClick={() => setSelectedRole('RESTAURANT_OWNER')}
             className={`py-2 px-2 rounded-xl border text-[11px] font-extrabold transition-all flex items-center justify-center gap-1.5 ${
               selectedRole === 'RESTAURANT_OWNER'
-                ? 'bg-[#6F4E37] text-white border-[#6F4E37] shadow-sm'
-                : 'bg-white text-[#2C1810]/70 border-border/60 hover:bg-[#FAF0E6]/50'
+                ? 'bg-[#E50914] text-white border-[#E50914] shadow-sm'
+                : 'bg-white text-[#252525]/70 border-[#FEE2E2] hover:bg-[#FFF5F5]/50'
             }`}
           >
-            <Utensils className={`w-3.5 h-3.5 ${selectedRole === 'RESTAURANT_OWNER' ? 'text-amber-200' : 'text-[#6F4E37]'}`} />
+            <Utensils className={`w-3.5 h-3.5 ${selectedRole === 'RESTAURANT_OWNER' ? 'text-amber-200' : 'text-[#E50914]'}`} />
             <span>Restaurant</span>
           </button>
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="email" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Email / Phone</Label>
+        <Label htmlFor="email" className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider">Email / Phone</Label>
         <Input
           id="email"
           type="email"
           placeholder="Enter your email address"
-          className="h-11 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810]"
+          className="h-11 rounded-2xl border-[#FEE2E2] bg-white focus:bg-white text-xs font-medium text-[#252525]"
           {...register('email')}
           error={errors.email?.message}
         />
@@ -97,8 +97,8 @@ export const LoginForm = ({
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between mb-1">
-          <Label htmlFor="password" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider mb-0">Password</Label>
-          <Link href={forgotPasswordLink} className="text-xs font-extrabold text-[#6F4E37] hover:underline">
+          <Label htmlFor="password" className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider mb-0">Password</Label>
+          <Link href={forgotPasswordLink} className="text-xs font-extrabold text-[#E50914] hover:underline">
             Forgot password?
           </Link>
         </div>
@@ -116,7 +116,7 @@ export const LoginForm = ({
         whileTap={{ scale: 0.98 }}
         type="submit" 
         disabled={loginMutation.isPending}
-        className="w-full mt-6 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] hover:from-[#5D3F2B] hover:to-[#6F4E37] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
+        className="w-full mt-6 py-3.5 px-4 rounded-2xl bg-[#E50914] hover:bg-[#B71C1C] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
       >
         {loginMutation.isPending ? (
           <>

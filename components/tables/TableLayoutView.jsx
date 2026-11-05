@@ -208,10 +208,10 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
     const createChair = (key, styleProps) => (
       <div
         key={key}
-        className={`absolute w-7 h-7 rounded-xl border-2 border-[#DDB892] flex items-center justify-center transition-all hover:scale-110 ${
+        className={`absolute w-7 h-7 rounded-xl border-2 border-[#EF5350] flex items-center justify-center transition-all hover:scale-110 ${
           is3D 
-            ? 'bg-gradient-to-t from-[#6F4E37] via-[#A67B5B] to-[#DDB892] text-white shadow-lg border-white/80' 
-            : 'bg-[#6F4E37] text-white shadow-md hover:bg-[#8B5E3C]'
+            ? 'bg-gradient-to-t from-[#E50914] via-[#B71C1C] to-[#EF5350] text-white shadow-lg border-white/80' 
+            : 'bg-[#E50914] text-white shadow-md hover:bg-[#8B5E3C]'
         }`}
         style={{
           ...styleProps,
@@ -219,7 +219,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
           boxShadow: is3D ? '0 6px 12px rgba(0,0,0,0.35)' : '0 4px 8px rgba(44, 24, 16, 0.45)'
         }}
       >
-        <Armchair className="w-3.5 h-3.5 text-[#FFF8F0] stroke-[2.5]" />
+        <Armchair className="w-3.5 h-3.5 text-[#FFF5F5] stroke-[2.5]" />
       </div>
     );
 
@@ -307,17 +307,17 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-[#DDB892]/60 p-5 sm:p-6 shadow-2xs space-y-6 text-[#2C1810]">
+    <div className="bg-white rounded-3xl border border-[#EF5350]/60 p-5 sm:p-6 shadow-2xs space-y-6 text-[#252525]">
       
       {/* Canvas Header Controls */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border/40">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] text-white flex items-center justify-center font-extrabold shadow-xs">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#E50914] to-[#B71C1C] text-white flex items-center justify-center font-extrabold shadow-xs">
               <Box className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-[#2C1810]">Seating Floor Plan Layout</h3>
+              <h3 className="text-base font-extrabold text-[#252525]">Seating Floor Plan Layout</h3>
               <p className="text-[11px] text-text/60 font-medium">Clear 2D View • Drag & Drop Tables • Dynamic Chairs & Combinations</p>
             </div>
           </div>
@@ -333,8 +333,8 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
                 onClick={() => setActiveLocationFilter(loc)}
                 className={`px-2.5 py-1 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
                   activeLocationFilter === loc
-                    ? 'bg-[#6F4E37] text-white shadow-2xs'
-                    : 'text-text/65 hover:text-[#2C1810]'
+                    ? 'bg-[#E50914] text-white shadow-2xs'
+                    : 'text-text/65 hover:text-[#252525]'
                 }`}
               >
                 {loc}
@@ -345,10 +345,10 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
           {/* Auto Align Layout Button */}
           <button
             onClick={handleAutoAlignLayout}
-            className="px-3 py-1.5 rounded-2xl text-xs font-extrabold flex items-center gap-1.5 border border-[#DDB892]/80 bg-white hover:bg-[#FFF8F0] text-[#6F4E37] transition-all cursor-pointer shadow-2xs"
+            className="px-3 py-1.5 rounded-2xl text-xs font-extrabold flex items-center gap-1.5 border border-[#EF5350]/80 bg-white hover:bg-[#FFF5F5] text-[#E50914] transition-all cursor-pointer shadow-2xs"
             title="Auto Align Tables into Clean Grid Rows"
           >
-            <LayoutGrid className="w-4 h-4 text-[#6F4E37]" />
+            <LayoutGrid className="w-4 h-4 text-[#E50914]" />
             <span>Auto-Align Grid</span>
           </button>
 
@@ -357,8 +357,8 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
             onClick={() => setShowGridLines(!showGridLines)}
             className={`px-3 py-1.5 rounded-2xl text-xs font-extrabold flex items-center gap-1.5 border transition-all cursor-pointer shadow-2xs ${
               showGridLines
-                ? 'bg-[#6F4E37] text-white border-transparent'
-                : 'bg-white text-[#6F4E37] border-[#DDB892]/80 hover:bg-[#FFF8F0]'
+                ? 'bg-[#E50914] text-white border-transparent'
+                : 'bg-white text-[#E50914] border-[#EF5350]/80 hover:bg-[#FFF5F5]'
             }`}
             title="Toggle Floor Grid Lines"
           >
@@ -371,8 +371,8 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
             onClick={() => setIs3DMode(!is3DMode)}
             className={`px-3 py-1.5 rounded-2xl text-xs font-extrabold flex items-center gap-1.5 border transition-all cursor-pointer shadow-2xs ${
               is3DMode
-                ? 'bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white border-transparent'
-                : 'bg-white text-[#6F4E37] border-[#DDB892]/80 hover:bg-[#FFF8F0]'
+                ? 'bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white border-transparent'
+                : 'bg-white text-[#E50914] border-[#EF5350]/80 hover:bg-[#FFF5F5]'
             }`}
           >
             <Box className="w-4 h-4" />
@@ -383,17 +383,17 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
           <div className="flex bg-surface p-1 rounded-2xl border border-border/40 text-text/70">
             <button
               onClick={() => setZoomLevel(prev => Math.max(0.7, prev - 0.1))}
-              className="p-1.5 hover:text-[#2C1810] cursor-pointer"
+              className="p-1.5 hover:text-[#252525] cursor-pointer"
               title="Zoom Out"
             >
               <ZoomOut className="w-4 h-4" />
             </button>
-            <span className="px-2 text-xs font-black self-center text-[#2C1810]">
+            <span className="px-2 text-xs font-black self-center text-[#252525]">
               {Math.round(zoomLevel * 100)}%
             </span>
             <button
               onClick={() => setZoomLevel(prev => Math.min(1.5, prev + 0.1))}
-              className="p-1.5 hover:text-[#2C1810] cursor-pointer"
+              className="p-1.5 hover:text-[#252525] cursor-pointer"
               title="Zoom In"
             >
               <ZoomIn className="w-4 h-4" />
@@ -418,7 +418,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
       <div 
         ref={canvasRef}
         onMouseMove={handleMouseMove}
-        className="relative min-h-[580px] rounded-3xl bg-gradient-to-br from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] border-2 border-dashed border-[#DDB892]/80 overflow-auto custom-scrollbar select-none p-4"
+        className="relative min-h-[580px] rounded-3xl bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border-2 border-dashed border-[#EF5350]/80 overflow-auto custom-scrollbar select-none p-4"
         style={{ perspective: is3DMode ? '1200px' : 'none' }}
       >
         {/* Interactive Mouse Spotlight Radial Glow */}
@@ -435,8 +435,8 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
             className="absolute inset-0 opacity-15 pointer-events-none z-0"
             style={{
               backgroundImage: `
-                linear-gradient(to right, #6F4E37 1px, transparent 1px),
-                linear-gradient(to bottom, #6F4E37 1px, transparent 1px)
+                linear-gradient(to right, #E50914 1px, transparent 1px),
+                linear-gradient(to bottom, #E50914 1px, transparent 1px)
               `,
               backgroundSize: '40px 40px'
             }}
@@ -460,8 +460,8 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
         >
           {filteredTables.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center space-y-2">
-              <Sparkles className="w-10 h-10 text-[#6F4E37] opacity-40 mx-auto" />
-              <p className="text-sm font-extrabold text-[#2C1810]">No tables in this layout filter</p>
+              <Sparkles className="w-10 h-10 text-[#E50914] opacity-40 mx-auto" />
+              <p className="text-sm font-extrabold text-[#252525]">No tables in this layout filter</p>
             </div>
           ) : (
             filteredTables.map((table) => {
@@ -511,9 +511,9 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
                   <div
                     className={`relative ${dim.width} ${dim.height} rounded-3xl p-3.5 flex flex-col items-center justify-between text-center transition-all duration-300 shadow-2xl border-2 ${
                       isSelected
-                        ? 'ring-4 ring-[#6F4E37] ring-offset-2 border-[#DDB892] bg-gradient-to-br from-[#2C1810] via-[#4A2E1B] to-[#6F4E37] text-white'
+                        ? 'ring-4 ring-[#E50914] ring-offset-2 border-[#EF5350] bg-gradient-to-br from-[#252525] via-[#4A2E1B] to-[#E50914] text-white'
                         : isActive
-                        ? 'border-[#6F4E37] bg-gradient-to-br from-[#2C1810] via-[#3D2314] to-[#5C3A21] text-white shadow-2xl group-hover:border-[#DDB892]'
+                        ? 'border-[#E50914] bg-gradient-to-br from-[#252525] via-[#3D2314] to-[#5C3A21] text-white shadow-2xl group-hover:border-[#EF5350]'
                         : isMaintenance
                         ? 'border-amber-500 bg-gradient-to-br from-amber-800 to-amber-950 text-white'
                         : 'border-rose-500 bg-gradient-to-br from-rose-900 to-gray-950 text-white opacity-85'
@@ -527,7 +527,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
                   >
                     {/* Header: Table Number Pill & Status Dot */}
                     <div className="flex items-center justify-between w-full">
-                      <span className="text-xs font-black uppercase px-2.5 py-0.5 rounded-full bg-white text-[#2C1810] border border-[#DDB892] shadow-sm tracking-wider">
+                      <span className="text-xs font-black uppercase px-2.5 py-0.5 rounded-full bg-white text-[#252525] border border-[#EF5350] shadow-sm tracking-wider">
                         {table.table_number}
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -539,7 +539,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
 
                     {/* Center: Seats Count & Icon */}
                     <div className="flex items-center gap-2 my-1 bg-black/40 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/15 w-full justify-center">
-                      <Users className="w-4 h-4 text-[#DDB892]" />
+                      <Users className="w-4 h-4 text-[#EF5350]" />
                       <span className="text-xs font-black tracking-tight text-white drop-shadow-xs">
                         {table.capacity} Seats ({table.table_type || `${table.capacity} Seater`})
                       </span>
@@ -552,7 +552,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 w-full px-2.5 py-1 rounded-xl bg-white/20 backdrop-blur-md text-white border border-white/25 shadow-xs">
-                        <MapPin className="w-3.5 h-3.5 text-[#DDB892] shrink-0" />
+                        <MapPin className="w-3.5 h-3.5 text-[#EF5350] shrink-0" />
                         <span className="text-[11px] font-extrabold tracking-wide uppercase">{table.location || 'Indoor'}</span>
                       </div>
                     )}
@@ -566,12 +566,12 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 10 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50 bg-white rounded-2xl border border-[#DDB892] shadow-xl p-2 flex items-center gap-1.5 shrink-0 text-[#2C1810]"
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50 bg-white rounded-2xl border border-[#EF5350] shadow-xl p-2 flex items-center gap-1.5 shrink-0 text-[#252525]"
                         style={{ transform: is3DMode ? 'translateZ(50px) rotateX(-40deg) rotateZ(10deg)' : 'none' }}
                       >
                         <button
                           onClick={() => handleRotate(table.id)}
-                          className="p-1.5 rounded-xl hover:bg-[#FFF8F0] text-[#6F4E37] text-xs font-bold flex items-center gap-1 cursor-pointer"
+                          className="p-1.5 rounded-xl hover:bg-[#FFF5F5] text-[#E50914] text-xs font-bold flex items-center gap-1 cursor-pointer"
                           title="Rotate Table 45°"
                         >
                           <RotateCw className="w-3.5 h-3.5" />
@@ -580,7 +580,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
 
                         <button
                           onClick={() => onSelectTable && onSelectTable(table)}
-                          className="p-1.5 rounded-xl hover:bg-[#FFF8F0] text-[#6F4E37] text-xs font-bold flex items-center gap-1 cursor-pointer"
+                          className="p-1.5 rounded-xl hover:bg-[#FFF5F5] text-[#E50914] text-xs font-bold flex items-center gap-1 cursor-pointer"
                           title="Edit Details"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -598,7 +598,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
 
                         <button
                           onClick={() => handleSaveSingleTable(table.id)}
-                          className="p-1.5 rounded-xl bg-[#6F4E37] text-white text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
+                          className="p-1.5 rounded-xl bg-[#E50914] text-white text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
                           title="Save Table Position"
                         >
                           <Save className="w-3.5 h-3.5" />
@@ -637,7 +637,7 @@ export const TableLayoutView = ({ tables = [], cafeId, onSelectTable, onToggleSt
         </div>
 
         <div className="text-[11px] text-text/50 font-medium">
-          💡 <span className="font-bold text-[#2C1810]">Tip:</span> 2-Seaters, 4-Seaters & 6-Seaters render scaled table tops with matching chairs. Joined combinations display glowing linking beams.
+          💡 <span className="font-bold text-[#252525]">Tip:</span> 2-Seaters, 4-Seaters & 6-Seaters render scaled table tops with matching chairs. Joined combinations display glowing linking beams.
         </div>
       </div>
 

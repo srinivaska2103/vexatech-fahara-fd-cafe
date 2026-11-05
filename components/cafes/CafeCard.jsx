@@ -39,7 +39,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white rounded-3xl border border-border/60 overflow-hidden hover:shadow-lg hover:border-[#DDB892] transition-all duration-300 group flex flex-col sm:flex-row items-stretch text-[#2C1810]">
+      <div className="bg-white rounded-3xl border border-border/60 overflow-hidden hover:shadow-lg hover:border-[#EF5350] transition-all duration-300 group flex flex-col sm:flex-row items-stretch text-[#252525]">
         {/* Image Left */}
         <div className="relative w-full sm:w-72 h-52 sm:h-auto bg-surface shrink-0 overflow-hidden">
           <img 
@@ -56,7 +56,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
         <div className="p-6 flex flex-col justify-between flex-1 space-y-4">
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-3">
-              <h3 className="text-lg font-extrabold text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">
+              <h3 className="text-lg font-extrabold text-[#252525] group-hover:text-[#E50914] transition-colors">
                 {cafe.name}
               </h3>
               <div className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
@@ -72,19 +72,19 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
 
           <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-border/40 text-xs text-text/70 font-semibold">
             <div className="flex items-center gap-1.5 truncate">
-              <MapPin className="w-4 h-4 text-[#6F4E37] shrink-0" />
+              <MapPin className="w-4 h-4 text-[#E50914] shrink-0" />
               <span className="truncate">{cafe.address ? `${cafe.address}, ${cafe.city || ''}` : (cafe.city || 'Location N/A')}</span>
             </div>
 
             <div className="flex items-center gap-4 shrink-0">
               <div className="flex items-center gap-1 text-text/60">
-                <Users className="w-4 h-4 text-[#6F4E37]" />
+                <Users className="w-4 h-4 text-[#E50914]" />
                 <span>Up to {cafe.maximum_persons || 'N/A'} guests</span>
               </div>
 
               {!cafe?.provides_event_services && !isRestaurant && !isWalkingCafe && Number(cafe?.price_per_hour) > 0 && (
-                <div className="flex items-center text-sm font-extrabold text-[#2C1810]">
-                  <IndianRupee className="w-4 h-4 text-[#6F4E37]" />
+                <div className="flex items-center text-sm font-extrabold text-[#252525]">
+                  <IndianRupee className="w-4 h-4 text-[#E50914]" />
                   <span>{cafe.price_per_hour}</span>
                   <span className="text-[10px] text-text/50 font-normal ml-0.5">/hr</span>
                 </div>
@@ -112,7 +112,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
             </div>
 
             <Link href={`/owner/cafes/${cafe.id}`}>
-              <Button className="rounded-xl gap-2 py-2 px-4 text-xs font-extrabold bg-[#6F4E37] hover:bg-[#5D3F2B] text-white shadow-2xs">
+              <Button className="rounded-xl gap-2 py-2 px-4 text-xs font-extrabold bg-[#E50914] hover:bg-[#E50914] text-white shadow-2xs">
                 <Eye className="w-3.5 h-3.5" />
                 <span>View Details</span>
               </Button>
@@ -124,7 +124,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-border/60 overflow-hidden hover:shadow-lg hover:border-[#DDB892] transition-all duration-300 group flex flex-col h-full hover:-translate-y-1 text-[#2C1810]">
+    <div className="bg-white rounded-3xl border border-border/60 overflow-hidden hover:shadow-lg hover:border-[#EF5350] transition-all duration-300 group flex flex-col h-full hover:-translate-y-1 text-[#252525]">
       {/* Image Header */}
       <div className="relative h-56 bg-surface overflow-hidden">
         <img 
@@ -141,7 +141,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
         {/* Floating Action Buttons */}
         <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 z-10">
           <Link href={`/owner/cafes/${cafe.id}/edit`}>
-            <button className="w-8 h-8 bg-white/95 backdrop-blur-md text-[#2C1810] hover:text-[#6F4E37] hover:bg-white rounded-xl flex items-center justify-center transition-all shadow-sm hover:scale-105" title="Edit Cafe">
+            <button className="w-8 h-8 bg-white/95 backdrop-blur-md text-[#252525] hover:text-[#E50914] hover:bg-white rounded-xl flex items-center justify-center transition-all shadow-sm hover:scale-105" title="Edit Cafe">
               <Edit2 className="w-3.5 h-3.5" />
             </button>
           </Link>
@@ -161,8 +161,8 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
             <span>Walk-in Cafe</span>
           </div>
         ) : !cafe?.provides_event_services && !isRestaurant && Number(cafe?.price_per_hour) > 0 && (
-          <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-white/60 shadow-xs flex items-center gap-0.5 text-xs font-extrabold text-[#2C1810]">
-            <IndianRupee className="w-3.5 h-3.5 text-[#6F4E37]" />
+          <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-white/60 shadow-xs flex items-center gap-0.5 text-xs font-extrabold text-[#252525]">
+            <IndianRupee className="w-3.5 h-3.5 text-[#E50914]" />
             <span>{cafe.price_per_hour}</span>
             <span className="text-[10px] text-text/50 font-normal">/hr</span>
           </div>
@@ -172,7 +172,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
       {/* Content Body */}
       <div className="p-6 flex flex-col flex-1 space-y-4">
         <div className="flex justify-between items-start gap-2">
-          <h3 className="text-base sm:text-lg font-extrabold text-[#2C1810] truncate group-hover:text-[#6F4E37] transition-colors">
+          <h3 className="text-base sm:text-lg font-extrabold text-[#252525] truncate group-hover:text-[#E50914] transition-colors">
             {cafe.name}
           </h3>
           <div className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
@@ -187,13 +187,13 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
         
         <div className="space-y-2 pt-3 border-t border-border/40 text-xs font-semibold text-text/70">
           <div className="flex items-center gap-2 truncate">
-            <MapPin className="w-4 h-4 text-[#6F4E37] shrink-0" />
+            <MapPin className="w-4 h-4 text-[#E50914] shrink-0" />
             <span className="truncate">{cafe.address ? `${cafe.address}, ${cafe.city || ''}` : (cafe.city || 'Location N/A')}</span>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-text/60">
-              <Users className="w-4 h-4 text-[#6F4E37] shrink-0" />
+              <Users className="w-4 h-4 text-[#E50914] shrink-0" />
               <span>Up to {cafe.maximum_persons || 'N/A'} guests capacity</span>
             </div>
           </div>
@@ -203,16 +203,16 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
         <div className="pt-2 flex items-center gap-2">
           {!isWalkingCafe && (
             <Link href={`/owner/cafes/${cafe.id}/tables`} className="shrink-0">
-              <Button variant="outline" className="py-2.5 px-3 rounded-2xl border-[#DDB892]/80 text-[#6F4E37] hover:bg-[#FFF8F0] font-extrabold text-xs shadow-2xs">
+              <Button variant="outline" className="py-2.5 px-3 rounded-2xl border-[#EF5350]/80 text-[#E50914] hover:bg-[#FFF5F5] font-extrabold text-xs shadow-2xs">
                 <span className="flex items-center gap-1.5">
-                  <Layers className="w-4 h-4 text-[#6F4E37]" />
+                  <Layers className="w-4 h-4 text-[#E50914]" />
                   <span>Tables</span>
                 </span>
               </Button>
             </Link>
           )}
           <Link href={`/owner/cafes/${cafe.id}`} className="flex-1 min-w-0">
-            <Button className="w-full justify-between py-2.5 px-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white hover:shadow-md transition-all duration-300 font-extrabold text-xs shadow-xs border-0">
+            <Button className="w-full justify-between py-2.5 px-3 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white hover:shadow-md transition-all duration-300 font-extrabold text-xs shadow-xs border-0">
               <span className="flex items-center gap-1.5 truncate">
                 <Eye className="w-4 h-4 text-white shrink-0" />
                 <span className="truncate">View Cafe</span>
@@ -221,7 +221,7 @@ export const CafeCard = ({ cafe, onDelete, viewMode = 'grid' }) => {
             </Button>
           </Link>
           <Link href={`/owner/cafes/${cafe.id}/edit`} className="shrink-0">
-            <button className="h-9 w-9 rounded-2xl border border-border/80 bg-surface hover:bg-[#FFF8F0] hover:border-[#DDB892] text-text/70 hover:text-[#6F4E37] flex items-center justify-center transition-all shadow-2xs" title="Edit Cafe">
+            <button className="h-9 w-9 rounded-2xl border border-border/80 bg-surface hover:bg-[#FFF5F5] hover:border-[#EF5350] text-text/70 hover:text-[#E50914] flex items-center justify-center transition-all shadow-2xs" title="Edit Cafe">
               <Edit2 className="w-4 h-4" />
             </button>
           </Link>

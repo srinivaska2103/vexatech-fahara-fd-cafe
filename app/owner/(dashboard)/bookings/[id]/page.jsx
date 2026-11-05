@@ -68,8 +68,8 @@ export default function BookingDetailsPage() {
   if (!booking) {
     return (
       <PageContainer>
-        <div className="p-12 text-center bg-white rounded-3xl border border-border/60 shadow-2xs max-w-md mx-auto my-10 space-y-4 text-[#2C1810]">
-          <Calendar className="w-12 h-12 text-[#6F4E37] opacity-40 mx-auto" />
+        <div className="p-12 text-center bg-white rounded-3xl border border-border/60 shadow-2xs max-w-md mx-auto my-10 space-y-4 text-[#252525]">
+          <Calendar className="w-12 h-12 text-[#E50914] opacity-40 mx-auto" />
           <h3 className="text-lg font-extrabold">Booking Record Not Found</h3>
           <p className="text-xs text-text/60">The reservation record you requested does not exist or has been removed.</p>
           <BackButton href="/owner/bookings" label="Back to Bookings" />
@@ -136,13 +136,13 @@ export default function BookingDetailsPage() {
 
   return (
     <PageContainer>
-      <div className="space-y-6 text-[#2C1810]">
+      <div className="space-y-6 text-[#252525]">
         
         {/* Modern SaaS Header Hero Banner */}
-        <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs space-y-4">
+        <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <BackButton href="/owner/bookings" label="Back to Bookings" />
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>RESERVATION DETAILS</span>
             </div>
@@ -151,7 +151,7 @@ export default function BookingDetailsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl sm:text-4xl font-black text-[#2C1810] tracking-tight">
+                <h1 className="text-2xl sm:text-4xl font-black text-[#252525] tracking-tight">
                   Booking #{idDisplay}
                 </h1>
                 <BookingStatusBadge status={status} />
@@ -161,14 +161,14 @@ export default function BookingDetailsPage() {
                     navigator.clipboard.writeText(bookingData.booking_number || bookingData.id);
                     toast.success('Booking reference copied!');
                   }}
-                  className="p-1.5 rounded-xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white transition-all shadow-2xs cursor-pointer"
+                  className="p-1.5 rounded-xl bg-white border border-[#EF5350]/60 hover:bg-[#E50914] text-[#E50914] hover:text-white transition-all shadow-2xs cursor-pointer"
                   title="Copy Booking Ref"
                 >
                   <Copy className="w-3.5 h-3.5" />
                 </button>
               </div>
               <p className="text-xs sm:text-sm text-text/60 mt-1 flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5 text-[#6F4E37]" />
+                <Calendar className="w-3.5 h-3.5 text-[#E50914]" />
                 <span>Placed on {createdAt ? format(new Date(createdAt), 'MMMM dd, yyyy · hh:mm a') : 'Unknown Date'}</span>
               </p>
             </div>
@@ -224,51 +224,51 @@ export default function BookingDetailsPage() {
             {/* Reservation Specs Card */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
               <div className="flex items-center gap-3 pb-4 border-b border-border/40">
-                <div className="w-10 h-10 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold">
+                <div className="w-10 h-10 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-extrabold">
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-[#2C1810]">Reservation Details</h3>
+                  <h3 className="text-base font-extrabold text-[#252525]">Reservation Details</h3>
                   <p className="text-xs text-text/60">Schedule time, guest count & venue location</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="p-3.5 rounded-2xl bg-surface/40 border border-border/50 space-y-1">
-                  <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">Date</span>
-                  <p className="text-xs sm:text-sm font-extrabold text-[#2C1810]">
+                  <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block">Date</span>
+                  <p className="text-xs sm:text-sm font-extrabold text-[#252525]">
                     {bookingDate ? format(new Date(bookingDate), 'MMM dd, yyyy') : 'N/A'}
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-surface/40 border border-border/50 space-y-1">
-                  <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">Time Slot</span>
-                  <p className="text-xs sm:text-sm font-extrabold text-[#2C1810] truncate">
+                  <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block">Time Slot</span>
+                  <p className="text-xs sm:text-sm font-extrabold text-[#252525] truncate">
                     {startTime} - {endTime}
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-surface/40 border border-border/50 space-y-1">
-                  <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">Guest Count</span>
-                  <p className="text-xs sm:text-sm font-extrabold text-[#2C1810]">
+                  <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block">Guest Count</span>
+                  <p className="text-xs sm:text-sm font-extrabold text-[#252525]">
                     {guests} People
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-surface/40 border border-border/50 space-y-1">
-                  <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">Venue Cafe</span>
-                  <p className="text-xs sm:text-sm font-extrabold text-[#2C1810] truncate">
+                  <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block">Venue Cafe</span>
+                  <p className="text-xs sm:text-sm font-extrabold text-[#252525] truncate">
                     {cafeName || 'N/A'}
                   </p>
                 </div>
               </div>
 
               {specialRequests && (
-                <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 space-y-1">
-                  <p className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider flex items-center gap-1.5">
+                <div className="p-4 rounded-2xl bg-[#FFF5F5] border border-[#EF5350]/60 space-y-1">
+                  <p className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider flex items-center gap-1.5">
                     <MessageSquare className="w-3.5 h-3.5" /> Special Guest Requests
                   </p>
-                  <p className="text-xs text-[#2C1810] leading-relaxed italic">"{specialRequests}"</p>
+                  <p className="text-xs text-[#252525] leading-relaxed italic">"{specialRequests}"</p>
                 </div>
               )}
             </div>
@@ -286,7 +286,7 @@ export default function BookingDetailsPage() {
               };
               const getLocColors = (loc) =>
                 LOCATION_COLORS[String(loc || '').toLowerCase()] ||
-                { bg: 'bg-surface/40', border: 'border-border/50', text: 'text-[#6F4E37]', pill: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#DDB892]/60' };
+                { bg: 'bg-surface/40', border: 'border-border/50', text: 'text-[#E50914]', pill: 'bg-[#E50914]/10 text-[#E50914] border-[#EF5350]/60' };
 
               return (
                 <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-5">
@@ -295,7 +295,7 @@ export default function BookingDetailsPage() {
                       <Store className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-extrabold text-[#2C1810]">
+                      <h3 className="text-base font-extrabold text-[#252525]">
                         Selected {bookingTables.length > 1 ? 'Tables' : 'Table'}
                       </h3>
                       <p className="text-xs text-text/60">
@@ -325,7 +325,7 @@ export default function BookingDetailsPage() {
 
                           <div className="min-w-0 flex-1 space-y-1.5">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-extrabold text-[#2C1810] text-sm">
+                              <span className="font-extrabold text-[#252525] text-sm">
                                 Table {tableNum}
                               </span>
                               {location && (
@@ -338,8 +338,8 @@ export default function BookingDetailsPage() {
                             <div className="flex flex-wrap gap-3 text-xs text-text/60">
                               {capacity && (
                                 <span className="flex items-center gap-1">
-                                  <Users className="w-3 h-3 text-[#6F4E37]" />
-                                  <span className="font-bold text-[#2C1810]">{capacity} seats</span>
+                                  <Users className="w-3 h-3 text-[#E50914]" />
+                                  <span className="font-bold text-[#252525]">{capacity} seats</span>
                                 </span>
                               )}
                               <span className={`flex items-center gap-1 font-bold ${
@@ -422,7 +422,7 @@ export default function BookingDetailsPage() {
                 STANDARD: { bg: 'bg-violet-50', border: 'border-violet-300/60', text: 'text-violet-700', pill: 'bg-violet-100 text-violet-700 border-violet-300' },
                 PREMIUM:  { bg: 'bg-amber-50',  border: 'border-amber-300/60',  text: 'text-amber-700',  pill: 'bg-amber-100 text-amber-700 border-amber-400' },
               };
-              const getTierColors = (tier) => TIER_COLORS[String(tier || '').toUpperCase()] || { bg: 'bg-surface/40', border: 'border-border/50', text: 'text-[#6F4E37]', pill: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#DDB892]/60' };
+              const getTierColors = (tier) => TIER_COLORS[String(tier || '').toUpperCase()] || { bg: 'bg-surface/40', border: 'border-border/50', text: 'text-[#E50914]', pill: 'bg-[#E50914]/10 text-[#E50914] border-[#EF5350]/60' };
 
               if (!hasAnything) return null;
 
@@ -433,7 +433,7 @@ export default function BookingDetailsPage() {
                       <Coffee className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-extrabold text-[#2C1810]">Included Services & Packages</h3>
+                      <h3 className="text-base font-extrabold text-[#252525]">Included Services & Packages</h3>
                       <p className="text-xs text-text/60">Selected party packages and event add-ons</p>
                     </div>
                   </div>
@@ -442,16 +442,16 @@ export default function BookingDetailsPage() {
 
                     {/* Package base row */}
                     {packageItem && (
-                      <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex items-start gap-4">
-                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#DDB892]/30 to-[#FFF8F0] border border-[#DDB892]/60 flex items-center justify-center text-[#6F4E37] shrink-0">
+                      <div className="p-4 rounded-2xl bg-[#FFF5F5] border border-[#EF5350]/60 flex items-start gap-4">
+                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#EF5350]/30 to-[#FFF5F5] border border-[#EF5350]/60 flex items-center justify-center text-[#E50914] shrink-0">
                           <Sparkles className="w-5 h-5" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <h4 className="font-extrabold text-[#2C1810] text-sm">
+                            <h4 className="font-extrabold text-[#252525] text-sm">
                               {packageItem.package_name || packageItem.item_name || packageItem.name || 'Cafe Package'}
                             </h4>
-                            <span className="text-[10px] font-black bg-[#6F4E37]/10 text-[#6F4E37] border border-[#DDB892]/60 px-2 py-0.5 rounded-full uppercase tracking-wider">Package</span>
+                            <span className="text-[10px] font-black bg-[#E50914]/10 text-[#E50914] border border-[#EF5350]/60 px-2 py-0.5 rounded-full uppercase tracking-wider">Package</span>
                           </div>
                           {(packageItem.description || packageItem.package_description) && (
                             <p className="text-xs text-text/60 mt-0.5">{packageItem.description || packageItem.package_description}</p>
@@ -474,7 +474,7 @@ export default function BookingDetailsPage() {
                             </div>
                             <div className="min-w-0 space-y-0.5">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <h4 className="font-extrabold text-[#2C1810] text-xs sm:text-sm truncate">{inc.name}</h4>
+                                <h4 className="font-extrabold text-[#252525] text-xs sm:text-sm truncate">{inc.name}</h4>
                                 {displayBadge && (
                                   <span className={`text-[10px] font-black border px-2 py-0.5 rounded-full uppercase tracking-wider ${colors.pill}`}>
                                     {displayBadge}
@@ -502,11 +502,11 @@ export default function BookingDetailsPage() {
                     {/* Event service row */}
                     {bookingData.event_services && (
                       <div className="p-4 rounded-2xl bg-surface/40 border border-border/50 flex items-start gap-4">
-                        <div className="w-11 h-11 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex items-center justify-center text-[#6F4E37] shrink-0">
+                        <div className="w-11 h-11 rounded-2xl bg-[#FFF5F5] border border-[#EF5350]/60 flex items-center justify-center text-[#E50914] shrink-0">
                           <Coffee className="w-5 h-5" />
                         </div>
                         <div className="min-w-0">
-                          <h4 className="font-extrabold text-[#2C1810] text-sm truncate">
+                          <h4 className="font-extrabold text-[#252525] text-sm truncate">
                             {bookingData.event_services.service_name || 'Event Service'}
                           </h4>
                           <p className="text-xs text-text/60">
@@ -532,17 +532,17 @@ export default function BookingDetailsPage() {
                   <User className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-[#2C1810]">Customer Profile</h3>
+                  <h3 className="text-base font-extrabold text-[#252525]">Customer Profile</h3>
                   <p className="text-[11px] text-text/60">Diner contact info</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center text-lg font-black shrink-0 border border-[#DDB892]/40">
+                <div className="w-12 h-12 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center text-lg font-black shrink-0 border border-[#EF5350]/40">
                   {customerName?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-black text-[#2C1810] text-sm truncate">{customerName}</p>
+                  <p className="font-black text-[#252525] text-sm truncate">{customerName}</p>
                   <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 inline-block mt-0.5">
                     Verified Customer
                   </span>
@@ -552,10 +552,10 @@ export default function BookingDetailsPage() {
               <div className="space-y-2.5 pt-3 border-t border-border/40 text-xs">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-text/60 flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-[#6F4E37]" /> Email
+                    <Mail className="w-3.5 h-3.5 text-[#E50914]" /> Email
                   </span>
                   <div className="flex items-center gap-1 min-w-0">
-                    <span className="font-bold text-[#2C1810] truncate max-w-[150px]">
+                    <span className="font-bold text-[#252525] truncate max-w-[150px]">
                       {customerEmail || 'N/A'}
                     </span>
                     {customerEmail && (
@@ -565,7 +565,7 @@ export default function BookingDetailsPage() {
                           navigator.clipboard.writeText(customerEmail);
                           toast.success('Email copied!');
                         }}
-                        className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
+                        className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#E50914] transition-all cursor-pointer shrink-0"
                         title="Copy Email"
                       >
                         <Copy className="w-3 h-3" />
@@ -576,10 +576,10 @@ export default function BookingDetailsPage() {
 
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-text/60 flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-[#6F4E37]" /> Phone
+                    <Phone className="w-3.5 h-3.5 text-[#E50914]" /> Phone
                   </span>
                   <div className="flex items-center gap-1 min-w-0">
-                    <a href={customerPhone ? `tel:${customerPhone}` : '#'} className="font-bold text-[#6F4E37] hover:underline truncate">
+                    <a href={customerPhone ? `tel:${customerPhone}` : '#'} className="font-bold text-[#E50914] hover:underline truncate">
                       {customerPhone || 'N/A'}
                     </a>
                   </div>
@@ -595,7 +595,7 @@ export default function BookingDetailsPage() {
                     <CreditCard className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#2C1810]">Payment & Settlement</h3>
+                    <h3 className="text-base font-extrabold text-[#252525]">Payment & Settlement</h3>
                     <p className="text-[11px] text-text/60">Online split details</p>
                   </div>
                 </div>
@@ -626,15 +626,15 @@ export default function BookingDetailsPage() {
                 </div>
 
                 <div className="pt-2 border-t border-border/40">
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] border border-[#DDB892]/60 space-y-1">
-                    <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">Cafe Earnings Net Split</span>
-                    <p className="text-2xl font-black text-[#6F4E37]">₹{amount.toLocaleString()}</p>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border border-[#EF5350]/60 space-y-1">
+                    <span className="text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider block">Cafe Earnings Net Split</span>
+                    <p className="text-2xl font-black text-[#E50914]">₹{amount.toLocaleString()}</p>
                   </div>
 
                   <div className="mt-3 text-xs text-text/60 space-y-1.5">
                     <div className="flex justify-between items-center">
                       <span>Payment Method</span>
-                      <span className="font-bold text-[#2C1810]">
+                      <span className="font-bold text-[#252525]">
                         {bookingData.paymentMethod ? bookingData.paymentMethod.replace(/\s*\/\s*(Cashfree|Razorpay)/gi, '').replace(/(Cashfree|Razorpay)/gi, 'Online') : 'Online'}
                       </span>
                     </div>
@@ -642,7 +642,7 @@ export default function BookingDetailsPage() {
                     <div className="flex justify-between items-center">
                       <span>Online Txn ID</span>
                       <div className="flex items-center gap-1 min-w-0">
-                        <span className="font-mono text-[11px] text-[#6F4E37] font-bold truncate max-w-[130px]">
+                        <span className="font-mono text-[11px] text-[#E50914] font-bold truncate max-w-[130px]">
                           {bookingData.transactionId || 'TXN-CONFIRMED'}
                         </span>
                         {bookingData.transactionId && (
@@ -652,7 +652,7 @@ export default function BookingDetailsPage() {
                               navigator.clipboard.writeText(bookingData.transactionId);
                               toast.success('Txn ID copied!');
                             }}
-                            className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#6F4E37] transition-all cursor-pointer shrink-0"
+                            className="p-1 rounded-lg hover:bg-surface text-text/50 hover:text-[#E50914] transition-all cursor-pointer shrink-0"
                             title="Copy Transaction ID"
                           >
                             <Copy className="w-3 h-3" />

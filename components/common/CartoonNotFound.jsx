@@ -48,7 +48,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
       particleCount: 35,
       spread: 80,
       origin: { y: 0.52 },
-      colors: ['#6F4E37', '#DDB892', '#A67B5B', '#FFF8F0', '#2C1810', '#E07A5F']
+      colors: ['#E50914', '#EF5350', '#B71C1C', '#FFF5F5', '#252525', '#E07A5F']
     });
 
     // Floating heart/star particle pop
@@ -65,23 +65,23 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
       particleCount: 100,
       spread: 120,
       origin: { y: 0.5 },
-      colors: ['#6F4E37', '#DDB892', '#A67B5B', '#FFF8F0', '#2C1810', '#F4A261', '#E76F51']
+      colors: ['#E50914', '#EF5350', '#B71C1C', '#FFF5F5', '#252525', '#F4A261', '#E76F51']
     });
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF6F0] text-[#2C1810] flex flex-col items-center justify-center p-4 sm:p-6 overflow-hidden relative font-sans selection:bg-[#DDB892]/40">
+    <div className="min-h-screen bg-[#FFF5F5] text-[#252525] flex flex-col items-center justify-center p-4 sm:p-6 overflow-hidden relative font-sans selection:bg-[#EF5350]/40">
       
       {/* Dynamic Background Lighting & Mesh Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-[#E6CCB2]/30 via-[#DDB892]/20 to-[#795548]/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
-      <div className="absolute top-12 left-10 w-72 h-72 bg-[#DDB892]/25 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-[#E6CCB2]/30 via-[#EF5350]/20 to-[#795548]/10 rounded-full blur-3xl pointer-events-none animate-pulse" />
+      <div className="absolute top-12 left-10 w-72 h-72 bg-[#EF5350]/25 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[#B08968]/20 rounded-full blur-3xl pointer-events-none" />
 
       {/* Floating Animated Ambient Icons */}
       <motion.div 
         animate={{ y: [-8, 8, -8], rotate: [-6, 6, -6] }}
         transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-        className="hidden sm:flex absolute top-16 left-12 sm:left-24 p-3.5 rounded-2xl bg-white/90 shadow-lg shadow-[#6F4E37]/5 border border-[#E6CCB2]/80 backdrop-blur-md text-[#6F4E37] items-center gap-2"
+        className="hidden sm:flex absolute top-16 left-12 sm:left-24 p-3.5 rounded-2xl bg-white/90 shadow-lg shadow-[#E50914]/5 border border-[#E6CCB2]/80 backdrop-blur-md text-[#E50914] items-center gap-2"
       >
         <Coffee className="w-5 h-5 text-[#795548]" />
         <span className="text-xs font-bold text-[#5C3D2E]">Fresh Brew</span>
@@ -90,7 +90,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
       <motion.div 
         animate={{ y: [10, -10, 10], rotate: [8, -8, 8] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-        className="hidden sm:flex absolute top-20 right-12 sm:right-24 p-3.5 rounded-2xl bg-white/90 shadow-lg shadow-[#6F4E37]/5 border border-[#E6CCB2]/80 backdrop-blur-md text-[#A67B5B] items-center gap-2"
+        className="hidden sm:flex absolute top-20 right-12 sm:right-24 p-3.5 rounded-2xl bg-white/90 shadow-lg shadow-[#E50914]/5 border border-[#E6CCB2]/80 backdrop-blur-md text-[#B71C1C] items-center gap-2"
       >
         <Sparkles className="w-5 h-5 text-amber-500" />
         <span className="text-xs font-bold text-[#5C3D2E]">Oops Moment</span>
@@ -99,7 +99,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
       <motion.div 
         animate={{ y: [-10, 6, -10], rotate: [-8, 8, -8] }}
         transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="hidden sm:flex absolute bottom-16 left-16 p-3 rounded-2xl bg-white/90 shadow-lg shadow-[#6F4E37]/5 border border-[#E6CCB2]/80 backdrop-blur-md text-[#6F4E37] items-center gap-2"
+        className="hidden sm:flex absolute bottom-16 left-16 p-3 rounded-2xl bg-white/90 shadow-lg shadow-[#E50914]/5 border border-[#E6CCB2]/80 backdrop-blur-md text-[#E50914] items-center gap-2"
       >
         <Compass className="w-5 h-5 text-[#8D5B4C]" />
         <span className="text-xs font-bold text-[#5C3D2E]">Off the Map</span>
@@ -119,12 +119,12 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
           animate={{ opacity: 1, y: 0, scale: 1 }}
           key={currentExpr.name}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="mb-3 px-4 py-2 bg-gradient-to-r from-[#FFF8F0] via-[#FAF0E6] to-[#FFF8F0] rounded-2xl border border-[#DDB892]/80 shadow-xs text-xs font-extrabold text-[#5C3D2E] flex items-center gap-2 relative"
+          className="mb-3 px-4 py-2 bg-gradient-to-r from-[#FFF5F5] via-[#FFF5F5] to-[#FFF5F5] rounded-2xl border border-[#EF5350]/80 shadow-xs text-xs font-extrabold text-[#5C3D2E] flex items-center gap-2 relative"
         >
           <Sparkles className="w-4 h-4 text-amber-500 animate-spin-slow" />
           <span>{currentExpr.quote}</span>
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-[#DDB892]" />
-          <div className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[7px] border-t-[#FFF8F0]" />
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-[#EF5350]" />
+          <div className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[7px] border-t-[#FFF5F5]" />
         </motion.div>
 
         {/* Cartoon Character: Interactive Coffee Cup */}
@@ -146,7 +146,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
                   delay: i * 0.4,
                   ease: 'easeInOut'
                 }}
-                className="w-2.5 h-7 bg-gradient-to-t from-[#B08968]/50 via-[#DDB892]/30 to-transparent rounded-full blur-[1px]"
+                className="w-2.5 h-7 bg-gradient-to-t from-[#B08968]/50 via-[#EF5350]/30 to-transparent rounded-full blur-[1px]"
               />
             ))}
           </div>
@@ -175,25 +175,25 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
             className="relative w-44 h-44 sm:w-48 sm:h-48 flex items-center justify-center"
           >
             {/* Soft Ambient Glow */}
-            <div className="absolute inset-2 bg-gradient-to-tr from-[#795548]/15 to-[#DDB892]/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300" />
+            <div className="absolute inset-2 bg-gradient-to-tr from-[#795548]/15 to-[#EF5350]/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300" />
 
             {/* SVG Cartoon Character */}
             <svg viewBox="0 0 160 160" className="w-full h-full drop-shadow-md">
               {/* Saucer Layer */}
-              <ellipse cx="80" cy="138" rx="62" ry="12" fill="#DDB892" opacity="0.85" />
+              <ellipse cx="80" cy="138" rx="62" ry="12" fill="#EF5350" opacity="0.85" />
               <ellipse cx="80" cy="135" rx="52" ry="9" fill="#FFFBF7" />
 
               {/* Handle */}
               <path d="M 122 68 C 148 68 148 108 122 108" fill="none" stroke="#5C3D2E" strokeWidth="12" strokeLinecap="round" />
 
               {/* Cup Outer & Inner Body */}
-              <path d="M 38 52 C 38 122 122 122 122 52 Z" fill="#FFF8F0" stroke="#5C3D2E" strokeWidth="5.5" strokeLinejoin="round" />
+              <path d="M 38 52 C 38 122 122 122 122 52 Z" fill="#FFF5F5" stroke="#5C3D2E" strokeWidth="5.5" strokeLinejoin="round" />
               <path d="M 42 54 C 44 116 116 116 118 54 Z" fill="#FFFFFF" />
               
               {/* Coffee Liquid Surface */}
               <ellipse cx="80" cy="52" rx="41" ry="10" fill="#5C3D2E" />
               <ellipse cx="76" cy="51" rx="33" ry="7.5" fill="#422A1D" />
-              <ellipse cx="66" cy="50" rx="10" ry="3.5" fill="#A67B5B" opacity="0.75" />
+              <ellipse cx="66" cy="50" rx="10" ry="3.5" fill="#B71C1C" opacity="0.75" />
 
               {/* Coffee Stamp / Icon Badge */}
               <circle cx="80" cy="97" r="11" fill="#5C3D2E" opacity="0.08" />
@@ -228,11 +228,11 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
             <span>404 — Page Not Found</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#252525] tracking-tight leading-tight">
             Lost in the Cafe?
           </h1>
 
-          <p className="text-xs sm:text-sm text-[#6F4E37]/85 max-w-sm mx-auto font-medium leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#E50914]/85 max-w-sm mx-auto font-medium leading-relaxed">
             Oops! It seems you've wandered off the map. The page you are looking for doesn't exist or has been moved.
           </p>
         </div>
@@ -242,7 +242,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="mt-3 text-xs font-bold text-[#5C3D2E] bg-[#FFF8F0] px-3.5 py-1.5 rounded-xl border border-[#E6CCB2] shadow-2xs flex items-center gap-1.5"
+            className="mt-3 text-xs font-bold text-[#5C3D2E] bg-[#FFF5F5] px-3.5 py-1.5 rounded-xl border border-[#E6CCB2] shadow-2xs flex items-center gap-1.5"
           >
             <span>🎉 You poked Bippy</span>
             <span className="bg-[#5C3D2E] text-white font-extrabold px-2 py-0.5 rounded-md text-[11px]">{pokeCount}</span>
@@ -267,7 +267,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => router.back()}
-            className="w-full sm:w-auto py-3 px-5 rounded-xl bg-white hover:bg-[#FFF8F0] text-[#5C3D2E] border border-[#E6CCB2] text-xs font-bold shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto py-3 px-5 rounded-xl bg-white hover:bg-[#FFF5F5] text-[#5C3D2E] border border-[#E6CCB2] text-xs font-bold shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Go Back</span>
@@ -297,7 +297,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
               className="p-3 rounded-xl bg-[#FFFBF7] hover:bg-white border border-[#E6CCB2]/70 hover:border-[#795548] shadow-2xs hover:shadow-xs transition-all flex flex-col items-center gap-1.5 group text-center"
             >
               <Store className="w-4 h-4 text-[#795548] group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-bold text-[#2C1810]">My Cafes</span>
+              <span className="text-[11px] font-bold text-[#252525]">My Cafes</span>
             </Link>
 
             <Link 
@@ -305,7 +305,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
               className="p-3 rounded-xl bg-[#FFFBF7] hover:bg-white border border-[#E6CCB2]/70 hover:border-[#795548] shadow-2xs hover:shadow-xs transition-all flex flex-col items-center gap-1.5 group text-center"
             >
               <Calendar className="w-4 h-4 text-[#795548] group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-bold text-[#2C1810]">Bookings</span>
+              <span className="text-[11px] font-bold text-[#252525]">Bookings</span>
             </Link>
 
             <Link 
@@ -313,7 +313,7 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
               className="p-3 rounded-xl bg-[#FFFBF7] hover:bg-white border border-[#E6CCB2]/70 hover:border-[#795548] shadow-2xs hover:shadow-xs transition-all flex flex-col items-center gap-1.5 group text-center"
             >
               <HelpCircle className="w-4 h-4 text-[#795548] group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-bold text-[#2C1810]">Support</span>
+              <span className="text-[11px] font-bold text-[#252525]">Support</span>
             </Link>
           </div>
         </div>

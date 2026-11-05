@@ -207,19 +207,19 @@ export default function TableManagementPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Top Header Banner with Cafe Selector */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] text-white flex items-center justify-center font-extrabold shadow-xs shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E50914] to-[#B71C1C] text-white flex items-center justify-center font-extrabold shadow-xs shrink-0">
             <Armchair className="w-6 h-6" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">Table Management</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#252525] tracking-tight">Table Management</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-extrabold">
                 SEATING CONFIG
               </span>
             </div>
@@ -245,7 +245,7 @@ export default function TableManagementPage() {
 
           <Button
             onClick={handleOpenCreateModal}
-            className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add Table</span>
@@ -270,8 +270,8 @@ export default function TableManagementPage() {
               onClick={() => setSelectedStatus(st)}
               className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
                 selectedStatus === st
-                  ? 'bg-[#6F4E37] text-white shadow-2xs'
-                  : 'bg-surface/60 text-text/65 hover:bg-surface hover:text-[#2C1810]'
+                  ? 'bg-[#E50914] text-white shadow-2xs'
+                  : 'bg-surface/60 text-text/65 hover:bg-surface hover:text-[#252525]'
               }`}
             >
               {st === 'ALL' ? 'All Tables' : st.charAt(0) + st.slice(1).toLowerCase()}
@@ -282,12 +282,12 @@ export default function TableManagementPage() {
         {/* Search & Layout View Toggles */}
         <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
           <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6F4E37]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#E50914]" />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#6F4E37] transition-all font-medium"
+              className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#E50914] transition-all font-medium"
               placeholder="Search table number or location..."
             />
           </div>
@@ -296,7 +296,7 @@ export default function TableManagementPage() {
             <button
               onClick={() => setViewMode('grid')}
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 cursor-pointer ${
-                viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37]' : 'text-text/50 hover:text-[#2C1810]'
+                viewMode === 'grid' ? 'bg-white shadow-2xs text-[#E50914]' : 'text-text/50 hover:text-[#252525]'
               }`}
             >
               <Grid className="w-3.5 h-3.5" />
@@ -317,7 +317,7 @@ export default function TableManagementPage() {
           title="Unable to load tables"
           message="There was an error retrieving physical tables for this cafe."
           action={
-            <Button onClick={() => refetch()} className="bg-[#6F4E37] text-white font-extrabold rounded-2xl px-5 py-2">
+            <Button onClick={() => refetch()} className="bg-[#E50914] text-white font-extrabold rounded-2xl px-5 py-2">
               Try Again
             </Button>
           }
@@ -328,7 +328,7 @@ export default function TableManagementPage() {
           title={search ? "No tables match your filter" : "No tables added yet"}
           message={search ? "Try searching for a different table number or status." : "Create your first table to start managing cafe seating and guest reservations."}
           action={!search && (
-            <Button onClick={handleOpenCreateModal} className="bg-[#6F4E37] text-white font-extrabold rounded-2xl px-6 py-2.5 shadow-xs">
+            <Button onClick={handleOpenCreateModal} className="bg-[#E50914] text-white font-extrabold rounded-2xl px-6 py-2.5 shadow-xs">
               <Plus className="w-4 h-4 mr-1.5" /> + Add Table
             </Button>
           )}

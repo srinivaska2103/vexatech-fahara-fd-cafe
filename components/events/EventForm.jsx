@@ -87,20 +87,20 @@ const CustomHostCafeSelect = ({ cafes, value, onChange, disabled, error }) => {
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={cn(
-          "w-full h-11 px-4 rounded-xl border flex items-center justify-between text-xs font-bold text-[#2C1810] transition-all cursor-pointer shadow-2xs",
+          "w-full h-11 px-4 rounded-xl border flex items-center justify-between text-xs font-bold text-[#252525] transition-all cursor-pointer shadow-2xs",
           disabled && "opacity-60 cursor-not-allowed bg-stone-50",
-          isOpen ? "border-[#6F4E37] ring-2 ring-[#6F4E37]/20 bg-[#FFF8F0]" : "border-[#E8DED5] bg-white hover:border-[#6F4E37]"
+          isOpen ? "border-[#E50914] ring-2 ring-[#E50914]/20 bg-[#FFF5F5]" : "border-[#FEE2E2] bg-white hover:border-[#E50914]"
         )}
       >
         <div className="flex items-center gap-2.5 truncate">
-          <Store className="w-4 h-4 text-[#6F4E37] shrink-0" />
+          <Store className="w-4 h-4 text-[#E50914] shrink-0" />
           <span className="truncate">{selectedCafe ? selectedCafe.name : 'Select Host Cafe'}</span>
         </div>
-        <ChevronDown className={cn("w-4 h-4 text-[#6F4E37] transition-transform shrink-0", isOpen && "rotate-180")} />
+        <ChevronDown className={cn("w-4 h-4 text-[#E50914] transition-transform shrink-0", isOpen && "rotate-180")} />
       </button>
 
       {isOpen && !disabled && (
-        <div className="absolute left-0 right-0 mt-1.5 z-50 max-h-60 overflow-y-auto rounded-xl bg-white border border-[#E8DED5] shadow-xl p-1.5 space-y-1 custom-scrollbar">
+        <div className="absolute left-0 right-0 mt-1.5 z-50 max-h-60 overflow-y-auto rounded-xl bg-white border border-[#FEE2E2] shadow-xl p-1.5 space-y-1 custom-scrollbar">
           {cafes.map((cafe) => {
             const isSelected = String(cafe.id) === String(value);
             return (
@@ -114,8 +114,8 @@ const CustomHostCafeSelect = ({ cafes, value, onChange, disabled, error }) => {
                 className={cn(
                   "w-full px-3.5 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between transition-all cursor-pointer text-left",
                   isSelected
-                    ? "bg-[#6F4E37] text-white"
-                    : "text-[#2C1810] hover:bg-[#FFF8F0] hover:text-[#6F4E37]"
+                    ? "bg-[#E50914] text-white"
+                    : "text-[#252525] hover:bg-[#FFF5F5] hover:text-[#E50914]"
                 )}
               >
                 <div className="flex items-center gap-2 truncate">
@@ -297,24 +297,24 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleFormSubmit, handleFormErrors)} className="space-y-6 text-[#2C1810]">
+      <form onSubmit={handleSubmit(handleFormSubmit, handleFormErrors)} className="space-y-6 text-[#252525]">
         
         {/* Wizard Stepper Progress Bar */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-[#E8DED5] shadow-2xs space-y-4">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-[#FEE2E2] shadow-2xs space-y-4">
           
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-[#6F4E37] uppercase tracking-wider">
+            <span className="text-xs font-black text-[#E50914] uppercase tracking-wider">
               Step {currentStep} of {steps.length} — {steps[currentStep - 1].title}
             </span>
-            <span className="text-xs font-bold text-[#2C1810]/60">
+            <span className="text-xs font-bold text-[#252525]/60">
               {Math.round((currentStep / steps.length) * 100)}% Completed
             </span>
           </div>
 
           {/* Animated Progress Line */}
-          <div className="w-full h-2 bg-[#FFF8F0] rounded-full overflow-hidden border border-[#E8DED5]/60">
+          <div className="w-full h-2 bg-[#FFF5F5] rounded-full overflow-hidden border border-[#FEE2E2]/60">
             <motion.div 
-              className="h-full bg-[#6F4E37] rounded-full"
+              className="h-full bg-[#E50914] rounded-full"
               initial={{ width: '25%' }}
               animate={{ width: `${(currentStep / steps.length) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -336,28 +336,28 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                   className={cn(
                     "p-3 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-2.5",
                     isCurrent 
-                      ? "bg-[#FFF8F0] border-[#6F4E37] ring-1 ring-[#6F4E37]/20 shadow-2xs" 
+                      ? "bg-[#FFF5F5] border-[#E50914] ring-1 ring-[#E50914]/20 shadow-2xs" 
                       : isCompleted 
                         ? "bg-emerald-50/60 border-emerald-200 text-emerald-800" 
-                        : "bg-white border-[#E8DED5] opacity-70 hover:opacity-100"
+                        : "bg-white border-[#FEE2E2] opacity-70 hover:opacity-100"
                   )}
                 >
                   <div className={cn(
                     "w-6 h-6 rounded-lg flex items-center justify-center text-xs font-extrabold shrink-0 mt-0.5",
                     isCurrent 
-                      ? "bg-[#6F4E37] text-white" 
+                      ? "bg-[#E50914] text-white" 
                       : isCompleted 
                         ? "bg-emerald-600 text-white" 
-                        : "bg-[#FFF8F0] text-[#2C1810]/50"
+                        : "bg-[#FFF5F5] text-[#252525]/50"
                   )}>
                     {isCompleted ? <Check className="w-3.5 h-3.5" /> : step.id}
                   </div>
 
                   <div className="min-w-0">
-                    <p className={cn("text-xs font-bold truncate", isCurrent ? "text-[#6F4E37]" : "text-[#2C1810]")}>
+                    <p className={cn("text-xs font-bold truncate", isCurrent ? "text-[#E50914]" : "text-[#252525]")}>
                       {step.title}
                     </p>
-                    <p className="text-[10px] text-[#2C1810]/50 truncate hidden sm:block">{step.desc}</p>
+                    <p className="text-[10px] text-[#252525]/50 truncate hidden sm:block">{step.desc}</p>
                   </div>
                 </button>
               );
@@ -378,15 +378,15 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white p-6 sm:p-8 rounded-2xl border border-[#E8DED5] shadow-2xs space-y-6"
+                className="bg-white p-6 sm:p-8 rounded-2xl border border-[#FEE2E2] shadow-2xs space-y-6"
               >
                 
                 {/* STEP 1: EVENT PROFILE */}
                 {currentStep === 1 && (
                   <div className="space-y-5">
-                    <div className="pb-3 border-b border-[#E8DED5]">
-                      <h3 className="text-base font-black text-[#2C1810]">1. Venue & Event Profile</h3>
-                      <p className="text-xs text-[#2C1810]/70 mt-0.5">Select the host cafe and choice of event category.</p>
+                    <div className="pb-3 border-b border-[#FEE2E2]">
+                      <h3 className="text-base font-black text-[#252525]">1. Venue & Event Profile</h3>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">Select the host cafe and choice of event category.</p>
                     </div>
 
                     {/* Host Cafe Select */}
@@ -416,8 +416,8 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                               className={cn(
                                 "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2.5 shadow-2xs group hover:-translate-y-0.5",
                                 isSelected
-                                  ? "bg-gradient-to-br from-[#6F4E37] to-[#452718] text-white border-[#6F4E37] shadow-md"
-                                  : "bg-white border-stone-200/90 hover:bg-[#FFF8F0] hover:border-[#6F4E37]/40 text-[#2C1810]"
+                                  ? "bg-gradient-to-br from-[#E50914] to-[#452718] text-white border-[#E50914] shadow-md"
+                                  : "bg-white border-stone-200/90 hover:bg-[#FFF5F5] hover:border-[#E50914]/40 text-[#252525]"
                               )}
                             >
                               <div className="flex items-center justify-between w-full">
@@ -456,7 +456,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                         id="package_name"
                         {...register('package_name')}
                         placeholder="e.g. Birthday Celebration — Package 1"
-                        className="mt-1.5 h-11 text-xs font-bold rounded-xl border-[#E8DED5] focus:border-[#6F4E37]"
+                        className="mt-1.5 h-11 text-xs font-bold rounded-xl border-[#FEE2E2] focus:border-[#E50914]"
                       />
                       {errors.package_name && <p className="mt-1 text-[10px] text-rose-600">{errors.package_name.message}</p>}
                     </div>
@@ -466,16 +466,16 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                 {/* STEP 2: RATES, CAPACITY & DURATION */}
                 {currentStep === 2 && (
                   <div className="space-y-5">
-                    <div className="pb-3 border-b border-[#E8DED5]">
-                      <h3 className="text-base font-black text-[#2C1810]">2. Rates, Capacity & Duration</h3>
-                      <p className="text-xs text-[#2C1810]/70 mt-0.5">Set custom package pricing, maximum guest limits, and duration.</p>
+                    <div className="pb-3 border-b border-[#FEE2E2]">
+                      <h3 className="text-base font-black text-[#252525]">2. Rates, Capacity & Duration</h3>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">Set custom package pricing, maximum guest limits, and duration.</p>
                     </div>
 
                     {/* Price Input & Quick Presets */}
                     <div>
                       <Label htmlFor="price">Package Price (₹) *</Label>
                       <div className="relative mt-1">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6F4E37] font-black text-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#E50914] font-black text-sm">
                           ₹
                         </div>
                         <Input
@@ -484,13 +484,13 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                           min="0"
                           {...register('price')}
                           placeholder="2499"
-                          className="pl-8 h-11 text-sm font-black rounded-xl border-[#E8DED5] focus:border-[#6F4E37]"
+                          className="pl-8 h-11 text-sm font-black rounded-xl border-[#FEE2E2] focus:border-[#E50914]"
                         />
                       </div>
 
                       {/* Price Preset Chips */}
                       <div className="flex flex-wrap items-center gap-2 mt-2.5">
-                        <span className="text-[10px] font-black text-[#6F4E37] uppercase tracking-wider mr-1 flex items-center gap-1">
+                        <span className="text-[10px] font-black text-[#E50914] uppercase tracking-wider mr-1 flex items-center gap-1">
                           <Sparkles className="w-3 h-3 text-amber-500" />
                           Presets:
                         </span>
@@ -519,7 +519,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                     <div>
                       <Label htmlFor="maximum_persons">Maximum Guests / Members</Label>
                       <div className="relative mt-1">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6F4E37]">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#E50914]">
                           <Users className="w-4 h-4" />
                         </div>
                         <Input
@@ -528,13 +528,13 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                           min="1"
                           {...register('maximum_persons')}
                           placeholder="e.g. 10"
-                          className="pl-9 h-11 text-xs font-bold rounded-xl border-[#E8DED5] focus:border-[#6F4E37]"
+                          className="pl-9 h-11 text-xs font-bold rounded-xl border-[#FEE2E2] focus:border-[#E50914]"
                         />
                       </div>
 
                       {/* Guest Presets */}
                       <div className="flex flex-wrap items-center gap-2 mt-2.5">
-                        <span className="text-[10px] font-black text-[#6F4E37] uppercase tracking-wider mr-1 flex items-center gap-1">
+                        <span className="text-[10px] font-black text-[#E50914] uppercase tracking-wider mr-1 flex items-center gap-1">
                           <Users className="w-3 h-3 text-emerald-600" />
                           Guests:
                         </span>
@@ -565,7 +565,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                         <div>
                           <Label htmlFor="duration_value">Duration Value</Label>
                           <div className="relative mt-1">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6F4E37]">
+                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#E50914]">
                               <Clock className="w-4 h-4" />
                             </div>
                             <Input
@@ -574,14 +574,14 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                               min="1"
                               {...register('duration_value')}
                               placeholder="e.g. 2 or 90"
-                              className="pl-9 h-11 text-xs font-bold rounded-xl border-[#E8DED5] focus:border-[#6F4E37]"
+                              className="pl-9 h-11 text-xs font-bold rounded-xl border-[#FEE2E2] focus:border-[#E50914]"
                             />
                           </div>
                         </div>
 
                         <div>
                           <Label>Duration Unit</Label>
-                          <div className="flex items-center gap-1.5 mt-1 p-1 bg-[#FFF8F0] rounded-xl border border-[#E8DED5] h-11">
+                          <div className="flex items-center gap-1.5 mt-1 p-1 bg-[#FFF5F5] rounded-xl border border-[#FEE2E2] h-11">
                             {['Hours', 'Minutes'].map((unit) => {
                               const isSelected = watchedDurationUnit === unit;
                               return (
@@ -592,8 +592,8 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                                   className={cn(
                                     "flex-1 h-full rounded-lg text-xs font-extrabold transition-all cursor-pointer text-center flex items-center justify-center",
                                     isSelected
-                                      ? "bg-[#6F4E37] text-white shadow-2xs"
-                                      : "text-[#2C1810]/70 hover:bg-[#E8DED5]"
+                                      ? "bg-[#E50914] text-white shadow-2xs"
+                                      : "text-[#252525]/70 hover:bg-[#FEE2E2]"
                                   )}
                                 >
                                   {unit}
@@ -606,7 +606,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
 
                       {/* Quick Duration Presets */}
                       <div className="flex flex-wrap items-center gap-2 mt-2.5">
-                        <span className="text-[10px] font-black text-[#6F4E37] uppercase tracking-wider mr-1 flex items-center gap-1">
+                        <span className="text-[10px] font-black text-[#E50914] uppercase tracking-wider mr-1 flex items-center gap-1">
                           <Clock className="w-3 h-3 text-cyan-600" />
                           Duration:
                         </span>
@@ -642,7 +642,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                         rows={3}
                         {...register('description')}
                         placeholder="Describe what makes this custom package special for your customers..."
-                        className="w-full mt-1.5 p-3.5 rounded-xl border border-[#E8DED5] text-xs font-medium focus:border-[#6F4E37] focus:outline-none resize-none leading-relaxed"
+                        className="w-full mt-1.5 p-3.5 rounded-xl border border-[#FEE2E2] text-xs font-medium focus:border-[#E50914] focus:outline-none resize-none leading-relaxed"
                       />
                     </div>
                   </div>
@@ -651,10 +651,10 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                 {/* STEP 3: CUSTOM INCLUSIONS */}
                 {currentStep === 3 && (
                   <div className="space-y-5">
-                    <div className="pb-3 border-b border-[#E8DED5] flex items-center justify-between">
+                    <div className="pb-3 border-b border-[#FEE2E2] flex items-center justify-between">
                       <div>
-                        <h3 className="text-base font-black text-[#2C1810]">3. Custom Inclusions</h3>
-                        <p className="text-xs text-[#2C1810]/70 mt-0.5">Add items included in this package (Cake, Food, Setup, etc.).</p>
+                        <h3 className="text-base font-black text-[#252525]">3. Custom Inclusions</h3>
+                        <p className="text-xs text-[#252525]/70 mt-0.5">Add items included in this package (Cake, Food, Setup, etc.).</p>
                       </div>
 
                       <Button
@@ -663,7 +663,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                           setEditingInclusion(null);
                           setIsInclusionModalOpen(true);
                         }}
-                        className="py-1.5 px-3.5 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs shrink-0"
+                        className="py-1.5 px-3.5 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs shrink-0"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>+ Add Inclusion</span>
@@ -672,26 +672,26 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
 
                     {/* Inclusions Cards List */}
                     {inclusions.length === 0 ? (
-                      <div className="p-8 rounded-2xl border border-dashed border-[#E8DED5] bg-[#FFF8F0]/40 text-center space-y-2">
-                        <Package className="w-8 h-8 text-[#6F4E37] mx-auto opacity-70" />
-                        <h4 className="text-xs font-black text-[#2C1810]">No Custom Inclusions Added</h4>
-                        <p className="text-xs text-[#2C1810]/60 max-w-xs mx-auto">
+                      <div className="p-8 rounded-2xl border border-dashed border-[#FEE2E2] bg-[#FFF5F5]/40 text-center space-y-2">
+                        <Package className="w-8 h-8 text-[#E50914] mx-auto opacity-70" />
+                        <h4 className="text-xs font-black text-[#252525]">No Custom Inclusions Added</h4>
+                        <p className="text-xs text-[#252525]/60 max-w-xs mx-auto">
                           Click "+ Add Inclusion" above to add custom items such as 1 Kg Cake, Table Setup, Welcome Drinks, etc.
                         </p>
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {inclusions.map((inc, index) => (
-                          <div key={inc.id || index} className="p-3.5 rounded-xl border border-[#E8DED5] bg-white shadow-2xs flex items-start justify-between gap-2.5">
+                          <div key={inc.id || index} className="p-3.5 rounded-xl border border-[#FEE2E2] bg-white shadow-2xs flex items-start justify-between gap-2.5">
                             <div className="space-y-1">
-                              <p className="text-xs font-black text-[#2C1810] flex items-center gap-1.5">
+                              <p className="text-xs font-black text-[#252525] flex items-center gap-1.5">
                                 <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                 <span>{inc.name || inc.inclusion_name}</span>
                               </p>
                               {inc.description && (
-                                <p className="text-[11px] text-[#2C1810]/60 line-clamp-2 pl-5">{inc.description}</p>
+                                <p className="text-[11px] text-[#252525]/60 line-clamp-2 pl-5">{inc.description}</p>
                               )}
-                              <p className="text-[10px] font-extrabold text-[#6F4E37] pl-5">
+                              <p className="text-[10px] font-extrabold text-[#E50914] pl-5">
                                 Qty: {inc.quantity} {inc.unit}
                               </p>
                             </div>
@@ -703,7 +703,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                                   setEditingInclusion(inc);
                                   setIsInclusionModalOpen(true);
                                 }}
-                                className="p-1.5 rounded-lg text-[#2C1810]/60 hover:text-[#6F4E37] hover:bg-[#FFF8F0]"
+                                className="p-1.5 rounded-lg text-[#252525]/60 hover:text-[#E50914] hover:bg-[#FFF5F5]"
                                 title="Edit Inclusion"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
@@ -727,14 +727,14 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                 {/* STEP 4: REVIEW & PUBLISH */}
                 {currentStep === 4 && (
                   <div className="space-y-5">
-                    <div className="pb-3 border-b border-[#E8DED5]">
-                      <h3 className="text-base font-black text-[#2C1810]">4. Final Review & Status</h3>
-                      <p className="text-xs text-[#2C1810]/70 mt-0.5">Review package details and set listing status before saving.</p>
+                    <div className="pb-3 border-b border-[#FEE2E2]">
+                      <h3 className="text-base font-black text-[#252525]">4. Final Review & Status</h3>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">Review package details and set listing status before saving.</p>
                     </div>
 
                     {/* Listing Status Toggle */}
-                    <div className="p-4 rounded-xl border border-[#E8DED5] bg-[#FFF8F0]/40 space-y-2">
-                      <Label className="text-xs font-black text-[#2C1810]">Listing Status</Label>
+                    <div className="p-4 rounded-xl border border-[#FEE2E2] bg-[#FFF5F5]/40 space-y-2">
+                      <Label className="text-xs font-black text-[#252525]">Listing Status</Label>
                       <div className="grid grid-cols-2 gap-3">
                         <button
                           type="button"
@@ -743,7 +743,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                             "p-3 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer",
                             watchedStatus === 'PUBLISHED' || watchedStatus === 'ACTIVE'
                               ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
-                              : "bg-white text-[#2C1810] border-[#E8DED5] hover:border-emerald-500"
+                              : "bg-white text-[#252525] border-[#FEE2E2] hover:border-emerald-500"
                           )}
                         >
                           <Globe className="w-4 h-4 shrink-0" />
@@ -760,7 +760,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                             "p-3 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer",
                             watchedStatus === 'DRAFT'
                               ? "bg-amber-600 text-white border-amber-600 shadow-2xs"
-                              : "bg-white text-[#2C1810] border-[#E8DED5] hover:border-amber-500"
+                              : "bg-white text-[#252525] border-[#FEE2E2] hover:border-amber-500"
                           )}
                         >
                           <FileText className="w-4 h-4 shrink-0" />
@@ -775,13 +775,13 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                 )}
 
                 {/* Step Controls Navigation Bar */}
-                <div className="pt-4 border-t border-[#E8DED5] flex items-center justify-between gap-3">
+                <div className="pt-4 border-t border-[#FEE2E2] flex items-center justify-between gap-3">
                   <Button
                     type="button"
                     variant="outline"
                     disabled={currentStep === 1}
                     onClick={prevStep}
-                    className="py-2.5 px-4 rounded-xl border-[#E8DED5] text-xs font-bold text-[#2C1810] flex items-center gap-1.5"
+                    className="py-2.5 px-4 rounded-xl border-[#FEE2E2] text-xs font-bold text-[#252525] flex items-center gap-1.5"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     <span>Previous Step</span>
@@ -791,7 +791,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                     <Button
                       type="button"
                       onClick={nextStep}
-                      className="py-2.5 px-6 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold flex items-center gap-1.5 shadow-2xs"
+                      className="py-2.5 px-6 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold flex items-center gap-1.5 shadow-2xs"
                     >
                       <span>Next Step</span>
                       <ArrowRight className="w-4 h-4" />
@@ -800,7 +800,7 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
                     <Button
                       type="submit"
                       isLoading={isLoading}
-                      className="py-2.5 px-6 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold shadow-2xs flex items-center gap-2"
+                      className="py-2.5 px-6 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold shadow-2xs flex items-center gap-2"
                     >
                       <Save className="w-4 h-4" />
                       <span>{submitLabel}</span>
@@ -815,8 +815,8 @@ export const EventForm = ({ defaultValues, onSubmit, isLoading, submitLabel = "S
           {/* Live Package Preview (5 Cols on desktop, sticky) */}
           <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-3">
             <div className="flex items-center gap-2 px-1">
-              <Eye className="w-4 h-4 text-[#6F4E37]" />
-              <h4 className="text-xs font-black uppercase tracking-wider text-[#6F4E37]">
+              <Eye className="w-4 h-4 text-[#E50914]" />
+              <h4 className="text-xs font-black uppercase tracking-wider text-[#E50914]">
                 Live Package Card Preview
               </h4>
             </div>

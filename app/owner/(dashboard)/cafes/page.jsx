@@ -100,21 +100,21 @@ export default function CafesPage() {
     cafes.some(c => c.is_walking_cafe === true || (c.category || '').toLowerCase().includes('walking'));
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Modern Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-5 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 z-10">
-          <div className="w-12 h-12 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-extrabold text-xl shadow-xs shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-extrabold text-xl shadow-xs shrink-0">
             <Store className="w-6 h-6" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#252525] tracking-tight">
                 {isRestaurantOwner ? 'My Restaurants' : 'My Cafe Venues'}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-extrabold">
                 PORTFOLIO
               </span>
             </div>
@@ -138,7 +138,7 @@ export default function CafesPage() {
             </div>
           ) : (
             <Link href="/owner/cafes/create">
-              <Button className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-2 transition-all">
+              <Button className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-2 transition-all">
                 <Plus className="w-4 h-4" />
                 <span>Add New {isRestaurantOwner ? 'Restaurant' : 'Cafe'} ({cafes.length}/3)</span>
               </Button>
@@ -150,12 +150,12 @@ export default function CafesPage() {
       {/* Interactive Venue Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         <div className="bg-white p-4 rounded-3xl border border-border/60 shadow-2xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-extrabold shrink-0">
             <Store className="w-5 h-5" />
           </div>
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Total Venues</p>
-            <h3 className="text-lg font-black text-[#2C1810]">{totalVenues}</h3>
+            <h3 className="text-lg font-black text-[#252525]">{totalVenues}</h3>
           </div>
         </div>
 
@@ -165,7 +165,7 @@ export default function CafesPage() {
           </div>
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Active Listings</p>
-            <h3 className="text-lg font-black text-[#2C1810]">{activeVenues}</h3>
+            <h3 className="text-lg font-black text-[#252525]">{activeVenues}</h3>
           </div>
         </div>
 
@@ -175,7 +175,7 @@ export default function CafesPage() {
           </div>
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Pending Review</p>
-            <h3 className="text-lg font-black text-[#2C1810]">{pendingVenues}</h3>
+            <h3 className="text-lg font-black text-[#252525]">{pendingVenues}</h3>
           </div>
         </div>
 
@@ -196,7 +196,7 @@ export default function CafesPage() {
             </div>
             <div>
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-text/50">Avg Hourly Rate</p>
-              <h3 className="text-lg font-black text-[#2C1810]">₹{avgHourlyRate}/hr</h3>
+              <h3 className="text-lg font-black text-[#252525]">₹{avgHourlyRate}/hr</h3>
             </div>
           </div>
         ) : (
@@ -223,8 +223,8 @@ export default function CafesPage() {
               onClick={() => setSelectedStatus(tab.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 ${
                 selectedStatus === tab.id
-                  ? 'bg-[#6F4E37] text-white shadow-2xs'
-                  : 'bg-surface/60 text-text/65 hover:bg-surface hover:text-[#2C1810]'
+                  ? 'bg-[#E50914] text-white shadow-2xs'
+                  : 'bg-surface/60 text-text/65 hover:bg-surface hover:text-[#252525]'
               }`}
             >
               <span>{tab.label}</span>
@@ -240,12 +240,12 @@ export default function CafesPage() {
         {/* Right: Search Box & View Mode Toggles */}
         <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
           <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6F4E37]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#E50914]" />
             <input 
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#6F4E37] transition-all font-medium" 
+              className="w-full pl-10 pr-3 py-2 text-xs rounded-xl border border-border/60 bg-surface/30 focus:outline-none focus:bg-white focus:border-[#E50914] transition-all font-medium" 
               placeholder={isRestaurantOwner ? "Search restaurants by name or city..." : "Search cafes by name or city..."} 
             />
           </div>
@@ -253,14 +253,14 @@ export default function CafesPage() {
           <div className="flex bg-surface p-1 rounded-xl border border-border/40 shrink-0">
             <button 
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white shadow-2xs text-[#6F4E37] font-bold' : 'text-text/50 hover:text-[#2C1810]'}`}
+              className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white shadow-2xs text-[#E50914] font-bold' : 'text-text/50 hover:text-[#252525]'}`}
               title="Grid View"
             >
               <Grid className="w-4 h-4" />
             </button>
             <button 
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white shadow-2xs text-[#6F4E37] font-bold' : 'text-text/50 hover:text-[#2C1810]'}`}
+              className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white shadow-2xs text-[#E50914] font-bold' : 'text-text/50 hover:text-[#252525]'}`}
               title="List View"
             >
               <ListIcon className="w-4 h-4" />
@@ -281,7 +281,7 @@ export default function CafesPage() {
           message={search ? "Try adjusting your search query or status filter." : (isRestaurantOwner ? "You haven't registered any restaurants yet. Add your first venue to start accepting guest table reservations!" : "You haven't registered any cafes yet. Add your first venue to start accepting guest table reservations!")}
           action={!search && (
             <Link href="/owner/cafes/create">
-              <Button className="rounded-2xl font-extrabold bg-[#6F4E37] hover:bg-[#5D3F2B] text-white px-6 py-2.5 shadow-xs">
+              <Button className="rounded-2xl font-extrabold bg-[#E50914] hover:bg-[#E50914] text-white px-6 py-2.5 shadow-xs">
                 <Plus className="w-4 h-4 mr-1.5" /> {isRestaurantOwner ? "Create First Restaurant" : "Create First Cafe"}
               </Button>
             </Link>

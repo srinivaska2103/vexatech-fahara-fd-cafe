@@ -60,7 +60,7 @@ export const ConfirmProvider = ({ children }) => {
       case 'success':
         return <CheckCircle2 className="w-6 h-6 text-emerald-600" />;
       default:
-        return <HelpCircle className="w-6 h-6 text-[#6F4E37]" />;
+        return <HelpCircle className="w-6 h-6 text-[#E50914]" />;
     }
   };
 
@@ -73,7 +73,7 @@ export const ConfirmProvider = ({ children }) => {
       case 'success':
         return 'bg-emerald-50 border-emerald-100 text-emerald-900';
       default:
-        return 'bg-[#FFF8F0] border-[#E6CCB2] text-[#2C1810]';
+        return 'bg-[#FFF5F5] border-[#E6CCB2] text-[#252525]';
     }
   };
 
@@ -86,7 +86,7 @@ export const ConfirmProvider = ({ children }) => {
       case 'success':
         return 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20';
       default:
-        return 'bg-[#6F4E37] hover:bg-[#5D3F2B] text-white shadow-[#6F4E37]/20';
+        return 'bg-[#E50914] hover:bg-[#E50914] text-white shadow-[#E50914]/20';
     }
   };
 
@@ -122,7 +122,7 @@ export const ConfirmProvider = ({ children }) => {
                     {getIcon()}
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#2C1810] tracking-tight leading-snug">
+                    <h3 className="text-base font-extrabold text-[#252525] tracking-tight leading-snug">
                       {modalState.title}
                     </h3>
                     <p className="text-[11px] font-bold text-black/50 uppercase tracking-wider mt-0.5">
@@ -141,7 +141,7 @@ export const ConfirmProvider = ({ children }) => {
               </div>
 
               {/* Message Body */}
-              <div className="p-6 text-xs sm:text-sm font-medium text-[#2C1810]/80 leading-relaxed">
+              <div className="p-6 text-xs sm:text-sm font-medium text-[#252525]/80 leading-relaxed">
                 {modalState.message}
               </div>
 
@@ -150,7 +150,7 @@ export const ConfirmProvider = ({ children }) => {
                 <button
                   type="button"
                   onClick={() => handleClose(false)}
-                  className="px-4 py-2.5 rounded-xl bg-white border border-[#DDB892]/60 hover:bg-[#FFF8F0] text-[#2C1810] text-xs font-extrabold transition-all shadow-2xs cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-white border border-[#EF5350]/60 hover:bg-[#FFF5F5] text-[#252525] text-xs font-extrabold transition-all shadow-2xs cursor-pointer"
                 >
                   {modalState.cancelText}
                 </button>

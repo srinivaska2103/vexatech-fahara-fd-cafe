@@ -39,17 +39,17 @@ export function LiveNotificationListener() {
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } max-w-sm w-full bg-white shadow-xl rounded-2xl pointer-events-auto flex ring-1 ring-black/5 border border-[#DDB892]/60 overflow-hidden p-4 space-x-3 text-[#2C1810]`}
+            } max-w-sm w-full bg-white shadow-xl rounded-2xl pointer-events-auto flex ring-1 ring-black/5 border border-[#EF5350]/60 overflow-hidden p-4 space-x-3 text-[#252525]`}
           >
-            <div className="w-10 h-10 rounded-xl bg-[#6F4E37] text-white flex items-center justify-center font-extrabold shrink-0 shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-[#E50914] text-white flex items-center justify-center font-extrabold shrink-0 shadow-xs">
               <Bell className="w-5 h-5 animate-bounce" />
             </div>
             <div className="flex-1 space-y-1">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black text-[#2C1810]">
+                <p className="text-xs font-black text-[#252525]">
                   {notification.title || 'New Notification'}
                 </p>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37]">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914]">
                   JUST NOW
                 </span>
               </div>

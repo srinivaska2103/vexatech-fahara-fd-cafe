@@ -51,7 +51,7 @@ export default function SubscriptionPage() {
 
   const currentRole = isEventManager ? 'EVENT_MANAGER' : (isRestaurantOwner ? 'RESTAURANT_OWNER' : 'CAFE_OWNER');
   const currentPartnerLabel = isEventManager ? 'Event Manager' : (isRestaurantOwner ? 'Restaurant Owner' : 'Cafe Owner');
-  const currentPlanPrice = isRestaurantOwner ? 149 : 299;
+  const currentPlanPrice = isEventManager ? 299 : 399;
 
   // Plan metadata with accurate features matching application capability
   const allPlans = useMemo(() => [
@@ -59,7 +59,7 @@ export default function SubscriptionPage() {
       id: 'cafe-plan',
       role: 'CAFE_OWNER',
       title: 'Cafe Owner',
-      price: 299,
+      price: 399,
       billingCycle: 'MONTHLY',
       tagline: 'Take bookings, showcase custom event packages & grow cafe footfall.',
       icon: Coffee,
@@ -79,7 +79,7 @@ export default function SubscriptionPage() {
       id: 'restaurant-plan',
       role: 'RESTAURANT_OWNER',
       title: 'Restaurant Owner',
-      price: 149,
+      price: 399,
       billingCycle: 'MONTHLY',
       tagline: 'Connect with diners and manage tables, digital menu & reservations.',
       icon: Utensils,
@@ -161,16 +161,16 @@ export default function SubscriptionPage() {
         key: orderData.razorpayKeyId,
         amount: Math.round(resolvedAmount * 100),
         currency: orderData.currency || 'INR',
-        name: 'Fahara Partner',
-        description: `${orderData.planName || 'Fahara Partner'} Monthly Subscription ₹${resolvedAmount}/month`,
-        image: '/logo.jpeg',
+        name: 'Grab2GO Partner',
+        description: `${orderData.planName || 'Grab2GO Partner'} Monthly Subscription ₹${resolvedAmount}/month`,
+        image: '/grab-it-logo.png',
         prefill: {
           name: user?.name || '',
           email: user?.email || '',
           contact: user?.phone || ''
         },
         theme: {
-          color: '#6F4E37'
+          color: '#E50914'
         },
         handler: async function (response) {
           try {
@@ -180,7 +180,7 @@ export default function SubscriptionPage() {
               razorpay_subscription_id: response.razorpay_subscription_id,
               razorpay_signature: response.razorpay_signature
             });
-            setMsg({ type: 'success', text: 'Subscription activated successfully! Welcome to Fahara Partner.' });
+            setMsg({ type: 'success', text: 'Subscription activated successfully! Welcome to Grab2GO Partner.' });
             await fetchSubscription(true);
           } catch (err) {
             setMsg({ type: 'error', text: err.response?.data?.message || 'Subscription payment verification failed.' });
@@ -287,25 +287,25 @@ export default function SubscriptionPage() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto py-6 sm:py-8 px-4 sm:px-6 space-y-8 text-[#2C1810]">
-      {/* 1. Header Banner adhering to Fahara Theme (#6F4E37, #A67B5B, #DDB892, #FFF8F0, #2C1810) */}
-      <div className="relative bg-gradient-to-br from-[#FFF8F0] via-[#FAF0E6] to-[#F5E6D3] text-[#2C1810] p-6 sm:p-10 rounded-3xl shadow-md border border-[#E8DED5] overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#A67B5B]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-[#6F4E37]/10 rounded-full blur-2xl pointer-events-none" />
+    <div className="max-w-6xl mx-auto py-6 sm:py-8 px-4 sm:px-6 space-y-8 text-[#252525]">
+      {/* 1. Header Banner adhering to Grab2GO Theme (#E50914, #B71C1C, #EF5350, #FFF5F5, #252525) */}
+      <div className="relative bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#F5E6D3] text-[#252525] p-6 sm:p-10 rounded-3xl shadow-md border border-[#FEE2E2] overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#B71C1C]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-[#E50914]/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-black uppercase tracking-wider border border-[#6F4E37]/20 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#6F4E37]" />
-            <span>Fahara Partner Subscription</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-black uppercase tracking-wider border border-[#E50914]/20 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#E50914]" />
+            <span>Grab2GO Partner Subscription</span>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-1.5">
-              <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#2C1810] leading-tight">
-                Grow Your Business With Fahara
+              <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#252525] leading-tight">
+                Grow Your Business With Grab2GO
               </h1>
-              <p className="text-[#6F4E37]/90 text-xs sm:text-sm max-w-2xl font-medium leading-relaxed">
-                Discover Fahara's partner tools and activate your subscription to access your business dashboard.
+              <p className="text-[#E50914]/90 text-xs sm:text-sm max-w-2xl font-medium leading-relaxed">
+                Discover Grab2GO's partner tools and activate your subscription to access your business dashboard.
               </p>
             </div>
 
@@ -334,13 +334,13 @@ export default function SubscriptionPage() {
 
       {/* Inactive Notice Banner when subscription not active */}
       {!isActive && (
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#FFF8F0] border border-[#E8DED5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#FFF5F5] border border-[#FEE2E2] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center shrink-0 border border-[#DDB892]">
+            <div className="w-9 h-9 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center shrink-0 border border-[#EF5350]">
               <Lock className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-xs sm:text-sm font-extrabold text-[#2C1810]">
+              <h2 className="text-xs sm:text-sm font-extrabold text-[#252525]">
                 {status === 'EXPIRED' ? 'Subscription Expired' : (status === 'CANCELLED' ? 'Subscription Cancelled' : 'Active Subscription Required')}
               </h2>
               <p className="text-[11px] sm:text-xs text-stone-600 font-medium mt-0.5 leading-relaxed">
@@ -353,7 +353,7 @@ export default function SubscriptionPage() {
           <button
             onClick={handleSubscribe}
             disabled={submitting}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#6F4E37] hover:bg-[#593E2B] text-white text-xs font-black shadow-sm transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 shrink-0"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#E50914] hover:bg-[#593E2B] text-white text-xs font-black shadow-sm transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 shrink-0"
           >
             {submitting ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <CreditCard className="w-3.5 h-3.5" />}
             <span>{status === 'EXPIRED' ? `Renew for ₹${currentPlanPrice}/month` : `Subscribe for ₹${currentPlanPrice}/month`}</span>
@@ -363,18 +363,18 @@ export default function SubscriptionPage() {
 
       {/* 2. Active Subscription Details View */}
       {isActive && subscription && (
-        <div className="bg-white border border-[#E8DED5] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#E8DED5]">
+        <div className="bg-white border border-[#FEE2E2] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#FEE2E2]">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="px-3 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider border border-emerald-300">
                   Active Subscription
                 </span>
-                <span className="px-3 py-0.5 rounded-full bg-[#FFF8F0] text-[#6F4E37] text-[11px] font-bold border border-[#DDB892]">
+                <span className="px-3 py-0.5 rounded-full bg-[#FFF5F5] text-[#E50914] text-[11px] font-bold border border-[#EF5350]">
                   {currentPartnerLabel}
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-[#2C1810] tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-[#252525] tracking-tight">
                 {subscription.planName || `${currentPartnerLabel} Plan`}
               </h2>
               <p className="text-xs text-stone-500 font-medium">
@@ -382,8 +382,8 @@ export default function SubscriptionPage() {
               </p>
             </div>
 
-            <div className="bg-[#FFF8F0] p-4 rounded-2xl border border-[#E8DED5] text-right min-w-[140px]">
-              <div className="text-2xl sm:text-3xl font-black text-[#6F4E37]">
+            <div className="bg-[#FFF5F5] p-4 rounded-2xl border border-[#FEE2E2] text-right min-w-[140px]">
+              <div className="text-2xl sm:text-3xl font-black text-[#E50914]">
                 ₹{subscription.price || currentPlanPrice}
                 <span className="text-xs font-bold text-stone-500"> / month</span>
               </div>
@@ -395,32 +395,32 @@ export default function SubscriptionPage() {
 
           {/* Billing Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 bg-[#FFF8F0]/60 rounded-2xl border border-[#E8DED5]">
+            <div className="p-4 bg-[#FFF5F5]/60 rounded-2xl border border-[#FEE2E2]">
               <span className="text-stone-500 text-[11px] font-bold block mb-1">Status</span>
               <span className="text-xs sm:text-sm font-black text-emerald-800 uppercase flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> {subscription.status}
               </span>
             </div>
 
-            <div className="p-4 bg-[#FFF8F0]/60 rounded-2xl border border-[#E8DED5]">
+            <div className="p-4 bg-[#FFF5F5]/60 rounded-2xl border border-[#FEE2E2]">
               <span className="text-stone-500 text-[11px] font-bold block mb-1">Current Period Start</span>
-              <span className="text-xs sm:text-sm font-black text-[#2C1810] flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#6F4E37]" />
+              <span className="text-xs sm:text-sm font-black text-[#252525] flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#E50914]" />
                 {subscription.currentPeriodStart ? format(new Date(subscription.currentPeriodStart), 'dd MMM yyyy') : 'N/A'}
               </span>
             </div>
 
-            <div className="p-4 bg-[#FFF8F0]/60 rounded-2xl border border-[#E8DED5]">
+            <div className="p-4 bg-[#FFF5F5]/60 rounded-2xl border border-[#FEE2E2]">
               <span className="text-stone-500 text-[11px] font-bold block mb-1">
                 {subscription.cancelAtPeriodEnd ? 'Access Until' : 'Next Billing Date'}
               </span>
-              <span className="text-xs sm:text-sm font-black text-[#2C1810] flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#A67B5B]" />
+              <span className="text-xs sm:text-sm font-black text-[#252525] flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#B71C1C]" />
                 {subscription.currentPeriodEnd ? format(new Date(subscription.currentPeriodEnd), 'dd MMM yyyy') : 'N/A'}
               </span>
             </div>
 
-            <div className="p-4 bg-[#FFF8F0]/60 rounded-2xl border border-[#E8DED5]">
+            <div className="p-4 bg-[#FFF5F5]/60 rounded-2xl border border-[#FEE2E2]">
               <span className="text-stone-500 text-[11px] font-bold block mb-1">Payment Reference</span>
               <div className="flex items-center justify-between gap-1">
                 <span className="text-xs font-black text-stone-700 truncate max-w-[130px]">
@@ -429,7 +429,7 @@ export default function SubscriptionPage() {
                 {subscription.razorpaySubscriptionId && (
                   <button 
                     onClick={() => copyToClipboard(subscription.razorpaySubscriptionId)}
-                    className="p-1 text-stone-400 hover:text-[#6F4E37] cursor-pointer"
+                    className="p-1 text-stone-400 hover:text-[#E50914] cursor-pointer"
                     title="Copy ID"
                   >
                     <Copy className="w-3 h-3" />
@@ -440,7 +440,7 @@ export default function SubscriptionPage() {
           </div>
 
           {/* Cancellation Notice & Controls */}
-          <div className="pt-4 border-t border-[#E8DED5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="pt-4 border-t border-[#FEE2E2] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="text-xs text-stone-500 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>
@@ -454,7 +454,7 @@ export default function SubscriptionPage() {
               <button
                 onClick={handleReactivateRenewal}
                 disabled={submitting}
-                className="px-5 py-2.5 rounded-xl bg-[#6F4E37] hover:bg-[#593E2B] text-white text-xs font-black shadow-sm hover:shadow transition-all cursor-pointer shrink-0 flex items-center gap-1.5 disabled:opacity-50"
+                className="px-5 py-2.5 rounded-xl bg-[#E50914] hover:bg-[#593E2B] text-white text-xs font-black shadow-sm hover:shadow transition-all cursor-pointer shrink-0 flex items-center gap-1.5 disabled:opacity-50"
               >
                 {submitting ? (
                   <>
@@ -486,13 +486,13 @@ export default function SubscriptionPage() {
         <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-[#2C1810]">Subscription Plan</h2>
+            <h2 className="text-lg sm:text-xl font-black text-[#252525]">Subscription Plan</h2>
             <p className="text-xs text-stone-500 font-medium">
               Monthly partner subscription tailored for your verified {currentPartnerLabel} account.
             </p>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF8F0] border border-[#E8DED5] text-[11px] font-bold text-[#6F4E37] w-fit">
-            <Info className="w-3.5 h-3.5 text-[#6F4E37]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF5F5] border border-[#FEE2E2] text-[11px] font-bold text-[#E50914] w-fit">
+            <Info className="w-3.5 h-3.5 text-[#E50914]" />
             <span>Your Account: <strong className="font-black">{currentPartnerLabel}</strong></span>
           </div>
         </div>
@@ -508,16 +508,16 @@ export default function SubscriptionPage() {
             return (
               <div 
                 key={plan.id}
-                className="relative bg-white/95 backdrop-blur-xl border border-[#DDB892]/70 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-1"
+                className="relative bg-white/95 backdrop-blur-xl border border-[#EF5350]/70 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-1"
               >
                 {/* Modern Pill Badge */}
                 <div className="flex items-center justify-between gap-3 mb-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#E50914] to-[#B71C1C] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
                       <PlanIcon className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="text-base font-black text-[#2C1810] leading-none">{plan.title}</h3>
+                      <h3 className="text-base font-black text-[#252525] leading-none">{plan.title}</h3>
                       <span className="text-[10px] text-stone-500 font-medium">Billed monthly · Cancel anytime</span>
                     </div>
                   </div>
@@ -529,12 +529,12 @@ export default function SubscriptionPage() {
                 </div>
 
                 {/* Price Strip */}
-                <div className="flex items-baseline justify-between p-3 rounded-xl bg-[#FFF8F0] border border-[#DDB892]/40 mb-4">
+                <div className="flex items-baseline justify-between p-3 rounded-xl bg-[#FFF5F5] border border-[#EF5350]/40 mb-4">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-black text-[#2C1810]">₹{plan.price}</span>
+                    <span className="text-2xl font-black text-[#252525]">₹{plan.price}</span>
                     <span className="text-xs font-semibold text-stone-500">/mo</span>
                   </div>
-                  <span className="text-[10px] font-bold text-[#6F4E37] bg-white px-2 py-0.5 rounded-md border border-[#DDB892]/60 shadow-2xs">
+                  <span className="text-[10px] font-bold text-[#E50914] bg-white px-2 py-0.5 rounded-md border border-[#EF5350]/60 shadow-2xs">
                     Full Platform Access
                   </span>
                 </div>
@@ -546,7 +546,7 @@ export default function SubscriptionPage() {
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-stone-700">
                     {plan.features.slice(0, 6).map((feat, fIdx) => (
-                      <div key={fIdx} className="flex items-center gap-1.5 py-1 px-2 rounded-lg bg-stone-50 hover:bg-[#FFF8F0] transition-colors border border-transparent hover:border-[#DDB892]/40">
+                      <div key={fIdx} className="flex items-center gap-1.5 py-1 px-2 rounded-lg bg-stone-50 hover:bg-[#FFF5F5] transition-colors border border-transparent hover:border-[#EF5350]/40">
                         <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
                         <span className="text-[11px] font-medium truncate">{feat}</span>
                       </div>
@@ -599,7 +599,7 @@ export default function SubscriptionPage() {
       <div className="space-y-4 pt-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-[#2C1810]">
+            <h2 className="text-lg sm:text-xl font-black text-[#252525]">
               {isActive ? 'Your Unlocked Partner Tools' : (isRestaurantOwner ? 'Restaurant Partner Modules & Features' : 'Cafe Partner Modules & Features')}
             </h2>
             <p className="text-xs text-stone-500 font-medium">
@@ -610,8 +610,8 @@ export default function SubscriptionPage() {
                     : 'Explore venue management tools, live table reservations, custom event packages, and marketing campaigns included in your plan.')}
             </p>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF8F0] border border-[#E8DED5] text-[11px] font-bold text-[#6F4E37] w-fit">
-            <Info className="w-3.5 h-3.5 text-[#6F4E37]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF5F5] border border-[#FEE2E2] text-[11px] font-bold text-[#E50914] w-fit">
+            <Info className="w-3.5 h-3.5 text-[#E50914]" />
             <span>Account: <strong className="font-black">{currentPartnerLabel}</strong></span>
           </div>
         </div>
@@ -620,19 +620,19 @@ export default function SubscriptionPage() {
           {unlockedModules.map((mod, mIdx) => {
             const ModIcon = mod.icon;
             const CardContent = (
-              <div className="p-6 rounded-3xl bg-white border border-[#E8DED5] hover:border-[#6F4E37]/60 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group space-y-4 h-full">
+              <div className="p-6 rounded-3xl bg-white border border-[#FEE2E2] hover:border-[#E50914]/60 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group space-y-4 h-full">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="w-11 h-11 rounded-2xl bg-[#FFF8F0] text-[#6F4E37] flex items-center justify-center border border-[#E8DED5] group-hover:scale-105 group-hover:bg-[#6F4E37] group-hover:text-white transition-all duration-300">
+                    <div className="w-11 h-11 rounded-2xl bg-[#FFF5F5] text-[#E50914] flex items-center justify-center border border-[#FEE2E2] group-hover:scale-105 group-hover:bg-[#E50914] group-hover:text-white transition-all duration-300">
                       <ModIcon className="w-5 h-5 stroke-[2.2]" />
                     </div>
-                    <span className="text-[10px] font-extrabold text-[#6F4E37] bg-[#FFF8F0] px-2.5 py-1 rounded-full border border-[#DDB892] uppercase tracking-wider">
+                    <span className="text-[10px] font-extrabold text-[#E50914] bg-[#FFF5F5] px-2.5 py-1 rounded-full border border-[#EF5350] uppercase tracking-wider">
                       {mod.badge}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-sm sm:text-base font-black text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">
+                    <h3 className="text-sm sm:text-base font-black text-[#252525] group-hover:text-[#E50914] transition-colors">
                       {mod.title}
                     </h3>
                     <p className="text-xs text-stone-600 leading-relaxed font-medium mt-1">
@@ -641,7 +641,7 @@ export default function SubscriptionPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[#E8DED5]/70 flex items-center justify-between text-xs font-bold text-[#6F4E37]">
+                <div className="pt-3 border-t border-[#FEE2E2]/70 flex items-center justify-between text-xs font-bold text-[#E50914]">
                   <span>{isActive ? 'Open Module' : 'Included in Plan'}</span>
                   {isActive ? (
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -668,21 +668,21 @@ export default function SubscriptionPage() {
       {/* Cancellation Confirmation Modal */}
       {showCancelModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-[#E8DED5] space-y-5 text-[#2C1810]">
+          <div className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-[#FEE2E2] space-y-5 text-[#252525]">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 border border-amber-200">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-black text-[#2C1810]">Cancel Auto-Renewal?</h3>
+                <h3 className="text-base font-black text-[#252525]">Cancel Auto-Renewal?</h3>
                 <p className="text-xs text-stone-500 leading-relaxed">
                   Your partner dashboard will stay unlocked until your paid period ends. You won't be charged for next month.
                 </p>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#FFF8F0] border border-[#E8DED5] text-xs text-stone-600 space-y-1">
-              <div className="flex items-center gap-1.5 text-[#6F4E37] font-bold">
+            <div className="p-3.5 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-xs text-stone-600 space-y-1">
+              <div className="flex items-center gap-1.5 text-[#E50914] font-bold">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Business data stays safe</span>
               </div>

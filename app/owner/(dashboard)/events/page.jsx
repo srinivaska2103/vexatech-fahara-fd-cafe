@@ -94,15 +94,15 @@ export default function EventsPage() {
   const eventTypesPresent = Object.keys(groupedEvents);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 text-[#252525]">
       
       {/* SaaS Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#E8DED5]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#FEE2E2]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#2C1810] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
             Event Packages
           </h1>
-          <p className="text-xs sm:text-sm text-[#2C1810]/70 mt-1">
+          <p className="text-xs sm:text-sm text-[#252525]/70 mt-1">
             Create and manage custom packages for the events your cafe offers.
           </p>
         </div>
@@ -112,14 +112,14 @@ export default function EventsPage() {
           <button 
             type="button"
             onClick={() => refetch()}
-            className="w-10 h-10 rounded-xl border border-[#E8DED5] bg-white hover:bg-[#FFF8F0] text-[#6F4E37] flex items-center justify-center transition-all shrink-0"
+            className="w-10 h-10 rounded-xl border border-[#FEE2E2] bg-white hover:bg-[#FFF5F5] text-[#E50914] flex items-center justify-center transition-all shrink-0"
             title="Refresh Packages"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
 
           <Link href="/owner/events/create">
-            <Button className="py-2.5 px-5 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-bold shadow-2xs flex items-center gap-2">
+            <Button className="py-2.5 px-5 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-bold shadow-2xs flex items-center gap-2">
               <Plus className="w-4 h-4 text-white" />
               <span>+ Create Package</span>
             </Button>
@@ -128,7 +128,7 @@ export default function EventsPage() {
       </div>
 
       {/* Search & Category Filter Toolbar */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8DED5] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#FEE2E2] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
         
         {/* Category Pills */}
         <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
@@ -137,8 +137,8 @@ export default function EventsPage() {
             onClick={() => setSelectedCategory('ALL')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 ${
               selectedCategory === 'ALL'
-                ? 'bg-[#6F4E37] text-white shadow-2xs'
-                : 'bg-[#FFF8F0] text-[#2C1810] hover:bg-[#E8DED5]'
+                ? 'bg-[#E50914] text-white shadow-2xs'
+                : 'bg-[#FFF5F5] text-[#252525] hover:bg-[#FEE2E2]'
             }`}
           >
             All Event Types ({events.length})
@@ -147,13 +147,13 @@ export default function EventsPage() {
 
         {/* Search Field */}
         <div className="relative md:w-72">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#2C1810]/40">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#252525]/40">
             <Search className="h-4 w-4" />
           </div>
           <Input 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 rounded-xl border-[#E8DED5] bg-[#FFF8F0]/40 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-[#2C1810]/40" 
+            className="pl-9 h-10 rounded-xl border-[#FEE2E2] bg-[#FFF5F5]/40 focus:bg-white text-xs font-medium text-[#252525] placeholder:text-[#252525]/40" 
             placeholder="Search package name..." 
           />
         </div>
@@ -173,7 +173,7 @@ export default function EventsPage() {
       ) : events.length === 0 ? (
         <EmptyEventState search={search} />
       ) : eventTypesPresent.length === 0 ? (
-        <div className="p-12 text-center text-[#2C1810]/50 text-xs font-medium bg-white rounded-2xl border border-[#E8DED5]">
+        <div className="p-12 text-center text-[#252525]/50 text-xs font-medium bg-white rounded-2xl border border-[#FEE2E2]">
           No custom packages found matching "{search}".
         </div>
       ) : (
@@ -187,26 +187,26 @@ export default function EventsPage() {
               <section key={type} className="space-y-4">
                 
                 {/* Event Type Section Header */}
-                <div className="bg-white/80 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-[#E8DED5] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                <div className="bg-white/80 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-[#FEE2E2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#E50914] to-[#B71C1C] text-white flex items-center justify-center shrink-0 shadow-2xs">
                       <CategoryIcon className="w-4 h-4 stroke-[2.2]" />
                     </div>
                     <div>
-                      <h2 className="text-base font-black text-[#2C1810] flex items-center gap-2 leading-none">
+                      <h2 className="text-base font-black text-[#252525] flex items-center gap-2 leading-none">
                         <span>{type}</span>
-                        <span className="px-2 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[11px] font-black">
+                        <span className="px-2 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[11px] font-black">
                           {typePackages.length}
                         </span>
                       </h2>
-                      <p className="text-[11px] text-[#2C1810]/60 mt-0.5">{meta.subtitle}</p>
+                      <p className="text-[11px] text-[#252525]/60 mt-0.5">{meta.subtitle}</p>
                     </div>
                   </div>
 
                   <Link href={`/owner/events/create?event_type=${encodeURIComponent(type)}`}>
                     <button 
                       type="button"
-                      className="py-1.5 px-3 rounded-xl border border-[#6F4E37]/30 hover:border-[#6F4E37] bg-white hover:bg-[#FFF8F0] text-[#6F4E37] text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs shrink-0 cursor-pointer"
+                      className="py-1.5 px-3 rounded-xl border border-[#E50914]/30 hover:border-[#E50914] bg-white hover:bg-[#FFF5F5] text-[#E50914] text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs shrink-0 cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                       <span>Add {type} Package</span>

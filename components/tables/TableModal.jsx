@@ -143,16 +143,16 @@ export const TableModal = ({
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="bg-white rounded-3xl border border-[#DDB892]/60 shadow-2xl max-w-lg w-full overflow-hidden text-[#2C1810]"
+          className="bg-white rounded-3xl border border-[#EF5350]/60 shadow-2xl max-w-lg w-full overflow-hidden text-[#252525]"
         >
           {/* Modal Header */}
-          <div className="bg-gradient-to-r from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] p-5 border-b border-border/50 flex items-center justify-between">
+          <div className="bg-gradient-to-r from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] p-5 border-b border-border/50 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-extrabold text-[#2C1810]">
+                <h3 className="text-lg font-extrabold text-[#252525]">
                   {initialData ? `Edit Table ${initialData.table_number}` : 'Create New Table'}
                 </h3>
                 <p className="text-xs text-text/60 font-medium">Configure seating capacity, type and location</p>
@@ -161,7 +161,7 @@ export const TableModal = ({
 
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-white text-text/60 hover:text-[#2C1810] flex items-center justify-center border border-border/60 hover:bg-surface transition-colors"
+              className="w-8 h-8 rounded-full bg-white text-text/60 hover:text-[#252525] flex items-center justify-center border border-border/60 hover:bg-surface transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -179,7 +179,7 @@ export const TableModal = ({
             {/* Table Number & Table Type */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-extrabold text-[#2C1810] mb-1">
+                <label className="block text-xs font-extrabold text-[#252525] mb-1">
                   Table Number *
                 </label>
                 <input
@@ -188,12 +188,12 @@ export const TableModal = ({
                   onChange={(e) => setTableNumber(e.target.value)}
                   placeholder="e.g. T1"
                   required
-                  className="w-full px-3.5 py-2.5 rounded-2xl border border-border/60 text-xs font-bold focus:outline-none focus:border-[#6F4E37] bg-surface/30"
+                  className="w-full px-3.5 py-2.5 rounded-2xl border border-border/60 text-xs font-bold focus:outline-none focus:border-[#E50914] bg-surface/30"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-[#2C1810] mb-1">
+                <label className="block text-xs font-extrabold text-[#252525] mb-1">
                   Table Type
                 </label>
                 <CustomSelect
@@ -206,8 +206,8 @@ export const TableModal = ({
 
             {/* Seats Input */}
             <div>
-              <label className="block text-xs font-extrabold text-[#2C1810] mb-1">
-                Seats Count * {isCustomType && <span className="text-[#6F4E37] font-normal">(Custom Size)</span>}
+              <label className="block text-xs font-extrabold text-[#252525] mb-1">
+                Seats Count * {isCustomType && <span className="text-[#E50914] font-normal">(Custom Size)</span>}
               </label>
               <input
                 type="number"
@@ -216,14 +216,14 @@ export const TableModal = ({
                 value={seats}
                 onChange={(e) => setSeats(e.target.value)}
                 required
-                className="w-full px-3.5 py-2.5 rounded-2xl border border-border/60 text-xs font-bold focus:outline-none focus:border-[#6F4E37] bg-surface/30"
+                className="w-full px-3.5 py-2.5 rounded-2xl border border-border/60 text-xs font-bold focus:outline-none focus:border-[#E50914] bg-surface/30"
               />
             </div>
 
             {/* Location & Status */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-extrabold text-[#2C1810] mb-1">
+                <label className="block text-xs font-extrabold text-[#252525] mb-1">
                   Location
                 </label>
                 <CustomSelect
@@ -234,7 +234,7 @@ export const TableModal = ({
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-[#2C1810] mb-1">
+                <label className="block text-xs font-extrabold text-[#252525] mb-1">
                   Status
                 </label>
                 <CustomSelect
@@ -249,20 +249,20 @@ export const TableModal = ({
             <div className="p-3.5 rounded-2xl bg-surface/40 border border-border/50 space-y-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-xs font-extrabold text-[#2C1810]">Allow Combination</h4>
+                  <h4 className="text-xs font-extrabold text-[#252525]">Allow Combination</h4>
                   <p className="text-[11px] text-text/60 font-medium">Enable combining this table with adjacent tables for large parties</p>
                 </div>
                 <input
                   type="checkbox"
                   checked={isCombinable}
                   onChange={(e) => setIsCombinable(e.target.checked)}
-                  className="w-5 h-5 accent-[#6F4E37] rounded-md cursor-pointer"
+                  className="w-5 h-5 accent-[#E50914] rounded-md cursor-pointer"
                 />
               </div>
 
               {isCombinable && combinableOptions.length > 0 && (
                 <div className="pt-2 border-t border-border/30 space-y-1.5">
-                  <span className="text-[11px] font-extrabold text-[#2C1810] flex items-center gap-1.5">
+                  <span className="text-[11px] font-extrabold text-[#252525] flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-indigo-600" />
                     Can combine with tables:
                   </span>
@@ -276,8 +276,8 @@ export const TableModal = ({
                           onClick={() => toggleCombinedTable(t.id)}
                           className={`px-3 py-1 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
                             isSelected 
-                              ? 'bg-[#6F4E37] text-white shadow-2xs' 
-                              : 'bg-white text-text/70 border border-border/60 hover:border-[#6F4E37]'
+                              ? 'bg-[#E50914] text-white shadow-2xs' 
+                              : 'bg-white text-text/70 border border-border/60 hover:border-[#E50914]'
                           }`}
                         >
                           {t.table_number} ({t.capacity} seats)
@@ -291,7 +291,7 @@ export const TableModal = ({
 
             {/* Optional Description */}
             <div>
-              <label className="block text-xs font-extrabold text-[#2C1810] mb-1">
+              <label className="block text-xs font-extrabold text-[#252525] mb-1">
                 Description (Optional)
               </label>
               <textarea
@@ -299,7 +299,7 @@ export const TableModal = ({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g. Near window with garden view"
-                className="w-full px-3.5 py-2 rounded-2xl border border-border/60 text-xs font-medium focus:outline-none focus:border-[#6F4E37] bg-surface/30"
+                className="w-full px-3.5 py-2 rounded-2xl border border-border/60 text-xs font-medium focus:outline-none focus:border-[#E50914] bg-surface/30"
               />
             </div>
 
@@ -316,7 +316,7 @@ export const TableModal = ({
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="rounded-2xl px-6 py-2 text-xs font-extrabold bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white shadow-xs hover:shadow-md"
+                className="rounded-2xl px-6 py-2 text-xs font-extrabold bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white shadow-xs hover:shadow-md"
               >
                 {isLoading ? 'Saving...' : initialData ? 'Save Changes' : 'Create Table'}
               </Button>

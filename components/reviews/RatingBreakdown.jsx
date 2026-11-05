@@ -24,13 +24,13 @@ export const RatingBreakdown = ({ breakdown = {}, reviews = [] }) => {
   const totalReviews = rows.reduce((sum, row) => sum + row.count, 0);
 
   return (
-    <div className="space-y-3.5 text-[#2C1810]">
+    <div className="space-y-3.5 text-[#252525]">
       {rows.map((row) => {
         const percentage = totalReviews > 0 ? Math.round((row.count / totalReviews) * 100) : 0;
         
         return (
           <div key={row.stars} className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 w-14 text-xs font-extrabold text-[#2C1810]">
+            <div className="flex items-center gap-1.5 w-14 text-xs font-extrabold text-[#252525]">
               <span>{row.stars}</span>
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             </div>

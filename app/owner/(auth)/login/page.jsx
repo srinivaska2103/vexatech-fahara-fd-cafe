@@ -6,7 +6,7 @@ import { AuthLogo } from '@/components/auth/AuthLogo';
 import { LoginForm } from '@/components/auth/LoginForm';
 
 export const metadata = {
-  title: 'Owner Login - Fahara Cafe',
+  title: 'Owner Login - Grab2GO Cafe',
 };
 
 export default function LoginPage() {

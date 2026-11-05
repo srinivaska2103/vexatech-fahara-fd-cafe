@@ -24,6 +24,16 @@ export const customerService = {
     }
   },
 
+  // Get customer food orders
+  getCustomerFoodOrders: async (id) => {
+    try {
+      const response = await axiosInstance.get(`/customers/owner/${id}/orders`);
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 404) return { data: [] };
+      throw error;
+    }
+  },
   // Get customer bookings
   getCustomerBookings: async (id) => {
     try {

@@ -51,11 +51,11 @@ const CATEGORY_THEMES = {
     border: 'border-purple-200/80 hover:border-purple-500/50'
   },
   Default: {
-    bg: 'from-[#6F4E37]/10 via-[#A67B5B]/5 to-transparent',
-    badge: 'bg-[#FAF0E6] text-[#6F4E37] border-[#DDB892]',
-    iconColor: 'text-[#6F4E37]',
-    accent: 'bg-[#6F4E37]',
-    border: 'border-[#DDB892]/80 hover:border-[#6F4E37]/50'
+    bg: 'from-[#E50914]/10 via-[#B71C1C]/5 to-transparent',
+    badge: 'bg-[#FFF5F5] text-[#E50914] border-[#EF5350]',
+    iconColor: 'text-[#E50914]',
+    accent: 'bg-[#E50914]',
+    border: 'border-[#EF5350]/80 hover:border-[#E50914]/50'
   }
 };
 
@@ -102,7 +102,7 @@ export const EventCard = ({ event, onDelete }) => {
 
   return (
     <div className={cn(
-      "bg-white rounded-2xl border transition-all duration-300 flex flex-col justify-between text-[#2C1810] relative group hover:-translate-y-1 hover:shadow-xl shadow-xs overflow-hidden",
+      "bg-white rounded-2xl border transition-all duration-300 flex flex-col justify-between text-[#252525] relative group hover:-translate-y-1 hover:shadow-xl shadow-xs overflow-hidden",
       theme.border
     )}>
       {/* Top Accent Gradient Bar */}
@@ -131,11 +131,11 @@ export const EventCard = ({ event, onDelete }) => {
         {/* Header: Title, Description, and Price Strip */}
         <div className="space-y-2">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="text-base font-black text-[#2C1810] line-clamp-1 leading-snug group-hover:text-[#6F4E37] transition-colors">
+            <h3 className="text-base font-black text-[#252525] line-clamp-1 leading-snug group-hover:text-[#E50914] transition-colors">
               {packageName}
             </h3>
             <div className="text-right shrink-0">
-              <span className="text-xl font-black text-[#6F4E37] tracking-tight">
+              <span className="text-xl font-black text-[#E50914] tracking-tight">
                 ₹{price.toLocaleString('en-IN')}
               </span>
               <span className="text-[10px] font-bold text-stone-400 block -mt-0.5">/package</span>
@@ -169,7 +169,7 @@ export const EventCard = ({ event, onDelete }) => {
           <div className="pt-2.5 border-t border-stone-100/80 space-y-1.5">
             <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-stone-400">
               <span className="flex items-center gap-1">
-                <Package className="w-3 h-3 text-[#6F4E37]" />
+                <Package className="w-3 h-3 text-[#E50914]" />
                 <span>Inclusions ({inclusionsList.length})</span>
               </span>
             </div>
@@ -187,7 +187,7 @@ export const EventCard = ({ event, onDelete }) => {
                     </div>
 
                     {qtyText && (
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-white border border-stone-200 text-[#6F4E37] shrink-0 ml-1">
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-white border border-stone-200 text-[#E50914] shrink-0 ml-1">
                         {qtyText}
                       </span>
                     )}
@@ -196,7 +196,7 @@ export const EventCard = ({ event, onDelete }) => {
               })}
 
               {inclusionsList.length > 2 && (
-                <span className="text-[10px] font-bold text-[#6F4E37] pl-1 block">
+                <span className="text-[10px] font-bold text-[#E50914] pl-1 block">
                   +{inclusionsList.length - 2} more item{inclusionsList.length - 2 > 1 ? 's' : ''}
                 </span>
               )}
@@ -209,7 +209,7 @@ export const EventCard = ({ event, onDelete }) => {
           <Link href={`/owner/events/${event.id}/edit`} className="flex-1">
             <button 
               type="button"
-              className="w-full py-2 px-3 rounded-xl border border-stone-200 hover:border-[#6F4E37] hover:bg-[#FFF8F0] text-xs font-bold text-stone-700 hover:text-[#6F4E37] flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+              className="w-full py-2 px-3 rounded-xl border border-stone-200 hover:border-[#E50914] hover:bg-[#FFF5F5] text-xs font-bold text-stone-700 hover:text-[#E50914] flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs"
             >
               <Edit2 className="w-3 h-3" />
               <span>Edit</span>
@@ -219,7 +219,7 @@ export const EventCard = ({ event, onDelete }) => {
           <Link href={`/owner/events/${event.id}`} className="flex-1">
             <button 
               type="button"
-              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#593E2B] hover:brightness-105 active:scale-[0.98] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-[#E50914] to-[#593E2B] hover:brightness-105 active:scale-[0.98] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
             >
               <Eye className="w-3 h-3 text-amber-200" />
               <span>Manage</span>

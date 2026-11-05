@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, CreditCard, Star, CalendarCheck, Info, Clock, ExternalLink } from 'lucide-react';
+import { Bell, CreditCard, Star, CalendarCheck, Clock, ExternalLink } from 'lucide-react';
 import { NotificationBadge } from './NotificationBadge';
 import { Button } from '../ui/Button';
 
@@ -10,8 +10,7 @@ export const NotificationDetails = ({ notification }) => {
     if (type?.includes('BOOKING')) return <CalendarCheck className="w-8 h-8" />;
     if (type?.includes('PAYMENT')) return <CreditCard className="w-8 h-8" />;
     if (type?.includes('REVIEW')) return <Star className="w-8 h-8" />;
-    if (type?.includes('SYSTEM')) return <Info className="w-8 h-8" />;
-    return <Bell className="w-8 h-8" />;
+        return <Bell className="w-8 h-8" />;
   };
 
   const getIconColor = (type) => {

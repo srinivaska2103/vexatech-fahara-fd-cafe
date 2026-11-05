@@ -22,7 +22,7 @@ export const StatsCard = ({
 
   const isPositive = trend === 'up';
 
-  // Palette configurations matching Fahara theme and semantic indicators
+  // Palette configurations matching Grab2GO theme and semantic indicators
   const themeStyles = {
     revenue: {
       bg: "from-emerald-500/12 via-emerald-500/4 to-transparent",
@@ -49,10 +49,10 @@ export const StatsCard = ({
       accent: "text-rose-700"
     },
     primary: {
-      bg: "from-[#6F4E37]/12 via-[#6F4E37]/4 to-transparent",
-      iconBg: "bg-[#FFF8F0] text-[#6F4E37] border-[#DDB892]/60 group-hover:bg-[#6F4E37] group-hover:text-white",
-      borderHover: "hover:border-[#6F4E37]/40 hover:shadow-[#6F4E37]/10",
-      accent: "text-[#6F4E37]"
+      bg: "from-[#E50914]/12 via-[#E50914]/4 to-transparent",
+      iconBg: "bg-[#FFF5F5] text-[#E50914] border-[#EF5350]/60 group-hover:bg-[#E50914] group-hover:text-white",
+      borderHover: "hover:border-[#E50914]/40 hover:shadow-[#E50914]/10",
+      accent: "text-[#E50914]"
     }
   };
 
@@ -101,7 +101,7 @@ export const StatsCard = ({
         <span className="text-[11px] font-extrabold uppercase tracking-wider text-text/60 line-clamp-1">
           {title}
         </span>
-        <div className="text-xl sm:text-2xl lg:text-3xl font-black text-[#2C1810] tracking-tight font-sans truncate">
+        <div className="text-xl sm:text-2xl lg:text-3xl font-black text-[#252525] tracking-tight font-sans truncate">
           {value}
         </div>
       </div>
@@ -113,7 +113,7 @@ export const StatsCard = ({
       ) : (
         <div className="relative z-10 mt-2.5 pt-2.5 border-t border-border/40 flex items-center justify-between text-[11px] text-text/50 font-semibold">
           <span>Click to view details</span>
-          <ArrowUpRight className="w-3 h-3 text-[#6F4E37] opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+          <ArrowUpRight className="w-3 h-3 text-[#E50914] opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
         </div>
       )}
     </div>

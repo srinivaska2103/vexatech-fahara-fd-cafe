@@ -20,7 +20,7 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
   const responseRate = totalReviews > 0 ? Math.round((repliedCount / totalReviews) * 100) : 0;
 
   return (
-    <div className="space-y-6 text-[#2C1810]">
+    <div className="space-y-6 text-[#252525]">
       
       {/* 4 Dynamic Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
@@ -29,11 +29,11 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Reviews</span>
-            <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-bold">
               <MessageSquare className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{totalReviews}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{totalReviews}</p>
           <p className="text-[10px] text-text/50 font-medium">All recorded guest feedback</p>
         </div>
 
@@ -45,7 +45,7 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
               <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{Number(averageRating).toFixed(1)} ★</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{Number(averageRating).toFixed(1)} ★</p>
           <p className="text-[10px] text-amber-700/80 font-bold">Diner satisfaction score</p>
         </div>
 
@@ -57,7 +57,7 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
               <ThumbsUp className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{positiveReviews}%</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{positiveReviews}%</p>
           <p className="text-[10px] text-emerald-700/80 font-bold">{positiveCount} 4 & 5-Star ratings</p>
         </div>
 
@@ -69,7 +69,7 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
               <MessageCircle className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{responseRate}%</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{responseRate}%</p>
           <p className="text-[10px] text-text/50 font-medium">{repliedCount} Owner replies posted</p>
         </div>
 
@@ -80,11 +80,11 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
         <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-border/40">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-bold">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-[#2C1810]">Recent Diner Praise</h3>
+                <h3 className="text-base font-extrabold text-[#252525]">Recent Diner Praise</h3>
                 <p className="text-xs text-text/60">Verified customer feedback and venue reviews</p>
               </div>
             </div>
@@ -101,17 +101,17 @@ export const ReviewAnalytics = ({ analytics = {}, reviews = [] }) => {
                 <div 
                   key={r.id}
                   onClick={() => router.push(`/owner/reviews/${r.id}`)}
-                  className="p-4 rounded-2xl border border-border/40 hover:bg-[#FFF8F0] hover:border-[#DDB892]/60 transition-all space-y-2 cursor-pointer group"
+                  className="p-4 rounded-2xl border border-border/40 hover:bg-[#FFF5F5] hover:border-[#EF5350]/60 transition-all space-y-2 cursor-pointer group"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] font-black text-xs flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-[#E50914]/10 text-[#E50914] font-black text-xs flex items-center justify-center shrink-0">
                         {name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-xs font-extrabold text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">{name}</p>
+                        <p className="text-xs font-extrabold text-[#252525] group-hover:text-[#E50914] transition-colors">{name}</p>
                         <p className="text-[10px] text-text/50">
-                          {cafeName} {bookingNo !== 'N/A' && <span className="font-mono font-bold text-[#6F4E37] ml-1">({bookingNo})</span>}
+                          {cafeName} {bookingNo !== 'N/A' && <span className="font-mono font-bold text-[#E50914] ml-1">({bookingNo})</span>}
                         </p>
                       </div>
                     </div>

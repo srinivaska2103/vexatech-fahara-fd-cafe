@@ -72,8 +72,8 @@ const ModernTimePicker = ({ name, disabled, register }) => {
           disabled 
             ? "bg-surface/50 border-border/40 text-text/30 cursor-not-allowed" 
             : isOpen 
-              ? "bg-[#6F4E37] text-white border-[#6F4E37] shadow-xs" 
-              : "bg-[#FFF8F0] border-[#DDB892]/70 text-[#6F4E37] hover:bg-[#6F4E37] hover:text-white"
+              ? "bg-[#E50914] text-white border-[#E50914] shadow-xs" 
+              : "bg-[#FFF5F5] border-[#EF5350]/70 text-[#E50914] hover:bg-[#E50914] hover:text-white"
         )}
       >
         <Clock className="w-3.5 h-3.5" />
@@ -84,12 +84,12 @@ const ModernTimePicker = ({ name, disabled, register }) => {
       {/* Floating Popover Selector Modal */}
       {isOpen && !disabled && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs sm:static sm:bg-transparent sm:p-0 sm:backdrop-blur-none sm:z-auto">
-          <div className="w-full max-w-[280px] bg-white rounded-3xl sm:rounded-2xl border border-[#DDB892]/60 shadow-2xl sm:shadow-xl p-5 sm:p-4 space-y-3.5 sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-64 z-50 text-[#2C1810] animate-in fade-in zoom-in-95 duration-150">
+          <div className="w-full max-w-[280px] bg-white rounded-3xl sm:rounded-2xl border border-[#EF5350]/60 shadow-2xl sm:shadow-xl p-5 sm:p-4 space-y-3.5 sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-64 z-50 text-[#252525] animate-in fade-in zoom-in-95 duration-150">
             
             <div className="flex items-center justify-between pb-2 border-b border-border/40">
-              <span className="text-[11px] font-extrabold text-[#6F4E37] uppercase tracking-wider">Select Time</span>
+              <span className="text-[11px] font-extrabold text-[#E50914] uppercase tracking-wider">Select Time</span>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-black text-[#2C1810] bg-[#FFF8F0] px-2 py-0.5 rounded-md border border-[#DDB892]/50">
+                <span className="text-xs font-black text-[#252525] bg-[#FFF5F5] px-2 py-0.5 rounded-md border border-[#EF5350]/50">
                   {formattedDisplayTime}
                 </span>
                 <button 
@@ -119,8 +119,8 @@ const ModernTimePicker = ({ name, disabled, register }) => {
                     className={cn(
                       "px-2 py-1 rounded-lg text-[10px] font-bold transition-all border",
                       isSelected
-                        ? "bg-[#6F4E37] text-white border-[#6F4E37]"
-                        : "bg-surface/50 border-border/40 text-[#2C1810] hover:bg-[#6F4E37]/10 hover:text-[#6F4E37]"
+                        ? "bg-[#E50914] text-white border-[#E50914]"
+                        : "bg-surface/50 border-border/40 text-[#252525] hover:bg-[#E50914]/10 hover:text-[#E50914]"
                     )}
                   >
                     {preset.label}
@@ -138,8 +138,8 @@ const ModernTimePicker = ({ name, disabled, register }) => {
               className={cn(
                 "flex-1 py-1 text-xs font-black rounded-lg transition-all text-center",
                 ampm === 'AM'
-                  ? "bg-[#6F4E37] text-white shadow-2xs"
-                  : "text-text/60 hover:text-[#2C1810]"
+                  ? "bg-[#E50914] text-white shadow-2xs"
+                  : "text-text/60 hover:text-[#252525]"
               )}
             >
               AM
@@ -150,8 +150,8 @@ const ModernTimePicker = ({ name, disabled, register }) => {
               className={cn(
                 "flex-1 py-1 text-xs font-black rounded-lg transition-all text-center",
                 ampm === 'PM'
-                  ? "bg-[#6F4E37] text-white shadow-2xs"
-                  : "text-text/60 hover:text-[#2C1810]"
+                  ? "bg-[#E50914] text-white shadow-2xs"
+                  : "text-text/60 hover:text-[#252525]"
               )}
             >
               PM
@@ -172,8 +172,8 @@ const ModernTimePicker = ({ name, disabled, register }) => {
                     className={cn(
                       "py-1 rounded-lg text-xs font-bold transition-all text-center border",
                       isSelected
-                        ? "bg-[#6F4E37] text-white border-[#6F4E37]"
-                        : "bg-white border-border/40 text-[#2C1810] hover:bg-[#6F4E37]/10"
+                        ? "bg-[#E50914] text-white border-[#E50914]"
+                        : "bg-white border-border/40 text-[#252525] hover:bg-[#E50914]/10"
                     )}
                   >
                     {h.toString().padStart(2, '0')}
@@ -197,8 +197,8 @@ const ModernTimePicker = ({ name, disabled, register }) => {
                     className={cn(
                       "py-1.5 rounded-lg text-xs font-bold transition-all text-center border",
                       isSelected
-                        ? "bg-[#6F4E37] text-white border-[#6F4E37]"
-                        : "bg-white border-border/40 text-[#2C1810] hover:bg-[#6F4E37]/10"
+                        ? "bg-[#E50914] text-white border-[#E50914]"
+                        : "bg-white border-border/40 text-[#252525] hover:bg-[#E50914]/10"
                     )}
                   >
                     :{m}
@@ -212,7 +212,7 @@ const ModernTimePicker = ({ name, disabled, register }) => {
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="w-full py-1.5 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs text-center"
+            className="w-full py-1.5 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs text-center"
           >
             Apply Time
           </button>
@@ -231,7 +231,7 @@ export const BusinessHours = ({ className }) => {
     <div className={cn("space-y-3", className)}>
       
       {/* Desktop Column Titles */}
-      <div className="hidden sm:grid sm:grid-cols-12 gap-3 pb-3 border-b border-border/40 text-[11px] font-extrabold text-[#6F4E37] uppercase tracking-wider">
+      <div className="hidden sm:grid sm:grid-cols-12 gap-3 pb-3 border-b border-border/40 text-[11px] font-extrabold text-[#E50914] uppercase tracking-wider">
         <div className="col-span-3">Day of Week</div>
         <div className="col-span-3 text-center">Open Status</div>
         <div className="col-span-3 text-center">Opening Time</div>
@@ -255,7 +255,7 @@ export const BusinessHours = ({ className }) => {
             
             {/* Day Name & Mobile Status Toggle */}
             <div className="flex items-center justify-between sm:col-span-3">
-              <span className="text-xs font-extrabold text-[#2C1810] capitalize">{day}</span>
+              <span className="text-xs font-extrabold text-[#252525] capitalize">{day}</span>
               <div className="sm:hidden">
                 <button 
                   type="button"
@@ -264,14 +264,14 @@ export const BusinessHours = ({ className }) => {
                 >
                   <div className={cn(
                     "w-9 h-5 rounded-full transition-colors relative flex items-center p-0.5",
-                    isOpen ? "bg-[#6F4E37]" : "bg-border/60"
+                    isOpen ? "bg-[#E50914]" : "bg-border/60"
                   )}>
                     <div className={cn(
                       "w-4 h-4 rounded-full bg-white transition-transform shadow-2xs",
                       isOpen ? "translate-x-4" : "translate-x-0"
                     )} />
                   </div>
-                  <span className="ml-2 text-[11px] font-bold text-[#2C1810]">
+                  <span className="ml-2 text-[11px] font-bold text-[#252525]">
                     {isOpen ? 'Open' : 'Closed'}
                   </span>
                 </button>
@@ -287,14 +287,14 @@ export const BusinessHours = ({ className }) => {
               >
                 <div className={cn(
                   "w-9 h-5 rounded-full transition-colors relative flex items-center p-0.5",
-                  isOpen ? "bg-[#6F4E37]" : "bg-border/60"
+                  isOpen ? "bg-[#E50914]" : "bg-border/60"
                 )}>
                   <div className={cn(
                     "w-4 h-4 rounded-full bg-white transition-transform shadow-2xs",
                     isOpen ? "translate-x-4" : "translate-x-0"
                   )} />
                 </div>
-                <span className="ml-2 text-xs font-bold text-[#2C1810]">
+                <span className="ml-2 text-xs font-bold text-[#252525]">
                   {isOpen ? 'Open' : 'Closed'}
                 </span>
               </button>

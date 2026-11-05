@@ -76,14 +76,14 @@ function ComposeFormContent() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* Modern Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-5 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 z-10">
           <button 
             onClick={() => router.push('/owner/campaigns')}
-            className="w-10 h-10 rounded-2xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0"
+            className="w-10 h-10 rounded-2xl bg-white border border-[#EF5350]/60 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0"
             title="Back to Campaigns"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -91,8 +91,8 @@ function ComposeFormContent() {
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">Compose Email Broadcast</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-extrabold">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#252525] tracking-tight">Compose Email Broadcast</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-extrabold">
                 NEW MESSAGE
               </span>
             </div>
@@ -142,7 +142,7 @@ function ComposeFormContent() {
         {/* Actions Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border/40">
           <p className="text-[11px] text-text/60 font-medium hidden sm:block">
-            Emails are delivered via verified sender <span className="font-semibold text-[#6F4E37]">noreply@vexatech.in</span>.
+            Emails are delivered via verified sender <span className="font-semibold text-[#E50914]">noreply@vexatech.in</span>.
           </p>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -156,7 +156,7 @@ function ComposeFormContent() {
 
             <Button 
               type="submit" 
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-2"
               isLoading={sendMessageMutation.isPending}
             >
               <Send className="w-4 h-4" /> Send Email Broadcast

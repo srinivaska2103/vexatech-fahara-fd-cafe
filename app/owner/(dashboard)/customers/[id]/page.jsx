@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { 
   useCustomer, 
   useCustomerBookings, 
+  useCustomerFoodOrders,
   useCustomerPayments, 
   useCustomerReviews,
   useAddCustomerNote,
@@ -27,19 +28,13 @@ export default function CustomerDetailsPage() {
   const router = useRouter();
   const confirm = useConfirm();
 
-
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
-
-  const isWalkingCafe = 
-    userRole === 'WALKING_CAFE_OWNER' || 
-    user?.role === 'WALKING_CAFE_OWNER' || 
-    String(userRole || '').toUpperCase().includes('WALKING') ||
-    String(user?.role || '').toUpperCase().includes('WALKING');
 
   // Queries
   const { data: customerData, isLoading: loadingCustomer, isError: customerError } = useCustomer(id);
   const { data: bookingsData } = useCustomerBookings(id);
+  const { data: foodOrdersData } = useCustomerFoodOrders(id);
   const { data: paymentsData } = useCustomerPayments(id);
   const { data: reviewsData } = useCustomerReviews(id);
 
@@ -59,14 +54,14 @@ export default function CustomerDetailsPage() {
   if (loadingCustomer) {
     return (
       <div className="p-6 md:p-8 animate-pulse space-y-6">
-         <div className="h-10 w-32 bg-surface rounded-lg mb-4" />
-         <div className="h-40 w-full bg-surface rounded-3xl" />
+         <div className="h-10 w-32 bg-stone-100 rounded-lg mb-4" />
+         <div className="h-40 w-full bg-stone-100 rounded-3xl" />
          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
            <div className="xl:col-span-2 space-y-6">
-             <div className="h-32 bg-surface rounded-3xl" />
-             <div className="h-96 bg-surface rounded-3xl" />
+             <div className="h-32 bg-stone-100 rounded-3xl" />
+             <div className="h-96 bg-stone-100 rounded-3xl" />
            </div>
-           <div className="h-full bg-surface rounded-3xl" />
+           <div className="h-full bg-stone-100 rounded-3xl" />
          </div>
       </div>
     );
@@ -78,93 +73,134 @@ export default function CustomerDetailsPage() {
         <Button variant="ghost" onClick={() => router.push('/owner/customers')} className="mb-6 -ml-4">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Customers
         </Button>
-        <div className="bg-danger/10 text-danger p-6 rounded-3xl border border-danger/20 text-center">
-          <p className="font-semibold mb-2">Customer Not Found</p>
-          <p className="text-sm">This customer profile could not be loaded or the endpoint is not implemented.</p>
+        <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center space-y-4 shadow-sm">
+          <h2 className="text-xl font-bold text-stone-800">Customer Not Found</h2>
+          <p className="text-stone-500 max-w-sm mx-auto text-sm">
+            The customer you are looking for does not exist or has been removed.
+          </p>
+          <Button onClick={() => router.push('/owner/customers')}>
+            Return to List
+          </Button>
         </div>
       </div>
     );
   }
 
   const customer = customerData.data;
-  // Assuming backend returns notes within the customer object or as a separate endpoint. We'll extract from customer.
-  const notes = customer.notes || []; 
+  const bookings = bookingsData?.data || [];
+  const foodOrders = foodOrdersData?.data || [];
+  const payments = paymentsData?.data || [];
+  const reviews = reviewsData?.data || [];
+  const notes = customer.notes || [];
 
-  const handleToggleVip = (isVip) => {
-    toggleVipMutation.mutate({ customerId: id, isVip: customer.is_vip });
+  // Handlers
+  const handleToggleVip = () => {
+    toggleVipMutation.mutate({ customerId: id, currentStatus: customer.is_vip });
   };
 
-  const handleBlockAction = () => {
-    if (customer.status === 'BLOCKED') {
+  const handleBlockCustomer = (reason) => {
+    blockMutation.mutate({ customerId: id, reason }, {
+      onSuccess: () => setIsBlockDialogOpen(false)
+    });
+  };
+
+  const handleUnblockCustomer = async () => {
+    const isConfirmed = await confirm({
+      title: 'Unblock Customer',
+      message: `Are you sure you want to unblock ${customer.name}? They will be able to make bookings and orders again.`,
+      confirmText: 'Unblock',
+      variant: 'default'
+    });
+
+    if (isConfirmed) {
       unblockMutation.mutate(id);
-    } else {
-      setIsBlockDialogOpen(true);
+    }
+  };
+
+  const handleAddNote = (noteText) => {
+    addNoteMutation.mutate({ customerId: id, data: { note: noteText } }, {
+      onSuccess: () => setIsNoteDialogOpen(false)
+    });
+  };
+
+  const handleEditNote = (note) => {
+    setEditingNote(note);
+    setIsNoteDialogOpen(true);
+  };
+
+  const handleUpdateNote = (noteText) => {
+    if (!editingNote) return;
+    updateNoteMutation.mutate({ customerId: id, noteId: editingNote.id, data: { note: noteText } }, {
+      onSuccess: () => {
+        setIsNoteDialogOpen(false);
+        setEditingNote(null);
+      }
+    });
+  };
+
+  const handleDeleteNote = async (noteId) => {
+    const isConfirmed = await confirm({
+      title: 'Delete Note',
+      message: 'Are you sure you want to delete this internal staff note?',
+      confirmText: 'Delete',
+      variant: 'destructive'
+    });
+
+    if (isConfirmed) {
+      deleteNoteMutation.mutate({ customerId: id, noteId });
     }
   };
 
   return (
-    <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-4 sm:space-y-6 text-[#2C1810]">
-      <Button variant="ghost" onClick={() => router.push('/owner/customers')} className="mb-1 -ml-2 text-xs font-bold">
+    <div className="p-4 sm:p-6 md:p-8 space-y-6 max-w-7xl mx-auto font-sans">
+      <Button 
+        variant="ghost" 
+        onClick={() => router.push('/owner/customers')} 
+        className="mb-2 -ml-3 text-stone-600 hover:text-[#E50914] font-bold text-xs"
+      >
         <ChevronLeft className="w-4 h-4 mr-1" /> Back to Customers
       </Button>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <CustomerProfile 
-          customer={customer}
-          bookings={bookingsData?.data || []}
-          payments={paymentsData?.data || []}
-          reviews={reviewsData?.data || []}
-          notes={notes}
-          isWalkingCafe={isWalkingCafe}
-          handlers={{
-            onToggleVip: handleToggleVip,
-            isTogglingVip: toggleVipMutation.isPending,
-            onBlock: handleBlockAction,
-            onAddNote: () => { setEditingNote(null); setIsNoteDialogOpen(true); },
-            onEditNote: (note) => { setEditingNote(note); setIsNoteDialogOpen(true); },
-            onDeleteNote: async (noteId) => {
-              const ok = await confirm({
-                title: 'Delete Note',
-                message: 'Are you sure you want to delete this customer note?',
-                confirmText: 'Delete Note',
-                cancelText: 'Keep Note',
-                type: 'danger'
-              });
-              if (ok) {
-                deleteNoteMutation.mutate({ customerId: id, noteId });
-              }
-            }
+      <CustomerProfile 
+        customer={customer}
+        bookings={bookings}
+        foodOrders={foodOrders}
+        payments={payments}
+        reviews={reviews}
+        notes={notes}
+        handlers={{
+          onToggleVip: handleToggleVip,
+          isTogglingVip: toggleVipMutation.isPending,
+          onBlock: () => setIsBlockDialogOpen(true),
+          onUnblock: handleUnblockCustomer,
+          onAddNote: () => {
+            setEditingNote(null);
+            setIsNoteDialogOpen(true);
+          },
+          onEditNote: handleEditNote,
+          onDeleteNote: handleDeleteNote
+        }}
+      />
 
-          }}
-        />
-      </motion.div>
-
+      {/* Dialogs */}
       <AddNoteDialog 
         isOpen={isNoteDialogOpen}
-        onClose={() => setIsNoteDialogOpen(false)}
-        onConfirm={(data) => {
-          if (editingNote) {
-            updateNoteMutation.mutate({ customerId: id, noteId: editingNote.id, data }, {
-              onSuccess: () => setIsNoteDialogOpen(false)
-            });
-          } else {
-            addNoteMutation.mutate({ customerId: id, data }, {
-              onSuccess: () => setIsNoteDialogOpen(false)
-            });
-          }
+        onClose={() => {
+          setIsNoteDialogOpen(false);
+          setEditingNote(null);
         }}
-        isSubmitting={addNoteMutation.isPending || updateNoteMutation.isPending}
+        onSubmit={editingNote ? handleUpdateNote : handleAddNote}
+        initialText={editingNote?.note || ''}
+        isEditing={!!editingNote}
+        isLoading={addNoteMutation.isPending || updateNoteMutation.isPending}
       />
 
       <BlockCustomerDialog 
         isOpen={isBlockDialogOpen}
         onClose={() => setIsBlockDialogOpen(false)}
-        onConfirm={(data) => {
-          blockMutation.mutate({ customerId: id, data }, {
-            onSuccess: () => setIsBlockDialogOpen(false)
-          });
-        }}
-        isSubmitting={blockMutation.isPending}
+        onConfirm={handleBlockCustomer}
+        customerName={customer.name}
+        isLoading={blockMutation.isPending}
       />
     </div>
   );

@@ -1,10 +1,7 @@
-import React from 'react';
-import { LoadingSkeleton } from '@/components/settings/LoadingSkeleton';
+'use client';
 
-export default function SettingsLoading() {
-  return (
-    <div className="animate-in fade-in duration-500">
-       <LoadingSkeleton type="form" />
-    </div>
-  );
+import FoodLoadingScreen from '@/components/common/FoodLoadingScreen';
+
+export default function Loading() {
+  return <FoodLoadingScreen message="Loading settings..." fullScreen={true} />;
 }

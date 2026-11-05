@@ -6,7 +6,7 @@ import { AuthLogo } from '@/components/auth/AuthLogo';
 import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
 
 export const metadata = {
-  title: 'Forgot Password - Fahara Cafe',
+  title: 'Forgot Password - Grab2GO Cafe',
 };
 
 export default function ForgotPasswordPage() {

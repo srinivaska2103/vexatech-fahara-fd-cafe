@@ -18,11 +18,11 @@ export const BackButton = ({
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={cn(
-        "group inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 hover:border-[#DDB892] shadow-2xs hover:shadow-xs transition-all duration-200 cursor-pointer text-[#2C1810] hover:text-[#6F4E37] select-none",
+        "group inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 hover:border-[#EF5350] shadow-2xs hover:shadow-xs transition-all duration-200 cursor-pointer text-[#252525] hover:text-[#E50914] select-none",
         className
       )}
     >
-      <div className="w-6 h-6 rounded-xl bg-[#6F4E37]/10 group-hover:bg-[#6F4E37] group-hover:text-white flex items-center justify-center transition-all duration-200 shrink-0">
+      <div className="w-6 h-6 rounded-xl bg-[#E50914]/10 group-hover:bg-[#E50914] group-hover:text-white flex items-center justify-center transition-all duration-200 shrink-0">
         <ChevronLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
       </div>
       <span className="text-xs font-extrabold tracking-tight truncate">

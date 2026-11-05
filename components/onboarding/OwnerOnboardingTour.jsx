@@ -31,7 +31,7 @@ import toast from 'react-hot-toast';
 const celebrationBalloons = [
   { color: 'from-rose-500 to-red-600', left: '10%', delay: 0, duration: 4 },
   { color: 'from-amber-400 to-orange-500', left: '25%', delay: 0.5, duration: 4.5 },
-  { color: 'from-[#6F4E37] to-[#A67B5B]', left: '40%', delay: 1, duration: 3.8 },
+  { color: 'from-[#E50914] to-[#B71C1C]', left: '40%', delay: 1, duration: 3.8 },
   { color: 'from-emerald-400 to-teal-600', left: '60%', delay: 0.2, duration: 4.2 },
   { color: 'from-indigo-500 to-purple-600', left: '75%', delay: 0.7, duration: 4.8 },
   { color: 'from-pink-500 to-rose-500', left: '88%', delay: 0.4, duration: 4.1 },
@@ -66,7 +66,7 @@ export function OwnerOnboardingTour() {
         particleCount: 110,
         spread: 90,
         origin: { y: 0.6 },
-        colors: ['#6F4E37', '#A67B5B', '#DDB892', '#10B981', '#F59E0B', '#EC4899', '#6366F1']
+        colors: ['#E50914', '#B71C1C', '#EF5350', '#10B981', '#F59E0B', '#EC4899', '#6366F1']
       });
 
       // Left Side Cannon Stream
@@ -76,7 +76,7 @@ export function OwnerOnboardingTour() {
           angle: 60,
           spread: 55,
           origin: { x: 0, y: 0.7 },
-          colors: ['#6F4E37', '#A67B5B', '#DDB892', '#F59E0B']
+          colors: ['#E50914', '#B71C1C', '#EF5350', '#F59E0B']
         });
       }, 200);
 
@@ -87,7 +87,7 @@ export function OwnerOnboardingTour() {
           angle: 120,
           spread: 55,
           origin: { x: 1, y: 0.7 },
-          colors: ['#10B981', '#EC4899', '#6366F1', '#A67B5B']
+          colors: ['#10B981', '#EC4899', '#6366F1', '#B71C1C']
         });
       }, 400);
     } catch (e) {
@@ -307,7 +307,7 @@ export function OwnerOnboardingTour() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-[#2C1810]/78 backdrop-blur-[2px] transition-all duration-300 z-40"
+          className="fixed inset-0 bg-[#252525]/78 backdrop-blur-[2px] transition-all duration-300 z-40"
         />
       )}
 
@@ -324,7 +324,7 @@ export function OwnerOnboardingTour() {
             height: targetRect.height + 12,
           }}
           transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-          className="fixed pointer-events-none z-40 rounded-2xl ring-4 ring-[#DDB892] shadow-[0_0_35px_rgba(221,184,146,0.8)] border-2 border-white/80"
+          className="fixed pointer-events-none z-40 rounded-2xl ring-4 ring-[#EF5350] shadow-[0_0_35px_rgba(221,184,146,0.8)] border-2 border-white/80"
         />
       )}
 
@@ -335,18 +335,18 @@ export function OwnerOnboardingTour() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="w-full max-w-lg bg-[#FFF8F0] border-2 border-[#DDB892]/60 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-[#2C1810]"
+            className="w-full max-w-lg bg-[#FFF5F5] border-2 border-[#EF5350]/60 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-[#252525]"
           >
             {/* Background Decorative Gradient Blob */}
-            <div className="absolute -top-16 -right-16 w-40 h-40 bg-gradient-to-br from-[#6F4E37]/20 to-[#A67B5B]/30 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -top-16 -right-16 w-40 h-40 bg-gradient-to-br from-[#E50914]/20 to-[#B71C1C]/30 rounded-full blur-2xl pointer-events-none" />
 
             <div className="flex items-center justify-between mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#6F4E37]/10 text-[#6F4E37] border border-[#6F4E37]/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#E50914]/10 text-[#E50914] border border-[#E50914]/20">
                 <Compass className="w-3.5 h-3.5" /> Step 1 of 9
               </span>
               <button
                 onClick={() => handleFinishTour(true)}
-                className="text-[#2C1810]/50 hover:text-[#2C1810] transition-colors p-1.5 rounded-full hover:bg-[#6F4E37]/10 cursor-pointer"
+                className="text-[#252525]/50 hover:text-[#252525] transition-colors p-1.5 rounded-full hover:bg-[#E50914]/10 cursor-pointer"
                 title="Skip Tour"
               >
                 <X className="w-5 h-5" />
@@ -354,32 +354,32 @@ export function OwnerOnboardingTour() {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-20 h-20 rounded-3xl bg-white flex items-center justify-center shadow-xl shadow-[#6F4E37]/20 border-2 border-[#DDB892] p-1.5 transform hover:scale-105 transition-transform overflow-hidden">
+              <div className="w-20 h-20 rounded-3xl bg-white flex items-center justify-center shadow-xl shadow-[#E50914]/20 border-2 border-[#EF5350] p-1.5 transform hover:scale-105 transition-transform overflow-hidden">
                 <img 
-                  src="/logo.jpeg" 
-                  alt="Fahara Logo" 
+                  src="/grab-it-logo.png" 
+                  alt="Grab2GO Logo" 
                   className="w-full h-full object-contain rounded-2xl" 
                 />
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2C1810] tracking-tight">
-                Welcome to Fahara, {ownerName} 👋
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#252525] tracking-tight">
+                Welcome to Grab2GO, {ownerName} 👋
               </h2>
 
-              <p className="text-sm sm:text-base text-[#2C1810]/80 leading-relaxed max-w-md font-medium">
+              <p className="text-sm sm:text-base text-[#252525]/80 leading-relaxed max-w-md font-medium">
                 Let's take an interactive guided tour and show you how to set up your cafe, manage bookings, and receive payouts.
               </p>
 
               <div className="w-full pt-4 flex flex-col sm:flex-row items-center gap-3">
                 <button
                   onClick={nextStep}
-                  className="w-full sm:flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-[#6F4E37]/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-[#E50914]/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   Start Guided Tour <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleFinishTour(true)}
-                  className="w-full sm:w-auto py-3.5 px-6 rounded-2xl border-2 border-[#6F4E37]/20 hover:border-[#6F4E37]/40 text-[#6F4E37] font-extrabold text-xs sm:text-sm transition-colors cursor-pointer"
+                  className="w-full sm:w-auto py-3.5 px-6 rounded-2xl border-2 border-[#E50914]/20 hover:border-[#E50914]/40 text-[#E50914] font-extrabold text-xs sm:text-sm transition-colors cursor-pointer"
                 >
                   Skip for Now
                 </button>
@@ -404,12 +404,12 @@ export function OwnerOnboardingTour() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: -15 }}
             transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-            className="bg-gradient-to-b from-white via-[#FFF8F0] to-[#FFF3E4] border-2 border-[#DDB892] rounded-3xl p-6 shadow-2xl text-[#2C1810] relative overflow-hidden"
+            className="bg-gradient-to-b from-white via-[#FFF5F5] to-[#FFF3E4] border-2 border-[#EF5350] rounded-3xl p-6 shadow-2xl text-[#252525] relative overflow-hidden"
           >
             {/* Top Step Progress Bar Indicator */}
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#6F4E37]/15">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E50914]/15">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-[#6F4E37] text-white shadow-2xs">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-[#E50914] text-white shadow-2xs">
                   <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Step {activeStep} of 9
                 </span>
                 
@@ -420,10 +420,10 @@ export function OwnerOnboardingTour() {
                       key={idx}
                       className={`h-1.5 rounded-full transition-all duration-300 ${
                         idx + 1 === activeStep 
-                          ? 'w-4 bg-[#6F4E37]' 
+                          ? 'w-4 bg-[#E50914]' 
                           : idx + 1 < activeStep 
-                          ? 'w-1.5 bg-[#A67B5B]' 
-                          : 'w-1.5 bg-[#DDB892]/40'
+                          ? 'w-1.5 bg-[#B71C1C]' 
+                          : 'w-1.5 bg-[#EF5350]/40'
                       }`}
                     />
                   ))}
@@ -432,7 +432,7 @@ export function OwnerOnboardingTour() {
 
               <button
                 onClick={() => handleFinishTour(true)}
-                className="text-[#2C1810]/50 hover:text-[#6F4E37] text-xs font-extrabold hover:underline cursor-pointer"
+                className="text-[#252525]/50 hover:text-[#E50914] text-xs font-extrabold hover:underline cursor-pointer"
               >
                 Skip Tour
               </button>
@@ -442,20 +442,20 @@ export function OwnerOnboardingTour() {
             {activeStep === 2 && (
               <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                     <TrendingUp className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">Your Business at a Glance</h3>
-                    <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">PORTFOLIO SUMMARY</p>
+                    <h3 className="text-base font-black text-[#252525]">Your Business at a Glance</h3>
+                    <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">PORTFOLIO SUMMARY</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   Track your bookings, customers, revenue, ratings, and important business updates from one place.
                 </p>
-                <div className="bg-white p-3.5 rounded-2xl border border-[#DDB892]/50 text-xs space-y-1.5 shadow-2xs">
-                  <p className="font-extrabold text-[#6F4E37] text-[11px] uppercase tracking-wider">Key Metrics Tracked:</p>
-                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-bold text-[#2C1810]/80">
+                <div className="bg-white p-3.5 rounded-2xl border border-[#EF5350]/50 text-xs space-y-1.5 shadow-2xs">
+                  <p className="font-extrabold text-[#E50914] text-[11px] uppercase tracking-wider">Key Metrics Tracked:</p>
+                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-bold text-[#252525]/80">
                     <div className="flex items-center gap-1">✓ Total Revenue</div>
                     <div className="flex items-center gap-1">✓ Total Customers</div>
                     <div className="flex items-center gap-1">✓ Active Bookings</div>
@@ -471,15 +471,15 @@ export function OwnerOnboardingTour() {
             {activeStep === 3 && (
               <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                     <Building2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">Add Your Cafe Profile</h3>
-                    <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">VENUE LISTING</p>
+                    <h3 className="text-base font-black text-[#252525]">Add Your Cafe Profile</h3>
+                    <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">VENUE LISTING</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   Create your cafe profile so customers can discover and book your dining venue.
                 </p>
 
@@ -489,8 +489,8 @@ export function OwnerOnboardingTour() {
                     <span>Your cafe <strong>"{primaryCafe.name}"</strong> is already created. You can update details anytime.</span>
                   </div>
                 ) : (
-                  <div className="bg-white p-3.5 rounded-2xl border border-[#DDB892]/50 text-xs space-y-1 text-[#2C1810]/80 shadow-2xs">
-                    <p className="font-extrabold text-[#6F4E37] text-[11px] uppercase tracking-wider">Details Required:</p>
+                  <div className="bg-white p-3.5 rounded-2xl border border-[#EF5350]/50 text-xs space-y-1 text-[#252525]/80 shadow-2xs">
+                    <p className="font-extrabold text-[#E50914] text-[11px] uppercase tracking-wider">Details Required:</p>
                     <p className="text-[11px] leading-relaxed font-medium">
                       Cafe Name, Address & Map Coordinates, Photos, Pricing, Amenities, Capacity & Operating Hours.
                     </p>
@@ -503,30 +503,30 @@ export function OwnerOnboardingTour() {
             {activeStep === 4 && (
               <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                     <Zap className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">Make Your Cafe Ready</h3>
-                    <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">PROFILE OPTIMIZATION</p>
+                    <h3 className="text-base font-black text-[#252525]">Make Your Cafe Ready</h3>
+                    <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">PROFILE OPTIMIZATION</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   Complete your cafe information to give customers everything they need before booking.
                 </p>
 
                 {/* Dynamic Completion Bar */}
-                <div className="bg-white p-3.5 rounded-2xl border border-[#DDB892]/50 space-y-2 shadow-2xs">
-                  <div className="flex items-center justify-between text-xs font-extrabold text-[#2C1810]">
+                <div className="bg-white p-3.5 rounded-2xl border border-[#EF5350]/50 space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between text-xs font-extrabold text-[#252525]">
                     <span>Profile Setup Completion</span>
-                    <span className="text-[#6F4E37]">{cafeCompletionPercentage}% Complete</span>
+                    <span className="text-[#E50914]">{cafeCompletionPercentage}% Complete</span>
                   </div>
                   <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden p-0.5 border border-gray-200">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${cafeCompletionPercentage}%` }}
                       transition={{ duration: 0.8 }}
-                      className="h-full bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] rounded-full"
+                      className="h-full bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] rounded-full"
                     />
                   </div>
                 </div>
@@ -538,12 +538,12 @@ export function OwnerOnboardingTour() {
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                    <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-black text-[#2C1810]">Settlement Account</h3>
-                      <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">RAZORPAY PAYOUTS</p>
+                      <h3 className="text-base font-black text-[#252525]">Settlement Account</h3>
+                      <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">RAZORPAY PAYOUTS</p>
                     </div>
                   </div>
 
@@ -562,12 +562,12 @@ export function OwnerOnboardingTour() {
                   </span>
                 </div>
 
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   Add and verify your bank account so eligible payments and settlements can be processed securely via Razorpay.
                 </p>
 
-                <div className="bg-white p-3.5 rounded-2xl border border-[#DDB892]/50 text-xs space-y-1.5 shadow-2xs">
-                  <div className="flex items-center justify-between text-[#2C1810]/80 font-bold">
+                <div className="bg-white p-3.5 rounded-2xl border border-[#EF5350]/50 text-xs space-y-1.5 shadow-2xs">
+                  <div className="flex items-center justify-between text-[#252525]/80 font-bold">
                     <span>Account Status:</span>
                     <span className="font-mono">{maskedBankAccount}</span>
                   </div>
@@ -579,19 +579,19 @@ export function OwnerOnboardingTour() {
             {activeStep === 6 && (
               <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                     <CalendarCheck className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">Manage Bookings</h3>
-                    <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">DINER RESERVATIONS</p>
+                    <h3 className="text-base font-black text-[#252525]">Manage Bookings</h3>
+                    <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">DINER RESERVATIONS</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   View and manage all customer table and venue reservations from one place.
                 </p>
-                <div className="bg-white p-3.5 rounded-2xl border border-[#DDB892]/50 text-xs text-[#2C1810]/80 space-y-1 shadow-2xs">
-                  <p className="font-extrabold text-[#6F4E37] text-[11px] uppercase tracking-wider">Features:</p>
+                <div className="bg-white p-3.5 rounded-2xl border border-[#EF5350]/50 text-xs text-[#252525]/80 space-y-1 shadow-2xs">
+                  <p className="font-extrabold text-[#E50914] text-[11px] uppercase tracking-wider">Features:</p>
                   <p className="text-[11px] leading-relaxed font-medium">
                     Inspect guest details, event dates, guest counts, and approve or complete reservations.
                   </p>
@@ -603,15 +603,15 @@ export function OwnerOnboardingTour() {
             {activeStep === 7 && (
               <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">Manage Events</h3>
-                    <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">PARTY PACKAGES</p>
+                    <h3 className="text-base font-black text-[#252525]">Manage Events</h3>
+                    <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">PARTY PACKAGES</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   Create and manage event offerings for birthdays, meetings, parties, and special setups.
                 </p>
               </div>
@@ -621,25 +621,25 @@ export function OwnerOnboardingTour() {
             {activeStep === 8 && (
               <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#6F4E37] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                     <CreditCard className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">Track Earnings</h3>
-                    <p className="text-[10px] text-[#6F4E37] font-extrabold uppercase tracking-wider">PAYMENTS & SETTLEMENTS</p>
+                    <h3 className="text-base font-black text-[#252525]">Track Earnings</h3>
+                    <p className="text-[10px] text-[#E50914] font-extrabold uppercase tracking-wider">PAYMENTS & SETTLEMENTS</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#2C1810]/80 leading-relaxed font-medium">
+                <p className="text-xs text-[#252525]/80 leading-relaxed font-medium">
                   Monitor customer payments, settlement amounts, refunds, and transaction history.
                 </p>
               </div>
             )}
 
             {/* Footer Navigation Buttons */}
-            <div className="flex items-center justify-between pt-4 mt-3 border-t border-[#6F4E37]/15 gap-2">
+            <div className="flex items-center justify-between pt-4 mt-3 border-t border-[#E50914]/15 gap-2">
               <button
                 onClick={prevStep}
-                className="py-2.5 px-4 rounded-2xl border border-[#6F4E37]/30 hover:bg-[#6F4E37]/10 text-[#6F4E37] font-extrabold text-xs flex items-center gap-1 transition-all cursor-pointer"
+                className="py-2.5 px-4 rounded-2xl border border-[#E50914]/30 hover:bg-[#E50914]/10 text-[#E50914] font-extrabold text-xs flex items-center gap-1 transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" /> Back
               </button>
@@ -648,7 +648,7 @@ export function OwnerOnboardingTour() {
                 {activeStep === 3 && (
                   <button
                     onClick={() => navigateToAndNext('/owner/cafes')}
-                    className="py-2.5 px-3.5 rounded-2xl bg-[#A67B5B] hover:bg-[#6F4E37] text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3.5 rounded-2xl bg-[#B71C1C] hover:bg-[#E50914] text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
                   >
                     Go to Cafes →
                   </button>
@@ -656,7 +656,7 @@ export function OwnerOnboardingTour() {
                 {activeStep === 6 && (
                   <button
                     onClick={() => navigateToAndNext('/owner/bookings')}
-                    className="py-2.5 px-3.5 rounded-2xl bg-[#A67B5B] hover:bg-[#6F4E37] text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3.5 rounded-2xl bg-[#B71C1C] hover:bg-[#E50914] text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
                   >
                     View Bookings →
                   </button>
@@ -664,7 +664,7 @@ export function OwnerOnboardingTour() {
                 {activeStep === 7 && (
                   <button
                     onClick={() => navigateToAndNext('/owner/events')}
-                    className="py-2.5 px-3.5 rounded-2xl bg-[#A67B5B] hover:bg-[#6F4E37] text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
+                    className="py-2.5 px-3.5 rounded-2xl bg-[#B71C1C] hover:bg-[#E50914] text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
                   >
                     Manage Events →
                   </button>
@@ -672,7 +672,7 @@ export function OwnerOnboardingTour() {
 
                 <button
                   onClick={nextStep}
-                  className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white font-extrabold text-xs shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1 cursor-pointer"
+                  className="py-2.5 px-5 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1 cursor-pointer"
                 >
                   <span>Next Step</span> <ChevronRight className="w-4 h-4" />
                 </button>
@@ -720,25 +720,25 @@ export function OwnerOnboardingTour() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="w-full max-w-lg bg-[#FFF8F0] border-2 border-[#DDB892]/80 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center z-50"
+            className="w-full max-w-lg bg-[#FFF5F5] border-2 border-[#EF5350]/80 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center z-50"
           >
             {/* Background Festive Flare */}
             <div className="absolute -top-16 -left-16 w-40 h-40 bg-gradient-to-br from-amber-400/20 to-orange-500/20 rounded-full blur-2xl pointer-events-none" />
 
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 via-orange-500 to-[#6F4E37] flex items-center justify-center text-white mx-auto mb-4 shadow-xl shadow-orange-500/25 border-2 border-white/50 transform hover:scale-110 hover:rotate-3 transition-transform cursor-pointer" onClick={triggerConfettiExplosion}>
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 via-orange-500 to-[#E50914] flex items-center justify-center text-white mx-auto mb-4 shadow-xl shadow-orange-500/25 border-2 border-white/50 transform hover:scale-110 hover:rotate-3 transition-transform cursor-pointer" onClick={triggerConfettiExplosion}>
               <Star className="w-10 h-10 fill-white animate-pulse" />
             </div>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#6F4E37]/10 text-[#6F4E37] border border-[#6F4E37]/20 mb-3">
-              <PartyPopper className="w-3.5 h-3.5 text-[#6F4E37]" /> Step 9 of 9 • Complete
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#E50914]/10 text-[#E50914] border border-[#E50914]/20 mb-3">
+              <PartyPopper className="w-3.5 h-3.5 text-[#E50914]" /> Step 9 of 9 • Complete
             </span>
 
-            <h2 className="text-2xl sm:text-3xl font-black text-[#2C1810] tracking-tight mb-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight mb-2">
               You're All Set! 🎉
             </h2>
 
-            <p className="text-sm text-[#2C1810]/80 leading-relaxed mb-6 max-w-md mx-auto font-medium">
-              Your Fahara Owner Portal is ready. Monitor reviews, ratings, and revenue to start managing your cafe and growing your business.
+            <p className="text-sm text-[#252525]/80 leading-relaxed mb-6 max-w-md mx-auto font-medium">
+              Your Grab2GO Owner Portal is ready. Monitor reviews, ratings, and revenue to start managing your cafe and growing your business.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -747,7 +747,7 @@ export function OwnerOnboardingTour() {
                   handleFinishTour(false);
                   router.push('/owner/dashboard');
                 }}
-                className="w-full sm:flex-1 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:flex-1 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <PartyPopper className="w-4 h-4 text-white" />
                 <span>Go to Dashboard</span>
@@ -758,7 +758,7 @@ export function OwnerOnboardingTour() {
                   handleFinishTour(false);
                   router.push('/owner/cafes');
                 }}
-                className="w-full sm:flex-1 py-3.5 px-5 rounded-2xl border-2 border-[#6F4E37]/30 hover:border-[#6F4E37] hover:bg-[#6F4E37]/10 text-[#6F4E37] font-extrabold text-xs sm:text-sm transition-all cursor-pointer"
+                className="w-full sm:flex-1 py-3.5 px-5 rounded-2xl border-2 border-[#E50914]/30 hover:border-[#E50914] hover:bg-[#E50914]/10 text-[#E50914] font-extrabold text-xs sm:text-sm transition-all cursor-pointer"
               >
                 Create / Manage My Cafe
               </button>

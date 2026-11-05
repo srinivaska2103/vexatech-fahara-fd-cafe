@@ -1,4 +1,4 @@
-// Canonical URLs for Fahara Web Platform
+// Canonical URLs for Grab2GO Web Platform
 const IS_PROD = typeof window !== 'undefined' 
   ? !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')
   : process.env.NODE_ENV === 'production';

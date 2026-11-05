@@ -7,7 +7,7 @@ import { useLayoutStore } from '@/store/layout.store';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
 import { CornerDownRight, ChevronRight, Lock } from 'lucide-react';
 
-export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#6F4E37]', bg = 'bg-[#FFF8F0]', isLocked = false, badge }) => {
+export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#E50914]', bg = 'bg-[#FFF5F5]', isLocked = false, badge }) => {
   const pathname = usePathname();
   const targetHref = isLocked ? '/owner/subscription' : href;
   const isActive = exact 
@@ -34,15 +34,15 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
         "relative flex items-center min-h-[34px] rounded-xl transition-all duration-200 ease-out cursor-pointer group my-0.5 leading-snug",
         isSidebarCollapsed ? "justify-center px-0 py-1.5" : "px-2.5 py-1.5 gap-2",
         isActive
-          ? "bg-gradient-to-r from-[#6F4E37] to-[#4A3225] text-white font-extrabold shadow-md shadow-[#6F4E37]/20 scale-[1.01]"
+          ? "bg-[#E50914] text-white font-extrabold shadow-md shadow-[#E50914]/20 scale-[1.01]"
           : isLocked
           ? "text-stone-400 hover:bg-amber-500/10 hover:text-amber-700 font-bold border border-transparent"
-          : "text-[#4A3225]/85 hover:bg-[#FFF8F0] hover:text-[#6F4E37] hover:translate-x-0.5 font-bold border border-transparent hover:border-[#6F4E37]/15"
+          : "text-[#252525] hover:bg-[#FFF5F5] hover:text-[#E50914] hover:translate-x-0.5 font-bold border border-transparent hover:border-[#E50914]/15"
       )}
     >
       {/* Active Left Indicator Bar */}
       {isActive && !isSidebarCollapsed && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r-full bg-[#E6C5A8]" />
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r-full bg-[#FFFFFF]" />
       )}
 
       {/* Sub-navigation Branch Arrow */}
@@ -50,7 +50,7 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
         <CornerDownRight 
           className={cn(
             "w-3 h-3 shrink-0 stroke-[2] transition-colors",
-            isActive ? "text-white/80" : "text-[#8C6D58]/40 group-hover:text-[#6F4E37]"
+            isActive ? "text-white/80" : "text-[#757575]/40 group-hover:text-[#E50914]"
           )}
         />
       )}
@@ -78,21 +78,21 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
               <span className={cn(
                 "px-1.5 py-0.5 text-[9px] font-black rounded-full leading-none",
                 isActive 
-                  ? "bg-white text-[#6F4E37]" 
+                  ? "bg-white text-[#E50914]" 
                   : "bg-rose-500 text-white"
               )}>
                 {badge > 99 ? '99+' : badge}
               </span>
             )}
             {isLocked ? (
-              <Lock className={cn("w-3 h-3 shrink-0", isActive ? "text-[#E6C5A8]" : "text-amber-600/80")} />
+              <Lock className={cn("w-3 h-3 shrink-0", isActive ? "text-[#FFFFFF]" : "text-amber-600/80")} />
             ) : (
               <ChevronRight 
                 className={cn(
                   "w-3 h-3 transition-all duration-200",
                   isActive 
                     ? "text-white/80 translate-x-0.5 opacity-100" 
-                    : "text-[#8C6D58]/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:text-[#6F4E37]"
+                    : "text-[#757575]/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:text-[#E50914]"
                 )} 
               />
             )}

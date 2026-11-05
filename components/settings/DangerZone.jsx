@@ -26,7 +26,7 @@ export const DangerZone = () => {
          <div className="p-4 sm:p-5 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                <div>
-                 <h4 className="font-extrabold text-xs text-[#2C1810]">Deactivate Account</h4>
+                 <h4 className="font-extrabold text-xs text-[#252525]">Deactivate Account</h4>
                  <p className="text-[11px] text-text/60 mt-0.5 max-w-lg">
                    Temporarily hide your venue. You will not appear in search results, but you can reactivate later.
                  </p>
@@ -73,7 +73,7 @@ export const DangerZone = () => {
               <AlertTriangle className="w-5 h-5" />
             </div>
 
-            <h3 className="text-lg font-extrabold text-[#2C1810] mb-1">Are you absolutely sure?</h3>
+            <h3 className="text-lg font-extrabold text-[#252525] mb-1">Are you absolutely sure?</h3>
             <p className="text-xs text-text/60 mb-4 leading-relaxed">
               This will permanently delete your account, business profile, all branch data, and bookings. You will be logged out immediately.
             </p>

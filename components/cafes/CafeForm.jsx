@@ -132,7 +132,7 @@ const ModernStatusSelect = ({ value, onChange, register }) => {
         className={cn(
           "h-10 px-3.5 rounded-xl border flex items-center gap-2 text-xs font-extrabold transition-all shadow-2xs",
           currentOption.badgeBg,
-          isOpen ? "ring-2 ring-[#6F4E37]/20 border-[#6F4E37]" : "border-border/60 hover:bg-white"
+          isOpen ? "ring-2 ring-[#E50914]/20 border-[#E50914]" : "border-border/60 hover:bg-white"
         )}
       >
         <Icon className="w-4 h-4" />
@@ -142,8 +142,8 @@ const ModernStatusSelect = ({ value, onChange, register }) => {
 
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs sm:static sm:bg-transparent sm:p-0 sm:backdrop-blur-none sm:z-auto">
-          <div className="w-full max-w-[280px] bg-white rounded-3xl sm:rounded-2xl border border-[#DDB892]/60 shadow-2xl sm:shadow-xl p-3 space-y-1 sm:absolute sm:right-0 sm:bottom-full sm:mb-2 sm:w-64 z-50 text-[#2C1810] animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-3 py-1.5 border-b border-border/40 text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider flex items-center justify-between">
+          <div className="w-full max-w-[280px] bg-white rounded-3xl sm:rounded-2xl border border-[#EF5350]/60 shadow-2xl sm:shadow-xl p-3 space-y-1 sm:absolute sm:right-0 sm:bottom-full sm:mb-2 sm:w-64 z-50 text-[#252525] animate-in fade-in zoom-in-95 duration-150">
+            <div className="px-3 py-1.5 border-b border-border/40 text-[10px] font-extrabold text-[#E50914] uppercase tracking-wider flex items-center justify-between">
               <span>Select Listing Status</span>
               <button 
                 type="button" 
@@ -167,7 +167,7 @@ const ModernStatusSelect = ({ value, onChange, register }) => {
                   className={cn(
                     "w-full text-left p-2.5 rounded-xl transition-all flex items-start gap-2.5",
                     isSelected
-                      ? "bg-[#FFF8F0] border border-[#DDB892]/60"
+                      ? "bg-[#FFF5F5] border border-[#EF5350]/60"
                       : "hover:bg-surface/50 border border-transparent"
                   )}
                 >
@@ -176,8 +176,8 @@ const ModernStatusSelect = ({ value, onChange, register }) => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-extrabold text-[#2C1810]">{opt.label}</p>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#6F4E37]" />}
+                      <p className="text-xs font-extrabold text-[#252525]">{opt.label}</p>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#E50914]" />}
                     </div>
                     <p className="text-[10px] text-text/50">{opt.desc}</p>
                   </div>
@@ -243,18 +243,18 @@ const ModernCategorySelect = ({ value, onChange, error, register, isWalkingCafe 
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full h-11 px-4 rounded-xl border bg-surface/30 flex items-center justify-between text-xs font-medium transition-all text-[#2C1810]",
-          error ? "border-danger" : isOpen ? "border-[#6F4E37] bg-white ring-2 ring-[#6F4E37]/10" : "border-border/60 hover:bg-white"
+          "w-full h-11 px-4 rounded-xl border bg-surface/30 flex items-center justify-between text-xs font-medium transition-all text-[#252525]",
+          error ? "border-danger" : isOpen ? "border-[#E50914] bg-white ring-2 ring-[#E50914]/10" : "border-border/60 hover:bg-white"
         )}
       >
-        <span className={cn(value ? "font-bold text-[#2C1810]" : "text-text/50")}>
+        <span className={cn(value ? "font-bold text-[#252525]" : "text-text/50")}>
           {value || (isWalkingCafeOwnerRole ? "Walking Cafe" : "Select a category")}
         </span>
         <ChevronDown className={cn("w-4 h-4 text-text/40 transition-transform", isOpen && "rotate-180")} />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-2xl border border-[#DDB892]/60 shadow-xl z-50 p-2 space-y-1 text-[#2C1810] max-h-56 overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-2xl border border-[#EF5350]/60 shadow-xl z-50 p-2 space-y-1 text-[#252525] max-h-56 overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
           {categoryOptions.map((cat) => {
             const isSelected = value === cat;
             return (
@@ -268,8 +268,8 @@ const ModernCategorySelect = ({ value, onChange, error, register, isWalkingCafe 
                 className={cn(
                   "w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between",
                   isSelected
-                    ? "bg-[#6F4E37] text-white shadow-2xs"
-                    : "text-[#2C1810] hover:bg-[#6F4E37]/10 hover:text-[#6F4E37]"
+                    ? "bg-[#E50914] text-white shadow-2xs"
+                    : "text-[#252525] hover:bg-[#E50914]/10 hover:text-[#E50914]"
                 )}
               >
                 <span>{cat}</span>
@@ -462,7 +462,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?${structuredParams.toString()}&limit=5`,
-          { headers: { 'User-Agent': 'FaharaCafeApp/1.0' } }
+          { headers: { 'User-Agent': 'Grab2GOCafeApp/1.0' } }
         );
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -512,7 +512,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
           try {
             const response = await fetch(
               `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=in&q=${encodeURIComponent(query)}&limit=5`,
-              { headers: { 'User-Agent': 'FaharaCafeApp/1.0' } }
+              { headers: { 'User-Agent': 'Grab2GOCafeApp/1.0' } }
             );
             const data = await response.json();
             if (Array.isArray(data) && data.length > 0) {
@@ -577,7 +577,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&addressdetails=1`,
-        { headers: { 'User-Agent': 'FaharaCafeApp/1.0' } }
+        { headers: { 'User-Agent': 'Grab2GOCafeApp/1.0' } }
       );
       const data = await response.json();
       if (data && data.address) {
@@ -778,12 +778,12 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleFormSubmit, onFormError)} className="space-y-6 text-[#2C1810]">
+      <form onSubmit={handleSubmit(handleFormSubmit, onFormError)} className="space-y-6 text-[#252525]">
         
         {/* Step Wizard Navigation Header */}
         <div className="bg-white p-5 sm:p-6 rounded-3xl border border-border/60 shadow-2xs space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-[#6F4E37] uppercase tracking-wider">
+            <span className="text-xs font-extrabold text-[#E50914] uppercase tracking-wider">
               Step {currentStep} of {maxStep} — {steps[currentStep - 1]?.title}
             </span>
             <span className="text-xs font-bold text-text/60">
@@ -794,7 +794,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
           {/* Stepper Line Progress */}
           <div className="w-full h-2 bg-surface/70 rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-[#6F4E37] rounded-full"
+              className="h-full bg-[#E50914] rounded-full"
               initial={{ width: `${(1 / maxStep) * 100}%` }}
               animate={{ width: `${(currentStep / maxStep) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -816,7 +816,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   className={cn(
                     "p-2 sm:p-3 rounded-2xl border text-left transition-all flex items-center sm:items-start gap-1.5 sm:gap-2 cursor-pointer",
                     isCurrent 
-                      ? "bg-[#FFF8F0] border-[#DDB892] shadow-2xs" 
+                      ? "bg-[#FFF5F5] border-[#EF5350] shadow-2xs" 
                       : isCompleted 
                         ? "bg-surface/40 border-border/40 hover:bg-surface" 
                         : "bg-white border-border/30 opacity-60 hover:opacity-100"
@@ -825,7 +825,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   <div className={cn(
                     "w-6 h-6 sm:w-7 sm:h-7 rounded-xl flex items-center justify-center text-[11px] sm:text-xs font-extrabold shrink-0",
                     isCurrent 
-                      ? "bg-[#6F4E37] text-white" 
+                      ? "bg-[#E50914] text-white" 
                       : isCompleted 
                         ? "bg-emerald-500/10 text-emerald-700" 
                         : "bg-surface text-text/50"
@@ -833,7 +833,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                     {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" /> : step.id}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className={cn("text-[11px] sm:text-xs font-extrabold truncate", isCurrent ? "text-[#6F4E37]" : "text-[#2C1810]")}>
+                    <p className={cn("text-[11px] sm:text-xs font-extrabold truncate", isCurrent ? "text-[#E50914]" : "text-[#252525]")}>
                       {step.title}
                     </p>
                     <p className="text-[10px] text-text/50 truncate hidden md:block">{step.description}</p>
@@ -862,24 +862,24 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
                     {/* Header */}
                     <div className="flex items-center gap-3 pb-4 border-b border-border/40">
-                      <div className="w-10 h-10 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold">
+                      <div className="w-10 h-10 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-extrabold">
                         <Store className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">Walking Cafe Basic Information</h3>
+                        <h3 className="text-base font-extrabold text-[#252525]">Walking Cafe Basic Information</h3>
                         <p className="text-xs text-text/60">Official cafe name, category, and public description</p>
                       </div>
                     </div>
 
                     {/* Account Type Card */}
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FFF8F0] to-[#FFF5EA] border border-[#DDB892]/60 flex items-center justify-between">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FFF5F5] to-[#FFF5F5] border border-[#EF5350]/60 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#6F4E37] text-white flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-xl bg-[#E50914] text-white flex items-center justify-center">
                           <Footprints className="w-5 h-5" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="text-xs font-black text-[#2C1810]">Walking Cafe Account</h4>
+                            <h4 className="text-xs font-black text-[#252525]">Walking Cafe Account</h4>
                             <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 text-[10px] font-extrabold">
                               Walk-in Listing
                             </span>
@@ -907,7 +907,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           {...register('description')} 
                           rows={4}
                           className={cn(
-                            "w-full rounded-2xl border bg-surface/30 px-4 py-3 text-xs font-medium focus:outline-none focus:bg-white focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10 transition-all resize-none leading-relaxed", 
+                            "w-full rounded-2xl border bg-surface/30 px-4 py-3 text-xs font-medium focus:outline-none focus:bg-white focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/10 transition-all resize-none leading-relaxed", 
                             errors.description ? "border-danger focus:border-danger" : "border-border/60"
                           )}
                           placeholder="A cozy neighborhood cafe serving specialty coffee, fresh bakery items and desserts. Walk in anytime during business hours."
@@ -937,7 +937,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         <MapPin className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">Location & Contact Details</h3>
+                        <h3 className="text-base font-extrabold text-[#252525]">Location & Contact Details</h3>
                         <p className="text-xs text-text/60">Street address, map location, and owner contact information</p>
                       </div>
                     </div>
@@ -1010,7 +1010,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           <Footprints className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-base font-extrabold text-[#2C1810]">Walking Cafe Configuration</h3>
+                          <h3 className="text-base font-extrabold text-[#252525]">Walking Cafe Configuration</h3>
                           <p className="text-xs text-text/60">Walk-in service features and capability status</p>
                         </div>
                       </div>
@@ -1054,7 +1054,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           <Wifi className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-base font-extrabold text-[#2C1810]">Cafe Amenities & Features</h3>
+                          <h3 className="text-base font-extrabold text-[#252525]">Cafe Amenities & Features</h3>
                           <p className="text-xs text-text/60">Select features available to walk-in customers</p>
                         </div>
                       </div>
@@ -1073,7 +1073,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           <ImageIcon className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-base font-extrabold text-[#2C1810]">Cover Hero Banner Image</h3>
+                          <h3 className="text-base font-extrabold text-[#252525]">Cover Hero Banner Image</h3>
                           <p className="text-xs text-text/60">Main image displayed on your cafe listing</p>
                         </div>
                       </div>
@@ -1081,7 +1081,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                       <div 
                         className={cn(
                           "border-2 border-dashed rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all relative overflow-hidden min-h-[160px]",
-                          "hover:bg-surface/50 hover:border-[#6F4E37]",
+                          "hover:bg-surface/50 hover:border-[#E50914]",
                           errors.cover_image ? "border-danger bg-danger/5" : "border-border/60 bg-surface/30"
                         )}
                         onClick={() => document.getElementById('cover_image_input')?.click()}
@@ -1095,8 +1095,8 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           </div>
                         ) : (
                           <>
-                            <ImageIcon className="w-8 h-8 text-[#6F4E37] mb-2 opacity-70" />
-                            <p className="text-xs font-extrabold text-[#2C1810]">Click to upload cover image</p>
+                            <ImageIcon className="w-8 h-8 text-[#E50914] mb-2 opacity-70" />
+                            <p className="text-xs font-extrabold text-[#252525]">Click to upload cover image</p>
                             <p className="text-[10px] text-text/50 mt-0.5">PNG, JPG, WEBP (max 5MB)</p>
                           </>
                         )}
@@ -1126,7 +1126,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           <ImageIcon className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-base font-extrabold text-[#2C1810]">Additional Cafe Gallery</h3>
+                          <h3 className="text-base font-extrabold text-[#252525]">Additional Cafe Gallery</h3>
                           <p className="text-xs text-text/60">Upload ambience, seating, and food photos</p>
                         </div>
                       </div>
@@ -1147,7 +1147,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         <Clock className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base font-extrabold text-[#2C1810]">Weekly Operating Hours</h3>
+                        <h3 className="text-base font-extrabold text-[#252525]">Weekly Operating Hours</h3>
                         <p className="text-xs text-text/60">Set opening & closing hours for walk-in customers</p>
                       </div>
                     </div>
@@ -1163,11 +1163,11 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                   <div className="space-y-6">
                     <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
                       <div className="flex items-center gap-3 pb-4 border-b border-border/40">
-                        <div className="w-10 h-10 rounded-2xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold">
+                        <div className="w-10 h-10 rounded-2xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-extrabold">
                           <Info className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-base font-extrabold text-[#2C1810]">Basic Venue Information</h3>
+                          <h3 className="text-base font-extrabold text-[#252525]">Basic Venue Information</h3>
                           <p className="text-xs text-text/60">Official cafe name, description, and contact details</p>
                         </div>
                       </div>
@@ -1185,7 +1185,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                             {...register('description')} 
                             rows={4}
                             className={cn(
-                              "w-full rounded-2xl border bg-surface/30 px-4 py-3 text-xs font-medium focus:outline-none focus:bg-white focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10 transition-all resize-none leading-relaxed", 
+                              "w-full rounded-2xl border bg-surface/30 px-4 py-3 text-xs font-medium focus:outline-none focus:bg-white focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/10 transition-all resize-none leading-relaxed", 
                               errors.description ? "border-danger focus:border-danger" : "border-border/60"
                             )}
                             placeholder="Describe your venue's atmosphere, dining specialities, and guest experience..."
@@ -1213,15 +1213,15 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                             <MapPin className="w-5 h-5" />
                           </div>
                           <div>
-                            <h3 className="text-base font-extrabold text-[#2C1810]">Location & Address Coordinates</h3>
+                            <h3 className="text-base font-extrabold text-[#252525]">Location & Address Coordinates</h3>
                             <p className="text-xs text-text/60">Set the exact location customers will use to navigate to your venue</p>
                           </div>
                         </div>
 
                         {/* Location Header */}
                         <div>
-                          <h3 className="text-sm font-black text-[#2C1810] uppercase tracking-wider flex items-center gap-2">
-                            <MapPin className="w-4.5 h-4.5 text-[#6F4E37]" />
+                          <h3 className="text-sm font-black text-[#252525] uppercase tracking-wider flex items-center gap-2">
+                            <MapPin className="w-4.5 h-4.5 text-[#E50914]" />
                             <span>LOCATION</span>
                           </h3>
                           <p className="text-xs text-text/60 font-medium mt-0.5">
@@ -1287,7 +1287,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                             type="button"
                             onClick={() => handleSearchAndLocateAddress(true)}
                             disabled={isGeocodingAddress}
-                            className="w-full py-3 px-4 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
+                            className="w-full py-3 px-4 rounded-xl bg-[#E50914] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
                           >
                             {isGeocodingAddress ? (
                               <>
@@ -1304,9 +1304,9 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
 
                           {/* SEARCH RESULTS PANEL */}
                           {hasSearchedLocation && (
-                            <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 space-y-3">
-                              <div className="flex items-center justify-between border-b border-[#DDB892]/30 pb-2">
-                                <h4 className="text-xs font-black text-[#2C1810] uppercase tracking-wider flex items-center gap-1.5">
+                            <div className="p-4 rounded-2xl bg-[#FFF5F5] border border-[#EF5350]/60 space-y-3">
+                              <div className="flex items-center justify-between border-b border-[#EF5350]/30 pb-2">
+                                <h4 className="text-xs font-black text-[#252525] uppercase tracking-wider flex items-center gap-1.5">
                                   <span>SEARCH RESULTS</span>
                                 </h4>
                                 {candidateResults.length > 0 && (
@@ -1324,7 +1324,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                         key={cand.place_id || idx}
                                         className={cn(
                                           "p-3 rounded-xl border text-xs transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3",
-                                          isSelected ? "bg-white border-[#6F4E37] shadow-sm font-bold" : "bg-white/80 border-stone-200 hover:bg-white"
+                                          isSelected ? "bg-white border-[#E50914] shadow-sm font-bold" : "bg-white/80 border-stone-200 hover:bg-white"
                                         )}
                                       >
                                         <div className="flex-1 min-w-0">
@@ -1333,7 +1333,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                               {confidence.label}
                                             </span>
                                           </div>
-                                          <p className="text-xs text-[#2C1810] leading-snug line-clamp-2">{cand.display_name}</p>
+                                          <p className="text-xs text-[#252525] leading-snug line-clamp-2">{cand.display_name}</p>
                                         </div>
                                         <button
                                           type="button"
@@ -1342,7 +1342,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                             "px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all shrink-0 cursor-pointer",
                                             isSelected
                                               ? "bg-emerald-600 text-white shadow-2xs"
-                                              : "bg-[#6F4E37] text-white hover:bg-[#5a3e2b]"
+                                              : "bg-[#E50914] text-white hover:bg-[#5a3e2b]"
                                           )}
                                         >
                                           {isSelected ? "Selected ✓" : "Select"}
@@ -1369,7 +1369,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                         setHasSearchedLocation(false);
                                         toast.success("Please click or drag the pin on the map to place your cafe location manually.");
                                       }}
-                                      className="px-3 py-1.5 rounded-lg bg-[#6F4E37] text-white text-xs font-bold hover:bg-[#5a3e2b] transition-all flex items-center gap-1.5 cursor-pointer"
+                                      className="px-3 py-1.5 rounded-lg bg-[#E50914] text-white text-xs font-bold hover:bg-[#5a3e2b] transition-all flex items-center gap-1.5 cursor-pointer"
                                     >
                                       <MapPin className="w-3.5 h-3.5" />
                                       <span>Place Pin Manually</span>
@@ -1391,7 +1391,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         {/* RIGHT COLUMN: MAP & LOCATION STATUS */}
                         <div className="flex flex-col h-full min-h-[360px] space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-black text-[#2C1810] uppercase tracking-wider">MAP</span>
+                            <span className="text-xs font-black text-[#252525] uppercase tracking-wider">MAP</span>
                             <span className="text-[11px] font-bold text-text/50">Drag pin to exact location</span>
                           </div>
 
@@ -1415,7 +1415,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               type="button"
                               onClick={handleReverseGeocodeFromPin}
                               disabled={isReverseGeocoding || !hasValidCoords}
-                              className="px-3 py-1.5 rounded-xl bg-white border border-stone-200 hover:bg-[#FFF8F0] hover:border-[#DDB892] text-[#6F4E37] text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
+                              className="px-3 py-1.5 rounded-xl bg-white border border-stone-200 hover:bg-[#FFF5F5] hover:border-[#EF5350] text-[#E50914] text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
                               title="Update form address text fields from current pin position"
                             >
                               {isReverseGeocoding ? <Loader2 className="w-3 h-3 animate-spin" /> : <RotateCcw className="w-3 h-3" />}
@@ -1426,7 +1426,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           {/* LOCATION STATUS BAR */}
                           <div className="p-4 rounded-2xl bg-surface/60 border border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                             <div className="space-y-1">
-                              <div className="flex items-center gap-2 text-xs font-black text-[#2C1810]">
+                              <div className="flex items-center gap-2 text-xs font-black text-[#252525]">
                                 <span className={cn("w-2.5 h-2.5 rounded-full", hasValidCoords ? "bg-emerald-500 animate-pulse" : "bg-amber-500")} />
                                 <span>{hasValidCoords ? "Location Selected" : "Location Not Set"}</span>
                               </div>
@@ -1443,7 +1443,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               type="button"
                               onClick={handleConfirmLocation}
                               disabled={!hasValidCoords}
-                              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#6F4E37] text-white text-xs font-black hover:bg-[#5a3e2b] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-2xs"
+                              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#E50914] text-white text-xs font-black hover:bg-[#5a3e2b] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-2xs"
                             >
                               <Save className="w-4 h-4" />
                               <span>Save Location</span>
@@ -1457,7 +1457,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
 
                 {/* STEP 2: PRICING & CAPACITY (DUAL SUB-TAB SYSTEM) */}
                 {currentStep === 2 && (
-                  <div className="space-y-6 text-[#2C1810]">
+                  <div className="space-y-6 text-[#252525]">
                     {/* Step 2 Sub-Tabs Navigation */}
                     <div className="flex items-center gap-2 p-1.5 bg-white rounded-2xl border border-border/60 shadow-2xs w-fit">
                       <button
@@ -1466,8 +1466,8 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         className={cn(
                           "px-4 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer",
                           step2SubTab === 'rates' 
-                            ? "bg-[#6F4E37] text-white shadow-2xs" 
-                            : "text-[#6F4E37] hover:bg-[#FFF8F0]"
+                            ? "bg-[#E50914] text-white shadow-2xs" 
+                            : "text-[#E50914] hover:bg-[#FFF5F5]"
                         )}
                       >
                         <Tag className="w-3.5 h-3.5" />
@@ -1480,8 +1480,8 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         className={cn(
                           "px-4 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer",
                           step2SubTab === 'discounts' 
-                            ? "bg-[#6F4E37] text-white shadow-2xs" 
-                            : "text-[#6F4E37] hover:bg-[#FFF8F0]"
+                            ? "bg-[#E50914] text-white shadow-2xs" 
+                            : "text-[#E50914] hover:bg-[#FFF5F5]"
                         )}
                       >
                         <BadgePercent className="w-3.5 h-3.5" />
@@ -1507,7 +1507,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               <Tag className="w-5 h-5" />
                             </div>
                             <div>
-                              <h3 className="text-base font-extrabold text-[#2C1810]">Attributes & Pricing Configuration</h3>
+                              <h3 className="text-base font-extrabold text-[#252525]">Attributes & Pricing Configuration</h3>
                               <p className="text-xs text-text/60">
                                 Select venue category for your cafe
                               </p>
@@ -1554,7 +1554,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                   <PartyPopper className="w-5 h-5" />
                                 </div>
                                 <div>
-                                  <h3 className="text-base font-extrabold text-[#2C1810]">Event & Party Services</h3>
+                                  <h3 className="text-base font-extrabold text-[#252525]">Event & Party Services</h3>
                                   <p className="text-xs text-text/60">Configure private events, occasion types, and package settings</p>
                                 </div>
                               </div>
@@ -1569,8 +1569,8 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                   className={cn(
                                     "px-5 py-2.5 rounded-2xl border text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer",
                                     providesEventServices 
-                                      ? "bg-[#6F4E37] text-white border-[#6F4E37] shadow-xs" 
-                                      : "bg-white text-text/70 border-border/60 hover:border-[#6F4E37]"
+                                      ? "bg-[#E50914] text-white border-[#E50914] shadow-xs" 
+                                      : "bg-white text-text/70 border-border/60 hover:border-[#E50914]"
                                   )}
                                 >
                                   <CheckCircle2 className="w-4 h-4" />
@@ -1594,10 +1594,10 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
 
                             {providesEventServices && (
                               <div className="space-y-6 pt-4 border-t border-border/40">
-                                <div className="p-4 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div className="p-4 rounded-2xl bg-[#FFF5F5] border border-[#EF5350]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                   <div>
-                                    <h4 className="text-xs font-black text-[#2C1810] flex items-center gap-2">
-                                      <Package className="w-4 h-4 text-[#6F4E37]" />
+                                    <h4 className="text-xs font-black text-[#252525] flex items-center gap-2">
+                                      <Package className="w-4 h-4 text-[#E50914]" />
                                       Event Packages Availability
                                     </h4>
                                     <p className="text-[11px] text-text/60 mt-0.5">
@@ -1610,7 +1610,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                       href={`/owner/cafes/${defaultValues.id}/packages`}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="px-4 py-2 rounded-xl bg-[#6F4E37] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all shrink-0 flex items-center gap-1.5"
+                                      className="px-4 py-2 rounded-xl bg-[#E50914] text-white text-xs font-extrabold hover:bg-[#5a3e2b] transition-all shrink-0 flex items-center gap-1.5"
                                     >
                                       <span>Manage Packages</span>
                                       <ExternalLink className="w-3.5 h-3.5" />
@@ -1627,13 +1627,13 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               <div className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-surface/30 border border-border/60">
                                 <div className="space-y-0.5">
                                   <div className="flex items-center gap-2">
-                                    <Users className="w-4 h-4 text-[#6F4E37]" />
-                                    <h4 className="text-xs font-black text-[#2C1810]">
+                                    <Users className="w-4 h-4 text-[#E50914]" />
+                                    <h4 className="text-xs font-black text-[#252525]">
                                       Allow 3rd Party Event Management & Decoration Services
                                     </h4>
                                   </div>
                                   <p className="text-[11px] text-text/60 pl-6">
-                                    External event managers and decorators can offer their services for bookings at this cafe according to Fahara's event workflow.
+                                    External event managers and decorators can offer their services for bookings at this cafe according to Grab2GO's event workflow.
                                   </p>
                                 </div>
 
@@ -1642,7 +1642,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                   onClick={() => setValue('allow_third_party_decoration', !allowThirdPartyDecoration, { shouldDirty: true })}
                                   className={cn(
                                     "w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 border mt-1",
-                                    allowThirdPartyDecoration ? "bg-[#6F4E37] border-[#6F4E37]" : "bg-stone-300 border-stone-300"
+                                    allowThirdPartyDecoration ? "bg-[#E50914] border-[#E50914]" : "bg-stone-300 border-stone-300"
                                   )}
                                 >
                                   <div className={cn(
@@ -1666,7 +1666,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               <BadgePercent className="w-5 h-5" />
                             </div>
                             <div>
-                              <h3 className="text-base font-extrabold text-[#2C1810]">Discounts & Promotional Offers</h3>
+                              <h3 className="text-base font-extrabold text-[#252525]">Discounts & Promotional Offers</h3>
                               <p className="text-xs text-text/60">Create and manage customer discounts, weekend specials, and percentage offers</p>
                             </div>
                           </div>
@@ -1680,7 +1680,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                 setOfferFormData(defaultOfferState);
                                 setIsCreatingOffer(true);
                               }}
-                              className="bg-[#6F4E37] hover:bg-[#5a3e2b] text-white"
+                              className="bg-[#E50914] hover:bg-[#5a3e2b] text-white"
                             >
                               <Plus className="w-4 h-4 mr-1.5" />
                               Create Offer
@@ -1689,9 +1689,9 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                         </div>
 
                         {isCreatingOffer ? (
-                          <div className="p-5 rounded-2xl bg-[#FFF8F0] border border-[#DDB892] space-y-4">
-                            <h4 className="text-sm font-black text-[#2C1810] flex items-center gap-2">
-                              <Tag className="w-4 h-4 text-[#6F4E37]" />
+                          <div className="p-5 rounded-2xl bg-[#FFF5F5] border border-[#EF5350] space-y-4">
+                            <h4 className="text-sm font-black text-[#252525] flex items-center gap-2">
+                              <Tag className="w-4 h-4 text-[#E50914]" />
                               {editingOfferIndex !== null ? 'Edit Promotional Offer' : 'Create New Promotional Offer'}
                             </h4>
 
@@ -1714,7 +1714,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                     onClick={() => setOfferFormData(prev => ({ ...prev, type: 'PERCENTAGE' }))}
                                     className={cn(
                                       "flex-1 py-2.5 px-3 rounded-xl border text-xs font-extrabold cursor-pointer transition-all",
-                                      offerFormData.type === 'PERCENTAGE' ? "bg-[#6F4E37] text-white border-[#6F4E37]" : "bg-white text-text/70 border-border/60"
+                                      offerFormData.type === 'PERCENTAGE' ? "bg-[#E50914] text-white border-[#E50914]" : "bg-white text-text/70 border-border/60"
                                     )}
                                   >
                                     Percentage (%)
@@ -1724,7 +1724,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                     onClick={() => setOfferFormData(prev => ({ ...prev, type: 'FLAT' }))}
                                     className={cn(
                                       "flex-1 py-2.5 px-3 rounded-xl border text-xs font-extrabold cursor-pointer transition-all",
-                                      offerFormData.type === 'FLAT' ? "bg-[#6F4E37] text-white border-[#6F4E37]" : "bg-white text-text/70 border-border/60"
+                                      offerFormData.type === 'FLAT' ? "bg-[#E50914] text-white border-[#E50914]" : "bg-white text-text/70 border-border/60"
                                     )}
                                   >
                                     Flat Amount (₹)
@@ -1776,7 +1776,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               </div>
                             </div>
 
-                            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#DDB892]/40">
+                            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#EF5350]/40">
                               <Button 
                                 type="button" 
                                 variant="outline" 
@@ -1789,7 +1789,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                 type="button" 
                                 size="sm" 
                                 onClick={handleSaveOffer}
-                                className="bg-[#6F4E37] text-white hover:bg-[#5a3e2b]"
+                                className="bg-[#E50914] text-white hover:bg-[#5a3e2b]"
                               >
                                 Save Offer
                               </Button>
@@ -1799,8 +1799,8 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                           <div className="space-y-3">
                             {discountsList.length === 0 ? (
                               <div className="p-8 text-center rounded-2xl bg-surface/30 border border-border/60 space-y-3">
-                                <BadgePercent className="w-10 h-10 text-[#6F4E37] opacity-40 mx-auto" />
-                                <p className="text-xs font-bold text-[#2C1810]">No active offers or discounts created yet.</p>
+                                <BadgePercent className="w-10 h-10 text-[#E50914] opacity-40 mx-auto" />
+                                <p className="text-xs font-bold text-[#252525]">No active offers or discounts created yet.</p>
                                 <p className="text-[11px] text-text/50">Add promotional discounts to attract more customer bookings to your cafe.</p>
                                 <Button 
                                   type="button" 
@@ -1810,7 +1810,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                     setOfferFormData(defaultOfferState);
                                     setIsCreatingOffer(true);
                                   }}
-                                  className="bg-[#6F4E37] text-white"
+                                  className="bg-[#E50914] text-white"
                                 >
                                   <Plus className="w-4 h-4 mr-1.5" />
                                   Create First Offer
@@ -1822,7 +1822,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                   <div key={disc.id || idx} className="p-4 rounded-2xl bg-white border border-border/60 shadow-2xs flex flex-col justify-between space-y-3">
                                     <div>
                                       <div className="flex items-center justify-between">
-                                        <h4 className="text-xs font-black text-[#2C1810]">{disc.title || disc.name || 'Promotional Offer'}</h4>
+                                        <h4 className="text-xs font-black text-[#252525]">{disc.title || disc.name || 'Promotional Offer'}</h4>
                                         <span className={cn(
                                           "px-2 py-0.5 text-[10px] font-black rounded-full",
                                           disc.is_active !== false && disc.status !== 'INACTIVE' ? "bg-emerald-100 text-emerald-800" : "bg-stone-100 text-stone-600"
@@ -1831,7 +1831,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                         </span>
                                       </div>
 
-                                      <p className="text-sm font-extrabold text-[#6F4E37] mt-1">
+                                      <p className="text-sm font-extrabold text-[#E50914] mt-1">
                                         {disc.type === 'FLAT' ? `₹${disc.amount} OFF` : `${disc.amount}% OFF`}
                                       </p>
 
@@ -1854,7 +1854,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                                       <button
                                         type="button"
                                         onClick={() => handleEditOffer(idx)}
-                                        className="text-xs font-bold text-[#6F4E37] hover:underline cursor-pointer"
+                                        className="text-xs font-bold text-[#E50914] hover:underline cursor-pointer"
                                       >
                                         Edit
                                       </button>
@@ -1882,12 +1882,12 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                 {currentStep === 3 && (
                   <div className="space-y-6">
                     <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-                      <h3 className="text-base font-extrabold text-[#2C1810]">Venue Amenities</h3>
+                      <h3 className="text-base font-extrabold text-[#252525]">Venue Amenities</h3>
                       <CafeAmenities />
                     </div>
 
                     <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-                      <h3 className="text-base font-extrabold text-[#2C1810]">Cover & Gallery Photos</h3>
+                      <h3 className="text-base font-extrabold text-[#252525]">Cover & Gallery Photos</h3>
                       <GalleryUploader 
                         value={watch('gallery') || []}
                         onChange={(files) => methods.setValue('gallery', files, { shouldDirty: true })}
@@ -1900,7 +1900,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                 {/* STEP 4: BUSINESS HOURS */}
                 {currentStep === 4 && (
                   <div className="bg-white p-6 sm:p-8 rounded-3xl border border-border/60 shadow-2xs space-y-6">
-                    <h3 className="text-base font-extrabold text-[#2C1810]">Weekly Operating Hours</h3>
+                    <h3 className="text-base font-extrabold text-[#252525]">Weekly Operating Hours</h3>
                     <BusinessHours />
                   </div>
                 )}
@@ -1917,7 +1917,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
             variant="outline"
             disabled={currentStep === 1}
             onClick={prevStep}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border-border/60 text-xs font-bold text-[#2C1810] flex items-center justify-center gap-1.5 cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border-border/60 text-xs font-bold text-[#252525] flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" /> Previous Step
           </Button>
@@ -1927,7 +1927,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
               <Button 
                 type="button"
                 onClick={nextStep}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <span>Next Step</span>
                 <ArrowRight className="w-4 h-4" />
@@ -1943,7 +1943,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                 <Button 
                   type="submit" 
                   isLoading={isLoading}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Save className="w-4 h-4" /> {submitLabel}
                 </Button>

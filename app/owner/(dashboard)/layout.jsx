@@ -127,14 +127,14 @@ export default function DashboardLayout({ children }) {
         return;
       }
 
-      const resolvedAmount = orderData.amount || (role === 'RESTAURANT_OWNER' ? 149 : 299);
+      const resolvedAmount = orderData.amount || 399;
       const options = {
         key: orderData.razorpayKeyId,
         amount: Math.round(resolvedAmount * 100),
         currency: orderData.currency || 'INR',
-        name: 'Fahara Partner',
-        description: `${orderData.planName || 'Fahara Partner'} Monthly Subscription ₹${resolvedAmount}/month`,
-        image: '/logo.jpeg',
+        name: 'Grab2GO Partner',
+        description: `${orderData.planName || 'Grab2GO Partner'} Monthly Subscription ₹${resolvedAmount}/month`,
+        image: '/grab-it-logo.png',
         prefill: {
           name: user?.name || '',
           email: user?.email || '',
@@ -142,7 +142,7 @@ export default function DashboardLayout({ children }) {
         },
 
         theme: {
-          color: '#6F4E37'
+          color: '#E50914'
         },
         handler: async function (response) {
           try {
@@ -244,29 +244,29 @@ export default function DashboardLayout({ children }) {
           
           {/* STATE 1: LOADING STATE (While verifying subscription on page refresh) */}
           {isCheckingSubscription ? (
-            <div className="flex flex-col items-center justify-center min-h-[65vh] p-8 text-center text-[#2C1810]">
-              <div className="w-14 h-14 rounded-2xl bg-[#FFF8F0] border border-[#DDB892] flex items-center justify-center mb-3.5 shadow-2xs">
-                <Loader2 className="w-6 h-6 animate-spin text-[#6F4E37]" />
+            <div className="flex flex-col items-center justify-center min-h-[65vh] p-8 text-center text-[#252525]">
+              <div className="w-14 h-14 rounded-2xl bg-[#FFF5F5] border border-[#EF5350] flex items-center justify-center mb-3.5 shadow-2xs">
+                <Loader2 className="w-6 h-6 animate-spin text-[#E50914]" />
               </div>
-              <h3 className="text-sm font-extrabold text-[#2C1810]">Loading your partner account...</h3>
-              <p className="text-xs text-[#6F4E37] font-medium mt-1 flex items-center justify-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#6F4E37] animate-ping" />
+              <h3 className="text-sm font-extrabold text-[#252525]">Loading your partner account...</h3>
+              <p className="text-xs text-[#E50914] font-medium mt-1 flex items-center justify-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#E50914] animate-ping" />
                 <span>Checking subscription access...</span>
               </p>
             </div>
           ) : showServerErrorState ? (
             /* STATE 2: SERVER / VERIFICATION ERROR STATE (500 or Network Error) */
-            <div className="flex flex-col items-center justify-center min-h-[65vh] p-8 text-center text-[#2C1810] space-y-3">
+            <div className="flex flex-col items-center justify-center min-h-[65vh] p-8 text-center text-[#252525] space-y-3">
               <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center shadow-2xs">
                 <ShieldAlert className="w-6 h-6 text-rose-600" />
               </div>
-              <h3 className="text-base font-black text-[#2C1810]">Unable to verify your partner subscription</h3>
+              <h3 className="text-base font-black text-[#252525]">Unable to verify your partner subscription</h3>
               <p className="text-xs text-stone-500 max-w-sm text-center leading-relaxed font-medium">
                 {subError || "A server or network error occurred while checking your subscription access."}
               </p>
               <Button 
                 onClick={() => fetchSubscription(true)} 
-                className="py-2 px-5 rounded-xl bg-[#6F4E37] hover:bg-[#593E2B] text-white font-bold text-xs shadow-2xs"
+                className="py-2 px-5 rounded-xl bg-[#E50914] hover:bg-[#593E2B] text-white font-bold text-xs shadow-2xs"
               >
                 Retry Verification
               </Button>
@@ -276,19 +276,19 @@ export default function DashboardLayout({ children }) {
             <div className="min-h-full py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-10">
               
               {/* Hero Banner */}
-              <div className="relative bg-gradient-to-br from-[#FFF9F2] via-[#FAF0E6] to-[#F5E6D3] text-[#2C1810] p-8 sm:p-10 rounded-3xl shadow-xl overflow-hidden border border-[#DDB892]/80">
+              <div className="relative bg-gradient-to-br from-[#FFF9F2] via-[#FFF5F5] to-[#F5E6D3] text-[#252525] p-8 sm:p-10 rounded-3xl shadow-xl overflow-hidden border border-[#EF5350]/80">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#6F4E37]/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#E50914]/10 rounded-full blur-3xl pointer-events-none" />
                 
                 <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
                   <div className="space-y-4 max-w-2xl">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-black uppercase tracking-wider border border-[#6F4E37]/20 shadow-xs">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-black uppercase tracking-wider border border-[#E50914]/20 shadow-xs">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                       <Lock className="w-3.5 h-3.5" />
-                      {role === 'EVENT_MANAGER' ? 'FAHARA EVENT PARTNER • INSTANT UNLOCK' : 'FAHARA PARTNER SUITE • INSTANT UNLOCK'}
+                      {role === 'EVENT_MANAGER' ? 'Grab2GO EVENT PARTNER • INSTANT UNLOCK' : 'Grab2GO PARTNER SUITE • INSTANT UNLOCK'}
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight text-[#2C1810]">
-                      Empower Your Business with <span className="text-[#6F4E37]">{role === 'EVENT_MANAGER' ? 'Fahara Event Partner' : (isRestaurantOwner ? 'Fahara Restaurant Partner' : 'Fahara Cafe Partner')}</span>
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight text-[#252525]">
+                      Empower Your Business with <span className="text-[#E50914]">{role === 'EVENT_MANAGER' ? 'Grab2GO Event Partner' : (isRestaurantOwner ? 'Grab2GO Restaurant Partner' : 'Grab2GO Cafe Partner')}</span>
                     </h1>
                     <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-medium">
                       {role === 'EVENT_MANAGER'
@@ -306,11 +306,11 @@ export default function DashboardLayout({ children }) {
                   </div>
 
                     {/* Price Action Card */}
-                    <div className="w-full lg:w-80 bg-white/90 backdrop-blur-xl border border-[#DDB892]/80 hover:border-[#6F4E37]/50 p-6 rounded-3xl shrink-0 text-center space-y-4 shadow-xl transition-all">
+                    <div className="w-full lg:w-80 bg-white/90 backdrop-blur-xl border border-[#EF5350]/80 hover:border-[#E50914]/50 p-6 rounded-3xl shrink-0 text-center space-y-4 shadow-xl transition-all">
                       <div className="space-y-1">
                         <span className="text-stone-500 text-[11px] font-black uppercase tracking-widest block">Partner Membership</span>
                         <div className="flex items-baseline justify-center gap-1">
-                          <span className="text-4xl font-black text-[#6F4E37] tracking-tight">{role === 'RESTAURANT_OWNER' ? '₹149' : '₹299'}</span>
+                          <span className="text-4xl font-black text-[#E50914] tracking-tight">₹399</span>
                           <span className="text-xs font-bold text-stone-500"> / month</span>
                         </div>
                         <p className="text-[10px] text-stone-400">Monthly recurring partner membership</p>
@@ -319,7 +319,7 @@ export default function DashboardLayout({ children }) {
                       <button
                         onClick={handleDirectSubscribe}
                         disabled={checkoutLoading}
-                        className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#593E2B] to-[#452718] hover:from-[#593E2B] hover:to-[#2C1810] text-white font-black text-xs sm:text-sm shadow-lg shadow-[#6F4E37]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#593E2B] to-[#452718] hover:from-[#593E2B] hover:to-[#252525] text-white font-black text-xs sm:text-sm shadow-lg shadow-[#E50914]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                       >
                         {checkoutLoading ? (
                           <>
@@ -329,7 +329,7 @@ export default function DashboardLayout({ children }) {
                         ) : (
                           <>
                             <Sparkles className="w-4 h-4 text-amber-300 fill-current" />
-                            <span>Subscribe Now for {role === 'RESTAURANT_OWNER' ? '₹149' : '₹299'}/month</span>
+                            <span>Subscribe Now for ₹399/month</span>
                           </>
                         )}
                       </button>
@@ -349,10 +349,10 @@ export default function DashboardLayout({ children }) {
               <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-4">
                   <div>
-                    <h2 className="text-xl font-black text-[#2C1810]">Everything included in Fahara Partner</h2>
+                    <h2 className="text-xl font-black text-[#252525]">Everything included in Grab2GO Partner</h2>
                     <p className="text-xs text-stone-500 font-medium">Complete toolkit designed to maximize venue bookings and revenue</p>
                   </div>
-                  <span className="px-3.5 py-1.5 rounded-full bg-[#FAF0E6] text-[#6F4E37] text-xs font-black border border-[#DDB892]/60 w-fit">
+                  <span className="px-3.5 py-1.5 rounded-full bg-[#FFF5F5] text-[#E50914] text-xs font-black border border-[#EF5350]/60 w-fit">
                     {faharaFeatures.length} {isRestaurantOwner ? 'Restaurant Modules' : 'Enterprise Modules'}
                   </span>
                 </div>
@@ -375,7 +375,7 @@ export default function DashboardLayout({ children }) {
                             </span>
                           </div>
 
-                          <h3 className="text-base font-black text-[#2C1810] group-hover:text-[#6F4E37] transition-colors leading-snug">
+                          <h3 className="text-base font-black text-[#252525] group-hover:text-[#E50914] transition-colors leading-snug">
                             {feat.title}
                           </h3>
                           <p className="text-xs text-stone-500 leading-relaxed font-medium">
@@ -388,7 +388,7 @@ export default function DashboardLayout({ children }) {
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                             Full Access Unlocked
                           </span>
-                          <span className="text-[#6F4E37] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                          <span className="text-[#E50914] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                         </div>
                       </div>
                     );
@@ -397,19 +397,19 @@ export default function DashboardLayout({ children }) {
               </div>
 
               {/* Bottom Action Footer Banner */}
-              <div className="bg-gradient-to-r from-[#FAF0E6] via-[#FFF5EA] to-[#FAF0E6] border border-[#DDB892]/80 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+              <div className="bg-gradient-to-r from-[#FFF5F5] via-[#FFF5F5] to-[#FFF5F5] border border-[#EF5350]/80 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
                 <div className="space-y-1 text-center sm:text-left">
-                  <h4 className="text-lg font-black text-[#2C1810]">Ready to transform your venue management?</h4>
-                  <p className="text-xs text-stone-600 font-medium">Instant 1-click subscription for {role === 'RESTAURANT_OWNER' ? '₹149' : '₹299'}/month. Cancel renewal anytime.</p>
+                  <h4 className="text-lg font-black text-[#252525]">Ready to transform your venue management?</h4>
+                  <p className="text-xs text-stone-600 font-medium">Instant 1-click subscription for ₹399/month. Cancel renewal anytime.</p>
                 </div>
 
                 <button
                   onClick={handleDirectSubscribe}
                   disabled={checkoutLoading}
-                  className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] via-[#4A3225] to-[#2C1810] hover:from-[#4A3225] hover:to-[#1A0F0A] text-white text-xs sm:text-sm font-black shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center gap-2.5 shrink-0"
+                  className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#252525] hover:from-[#E50914] hover:to-[#1A0F0A] text-white text-xs sm:text-sm font-black shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center gap-2.5 shrink-0"
                 >
                   <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Subscribe Now for {role === 'RESTAURANT_OWNER' ? '₹149' : '₹299'}/month</span>
+                  <span>Subscribe Now for ₹399/month</span>
                 </button>
               </div>
 

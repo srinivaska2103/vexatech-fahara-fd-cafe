@@ -8,13 +8,13 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
 
-  --color-primary: #6F4E37;
-  --color-secondary: #A67B5B;
-  --color-accent: #DDB892;
-  --color-background: #FFF8F0;
-  --color-surface: #FFF5EA;
-  --color-border: #E7D8C9;
-  --color-text: #2C1810;
+  --color-primary: #E50914;
+  --color-secondary: #B71C1C;
+  --color-accent: #EF5350;
+  --color-background: #FFF5F5;
+  --color-surface: #FFFFFF;
+  --color-border: #FEE2E2;
+  --color-text: #252525;
   --color-success: #4CAF50;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
@@ -26,8 +26,8 @@
 }
 
 :root {
-  --background: #FFF8F0;
-  --foreground: #2C1810;
+  --background: #FFF5F5;
+  --foreground: #252525;
 }
 
 html, body {
@@ -38,7 +38,7 @@ html, body {
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #1A0F0A;
-    --foreground: #FFF8F0;
+    --foreground: #FFF5F5;
   }
 }
 
@@ -99,14 +99,14 @@ div[data-nextjs-toast-wrapper] {
 select {
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236F4E37' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E53935' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 0.85rem center;
   background-size: 1.1em 1.1em;
   padding-right: 2.5rem !important;
-  color: #2C1810;
-  background-color: #FFF8F0;
-  border: 1.5px solid #E7D8C9;
+  color: #252525;
+  background-color: #FFF5F5;
+  border: 1.5px solid #FEE2E2;
   border-radius: 1rem;
   font-weight: 700;
   transition: all 0.2s ease-in-out;
@@ -114,19 +114,19 @@ select {
 }
 
 select:hover {
-  border-color: #6F4E37;
-  background-color: #FFF5EA;
+  border-color: #E50914;
+  background-color: #FFF5F5;
 }
 
 select:focus {
   outline: none;
-  border-color: #6F4E37;
+  border-color: #E50914;
   box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.15);
 }
 
 select option {
-  background-color: #FFF8F0;
-  color: #2C1810;
+  background-color: #FFF5F5;
+  color: #252525;
   font-weight: 700;
   padding: 10px 14px;
 }
@@ -135,7 +135,28 @@ select option:hover,
 select option:focus,
 select option:active,
 select option:checked {
-  background-color: #6F4E37 !important;
+  background-color: #E50914 !important;
   color: #FFFFFF !important;
 }
 
+
+/* Hide scrollbars across sidebar and custom-scrollbar */
+.custom-scrollbar,
+.custom-scrollbar::-webkit-scrollbar,
+aside,
+aside *::-webkit-scrollbar,
+.scrollbar-none,
+.scrollbar-none::-webkit-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar,
+aside::-webkit-scrollbar,
+aside *::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}

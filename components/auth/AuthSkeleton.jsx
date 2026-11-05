@@ -17,7 +17,7 @@ export const AuthSkeleton = ({ type = 'form' }) => {
         <div className="h-11 bg-gray-100 rounded-2xl border border-gray-200/60 w-full" />
       </div>
 
-      <div className="h-12 bg-[#6F4E37]/20 rounded-2xl w-full mt-6" />
+      <div className="h-12 bg-[#E50914]/20 rounded-2xl w-full mt-6" />
     </div>
   );
 };

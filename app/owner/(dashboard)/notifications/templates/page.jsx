@@ -45,7 +45,7 @@ const EMAIL_TEMPLATES = [
     color: 'from-rose-500 to-pink-600',
     badgeBg: 'bg-rose-50 text-rose-800 border-rose-200',
     subject: '🔥 Exclusive VIP Offer & Discount from {{cafe_name}}!',
-    content: 'Hello {{customer_name}},\n\nAs a valued guest at {{cafe_name}}, we are excited to offer you an exclusive 20% discount on your next weekend reservation!\n\nUse Promo Code: FAHARA20 at checkout. Valid for parties of 2 or more guests.\n\nDon\'t miss out—book your table today!\n\nWarm regards,\n{{cafe_name}} Team',
+    content: 'Hello {{customer_name}},\n\nAs a valued guest at {{cafe_name}}, we are excited to offer you an exclusive 20% discount on your next weekend reservation!\n\nUse Promo Code: Grab2GO20 at checkout. Valid for parties of 2 or more guests.\n\nDon\'t miss out—book your table today!\n\nWarm regards,\n{{cafe_name}} Team',
   },
   {
     id: 'tpl-3',
@@ -140,15 +140,15 @@ export default function TemplatesPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* 1. Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-5 sm:p-6 rounded-3xl border border-[#DDB892]/60 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-5 sm:p-6 rounded-3xl border border-[#EF5350]/60 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <button 
             type="button"
             onClick={() => router.push('/owner/notifications/compose')}
-            className="w-10 h-10 rounded-2xl bg-white border border-[#DDB892]/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0 cursor-pointer"
+            className="w-10 h-10 rounded-2xl bg-white border border-[#EF5350]/60 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center shadow-2xs transition-all shrink-0 cursor-pointer"
             title="Back to Compose"
             suppressHydrationWarning
           >
@@ -156,8 +156,8 @@ export default function TemplatesPage() {
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black text-[#2C1810] tracking-tight">Email Broadcast Templates</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-black uppercase">
+              <h1 className="text-xl sm:text-2xl font-black text-[#252525] tracking-tight">Email Broadcast Templates</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-[10px] font-black uppercase">
                 {EMAIL_TEMPLATES.length} TEMPLATES
               </span>
             </div>
@@ -169,16 +169,16 @@ export default function TemplatesPage() {
       </div>
 
       {/* 2. Interactive Search & Category Filter Bar */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-3xl border border-[#DDB892]/60 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div className="bg-white p-3.5 sm:p-4 rounded-3xl border border-[#EF5350]/60 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative flex-1 min-w-[240px]">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6F4E37]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#E50914]" />
           <input
             type="text"
             placeholder="Search templates by title, keyword, or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-10 pr-4 text-xs font-bold rounded-2xl border border-[#DDB892]/80 bg-[#FFF8F0] focus:bg-[#FFF5EA] focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/20 text-[#2C1810] placeholder:text-stone-400 transition-all shadow-2xs"
+            className="w-full h-10 pl-10 pr-4 text-xs font-bold rounded-2xl border border-[#EF5350]/80 bg-[#FFF5F5] focus:bg-[#FFF5F5] focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/20 text-[#252525] placeholder:text-stone-400 transition-all shadow-2xs"
           />
         </div>
 
@@ -193,8 +193,8 @@ export default function TemplatesPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`h-9 px-3.5 rounded-xl text-xs font-extrabold transition-all shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-[#6F4E37] text-white shadow-xs'
-                    : 'bg-[#FFF8F0] hover:bg-[#FFF5EA] text-[#6F4E37] border border-[#DDB892]/60'
+                    ? 'bg-[#E50914] text-white shadow-xs'
+                    : 'bg-[#FFF5F5] hover:bg-[#FFF5F5] text-[#E50914] border border-[#EF5350]/60'
                 }`}
               >
                 {cat}
@@ -216,7 +216,7 @@ export default function TemplatesPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               whileHover={{ y: -3 }}
-              className="bg-white p-5 sm:p-6 rounded-3xl border border-stone-200/90 shadow-2xs hover:shadow-md hover:border-[#6F4E37]/40 transition-all flex flex-col justify-between space-y-4 group"
+              className="bg-white p-5 sm:p-6 rounded-3xl border border-stone-200/90 shadow-2xs hover:shadow-md hover:border-[#E50914]/40 transition-all flex flex-col justify-between space-y-4 group"
             >
               <div className="space-y-3.5">
                 <div className="flex items-start justify-between gap-3">
@@ -225,7 +225,7 @@ export default function TemplatesPage() {
                       <Icon className="w-5.5 h-5.5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-extrabold text-[#2C1810] group-hover:text-[#6F4E37] transition-colors">
+                      <h3 className="text-base font-extrabold text-[#252525] group-hover:text-[#E50914] transition-colors">
                         {tmpl.title}
                       </h3>
                       <span className={`text-[10px] font-black border px-2.5 py-0.5 rounded-full uppercase tracking-wider ${tmpl.badgeBg}`}>
@@ -238,7 +238,7 @@ export default function TemplatesPage() {
                   <button
                     type="button"
                     onClick={() => handleCopySubject(tmpl)}
-                    className="p-2 rounded-xl text-stone-400 hover:text-[#6F4E37] hover:bg-[#FFF5EA] transition-colors cursor-pointer shrink-0"
+                    className="p-2 rounded-xl text-stone-400 hover:text-[#E50914] hover:bg-[#FFF5F5] transition-colors cursor-pointer shrink-0"
                     title="Copy Subject Text"
                   >
                     {copiedId === tmpl.id ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -246,9 +246,9 @@ export default function TemplatesPage() {
                 </div>
 
                 {/* Email Content Preview Snippet */}
-                <div className="p-3.5 bg-[#FFF8F0]/70 rounded-2xl border border-[#DDB892]/50 space-y-1.5">
-                  <p className="text-xs font-black text-[#2C1810] truncate">
-                    <span className="text-[#6F4E37] font-extrabold">Subject:</span> {tmpl.subject}
+                <div className="p-3.5 bg-[#FFF5F5]/70 rounded-2xl border border-[#EF5350]/50 space-y-1.5">
+                  <p className="text-xs font-black text-[#252525] truncate">
+                    <span className="text-[#E50914] font-extrabold">Subject:</span> {tmpl.subject}
                   </p>
                   <p className="text-xs text-stone-600 font-medium line-clamp-3 leading-relaxed">
                     {tmpl.content}
@@ -261,7 +261,7 @@ export default function TemplatesPage() {
                 <button
                   type="button"
                   onClick={() => setPreviewTemplate(tmpl)}
-                  className="py-2.5 px-3 bg-[#FFF8F0] hover:bg-[#FFF5EA] text-[#6F4E37] border border-[#DDB892]/80 text-xs font-extrabold rounded-2xl flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="py-2.5 px-3 bg-[#FFF5F5] hover:bg-[#FFF5F5] text-[#E50914] border border-[#EF5350]/80 text-xs font-extrabold rounded-2xl flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   suppressHydrationWarning
                 >
                   <Eye className="w-3.5 h-3.5" /> Preview
@@ -270,7 +270,7 @@ export default function TemplatesPage() {
                 <button
                   type="button"
                   onClick={() => handleUseTemplate(tmpl)}
-                  className="py-2.5 px-3 bg-gradient-to-r from-[#6F4E37] to-[#8C6D58] hover:from-[#5D3F2B] hover:to-[#6F4E37] text-white text-xs font-extrabold rounded-2xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="py-2.5 px-3 bg-gradient-to-r from-[#E50914] to-[#757575] hover:from-[#E50914] hover:to-[#E50914] text-white text-xs font-extrabold rounded-2xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   suppressHydrationWarning
                 >
                   <Send className="w-3.5 h-3.5" /> Use Template
@@ -284,16 +284,16 @@ export default function TemplatesPage() {
       {/* Empty Search State */}
       {filteredTemplates.length === 0 && (
         <div className="bg-white rounded-3xl p-12 text-center border border-stone-200/90 space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#FFF8F0] text-[#6F4E37] flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-[#FFF5F5] text-[#E50914] flex items-center justify-center mx-auto">
             <Search className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-extrabold text-[#2C1810]">No Matching Templates Found</h3>
+          <h3 className="text-base font-extrabold text-[#252525]">No Matching Templates Found</h3>
           <p className="text-xs text-stone-500 font-medium max-w-sm mx-auto">
             Try adjusting your search keywords or switching category filters.
           </p>
           <button
             onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
-            className="px-4 py-2 bg-[#6F4E37] text-white text-xs font-bold rounded-xl"
+            className="px-4 py-2 bg-[#E50914] text-white text-xs font-bold rounded-xl"
           >
             Clear Filters
           </button>
@@ -308,7 +308,7 @@ export default function TemplatesPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-5 border border-[#DDB892] shadow-2xl relative overflow-hidden text-[#2C1810]"
+              className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-5 border border-[#EF5350] shadow-2xl relative overflow-hidden text-[#252525]"
             >
               {/* Modal Header */}
               <div className="flex items-center justify-between border-b border-stone-100 pb-3.5">
@@ -317,8 +317,8 @@ export default function TemplatesPage() {
                     <previewTemplate.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#2C1810]">{previewTemplate.title}</h3>
-                    <span className="text-[10px] font-black text-[#6F4E37]">{previewTemplate.category} Template</span>
+                    <h3 className="text-base font-extrabold text-[#252525]">{previewTemplate.title}</h3>
+                    <span className="text-[10px] font-black text-[#E50914]">{previewTemplate.category} Template</span>
                   </div>
                 </div>
                 <button
@@ -333,7 +333,7 @@ export default function TemplatesPage() {
               <div className="space-y-3">
                 <div>
                   <label className="text-[10px] font-black uppercase text-stone-400 tracking-wider">Email Subject</label>
-                  <div className="mt-1 p-3 bg-[#FFF8F0] rounded-xl border border-[#DDB892]/60 text-xs font-extrabold text-[#2C1810]">
+                  <div className="mt-1 p-3 bg-[#FFF5F5] rounded-xl border border-[#EF5350]/60 text-xs font-extrabold text-[#252525]">
                     {previewTemplate.subject}
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function TemplatesPage() {
                     handleUseTemplate(previewTemplate);
                     setPreviewTemplate(null);
                   }}
-                  className="px-5 py-2.5 bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold rounded-xl shadow-xs flex items-center gap-2"
+                  className="px-5 py-2.5 bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold rounded-xl shadow-xs flex items-center gap-2"
                 >
                   <Send className="w-3.5 h-3.5" /> Use This Template
                 </button>

@@ -180,15 +180,15 @@ export const InclusionsSection = () => {
   };
 
   return (
-    <div className="space-y-6 text-[#2C1810]">
+    <div className="space-y-6 text-[#252525]">
       
       {/* Header */}
-      <div className="p-5 rounded-3xl bg-gradient-to-r from-[#FFF8F0] via-[#FAF0E6] to-[#FFF3E4] border border-[#DDB892]/60 shadow-2xs space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-black">
+      <div className="p-5 rounded-3xl bg-gradient-to-r from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border border-[#EF5350]/60 shadow-2xs space-y-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-black">
           <Layers className="w-3.5 h-3.5" />
           <span>TIER-WISE INCLUSIONS BUILDER</span>
         </div>
-        <h3 className="text-xl font-extrabold text-[#2C1810]">
+        <h3 className="text-xl font-extrabold text-[#252525]">
           Package Inclusions & Tier Pricing Configuration
         </h3>
         <p className="text-xs text-text/70">
@@ -200,14 +200,14 @@ export const InclusionsSection = () => {
       <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-wider text-[#6F4E37] block">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#E50914] block">
               {editingIndex !== null ? 'Edit Package Feature & Tier Prices' : 'Add Package Feature & Configure Tier Prices'}
             </span>
             <p className="text-[11px] text-text/60 font-medium">
               {editingIndex !== null ? 'Update the details below and click Update.' : 'Click a preset or specify custom tier-wise pricing below.'}
             </p>
           </div>
-          <span className="text-[10px] font-extrabold text-[#6F4E37] bg-[#FFF8F0] px-3 py-1 rounded-full border border-[#DDB892]/50 shrink-0">
+          <span className="text-[10px] font-extrabold text-[#E50914] bg-[#FFF5F5] px-3 py-1 rounded-full border border-[#EF5350]/50 shrink-0">
             {packageInclusions.length} Feature{packageInclusions.length !== 1 ? 's' : ''} Configured
           </span>
         </div>
@@ -236,7 +236,7 @@ export const InclusionsSection = () => {
                   setPremiumPrice(preset.pP);
                   setPremiumDesc(preset.pD);
                 }}
-                className="px-3 py-1.5 rounded-xl bg-surface/60 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892]/50 text-xs font-extrabold transition-all cursor-pointer shadow-2xs hover:shadow-xs flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl bg-surface/60 hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350]/50 text-xs font-extrabold transition-all cursor-pointer shadow-2xs hover:shadow-xs flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{preset.name}</span>
@@ -248,18 +248,18 @@ export const InclusionsSection = () => {
         {/* Feature Basic Details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-[11px] font-extrabold text-[#6F4E37] uppercase tracking-wider block mb-1">Inclusion Name *</label>
+            <label className="text-[11px] font-extrabold text-[#E50914] uppercase tracking-wider block mb-1">Inclusion Name *</label>
             <input
               type="text"
               value={incName}
               onChange={(e) => setIncName(e.target.value)}
               placeholder="e.g. Food & Catering, Celebration Cake"
-              className="w-full h-10 px-3.5 rounded-xl border border-border/60 bg-surface/30 focus:bg-white text-xs font-bold text-[#2C1810] focus:ring-2 focus:ring-[#6F4E37]/20 outline-none"
+              className="w-full h-10 px-3.5 rounded-xl border border-border/60 bg-surface/30 focus:bg-white text-xs font-bold text-[#252525] focus:ring-2 focus:ring-[#E50914]/20 outline-none"
             />
           </div>
 
           <div>
-            <label className="text-[11px] font-extrabold text-[#6F4E37] uppercase tracking-wider block mb-1">Pricing Model *</label>
+            <label className="text-[11px] font-extrabold text-[#E50914] uppercase tracking-wider block mb-1">Pricing Model *</label>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: 'PER_GUEST', label: 'Per Guest', sub: '₹ × guest count' },
@@ -272,8 +272,8 @@ export const InclusionsSection = () => {
                   className={cn(
                     "h-10 rounded-xl border text-center transition-all cursor-pointer flex flex-col justify-center items-center",
                     pricingType === p.id 
-                      ? "bg-[#6F4E37] text-white border-[#6F4E37] font-black shadow-2xs" 
-                      : "bg-surface/30 text-[#2C1810] border-border/60 hover:bg-white font-bold"
+                      ? "bg-[#E50914] text-white border-[#E50914] font-black shadow-2xs" 
+                      : "bg-surface/30 text-[#252525] border-border/60 hover:bg-white font-bold"
                   )}
                 >
                   <p className="text-xs leading-none">{p.label}</p>
@@ -286,7 +286,7 @@ export const InclusionsSection = () => {
 
         {/* Tier-Wise Comparison Input Grid */}
         <div className="space-y-2 pt-2">
-          <label className="text-[11px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">
+          <label className="text-[11px] font-extrabold text-[#E50914] uppercase tracking-wider block">
             Tier-Wise Rates ({pricingType === 'PER_GUEST' ? 'Rate / Guest' : 'Fixed Amount'}) *
           </label>
 
@@ -309,7 +309,7 @@ export const InclusionsSection = () => {
                     value={basicPrice}
                     onChange={(e) => setBasicPrice(e.target.value)}
                     placeholder="100"
-                    className="w-full h-9 pl-7 pr-3 rounded-xl border border-stone-300 bg-white text-xs font-black text-[#2C1810] outline-none focus:ring-2 focus:ring-[#6F4E37]/20"
+                    className="w-full h-9 pl-7 pr-3 rounded-xl border border-stone-300 bg-white text-xs font-black text-[#252525] outline-none focus:ring-2 focus:ring-[#E50914]/20"
                   />
                 </div>
               </div>
@@ -321,7 +321,7 @@ export const InclusionsSection = () => {
                   value={basicDesc}
                   onChange={(e) => setBasicDesc(e.target.value)}
                   placeholder="e.g. Basic starters & drink"
-                  className="w-full h-9 px-3 rounded-xl border border-stone-300 bg-white text-xs font-medium text-[#2C1810] outline-none"
+                  className="w-full h-9 px-3 rounded-xl border border-stone-300 bg-white text-xs font-medium text-[#252525] outline-none"
                 />
               </div>
             </div>
@@ -343,7 +343,7 @@ export const InclusionsSection = () => {
                     value={standardPrice}
                     onChange={(e) => setStandardPrice(e.target.value)}
                     placeholder="250"
-                    className="w-full h-9 pl-7 pr-3 rounded-xl border border-amber-300 bg-white text-xs font-black text-[#2C1810] outline-none focus:ring-2 focus:ring-amber-500/20"
+                    className="w-full h-9 pl-7 pr-3 rounded-xl border border-amber-300 bg-white text-xs font-black text-[#252525] outline-none focus:ring-2 focus:ring-amber-500/20"
                   />
                 </div>
               </div>
@@ -355,20 +355,20 @@ export const InclusionsSection = () => {
                   value={standardDesc}
                   onChange={(e) => setStandardDesc(e.target.value)}
                   placeholder="e.g. Full buffet & cake"
-                  className="w-full h-9 px-3 rounded-xl border border-amber-300 bg-white text-xs font-medium text-[#2C1810] outline-none"
+                  className="w-full h-9 px-3 rounded-xl border border-amber-300 bg-white text-xs font-medium text-[#252525] outline-none"
                 />
               </div>
             </div>
 
             {/* PREMIUM TIER */}
-            <div className="p-4 rounded-2xl border border-[#DDB892] bg-[#FFF8F0] space-y-3">
+            <div className="p-4 rounded-2xl border border-[#EF5350] bg-[#FFF5F5] space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-[#6F4E37] uppercase tracking-wider">PREMIUM TIER</span>
-                <span className="text-[9px] font-bold px-2 py-0.5 bg-[#6F4E37] text-white rounded-full">VIP Full</span>
+                <span className="text-xs font-black text-[#E50914] uppercase tracking-wider">PREMIUM TIER</span>
+                <span className="text-[9px] font-bold px-2 py-0.5 bg-[#E50914] text-white rounded-full">VIP Full</span>
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-[#6F4E37]/80 block mb-1">Premium Price (₹)</label>
+                <label className="text-[10px] font-bold text-[#E50914]/80 block mb-1">Premium Price (₹)</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-xs font-bold text-text/40">₹</span>
                   <input
@@ -377,19 +377,19 @@ export const InclusionsSection = () => {
                     value={premiumPrice}
                     onChange={(e) => setPremiumPrice(e.target.value)}
                     placeholder="400"
-                    className="w-full h-9 pl-7 pr-3 rounded-xl border border-[#DDB892] bg-white text-xs font-black text-[#2C1810] outline-none focus:ring-2 focus:ring-[#6F4E37]/20"
+                    className="w-full h-9 pl-7 pr-3 rounded-xl border border-[#EF5350] bg-white text-xs font-black text-[#252525] outline-none focus:ring-2 focus:ring-[#E50914]/20"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-[#6F4E37]/80 block mb-1">Premium Description</label>
+                <label className="text-[10px] font-bold text-[#E50914]/80 block mb-1">Premium Description</label>
                 <input
                   type="text"
                   value={premiumDesc}
                   onChange={(e) => setPremiumDesc(e.target.value)}
                   placeholder="e.g. Live counters & custom desserts"
-                  className="w-full h-9 px-3 rounded-xl border border-[#DDB892] bg-white text-xs font-medium text-[#2C1810] outline-none"
+                  className="w-full h-9 px-3 rounded-xl border border-[#EF5350] bg-white text-xs font-medium text-[#252525] outline-none"
                 />
               </div>
             </div>
@@ -401,7 +401,7 @@ export const InclusionsSection = () => {
           <button
             type="button"
             onClick={handleSaveInclusion}
-            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5C402E] hover:to-[#8E6747] text-white text-xs font-extrabold shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
+            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:from-[#5C402E] hover:to-[#8E6747] text-white text-xs font-extrabold shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
           >
             {editingIndex !== null ? (
               <>
@@ -431,7 +431,7 @@ export const InclusionsSection = () => {
       {/* Configured Features Grid */}
       {packageInclusions.length > 0 && (
         <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-[#6F4E37] block">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#E50914] block">
             Configured Package Inclusions ({packageInclusions.length})
           </span>
 
@@ -444,15 +444,15 @@ export const InclusionsSection = () => {
                   key={index}
                   className={cn(
                     "p-4 rounded-2xl bg-white border transition-all space-y-3",
-                    editingIndex === index ? "border-[#6F4E37] ring-2 ring-[#6F4E37]/10 shadow-sm" : "border-[#DDB892]/60 shadow-2xs"
+                    editingIndex === index ? "border-[#E50914] ring-2 ring-[#E50914]/10 shadow-sm" : "border-[#EF5350]/60 shadow-2xs"
                   )}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-[#6F4E37]/10 text-[#6F4E37]">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-[#E50914]/10 text-[#E50914]">
                         {inc.category || 'Feature'}
                       </span>
-                      <h4 className="font-extrabold text-[#2C1810] text-sm">{inc.name}</h4>
+                      <h4 className="font-extrabold text-[#252525] text-sm">{inc.name}</h4>
                       <span className="text-[10px] text-text/50 font-bold">({pType === 'PER_GUEST' ? 'Per Guest' : 'Fixed Amount'})</span>
                     </div>
 
@@ -460,7 +460,7 @@ export const InclusionsSection = () => {
                       <button
                         type="button"
                         onClick={() => handleEditInclusion(index)}
-                        className="p-1.5 text-[#6F4E37] hover:bg-[#6F4E37]/10 rounded-xl transition-colors"
+                        className="p-1.5 text-[#E50914] hover:bg-[#E50914]/10 rounded-xl transition-colors"
                         title="Edit Inclusion"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -480,7 +480,7 @@ export const InclusionsSection = () => {
                   <div className="grid grid-cols-3 gap-2 pt-1">
                     <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs space-y-0.5">
                       <p className="text-[10px] font-black text-stone-700">BASIC</p>
-                      <p className="font-extrabold text-[#2C1810]">
+                      <p className="font-extrabold text-[#252525]">
                         ₹{inc.basic_price ?? inc.unit_price ?? 0} {pType === 'PER_GUEST' ? '/ guest' : 'fixed'}
                       </p>
                       <p className="text-[9px] text-text/60 truncate">{inc.basic_desc || inc.description || 'Basic tier'}</p>
@@ -488,15 +488,15 @@ export const InclusionsSection = () => {
 
                     <div className="p-2.5 rounded-xl bg-amber-50/60 border border-amber-200 text-xs space-y-0.5">
                       <p className="text-[10px] font-black text-amber-800">STANDARD</p>
-                      <p className="font-extrabold text-[#2C1810]">
+                      <p className="font-extrabold text-[#252525]">
                         ₹{inc.standard_price ?? inc.unit_price ?? 0} {pType === 'PER_GUEST' ? '/ guest' : 'fixed'}
                       </p>
                       <p className="text-[9px] text-text/60 truncate">{inc.standard_desc || inc.description || 'Standard tier'}</p>
                     </div>
 
-                    <div className="p-2.5 rounded-xl bg-[#FFF8F0] border border-[#DDB892]/60 text-xs space-y-0.5">
-                      <p className="text-[10px] font-black text-[#6F4E37]">PREMIUM</p>
-                      <p className="font-extrabold text-[#2C1810]">
+                    <div className="p-2.5 rounded-xl bg-[#FFF5F5] border border-[#EF5350]/60 text-xs space-y-0.5">
+                      <p className="text-[10px] font-black text-[#E50914]">PREMIUM</p>
+                      <p className="font-extrabold text-[#252525]">
                         ₹{inc.premium_price ?? inc.unit_price ?? 0} {pType === 'PER_GUEST' ? '/ guest' : 'fixed'}
                       </p>
                       <p className="text-[9px] text-text/60 truncate">{inc.premium_desc || inc.description || 'Premium tier'}</p>

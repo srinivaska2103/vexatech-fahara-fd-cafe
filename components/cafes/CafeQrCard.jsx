@@ -106,7 +106,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Fahara Stand - ${cafeName || 'Cafe'}</title>
+          <title>Grab2GO Stand - ${cafeName || 'Cafe'}</title>
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
             * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -118,12 +118,12 @@ export function CafeQrCard({ cafeId, cafeName }) {
               justify-content: center;
               min-height: 100vh;
               background-color: #FAF5EF;
-              color: #2C1810;
+              color: #252525;
               padding: 24px;
             }
             .stand-container {
               background: #ffffff;
-              border: 3px solid #DDB892;
+              border: 3px solid #EF5350;
               border-radius: 32px;
               padding: 44px 36px;
               text-align: center;
@@ -137,10 +137,10 @@ export function CafeQrCard({ cafeId, cafeName }) {
               align-items: center;
               gap: 6px;
               padding: 6px 16px;
-              background: #FFF8F0;
-              border: 1px solid #DDB892;
+              background: #FFF5F5;
+              border: 1px solid #EF5350;
               border-radius: 9999px;
-              color: #6F4E37;
+              color: #E50914;
               font-size: 11px;
               font-weight: 800;
               letter-spacing: 0.1em;
@@ -151,12 +151,12 @@ export function CafeQrCard({ cafeId, cafeName }) {
               font-size: 30px;
               font-weight: 900;
               line-height: 1.15;
-              color: #2C1810;
+              color: #252525;
               margin-bottom: 8px;
             }
             p.sub {
               font-size: 15px;
-              color: #6F4E37;
+              color: #E50914;
               font-weight: 700;
               margin-bottom: 28px;
             }
@@ -178,7 +178,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
               margin-top: 24px;
               font-size: 15px;
               font-weight: 800;
-              color: #2C1810;
+              color: #252525;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -204,21 +204,21 @@ export function CafeQrCard({ cafeId, cafeName }) {
             }
             @media print {
               body { background: #fff; padding: 0; }
-              .stand-container { border: 2.5px solid #2C1810; box-shadow: none; max-width: 100%; border-radius: 20px; }
+              .stand-container { border: 2.5px solid #252525; box-shadow: none; max-width: 100%; border-radius: 20px; }
             }
           </style>
         </head>
         <body>
           <div class="stand-container">
-            <div class="badge-brand">✦ Fahara Verified Venue ✦</div>
+            <div class="badge-brand">✦ Grab2GO Verified Venue ✦</div>
             <h1>${cafeName || 'Cafe Venue'}</h1>
-            <p class="sub">Scan to View Cafe and Book on Fahara</p>
+            <p class="sub">Scan to View Cafe and Book on Grab2GO</p>
             <div class="qr-frame">
-              <img src="${qrData.dataUrl}" alt="Fahara QR Code" />
+              <img src="${qrData.dataUrl}" alt="Grab2GO QR Code" />
             </div>
             <p class="scan-tip">📱 Open Camera & Point at QR</p>
             <p class="id-tag">ID: ${qrData.qrCodeId}</p>
-            <div class="footer-powered">Powered by Fahara.in</div>
+            <div class="footer-powered">Powered by Grab2GO.in</div>
           </div>
           <script>
             window.onload = function() {
@@ -244,12 +244,12 @@ export function CafeQrCard({ cafeId, cafeName }) {
         {/* Header Ribbon */}
         <div className="p-5 pb-4 border-b border-[#F5EBE1] flex items-center justify-between bg-gradient-to-r from-[#FFFDF9] via-white to-[#FFF9F2]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#A67B5B] flex items-center justify-center text-white shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E50914] to-[#B71C1C] flex items-center justify-center text-white shadow-xs">
               <QrCode className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-extrabold text-[#2C1810] tracking-tight">
+                <h4 className="text-sm font-extrabold text-[#252525] tracking-tight">
                   Cafe QR Code
                 </h4>
                 <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
@@ -264,7 +264,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
             <button
               onClick={() => setShowModal(true)}
               title="Expand QR Interactive Preview"
-              className="w-8 h-8 rounded-xl bg-stone-100 hover:bg-[#6F4E37]/10 hover:text-[#6F4E37] text-stone-600 flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-xl bg-stone-100 hover:bg-[#E50914]/10 hover:text-[#E50914] text-stone-600 flex items-center justify-center transition-all cursor-pointer"
             >
               <Maximize2 className="w-4 h-4" />
             </button>
@@ -275,7 +275,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
         <div className="p-5 space-y-4">
           {loading ? (
             <div className="py-12 flex flex-col items-center justify-center gap-3 text-stone-400">
-              <RefreshCw className="w-7 h-7 animate-spin text-[#6F4E37]" />
+              <RefreshCw className="w-7 h-7 animate-spin text-[#E50914]" />
               <p className="text-xs font-bold text-stone-600">Generating Cafe QR Code...</p>
             </div>
           ) : error ? (
@@ -300,7 +300,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
                     className="p-1.5 rounded-lg bg-white/90 hover:bg-white text-stone-700 shadow-xs text-xs font-bold flex items-center gap-1 transition-all"
                     title="Fullscreen Preview"
                   >
-                    <Eye className="w-3.5 h-3.5 text-[#6F4E37]" />
+                    <Eye className="w-3.5 h-3.5 text-[#E50914]" />
                     <span className="text-[10px]">Preview</span>
                   </button>
                 </div>
@@ -317,8 +317,8 @@ export function CafeQrCard({ cafeId, cafeName }) {
                     alt={`${cafeName || 'Cafe'} QR Code`}
                     className="w-44 h-44 sm:w-48 sm:h-48 object-contain rounded-xl"
                   />
-                  <div className="absolute inset-0 bg-[#2C1810]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                    <span className="px-3 py-1 bg-white/95 text-[#6F4E37] text-[10px] font-black rounded-full shadow-md">
+                  <div className="absolute inset-0 bg-[#252525]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                    <span className="px-3 py-1 bg-white/95 text-[#E50914] text-[10px] font-black rounded-full shadow-md">
                       Click to Enlarge
                     </span>
                   </div>
@@ -326,10 +326,10 @@ export function CafeQrCard({ cafeId, cafeName }) {
 
                 {/* Subtitle tag */}
                 <div className="mt-3.5 text-center space-y-1">
-                  <p className="text-xs font-extrabold text-[#6F4E37] tracking-tight">
-                    Scan to View Cafe and Book on Fahara
+                  <p className="text-xs font-extrabold text-[#E50914] tracking-tight">
+                    Scan to View Cafe and Book on Grab2GO
                   </p>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/80 border border-[#DDB892]/60 text-[11px] font-mono font-bold text-stone-700">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/80 border border-[#EF5350]/60 text-[11px] font-mono font-bold text-stone-700">
                     <ShieldCheck className="w-3 h-3 text-emerald-600" />
                     <span>ID: {qrData.qrCodeId}</span>
                   </div>
@@ -356,7 +356,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all ${
                       copied 
                         ? 'bg-emerald-600 text-white' 
-                        : 'bg-white hover:bg-[#6F4E37] text-stone-700 hover:text-white border border-stone-200'
+                        : 'bg-white hover:bg-[#E50914] text-stone-700 hover:text-white border border-stone-200'
                     }`}
                   >
                     {copied ? (
@@ -376,7 +376,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
                     href={qrData.landingUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-1.5 rounded-lg bg-white hover:bg-[#6F4E37] text-stone-700 hover:text-white border border-stone-200 transition-all"
+                    className="p-1.5 rounded-lg bg-white hover:bg-[#E50914] text-stone-700 hover:text-white border border-stone-200 transition-all"
                     title="Open Destination Page"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -389,16 +389,16 @@ export function CafeQrCard({ cafeId, cafeName }) {
                 <Button
                   onClick={() => handleDownload(1024)}
                   disabled={downloading}
-                  className="py-2.5 px-3 rounded-xl bg-[#6F4E37] hover:bg-[#5A3E2D] text-white text-xs font-extrabold shadow-sm hover:shadow flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="py-2.5 px-3 rounded-xl bg-[#E50914] hover:bg-[#5A3E2D] text-white text-xs font-extrabold shadow-sm hover:shadow flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>{downloading ? 'Downloading...' : 'Download PNG'}</span>
                 </Button>
                 <Button
                   onClick={() => handlePrint()}
-                  className="py-2.5 px-3 rounded-xl bg-white hover:bg-[#FFF8F0] border-2 border-[#DDB892] text-[#2C1810] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="py-2.5 px-3 rounded-xl bg-white hover:bg-[#FFF5F5] border-2 border-[#EF5350] text-[#252525] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <Printer className="w-4 h-4 text-[#6F4E37]" />
+                  <Printer className="w-4 h-4 text-[#E50914]" />
                   <span>Print Table Stand</span>
                 </Button>
               </div>
@@ -415,16 +415,16 @@ export function CafeQrCard({ cafeId, cafeName }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-[#DDB892] flex flex-col"
+              className="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-[#EF5350] flex flex-col"
             >
               {/* Modal Topbar */}
               <div className="p-5 border-b border-stone-200 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
+                  <div className="w-9 h-9 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-bold">
                     <QrCode className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#2C1810]">
+                    <h3 className="text-base font-black text-[#252525]">
                       Interactive Table Stand Preview
                     </h3>
                     <p className="text-xs text-stone-500 font-medium">
@@ -442,8 +442,8 @@ export function CafeQrCard({ cafeId, cafeName }) {
               </div>
 
               {/* Modal Stand Canvas */}
-              <div className="p-6 sm:p-8 bg-[#FAF6F0] flex flex-col items-center justify-center flex-1">
-                <div className="w-full max-w-sm bg-white rounded-3xl p-7 border-4 border-[#DDB892] shadow-xl text-center space-y-4 relative">
+              <div className="p-6 sm:p-8 bg-[#FFF5F5] flex flex-col items-center justify-center flex-1">
+                <div className="w-full max-w-sm bg-white rounded-3xl p-7 border-4 border-[#EF5350] shadow-xl text-center space-y-4 relative">
                   {/* Premium corner embellishment */}
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-900 text-[10px] font-black uppercase tracking-widest">
                     <Sparkles className="w-3 h-3 text-amber-600" />
@@ -451,11 +451,11 @@ export function CafeQrCard({ cafeId, cafeName }) {
                   </div>
 
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-[#2C1810] tracking-tight">
+                    <h2 className="text-2xl font-black text-[#252525] tracking-tight">
                       {cafeName || 'Cafe Venue'}
                     </h2>
-                    <p className="text-xs sm:text-sm font-bold text-[#6F4E37]">
-                      Scan to View Cafe and Book on Fahara
+                    <p className="text-xs sm:text-sm font-bold text-[#E50914]">
+                      Scan to View Cafe and Book on Grab2GO
                     </p>
                   </div>
 
@@ -469,8 +469,8 @@ export function CafeQrCard({ cafeId, cafeName }) {
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-[#2C1810] flex items-center justify-center gap-1.5">
-                      <Smartphone className="w-3.5 h-3.5 text-[#6F4E37]" />
+                    <p className="text-xs font-bold text-[#252525] flex items-center justify-center gap-1.5">
+                      <Smartphone className="w-3.5 h-3.5 text-[#E50914]" />
                       <span>Point your camera to explore</span>
                     </p>
                     <p className="text-[11px] font-mono text-stone-400 font-medium">
@@ -479,7 +479,7 @@ export function CafeQrCard({ cafeId, cafeName }) {
                   </div>
 
                   <div className="pt-2 border-t border-dashed border-stone-200 text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-                    Powered by Fahara.in
+                    Powered by Grab2GO.in
                   </div>
                 </div>
               </div>
@@ -493,14 +493,14 @@ export function CafeQrCard({ cafeId, cafeName }) {
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() => handleDownload(2048)}
-                    className="py-2 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-[#2C1810] text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                    className="py-2 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-[#252525] text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Ultra HD PNG</span>
                   </Button>
                   <Button
                     onClick={() => handlePrint()}
-                    className="py-2 px-4 rounded-xl bg-[#6F4E37] hover:bg-[#5A3E2D] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    className="py-2 px-4 rounded-xl bg-[#E50914] hover:bg-[#5A3E2D] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm"
                   >
                     <Printer className="w-3.5 h-3.5" />
                     <span>Print Stand (A5/A6)</span>

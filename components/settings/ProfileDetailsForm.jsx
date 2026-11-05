@@ -80,32 +80,32 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
       title: 'Personal Info', 
       description: 'Name & Contact', 
       icon: User,
-      activeBg: 'bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white border-[#DDB892]/40 shadow-xs shadow-[#6F4E37]/20',
+      activeBg: 'bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white border-[#EF5350]/40 shadow-xs shadow-[#E50914]/20',
       badgeBg: 'bg-white/20 text-white',
-      completedBg: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#6F4E37]/30 hover:bg-[#6F4E37]/20'
+      completedBg: 'bg-[#E50914]/10 text-[#E50914] border-[#E50914]/30 hover:bg-[#E50914]/20'
     },
     { 
       number: 2, 
       title: 'Business Profile', 
       description: 'Venue Identity', 
       icon: Briefcase,
-      activeBg: 'bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white border-[#DDB892]/40 shadow-xs shadow-[#6F4E37]/20',
+      activeBg: 'bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white border-[#EF5350]/40 shadow-xs shadow-[#E50914]/20',
       badgeBg: 'bg-white/20 text-white',
-      completedBg: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#6F4E37]/30 hover:bg-[#6F4E37]/20'
+      completedBg: 'bg-[#E50914]/10 text-[#E50914] border-[#E50914]/30 hover:bg-[#E50914]/20'
     },
     { 
       number: 3, 
       title: 'Location & Address', 
       description: 'Address Details', 
       icon: MapPin,
-      activeBg: 'bg-gradient-to-r from-[#6F4E37] via-[#5D3F2B] to-[#A67B5B] text-white border-[#DDB892]/40 shadow-xs shadow-[#6F4E37]/20',
+      activeBg: 'bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white border-[#EF5350]/40 shadow-xs shadow-[#E50914]/20',
       badgeBg: 'bg-white/20 text-white',
-      completedBg: 'bg-[#6F4E37]/10 text-[#6F4E37] border-[#6F4E37]/30 hover:bg-[#6F4E37]/20'
+      completedBg: 'bg-[#E50914]/10 text-[#E50914] border-[#E50914]/30 hover:bg-[#E50914]/20'
     }
   ];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 bg-white p-4 sm:p-6 rounded-3xl border border-border/60 shadow-xs relative overflow-hidden text-[#2C1810]">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 bg-white p-4 sm:p-6 rounded-3xl border border-border/60 shadow-xs relative overflow-hidden text-[#252525]">
       
       {/* 3 Step Stepper Navigation Header */}
       <div className="border-b border-border/40 pb-4">
@@ -134,7 +134,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                   isActive 
                     ? step.badgeBg 
                     : isCompleted 
-                    ? "bg-[#6F4E37] text-white" 
+                    ? "bg-[#E50914] text-white" 
                     : "bg-border/40 text-text/60"
                 )}>
                   {isCompleted ? <CheckCircle2 className="w-4 h-4 text-white" /> : step.number}
@@ -152,9 +152,9 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
         </div>
 
         {/* Step Progress Line */}
-        <div className="w-full bg-[#6F4E37]/15 h-1.5 rounded-full mt-3 overflow-hidden">
+        <div className="w-full bg-[#E50914]/15 h-1.5 rounded-full mt-3 overflow-hidden">
           <motion.div 
-            className="h-full bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] rounded-full shadow-2xs"
+            className="h-full bg-gradient-to-r from-[#E50914] to-[#B71C1C] rounded-full shadow-2xs"
             initial={{ width: '33.33%' }}
             animate={{ width: `${(currentStep / 3) * 100}%` }}
             transition={{ duration: 0.3 }}
@@ -180,7 +180,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                 <User className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-[#2C1810]">Step 1: Personal Information</h3>
+                <h3 className="text-sm font-extrabold text-[#252525]">Step 1: Personal Information</h3>
                 <p className="text-[11px] text-text/60">Account owner contact & profile avatar</p>
               </div>
             </div>
@@ -189,7 +189,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
               
               {/* Full Name */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Full Name *</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Full Name *</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -207,7 +207,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Email Address *</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Email Address *</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -225,7 +225,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Phone */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Phone Number *</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Phone Number *</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -243,7 +243,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Password */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Password (Optional)</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Password (Optional)</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -260,12 +260,12 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Profile Image Drag & Drop Avatar */}
               <div className="sm:col-span-2 space-y-1">
-                <label className="block text-xs font-bold text-[#2C1810]">Profile Image Avatar</label>
+                <label className="block text-xs font-bold text-[#252525]">Profile Image Avatar</label>
                 <div 
                   className={cn(
                     "border border-dashed rounded-2xl p-4 flex items-center justify-center text-center cursor-pointer transition-all relative overflow-hidden min-h-[90px]",
-                    "hover:bg-[#FFF8F0]/80 hover:border-[#6F4E37]/60",
-                    errors.profile_image ? "border-danger bg-danger/5" : "border-[#DDB892]/60 bg-surface/20"
+                    "hover:bg-[#FFF5F5]/80 hover:border-[#E50914]/60",
+                    errors.profile_image ? "border-danger bg-danger/5" : "border-[#EF5350]/60 bg-surface/20"
                   )}
                   onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onDrop={(e) => {
@@ -288,7 +288,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                         <img src={profileImageUrl} alt="Profile preview" className="w-full h-full object-cover" />
                       </div>
                       <div className="text-left flex-1">
-                        <p className="text-xs font-bold text-[#2C1810]">Avatar Uploaded</p>
+                        <p className="text-xs font-bold text-[#252525]">Avatar Uploaded</p>
                         <p className="text-[10px] text-text/60">Click or drag image to update avatar</p>
                         <span className="inline-block mt-1 px-2.5 py-0.5 bg-amber-500/10 text-amber-800 text-[10px] font-bold rounded-md">
                           Change Avatar
@@ -301,7 +301,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                         <ImageIcon className="w-4 h-4" />
                       </div>
                       <div className="text-left">
-                        <p className="text-xs font-bold text-[#2C1810]">Click or Drag Avatar Image</p>
+                        <p className="text-xs font-bold text-[#252525]">Click or Drag Avatar Image</p>
                         <p className="text-[10px] text-text/50">PNG, JPG or WEBP (Max 5MB)</p>
                       </div>
                     </div>
@@ -340,11 +340,11 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
             className="space-y-4"
           >
             <div className="flex items-center gap-2 pb-1">
-              <div className="p-1.5 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37]">
+              <div className="p-1.5 rounded-xl bg-[#E50914]/10 text-[#E50914]">
                 <Briefcase className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-[#2C1810]">Step 2: Business Profile</h3>
+                <h3 className="text-sm font-extrabold text-[#252525]">Step 2: Business Profile</h3>
                 <p className="text-[11px] text-text/60">Venue business identity and details</p>
               </div>
             </div>
@@ -353,7 +353,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
               
               {/* Business Name */}
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Business / Cafe Name *</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Business / Cafe Name *</label>
                 <div className="relative">
                   <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -361,7 +361,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                     placeholder="Official Registered Business Name"
                     {...register('business_name', { required: 'Business name is required' })} 
                     className={cn(
-                      "w-full pl-9 pr-3.5 py-2.5 rounded-xl border bg-surface/30 text-xs font-medium transition-all hover:bg-surface/50 focus:bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10", 
+                      "w-full pl-9 pr-3.5 py-2.5 rounded-xl border bg-surface/30 text-xs font-medium transition-all hover:bg-surface/50 focus:bg-white focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/10", 
                       errors.business_name ? "border-danger focus:border-danger focus:ring-danger/10" : "border-border/60"
                     )} 
                   />
@@ -371,7 +371,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* GST / Business Tax ID Number */}
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">GST / Tax ID Number (Optional)</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">GST / Tax ID Number (Optional)</label>
                 <div className="relative">
                   <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -379,7 +379,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                     placeholder="22AAAAA0000A1Z5 (GST Registration)"
                     {...register('gst_number')} 
                     className={cn(
-                      "w-full pl-9 pr-3.5 py-2.5 rounded-xl border bg-surface/30 text-xs font-medium transition-all hover:bg-surface/50 focus:bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10", 
+                      "w-full pl-9 pr-3.5 py-2.5 rounded-xl border bg-surface/30 text-xs font-medium transition-all hover:bg-surface/50 focus:bg-white focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/10", 
                       errors.gst_number ? "border-danger focus:border-danger focus:ring-danger/10" : "border-border/60"
                     )} 
                   />
@@ -388,7 +388,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Description */}
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Business Description</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Business Description</label>
                 <div className="relative">
                   <AlignLeft className="absolute left-3 top-3 w-4 h-4 text-text/40" />
                   <textarea 
@@ -396,7 +396,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                     placeholder="Describe your venue ambience, food items, seating capacity, and features..."
                     {...register('description')} 
                     className={cn(
-                      "w-full pl-9 pr-3.5 py-2.5 rounded-xl border bg-surface/30 text-xs font-medium transition-all hover:bg-surface/50 focus:bg-white focus:outline-none focus:border-[#6F4E37] focus:ring-2 focus:ring-[#6F4E37]/10 resize-none", 
+                      "w-full pl-9 pr-3.5 py-2.5 rounded-xl border bg-surface/30 text-xs font-medium transition-all hover:bg-surface/50 focus:bg-white focus:outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/10 resize-none", 
                       errors.description ? "border-danger focus:border-danger focus:ring-danger/10" : "border-border/60"
                     )} 
                   />
@@ -421,7 +421,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-[#2C1810]">Step 3: Location & Address</h3>
+                <h3 className="text-sm font-extrabold text-[#252525]">Step 3: Location & Address</h3>
                 <p className="text-[11px] text-text/60">Official venue location & postal details</p>
               </div>
             </div>
@@ -430,7 +430,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
               
               {/* Street Address */}
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Street Address</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Street Address</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -447,7 +447,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* City */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">City</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">City</label>
                 <div className="relative">
                   <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -464,7 +464,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* State */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">State</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">State</label>
                 <div className="relative">
                   <Map className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -481,7 +481,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Country */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Country</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Country</label>
                 <div className="relative">
                   <Flag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -498,7 +498,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
 
               {/* Pincode */}
               <div>
-                <label className="block text-xs font-bold text-[#2C1810] mb-1">Postal Pincode</label>
+                <label className="block text-xs font-bold text-[#252525] mb-1">Postal Pincode</label>
                 <div className="relative">
                   <PinIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40" />
                   <input 
@@ -525,7 +525,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
           disabled={currentStep === 1}
           className={cn(
             "w-full sm:w-auto py-2 px-4 rounded-xl border border-border/60 font-bold text-xs flex items-center justify-center gap-1 transition-colors",
-            currentStep === 1 ? "opacity-40 cursor-not-allowed text-text/40" : "hover:bg-surface text-[#6F4E37]"
+            currentStep === 1 ? "opacity-40 cursor-not-allowed text-text/40" : "hover:bg-surface text-[#E50914]"
           )}
         >
           <ChevronLeft className="w-3.5 h-3.5" /> Previous Step
@@ -536,7 +536,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
             <button
               type="button"
               onClick={handleNextStep}
-              className="w-full sm:w-auto py-2 px-5 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white font-extrabold text-xs shadow-2xs hover:shadow-xs transition-all flex items-center justify-center gap-1"
+              className="w-full sm:w-auto py-2 px-5 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white font-extrabold text-xs shadow-2xs hover:shadow-xs transition-all flex items-center justify-center gap-1"
             >
               Next Step <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -546,7 +546,7 @@ export const ProfileDetailsForm = ({ initialData, onSubmit, isPending }) => {
             type="submit" 
             disabled={!isDirty && currentStep !== 3} 
             isLoading={isPending} 
-            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-1.5"
+            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-1.5"
           >
             <Save className="w-3.5 h-3.5" /> Save Profile Details
           </Button>

@@ -64,16 +64,16 @@ export const ForgotPasswordForm = () => {
   };
 
   return (
-    <div className="space-y-4 text-[#2C1810]">
+    <div className="space-y-4 text-[#252525]">
       {submittedEmail ? (
         <div className="space-y-4 animate-fade-in">
           {/* Confirmation Alert Box */}
           <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
             <div className="text-xs space-y-1">
-              <p className="font-extrabold text-sm text-[#2C1810]">Reset OTP Dispatched</p>
+              <p className="font-extrabold text-sm text-[#252525]">Reset OTP Dispatched</p>
               <p className="text-text/70">
-                We sent a 6-digit password recovery OTP to <span className="font-bold text-[#6F4E37]">{submittedEmail}</span>.
+                We sent a 6-digit password recovery OTP to <span className="font-bold text-[#E50914]">{submittedEmail}</span>.
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export const ForgotPasswordForm = () => {
               type="button"
               onClick={handleResend}
               disabled={resendCooldown > 0 || forgotPasswordMutation.isPending}
-              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892] text-xs font-extrabold shadow-2xs flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${forgotPasswordMutation.isPending ? 'animate-spin' : ''}`} />
               <span>
@@ -104,7 +104,7 @@ export const ForgotPasswordForm = () => {
                 const queryParam = targetId ? `id=${encodeURIComponent(targetId)}` : `email=${encodeURIComponent(targetEmail)}`;
                 router.push(`/owner/reset-password?${queryParam}`);
               }}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <span>Enter Reset OTP</span>
               <ArrowRight className="w-4 h-4 text-white" />
@@ -114,12 +114,12 @@ export const ForgotPasswordForm = () => {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-xs font-extrabold text-[#2C1810]/80 uppercase tracking-wider">Email Address</Label>
+            <Label htmlFor="email" className="text-xs font-extrabold text-[#252525]/80 uppercase tracking-wider">Email Address</Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your registered cafe email"
-              className="h-11 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810]"
+              className="h-11 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#252525]"
               {...register('email')}
               error={errors.email?.message}
             />
@@ -128,7 +128,7 @@ export const ForgotPasswordForm = () => {
           <button
             type="submit" 
             disabled={forgotPasswordMutation.isPending}
-            className="w-full mt-6 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] hover:from-[#5D3F2B] hover:to-[#6F4E37] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full mt-6 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:from-[#E50914] hover:to-[#E50914] text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <Send className="w-4 h-4 text-white" />
             <span>{forgotPasswordMutation.isPending ? 'Sending Reset OTP...' : 'Send Reset OTP'}</span>

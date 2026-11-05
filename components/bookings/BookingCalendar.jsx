@@ -62,9 +62,9 @@ export const BookingCalendar = ({ bookings = [] }) => {
   });
 
   const eventStyleGetter = (event) => {
-    let backgroundColor = '#FFF8F0';
-    let color = '#6F4E37';
-    let border = '1px solid #DDB892';
+    let backgroundColor = '#FFF5F5';
+    let color = '#E50914';
+    let border = '1px solid #EF5350';
 
     const statusUpper = (event.status || '').toUpperCase();
 
@@ -109,7 +109,7 @@ export const BookingCalendar = ({ bookings = [] }) => {
   };
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-3xl border border-border/60 shadow-2xs h-[720px] calendar-wrapper text-[#2C1810]">
+    <div className="bg-white p-4 sm:p-6 rounded-3xl border border-border/60 shadow-2xs h-[720px] calendar-wrapper text-[#252525]">
       <style dangerouslySetInnerHTML={{__html: `
         .calendar-wrapper .rbc-calendar {
           font-family: inherit;
@@ -125,46 +125,46 @@ export const BookingCalendar = ({ bookings = [] }) => {
           padding: 6px 14px;
           font-size: 12px;
           font-weight: 700;
-          color: #2C1810;
+          color: #252525;
           transition: all 0.2s ease;
         }
         .calendar-wrapper .rbc-toolbar button:hover {
-          background-color: #FFF8F0;
-          color: #6F4E37;
-          border-color: #DDB892;
+          background-color: #FFF5F5;
+          color: #E50914;
+          border-color: #EF5350;
         }
         .calendar-wrapper .rbc-toolbar button.rbc-active {
-          background-color: #6F4E37 !important;
+          background-color: #E50914 !important;
           color: #ffffff !important;
-          border-color: #6F4E37 !important;
+          border-color: #E50914 !important;
           box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .calendar-wrapper .rbc-toolbar-label {
           font-size: 16px;
           font-weight: 900;
-          color: #2C1810;
+          color: #252525;
         }
         .calendar-wrapper .rbc-header {
           padding: 12px 0;
           font-size: 11px;
           font-weight: 800;
-          color: #6F4E37;
+          color: #E50914;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           border-bottom: 1px solid #f3f4f6;
         }
-        .calendar-wrapper .rbc-month-view, .calendar-wrapper .rbc-[#6F4E37]-view {
+        .calendar-wrapper .rbc-month-view, .calendar-wrapper .rbc-[#E50914]-view {
           border-radius: 16px;
           border: 1px solid #f3f4f6;
           overflow: hidden;
         }
         .calendar-wrapper .rbc-today {
-          background-color: #FFF8F0 !important;
+          background-color: #FFF5F5 !important;
         }
         .calendar-wrapper .rbc-day-bg + .rbc-day-bg {
           border-left: 1px solid #f3f4f6;
         }
-        .calendar-wrapper .rbc-[#6F4E37]-bg + .rbc-[#6F4E37]-bg {
+        .calendar-wrapper .rbc-[#E50914]-bg + .rbc-[#E50914]-bg {
           border-top: 1px solid #f3f4f6;
         }
         .calendar-wrapper .rbc-event {

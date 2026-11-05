@@ -83,14 +83,14 @@ export const NotificationPreferences = ({ initialData }) => {
     });
   };
 
-  const ToggleItem = ({ name, title, description, icon: Icon, badgeColor = 'bg-[#6F4E37]/10 text-[#6F4E37]' }) => {
+  const ToggleItem = ({ name, title, description, icon: Icon, badgeColor = 'bg-[#E50914]/10 text-[#E50914]' }) => {
     const isChecked = watch(name);
 
     return (
       <div className={cn(
         "flex items-start justify-between p-4 rounded-2xl border transition-all duration-200",
         isChecked 
-          ? "bg-white border-[#DDB892]/80 shadow-2xs" 
+          ? "bg-white border-[#EF5350]/80 shadow-2xs" 
           : "bg-surface/30 border-border/40 opacity-75"
       )}>
         <div className="flex items-start gap-3.5">
@@ -98,27 +98,27 @@ export const NotificationPreferences = ({ initialData }) => {
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs sm:text-sm font-extrabold text-[#2C1810]">{title}</h4>
+            <h4 className="text-xs sm:text-sm font-extrabold text-[#252525]">{title}</h4>
             <p className="text-[11px] text-text/65 mt-0.5 max-w-sm leading-relaxed">{description}</p>
           </div>
         </div>
 
         <label className="relative inline-flex items-center cursor-pointer mt-0.5 shrink-0">
           <input type="checkbox" {...register(name)} className="sr-only peer" />
-          <div className="w-11 h-6 bg-border/70 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6F4E37] shadow-inner"></div>
+          <div className="w-11 h-6 bg-border/70 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#E50914] shadow-inner"></div>
         </label>
       </div>
     );
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-[#2C1810]">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-[#252525]">
       
       {/* Event Types */}
       <div>
         <div className="flex items-center gap-2 mb-3.5 pb-2 border-b border-border/40">
-          <Sliders className="w-4 h-4 text-[#6F4E37]" />
-          <h3 className="text-sm font-extrabold text-[#2C1810]">Event Category Alerts</h3>
+          <Sliders className="w-4 h-4 text-[#E50914]" />
+          <h3 className="text-sm font-extrabold text-[#252525]">Event Category Alerts</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -156,8 +156,8 @@ export const NotificationPreferences = ({ initialData }) => {
       {/* Delivery Channels (WhatsApp Removed) */}
       <div className="pt-4 border-t border-border/40">
         <div className="flex items-center gap-2 mb-3.5 pb-2 border-b border-border/40">
-          <Radio className="w-4 h-4 text-[#6F4E37]" />
-          <h3 className="text-sm font-extrabold text-[#2C1810]">Delivery Channels & Frequency</h3>
+          <Radio className="w-4 h-4 text-[#E50914]" />
+          <h3 className="text-sm font-extrabold text-[#252525]">Delivery Channels & Frequency</h3>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -166,7 +166,7 @@ export const NotificationPreferences = ({ initialData }) => {
             title="In-App Dashboard"
             description="Real-time alert notifications inside your venue partner portal."
             icon={Bell}
-            badgeColor="bg-[#6F4E37]/10 text-[#6F4E37]"
+            badgeColor="bg-[#E50914]/10 text-[#E50914]"
           />
           <ToggleItem 
             name="email_notifications"
@@ -195,7 +195,7 @@ export const NotificationPreferences = ({ initialData }) => {
           type="submit" 
           disabled={!isDirty} 
           isLoading={updateMutation.isPending}
-          className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#6F4E37] hover:bg-[#5D3F2B] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#E50914] hover:bg-[#E50914] text-white text-xs font-extrabold shadow-xs flex items-center justify-center gap-2"
         >
           <Save className="w-4 h-4" /> Save Notification Preferences
         </Button>

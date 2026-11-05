@@ -43,7 +43,7 @@ export const CapacitySummaryCard = ({ capacitySummary }) => {
         {/* Card 1: Total Cafe Capacity */}
         <motion.div 
           whileHover={{ y: -2 }}
-          className="p-5 rounded-3xl bg-gradient-to-br from-[#6F4E37] via-[#A67B5B] to-[#DDB892] text-white shadow-md relative overflow-hidden flex flex-col justify-between"
+          className="p-5 rounded-3xl bg-gradient-to-br from-[#E50914] via-[#B71C1C] to-[#EF5350] text-white shadow-md relative overflow-hidden flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-widest text-white/80">Total Cafe Capacity</span>
@@ -64,18 +64,18 @@ export const CapacitySummaryCard = ({ capacitySummary }) => {
         <motion.div 
           whileHover={{ y: -2 }}
           className={`p-5 rounded-3xl bg-white border ${
-            isOverCapacity ? 'border-rose-300 bg-rose-50/30' : 'border-[#DDB892]/60'
+            isOverCapacity ? 'border-rose-300 bg-rose-50/30' : 'border-[#EF5350]/60'
           } shadow-2xs flex flex-col justify-between`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-widest text-text/50">Assigned Table Capacity</span>
-            <div className={`w-9 h-9 rounded-2xl ${isOverCapacity ? 'bg-rose-100 text-rose-700' : 'bg-[#6F4E37]/10 text-[#6F4E37]'} flex items-center justify-center`}>
+            <div className={`w-9 h-9 rounded-2xl ${isOverCapacity ? 'bg-rose-100 text-rose-700' : 'bg-[#E50914]/10 text-[#E50914]'} flex items-center justify-center`}>
               <Users className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-4">
             <div className="flex items-baseline gap-1.5">
-              <h2 className={`text-3xl font-black ${isOverCapacity ? 'text-rose-700' : 'text-[#2C1810]'} tracking-tight`}>{assigned}</h2>
+              <h2 className={`text-3xl font-black ${isOverCapacity ? 'text-rose-700' : 'text-[#252525]'} tracking-tight`}>{assigned}</h2>
               <span className="text-xs font-extrabold text-text/60">Guests</span>
             </div>
             <p className="text-[11px] text-text/65 mt-1 font-medium">Sum of all active table seats</p>
@@ -85,7 +85,7 @@ export const CapacitySummaryCard = ({ capacitySummary }) => {
         {/* Card 3: Unassigned Capacity */}
         <motion.div 
           whileHover={{ y: -2 }}
-          className="p-5 rounded-3xl bg-white border border-[#DDB892]/60 shadow-2xs flex flex-col justify-between"
+          className="p-5 rounded-3xl bg-white border border-[#EF5350]/60 shadow-2xs flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-widest text-text/50">Unassigned Capacity</span>
@@ -95,7 +95,7 @@ export const CapacitySummaryCard = ({ capacitySummary }) => {
           </div>
           <div className="mt-4">
             <div className="flex items-baseline gap-1.5">
-              <h2 className="text-3xl font-black text-[#2C1810] tracking-tight">{unassigned}</h2>
+              <h2 className="text-3xl font-black text-[#252525] tracking-tight">{unassigned}</h2>
               <span className="text-xs font-extrabold text-text/60">Guests</span>
             </div>
             <p className="text-[11px] text-text/65 mt-1 font-medium">Remaining seats available to configure</p>

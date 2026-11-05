@@ -12,7 +12,10 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  CartesianGrid
+  CartesianGrid,
+  Legend,
+  AreaChart,
+  Area
 } from 'recharts';
 import { 
   IndianRupee,
@@ -33,7 +36,13 @@ import {
   Sparkles,
   CreditCard,
   Layers,
-  Award
+  Award,
+  ShoppingBag,
+  Utensils,
+  Receipt,
+  UserCheck,
+  Percent,
+  Calendar
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/utils/cn';
@@ -41,107 +50,52 @@ import Link from 'next/link';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState('7days');
-  const [chartMetric, setChartMetric] = useState('revenue'); // 'revenue' | 'bookings' | 'both'
-  const [hoveredBarIndex, setHoveredBarIndex] = useState(null);
+  const [activeTab, setActiveTab] = useState('overall'); // 'overall' | 'food' | 'bookings'
+  const [chartMetric, setChartMetric] = useState('revenue'); // 'revenue' | 'volume'
+
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
   const { data: cafesData } = useCafes();
   const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
 
-  const isRestaurant = 
-    userRole === 'RESTAURANT_OWNER' || 
-    user?.role === 'RESTAURANT_OWNER' || 
-    user?.user_type === 'RESTAURANT_OWNER' ||
-    user?.roles?.name === 'RESTAURANT_OWNER' ||
-    String(userRole || '').toUpperCase().includes('RESTAURANT') ||
-    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
-    String(user?.user_type || '').toUpperCase().includes('RESTAURANT');
-
-  const isWalkingCafe = 
-    !isRestaurant && (
-      userRole === 'WALKING_CAFE_OWNER' || 
-      user?.role === 'WALKING_CAFE_OWNER' || 
-      user?.user_type === 'WALKING_CAFE_OWNER' ||
-      user?.roles?.name === 'WALKING_CAFE_OWNER' ||
-      String(userRole || '').toUpperCase() === 'WALKING_CAFE_OWNER' ||
-      String(user?.role || '').toUpperCase() === 'WALKING_CAFE_OWNER'
-    );
-
-  const { data: cafeAnalyticsRes, isLoading: isCafeLoading } = useCafeAnalytics('overview', { period: dateRange });
+  const { data: cafeAnalyticsRes, isLoading: isCafeLoading, refetch } = useCafeAnalytics('overview', { period: dateRange });
   const { data: analyticsData, isLoading: isLegacyLoading } = useAnalytics({ date_range: dateRange });
-  const { data: recentBookings } = useRecentBookings();
 
   const isLoading = isCafeLoading && isLegacyLoading;
   const cafeAnalytics = cafeAnalyticsRes?.data;
-  const data = analyticsData?.data;
+  const kpi = cafeAnalytics?.kpi || {};
+  const timeline = cafeAnalytics?.timeline || [];
+  const topSellingFood = cafeAnalytics?.top_selling_food_items || [];
+  const insights = cafeAnalytics?.insights || [];
 
-  const bookingList = Array.isArray(recentBookings) ? recentBookings : (recentBookings?.data || []);
+  // Formatted KPI Metrics
+  const overallRevenue = Number(kpi.overall_revenue || 0);
+  const foodRevenue = Number(kpi.food_revenue || 0);
+  const bookingRevenue = Number(kpi.booking_revenue || 0);
 
-  const realTotalRevenue = Number(data?.total_revenue || cafeAnalytics?.overview?.total_revenue || bookingList.reduce((sum, b) => {
-    const bookingStatus = String(b.status || b.booking_status || '').toUpperCase();
-    const paymentStatus = String(b.paymentStatus || b.payment_status || '').toUpperCase();
-    if (['CANCELLED', 'REJECTED', 'DECLINED'].includes(bookingStatus)) return sum;
-    if (['REFUNDED', 'PARTIALLY_REFUNDED', 'FAILED'].includes(paymentStatus)) return sum;
-    const isCompleted = bookingStatus === 'COMPLETED';
-    const isPaid = ['PAID', 'COMPLETED', 'SUCCESS'].includes(paymentStatus);
-    const isConfirmedAndPaid = bookingStatus === 'CONFIRMED' && (isPaid || Number(b.amount || b.cafe_amount || 0) === 0);
-    if (!isCompleted && !isPaid && !isConfirmedAndPaid) return sum;
-    return sum + Number(b.amount || b.cafe_amount || b.subtotal || b.total_price || 0);
-  }, 0));
+  const totalFoodOrders = Number(kpi.total_food_orders || 0);
+  const paidFoodOrders = Number(kpi.paid_food_orders || 0);
+  const pendingFoodPayments = Number(kpi.pending_food_payments || 0);
+  const avgFoodOrderValue = Number(kpi.avg_food_order_value || 0);
 
-  const realTotalBookings = Number(data?.total_bookings || cafeAnalytics?.overview?.total_bookings || bookingList.length);
+  const totalBookings = Number(kpi.total_bookings || 0);
+  const eligibleBookings = Number(kpi.eligible_bookings || 0);
+  const avgBookingValue = Number(kpi.avg_booking_value || 0);
 
-  // Build daily vertical bar chart progression unconditionally before any early returns (Rules of Hooks)
-  const last7DaysData = React.useMemo(() => {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const result = [];
-    const now = new Date();
+  const totalCustomers = Number(kpi.total_customers || 0);
+  const foodCustomers = Number(kpi.food_customers || 0);
+  const bookingCustomers = Number(kpi.booking_customers || 0);
 
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
-      const dayName = days[d.getDay()];
-
-      // Filter bookings matching this date
-      const matchingBookings = bookingList.filter(b => {
-        const bDate = b.booking_date || b.created_at || b.date;
-        if (!bDate) return false;
-        return String(bDate).startsWith(dateStr);
-      });
-
-      const dayRevenue = matchingBookings.reduce((sum, b) => sum + Number(b.amount || b.subtotal || b.total_price || 0), 0);
-      const dayBookings = matchingBookings.length;
-
-      result.push({
-        day: dayName,
-        date: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
-        revenue: dayRevenue,
-        bookings: dayBookings,
-        completed: matchingBookings.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'COMPLETED').length,
-        confirmed: matchingBookings.filter(b => ['CONFIRMED', 'PAID'].includes((b.status || b.booking_status || '').toUpperCase())).length,
-      });
-    }
-
-    const totalCalcRevenue = result.reduce((s, r) => s + r.revenue, 0);
-    const totalCalcBookings = result.reduce((s, r) => s + r.bookings, 0);
-
-    if (totalCalcRevenue === 0 && realTotalRevenue > 0) {
-      const distribution = [0.10, 0.12, 0.15, 0.14, 0.18, 0.20, 0.11];
-      result.forEach((r, idx) => {
-        r.revenue = Math.round(realTotalRevenue * distribution[idx]);
-      });
-    }
-
-    if (totalCalcBookings === 0 && realTotalBookings > 0) {
-      const bDistribution = [0.10, 0.12, 0.16, 0.14, 0.20, 0.18, 0.10];
-      result.forEach((r, idx) => {
-        r.bookings = Math.max(1, Math.round(realTotalBookings * bDistribution[idx]));
-      });
-    }
-
-    return result;
-  }, [bookingList, realTotalRevenue, realTotalBookings]);
+  // Transform timeline data for chart
+  const chartData = timeline.map(item => ({
+    name: item.label,
+    date: item.date,
+    'Food Revenue': item.foodRevenue,
+    'Booking Revenue': item.bookingRevenue,
+    'Overall Revenue': item.totalRevenue,
+    'Food Orders': item.foodOrders,
+    'Bookings': item.bookings
+  }));
 
   if (isLoading) {
     return (
@@ -151,532 +105,49 @@ export default function AnalyticsDashboardPage() {
     );
   }
 
-  const overview = cafeAnalytics?.overview || {
-    total_views: data?.total_views || 0,
-    unique_visitors: data?.new_customers || 0,
-    menu_views: 0,
-    wishlist_adds: 0,
-    directions_clicks: 0,
-    contact_clicks: 0
-  };
-
-  const totalBookings = Number(data?.total_bookings || (Array.isArray(recentBookings) ? recentBookings.length : 0));
-  const newCustomers = Number(data?.new_customers || (totalBookings * 2));
-  const averageRating = Number(data?.average_rating || 5.0);
-  const totalRevenue = Number(data?.total_revenue || 0);
-
-  // 1. Dedicated Analytics View for RESTAURANT_OWNER
-  if (isRestaurant) {
-    const totalResCount = totalBookings > 0 ? totalBookings : bookingList.length;
-    
-    const confirmedCount = bookingList.filter(b => ['CONFIRMED', 'PAID', 'SUCCESS'].includes((b.status || b.booking_status || '').toUpperCase())).length;
-    const pendingCount = bookingList.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'PENDING').length;
-    const completedCount = bookingList.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'COMPLETED').length;
-
-    const realTotal = bookingList.length > 0 ? bookingList.length : 1;
-    const confirmedPct = bookingList.length > 0 ? Math.round((confirmedCount / realTotal) * 100) : 0;
-    const pendingPct = bookingList.length > 0 ? Math.round((pendingCount / realTotal) * 100) : 0;
-    const completedPct = bookingList.length > 0 ? Math.round((completedCount / realTotal) * 100) : 0;
-
-    const totalGuestsHosted = bookingList.reduce((sum, b) => sum + (Number(b.guests || b.total_persons || 1)), 0);
-
-    return (
-      <div className="p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 text-[#2C1810]">
-        {/* Restaurant Analytics Hero Header */}
-        <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-4 sm:p-7 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
-          <div className="flex items-center gap-3 sm:gap-4 z-10">
-            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#8C6246] text-white flex items-center justify-center font-extrabold shadow-md shrink-0 ring-4 ring-[#6F4E37]/10">
-              <Armchair className="w-5 h-5 sm:w-7 sm:h-7 text-amber-200" />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-base sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
-                  Restaurant Dining & Table Analytics
-                </h1>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black uppercase tracking-wider">
-                  Dining Mode
-                </span>
-              </div>
-              <p className="text-[11px] sm:text-sm text-text/70 mt-0.5 sm:mt-1 leading-snug">
-                Real-time table reservations, seating demand, guest headcount, and dining performance metrics.
-              </p>
-            </div>
-          </div>
-
-          {/* Date Range Selector */}
-          <div className="flex items-center gap-1 sm:gap-1.5 bg-white p-1.5 rounded-2xl border border-[#DDB892]/60 shadow-2xs z-10 shrink-0 overflow-x-auto custom-scrollbar">
-            {[
-              { key: 'today', label: 'Today' },
-              { key: 'yesterday', label: 'Yesterday' },
-              { key: '7days', label: 'Last 7 Days' },
-              { key: '30days', label: 'Last 30 Days' },
-              { key: 'this_month', label: 'This Month' },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setDateRange(tab.key)}
-                className={cn(
-                  "px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer shrink-0",
-                  dateRange === tab.key
-                    ? "bg-[#6F4E37] text-white shadow-2xs"
-                    : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Restaurant Specific KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-3xl border border-emerald-200/80 shadow-2xs space-y-2 hover:shadow-xs transition-all">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider">Total Table Reservations</span>
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-extrabold">
-                <CalendarCheck className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-emerald-950 tracking-tight">{totalResCount.toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Direct dining table bookings</div>
-          </div>
-
-          <div className="bg-white p-5 rounded-3xl border border-blue-200/80 shadow-2xs space-y-2 hover:shadow-xs transition-all">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-blue-800 uppercase tracking-wider">Total Guests Hosted</span>
-              <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-extrabold">
-                <Users className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">{(totalGuestsHosted || newCustomers || (totalResCount * 2)).toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Guest dining headcount</div>
-          </div>
-
-          <div className="bg-white p-5 rounded-3xl border border-amber-200/80 shadow-2xs space-y-2 hover:shadow-xs transition-all">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-amber-800 uppercase tracking-wider">Active Table Bookings</span>
-              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-extrabold">
-                <Armchair className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-amber-950 tracking-tight">{(confirmedCount || totalResCount).toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Confirmed seating reservations</div>
-          </div>
-
-          <div className="bg-white p-5 rounded-3xl border border-purple-200/80 shadow-2xs space-y-2 hover:shadow-xs transition-all">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-purple-800 uppercase tracking-wider">Average Guest Rating</span>
-              <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-extrabold">
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-purple-950 tracking-tight">{averageRating.toFixed(1)} / 5.0</div>
-            <div className="text-[10px] text-text/50 font-medium">Customer dining feedback score</div>
-          </div>
-        </div>
-
-        {/* Restaurant Seating Demand & Operational Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Reservation Breakdown */}
-          <div className="lg:col-span-7 bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-5">
-            <div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-[#6F4E37]" />
-                <h3 className="text-base sm:text-lg font-extrabold text-[#2C1810]">Dining Reservation & Seating Demand</h3>
-              </div>
-              <p className="text-xs text-text/60 mt-0.5">Status of table seating requests and customer dining confirmations.</p>
-            </div>
-
-            <div className="space-y-4 pt-2">
-              {[
-                { stage: 'Confirmed Table Reservations', count: confirmedCount || totalResCount, percent: confirmedPct || (totalResCount > 0 ? 100 : 0), color: 'from-emerald-600 to-teal-600' },
-                { stage: 'Pending Seating Confirmations', count: pendingCount, percent: pendingPct, color: 'from-amber-500 to-orange-500' },
-                { stage: 'Completed Dining Sessions', count: completedCount, percent: completedPct, color: 'from-blue-600 to-indigo-600' }
-              ].map((item, idx) => (
-                <div key={idx} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-extrabold text-[#2C1810]">
-                    <span>{item.stage}</span>
-                    <span className="text-[#6F4E37]">{item.count.toLocaleString()} ({item.percent}%)</span>
-                  </div>
-                  <div className="h-2.5 w-full bg-[#FFF8F0] rounded-full overflow-hidden border border-[#DDB892]/30">
-                    <div 
-                      className={`h-full bg-gradient-to-r ${item.color} rounded-full transition-all duration-500`}
-                      style={{ width: `${Math.max(item.percent > 0 ? 6 : 0, item.percent)}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Peak Hours & Info Card */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[#6F4E37]" />
-                <h3 className="text-base sm:text-lg font-extrabold text-[#2C1810]">Peak Dining Time Slots</h3>
-              </div>
-              <div className="space-y-2.5">
-                {[
-                  { slot: 'Lunch Hours (12:00 PM - 03:00 PM)', level: 'High Demand', badgeBg: 'bg-emerald-100 text-emerald-800' },
-                  { slot: 'Afternoon Hours (03:00 PM - 07:00 PM)', level: 'Moderate', badgeBg: 'bg-amber-100 text-amber-800' },
-                  { slot: 'Dinner Hours (07:00 PM - 11:00 PM)', level: 'Peak Demand', badgeBg: 'bg-rose-100 text-rose-800' }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/40 text-xs font-bold text-[#2C1810]">
-                    <span>{item.slot}</span>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${item.badgeBg}`}>
-                      {item.level}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100/50 p-5 rounded-3xl border border-emerald-200 shadow-2xs space-y-2">
-              <div className="flex items-center gap-2 text-emerald-900 font-extrabold text-xs">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Restaurant Table Reservations</span>
-              </div>
-              <p className="text-[11px] text-emerald-800 leading-snug">
-                All dining reservations for your restaurant are managed directly without online package fees. Customers receive instant seating confirmations.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Live Table Bookings Table */}
-        <div className="bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Armchair className="w-5 h-5 text-[#6F4E37]" />
-              <h3 className="text-base sm:text-lg font-extrabold text-[#2C1810]">Live Table Reservations</h3>
-            </div>
-            <Link 
-              href="/owner/bookings" 
-              className="text-xs font-extrabold text-[#6F4E37] hover:underline"
-            >
-              Manage All Bookings →
-            </Link>
-          </div>
-
-          {bookingList.length === 0 ? (
-            <div className="text-center py-8 text-xs text-text/50">
-              No recent table reservations found.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-border/60 text-[11px] font-extrabold text-text/50 uppercase">
-                    <th className="py-2.5 px-3">Customer</th>
-                    <th className="py-2.5 px-3">Guests</th>
-                    <th className="py-2.5 px-3">Date & Time</th>
-                    <th className="py-2.5 px-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/40">
-                  {bookingList.slice(0, 5).map((booking, idx) => (
-                    <tr key={booking.id || idx} className="hover:bg-[#FFF8F0]/50 transition-colors">
-                      <td className="py-3 px-3 font-bold text-[#2C1810]">
-                        {booking.customerName || booking.customer_name || booking.users?.name || 'Customer'}
-                      </td>
-                      <td className="py-3 px-3 font-semibold text-text/70">
-                        {booking.guests || booking.total_persons || 1} Guests
-                      </td>
-                      <td className="py-3 px-3 text-text/70">
-                        {booking.date || booking.booking_date 
-                          ? new Date(booking.date || booking.booking_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
-                          : 'Today'} {booking.time ? new Date(booking.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' }) : ''}
-                      </td>
-                      <td className="py-3 px-3">
-                        {(() => {
-                          const st = (booking.status || booking.booking_status || 'CONFIRMED').toUpperCase();
-                          if (st === 'CANCELLED' || st === 'REJECTED') {
-                            return (
-                              <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                                <span>{st}</span>
-                              </span>
-                            );
-                          }
-                          if (st === 'PENDING') {
-                            return (
-                              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                                <span>{st}</span>
-                              </span>
-                            );
-                          }
-                          return (
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                              <span>{st}</span>
-                            </span>
-                          );
-                        })()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // 2. Dedicated Customer Interest View for WALKING_CAFE_OWNER ONLY
-  if (isWalkingCafe) {
-    const funnel = cafeAnalytics?.funnel || [
-      { stage: 'Cafe Views', count: overview.total_views },
-      { stage: 'Menu Views', count: overview.menu_views },
-      { stage: 'Wishlist Adds', count: overview.wishlist_adds },
-      { stage: 'Directions Clicked', count: overview.directions_clicks },
-      { stage: 'Contact Requests', count: overview.contact_clicks }
-    ];
-
-    const discoverySources = cafeAnalytics?.discovery_sources || [];
-
-    return (
-      <div className="p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
-        {/* Walking Cafe Hero Header Banner */}
-        <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF3E4] p-4 sm:p-7 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3 sm:gap-4 z-10">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#8C6246] text-white flex items-center justify-center font-extrabold shadow-md shrink-0 ring-4 ring-[#6F4E37]/10">
-              <BarChart3 className="w-6 h-6 text-amber-200" />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg sm:text-2xl font-black text-[#2C1810] tracking-tight">
-                  Walking Cafe & Customer Interest Analytics
-                </h1>
-                <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-[#6F4E37] border border-amber-300 text-[10px] font-black uppercase tracking-wider">
-                  Walking Cafe
-                </span>
-              </div>
-              <p className="text-xs sm:text-sm text-text/70 mt-1 leading-snug">
-                Aggregated customer traffic, discovery sources, wishlist saves, and engagement metrics.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border border-[#DDB892]/60 shadow-2xs z-10 shrink-0 overflow-x-auto custom-scrollbar">
-            {[
-              { key: 'today', label: 'Today' },
-              { key: 'yesterday', label: 'Yesterday' },
-              { key: '7days', label: 'Last 7 Days' },
-              { key: '30days', label: 'Last 30 Days' },
-              { key: 'this_month', label: 'This Month' },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setDateRange(tab.key)}
-                className={cn(
-                  "px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer shrink-0",
-                  dateRange === tab.key
-                    ? "bg-[#6F4E37] text-white shadow-2xs"
-                    : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Customer Interest KPI Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 hover:border-[#6F4E37]/60 shadow-2xs hover:shadow-xs transition-all space-y-2 group">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">CAFE VIEWS</span>
-              <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-extrabold group-hover:scale-110 transition-transform">
-                <Eye className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-[#2C1810] tracking-tight">{overview.total_views.toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Customer store visits</div>
-          </div>
-
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 hover:border-blue-500/40 shadow-2xs hover:shadow-xs transition-all space-y-2 group">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">UNIQUE VISITORS</span>
-              <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-extrabold group-hover:scale-110 transition-transform">
-                <Users className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">{overview.unique_visitors.toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Distinct users browsing</div>
-          </div>
-
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 hover:border-rose-500/40 shadow-2xs hover:shadow-xs transition-all space-y-2 group">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">WISHLIST ADDS</span>
-              <div className="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center font-extrabold group-hover:scale-110 transition-transform">
-                <Heart className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-rose-950 tracking-tight">{overview.wishlist_adds.toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Saved by customers</div>
-          </div>
-
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 hover:border-emerald-500/40 shadow-2xs hover:shadow-xs transition-all space-y-2 group">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">DIRECTIONS CLICKS</span>
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-extrabold group-hover:scale-110 transition-transform">
-                <MapPin className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-emerald-950 tracking-tight">{overview.directions_clicks.toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Map navigation requests</div>
-          </div>
-
-          <div className="col-span-2 sm:col-span-1 bg-white p-4 sm:p-5 rounded-3xl border border-purple-500/40 shadow-2xs hover:shadow-xs transition-all space-y-2 group">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">CONTACT CLICKS</span>
-              <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center font-extrabold group-hover:scale-110 transition-transform">
-                <PhoneCall className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-purple-950 tracking-tight">{overview.contact_clicks.toLocaleString()}</div>
-            <div className="text-[10px] text-text/50 font-medium">Phone / WhatsApp inquiries</div>
-          </div>
-        </div>
-
-        {/* Customer Interest Funnel & Discovery Sources */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-7 bg-white p-5 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-5">
-            <div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-[#6F4E37]" />
-                <h3 className="text-base sm:text-xl font-extrabold text-[#2C1810]">Customer Interest Funnel</h3>
-              </div>
-              <p className="text-xs text-text/60 mt-0.5">Progression of customer interactions from discovery to direct contact.</p>
-            </div>
-
-            <div className="space-y-4 pt-2">
-              {funnel.map((item, idx) => {
-                const maxVal = Math.max(1, funnel[0]?.count || 1);
-                const percentage = Math.round((item.count / maxVal) * 100);
-                return (
-                  <div key={idx} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-extrabold text-[#2C1810]">
-                      <span>{item.stage}</span>
-                      <span className="text-[#6F4E37] font-black">{item.count.toLocaleString()} ({percentage}%)</span>
-                    </div>
-                    <div className="h-3 w-full bg-[#FFF8F0] rounded-full overflow-hidden border border-[#DDB892]/30 p-0.5">
-                      <div 
-                        className="h-full bg-gradient-to-r from-[#6F4E37] via-[#8C6246] to-[#A67B5B] rounded-full transition-all duration-500 shadow-xs"
-                        style={{ width: `${Math.max(4, percentage)}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
-            <div className="bg-white p-5 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-              <div className="flex items-center gap-2">
-                <Compass className="w-5 h-5 text-[#6F4E37]" />
-                <h3 className="text-base sm:text-xl font-extrabold text-[#2C1810]">Top Discovery Sources</h3>
-              </div>
-              
-              {discoverySources.length === 0 ? (
-                <div className="text-xs text-text/50 py-6 text-center bg-[#FFF8F0]/40 rounded-2xl border border-dashed border-[#DDB892]/40">
-                  Sources will automatically populate as customer traffic builds.
-                </div>
-              ) : (
-                <div className="space-y-2.5">
-                  {discoverySources.map((src, i) => (
-                    <div key={i} className="flex items-center justify-between p-3.5 rounded-2xl bg-[#FFF8F0] border border-[#DDB892]/40 text-xs font-bold text-[#2C1810] hover:border-[#6F4E37]/50 transition-all">
-                      <span className="capitalize font-extrabold">{src.source.replace('_', ' ')}</span>
-                      <span className="px-2.5 py-1 rounded-xl bg-white border border-[#DDB892]/40 text-[#6F4E37] font-black shadow-2xs">
-                        {src.count} views
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100/50 p-5 rounded-3xl border border-emerald-200 shadow-2xs space-y-2">
-              <div className="flex items-center gap-2 text-emerald-900 font-extrabold text-xs">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Customer Privacy Enforced</span>
-              </div>
-              <p className="text-[11px] text-emerald-800 leading-snug">
-                Browsing activity is strictly aggregated to protect customer privacy. Personal information is only shared when a customer explicitly submits an inquiry or booking.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 3. Dedicated Analytics View for Standard CAFE_OWNER
-  const realUniqueDiners = Number(data?.new_customers || cafeAnalytics?.overview?.unique_visitors || (bookingList.length > 0 ? new Set(bookingList.map(b => b.user_id || b.customer_name || b.id)).size : 0));
-  const realAverageRating = Number(data?.average_rating || cafeAnalytics?.overview?.average_rating || 5.0);
-
-  const confirmedBookingsCount = bookingList.filter(b => {
-    const bookingStatus = String(b.status || b.booking_status || '').toUpperCase();
-    return bookingStatus === 'CONFIRMED';
-  }).length;
-  const pendingBookingsCount = bookingList.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'PENDING').length;
-  const completedBookingsCount = bookingList.filter(b => (b.status || b.booking_status || '').toUpperCase() === 'COMPLETED').length;
-
-  const totalSeats = cafeList.reduce((sum, c) => sum + (Number(c.capacity || c.seating_capacity || c.total_seats || 0)), 0) || 20;
-  const bookedGuestsCount = bookingList.reduce((sum, b) => sum + Number(b.guests || b.total_persons || 1), 0);
-  const occupancyPercentage = Math.min(100, Math.max(0, totalSeats > 0 ? Math.round((bookedGuestsCount / totalSeats) * 100) : 0));
-  const avgOrderValue = realTotalBookings > 0 ? (realTotalRevenue / realTotalBookings) : 0;
-
-
-
   return (
-    <div className="p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 text-[#2C1810]">
-      {/* Standard Cafe Analytics Hero Header */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-4 sm:p-7 rounded-3xl border border-[#DDB892]/60 shadow-xs relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
-        <div className="flex items-center gap-3 sm:gap-4 z-10">
-          <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#6F4E37] to-[#8C6246] text-white flex items-center justify-center font-extrabold shadow-md shrink-0 ring-4 ring-[#6F4E37]/10">
-            <BarChart3 className="w-5 h-5 sm:w-7 sm:h-7 text-amber-200" />
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8 font-sans text-[#252525]">
+      
+      {/* ── 1. HERO HEADER WITH DATE RANGE FILTERS ── */}
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-white p-5 sm:p-7 rounded-3xl border border-[#FEE2E2] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-[#E50914] text-white flex items-center justify-center font-black shadow-md shrink-0">
+            <BarChart3 className="w-6 h-6" />
           </div>
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-base sm:text-2xl font-extrabold text-[#2C1810] tracking-tight">
-                Cafe Analytics & Intelligence
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-black text-[#252525] tracking-tight">
+                Restaurant &amp; Food Analytics
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                LIVE DATA
+              <span className="px-2.5 py-0.5 rounded-full bg-[#FFF5F5] text-[#E50914] border border-[#FEE2E2] text-[10px] font-black uppercase tracking-wider">
+                Live Overview
               </span>
             </div>
-            <p className="text-[11px] sm:text-sm text-text/70 mt-0.5 sm:mt-1 leading-snug">
-              Real-time booking revenue, space utilization, peak dining hours, and customer retention metrics.
+            <p className="text-xs sm:text-sm text-stone-500 font-medium mt-0.5">
+              Comprehensive real-time tracking of food orders, table bookings, customer counts and verified revenue.
             </p>
           </div>
         </div>
 
-        {/* Date Filter Tabs */}
-        <div className="flex items-center gap-1 sm:gap-1.5 bg-white p-1.5 rounded-2xl border border-[#DDB892]/60 shadow-2xs z-10 shrink-0 overflow-x-auto custom-scrollbar">
+        {/* Date Range Selector (Today, Yesterday, 7 Days, 30 Days, This Month, Last Month) */}
+        <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-stone-200/90 shadow-2xs shrink-0 overflow-x-auto no-scrollbar">
           {[
             { key: 'today', label: 'Today' },
-            { key: '7days', label: '7 Days' },
+            { key: 'yesterday', label: 'Yesterday' },
+            { key: '7days', label: 'Last 7 Days' },
+            { key: '30days', label: 'Last 30 Days' },
             { key: 'this_month', label: 'This Month' },
-            { key: 'all_time', label: 'All Time' },
+            { key: 'last_month', label: 'Last Month' },
           ].map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => setDateRange(tab.key)}
               className={cn(
-                "px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer shrink-0",
+                "px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap",
                 dateRange === tab.key
-                  ? "bg-[#6F4E37] text-white shadow-2xs"
-                  : "text-text/60 hover:text-[#6F4E37] hover:bg-surface/60"
+                  ? "bg-[#E50914] text-white shadow-2xs"
+                  : "text-stone-600 hover:text-[#E50914] hover:bg-[#FFF5F5]"
               )}
             >
               {tab.label}
@@ -685,359 +156,247 @@ export default function AnalyticsDashboardPage() {
         </div>
       </div>
 
-      {/* 6 KPI Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
-        {/* TOTAL REVENUE */}
-        <div className="bg-white p-5 rounded-3xl border border-border/60 shadow-2xs space-y-2 hover:shadow-xs transition-all">
+      {/* ── 2. TOP LEVEL REVENUE KPI CARDS (Requirements 3 & 4) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        {/* Overall Revenue */}
+        <div className="bg-gradient-to-br from-[#E50914] to-[#B71C1C] p-5 rounded-3xl text-white shadow-md space-y-2 relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">TOTAL REVENUE</span>
-            <div className="w-7 h-7 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center font-extrabold">
-              <IndianRupee className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Overall Net Revenue</span>
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white">
+              <IndianRupee className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-[#2C1810] tracking-tight">₹{realTotalRevenue.toLocaleString()}</div>
-          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-0.5">
-            <TrendingUp className="w-3 h-3" /> +100% vs last period
+          <div className="text-2xl sm:text-3xl font-black tracking-tight">
+            ₹{overallRevenue.toLocaleString()}
           </div>
+          <p className="text-[10px] text-white/80 font-medium">Food Sales + Table Bookings</p>
         </div>
 
-        {/* RESERVATIONS */}
-        <div className="bg-white p-5 rounded-3xl border border-border/60 shadow-2xs space-y-2 hover:shadow-xs transition-all">
+        {/* Food Revenue */}
+        <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">RESERVATIONS</span>
-            <div className="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-extrabold">
-              <CalendarCheck className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#E50914]">Food Revenue</span>
+            <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
+              <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-[#2C1810] tracking-tight">{realTotalBookings.toLocaleString()}</div>
-          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-0.5">
-            <TrendingUp className="w-3 h-3" /> +100% growth
+          <div className="text-2xl sm:text-3xl font-black text-[#E50914] tracking-tight">
+            ₹{foodRevenue.toLocaleString()}
           </div>
+          <p className="text-[10px] text-stone-400 font-medium">{paidFoodOrders} paid food orders</p>
         </div>
 
-        {/* UNIQUE DINERS */}
-        <div className="bg-white p-5 rounded-3xl border border-border/60 shadow-2xs space-y-2 hover:shadow-xs transition-all">
+        {/* Booking Revenue */}
+        <div className="bg-white p-5 rounded-3xl border border-stone-200 shadow-xs space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">UNIQUE DINERS</span>
-            <div className="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-extrabold">
-              <Users className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Booking Revenue</span>
+            <div className="w-8 h-8 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
+              <Utensils className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-[#2C1810] tracking-tight">{realUniqueDiners.toLocaleString()}</div>
-          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-0.5">
-            <TrendingUp className="w-3 h-3" /> +100% active
+          <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+            ₹{bookingRevenue.toLocaleString()}
           </div>
+          <p className="text-[10px] text-stone-400 font-medium">{eligibleBookings} eligible bookings</p>
         </div>
 
-        {/* SPACE OCCUPANCY */}
-        <div className="bg-white p-5 rounded-3xl border border-border/60 shadow-2xs space-y-2 hover:shadow-xs transition-all">
+        {/* Total Customers */}
+        <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">SPACE OCCUPANCY</span>
-            <div className="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-extrabold">
-              <TrendingUp className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Total Diners Served</span>
+            <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
+              <Users className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-[#2C1810] tracking-tight">{occupancyPercentage}%</div>
-          <div className="text-[10px] text-text/50 font-medium">Capacity: {totalSeats} seats</div>
+          <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+            {totalCustomers.toLocaleString()}
+          </div>
+          <p className="text-[10px] text-stone-400 font-medium">Food: {foodCustomers} | Bookings: {bookingCustomers}</p>
         </div>
 
-        {/* DINER RATING */}
-        <div className="bg-white p-5 rounded-3xl border border-border/60 shadow-2xs space-y-2 hover:shadow-xs transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">DINER RATING</span>
-            <div className="w-7 h-7 rounded-xl bg-amber-100 text-amber-500 flex items-center justify-center font-extrabold">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black text-[#2C1810] tracking-tight">{realAverageRating.toFixed(1)}</span>
-            <span className="text-xs text-text/40 font-bold">/ 5.0</span>
-          </div>
-          <div className="text-[10px] text-emerald-700 font-extrabold flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-amber-500" /> Verified Customer Reviews
-          </div>
+      </div>
+
+      {/* ── 3. OPERATIONAL BREAKDOWN TILES (AOV & Status) ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Avg Food Order Value</span>
+          <span className="text-lg sm:text-xl font-black text-[#252525]">₹{avgFoodOrderValue}</span>
+          <p className="text-[9px] text-stone-400 mt-0.5">Per paid food order</p>
         </div>
 
-        {/* AVG ORDER VALUE */}
-        <div className="bg-white p-5 rounded-3xl border border-border/60 shadow-2xs space-y-2 hover:shadow-xs transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-text/50 uppercase tracking-wider">AVG ORDER VALUE</span>
-            <div className="w-7 h-7 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-extrabold">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-[#2C1810] tracking-tight">
-            ₹{avgOrderValue.toFixed(2)}
-          </div>
-          <div className="text-[10px] text-text/50 font-medium">Per booking average</div>
+        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Avg Booking Value</span>
+          <span className="text-lg sm:text-xl font-black text-[#252525]">₹{avgBookingValue}</span>
+          <p className="text-[9px] text-stone-400 mt-0.5">Per dining table reservation</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Total Orders Placed</span>
+          <span className="text-lg sm:text-xl font-black text-[#252525]">{totalFoodOrders}</span>
+          <p className="text-[9px] text-emerald-700 font-bold mt-0.5">{paidFoodOrders} Paid • {pendingFoodPayments} Pending</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Total Table Bookings</span>
+          <span className="text-lg sm:text-xl font-black text-[#252525]">{totalBookings}</span>
+          <p className="text-[9px] text-stone-500 font-medium mt-0.5">{eligibleBookings} Confirmed / Completed</p>
         </div>
       </div>
 
-      {/* Revenue & Booking Growth + Seating Capacity Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Revenue & Booking Growth Interactive Vertical Bar Chart Card */}
-        <div className="lg:col-span-8 bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base sm:text-xl font-extrabold text-[#2C1810]">Revenue & Booking Growth</h3>
-                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-[#6F4E37] border border-[#DDB892]/60 text-[9px] font-black uppercase tracking-wider">
-                  7 DAY PROGRESSION
-                </span>
-              </div>
-              <p className="text-xs text-text/60 mt-0.5">Track daily booking revenue trends and reservation velocity.</p>
-            </div>
-
-            {/* Interactive Metric Switcher Pill */}
-            <div className="flex items-center gap-1 bg-[#FFF8F0] p-1 rounded-2xl border border-[#DDB892]/50 self-start sm:self-auto shrink-0">
-              <button
-                type="button"
-                onClick={() => setChartMetric('revenue')}
-                className={cn(
-                  "px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5",
-                  chartMetric === 'revenue'
-                    ? "bg-[#6F4E37] text-white shadow-xs"
-                    : "text-[#6F4E37]/70 hover:text-[#6F4E37] hover:bg-white/60"
-                )}
-              >
-                <IndianRupee className="w-3.5 h-3.5" />
-                <span>Revenue</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setChartMetric('bookings')}
-                className={cn(
-                  "px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5",
-                  chartMetric === 'bookings'
-                    ? "bg-[#6F4E37] text-white shadow-xs"
-                    : "text-[#6F4E37]/70 hover:text-[#6F4E37] hover:bg-white/60"
-                )}
-              >
-                <CalendarCheck className="w-3.5 h-3.5" />
-                <span>Bookings</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Vertical Bar Chart Container */}
-          <div className="h-64 sm:h-72 w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={last7DaysData}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                onMouseMove={(state) => {
-                  if (state?.activeTooltipIndex !== undefined) {
-                    setHoveredBarIndex(state.activeTooltipIndex);
-                  }
-                }}
-                onMouseLeave={() => setHoveredBarIndex(null)}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F5EBE1" />
-                <XAxis 
-                  dataKey="day" 
-                  tickLine={false} 
-                  axisLine={{ stroke: '#E8DED5' }}
-                  tick={{ fill: '#8C6246', fontSize: 12, fontWeight: 700 }}
-                  dy={8}
-                />
-                <YAxis 
-                  tickLine={false} 
-                  axisLine={false}
-                  tick={{ fill: '#A67B5B', fontSize: 11, fontWeight: 600 }}
-                  tickFormatter={(val) => chartMetric === 'revenue' ? `₹${val}` : `${val}`}
-                  dx={-4}
-                />
-                <Tooltip
-                  cursor={{ fill: 'rgba(221, 184, 146, 0.12)', radius: 12 }}
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const data = payload[0].payload;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#DDB892]/80 shadow-xl space-y-1.5 min-w-[150px]">
-                          <div className="flex items-center justify-between text-[11px] font-black text-[#6F4E37] uppercase tracking-wider pb-1 border-b border-border/40">
-                            <span>{data.day}</span>
-                            <span className="text-text/50 font-semibold">{data.date}</span>
-                          </div>
-                          <div className="flex items-center justify-between gap-3 text-xs font-black text-[#2C1810]">
-                            <span className="flex items-center gap-1.5 text-stone-600 font-bold">
-                              <span className="w-2 h-2 rounded-full bg-[#6F4E37]" />
-                              Revenue
-                            </span>
-                            <span className="text-emerald-700">₹{data.revenue.toLocaleString()}</span>
-                          </div>
-                          <div className="flex items-center justify-between gap-3 text-xs font-black text-[#2C1810]">
-                            <span className="flex items-center gap-1.5 text-stone-600 font-bold">
-                              <span className="w-2 h-2 rounded-full bg-[#DDB892]" />
-                              Reservations
-                            </span>
-                            <span>{data.bookings} bookings</span>
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar 
-                  dataKey={chartMetric} 
-                  radius={[10, 10, 4, 4]} 
-                  animationDuration={800}
-                >
-                  {last7DaysData.map((entry, index) => {
-                    const isHovered = hoveredBarIndex === index;
-                    let fill = chartMetric === 'revenue' ? '#6F4E37' : '#2563EB';
-                    if (isHovered) {
-                      fill = chartMetric === 'revenue' ? '#A67B5B' : '#3B82F6';
-                    }
-                    return (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={fill} 
-                        className="transition-colors duration-200 cursor-pointer"
-                      />
-                    );
-                  })}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Interactive Legend & Sub-Metrics Summary */}
-          <div className="pt-2 border-t border-border/40 grid grid-cols-3 gap-2 sm:gap-4 text-center">
-            <div className="p-2 sm:p-3 rounded-2xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-              <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">7-Day Total</span>
-              <span className="text-sm sm:text-base font-black text-[#2C1810]">
-                {chartMetric === 'revenue' 
-                  ? `₹${last7DaysData.reduce((s, r) => s + r.revenue, 0).toLocaleString()}` 
-                  : `${last7DaysData.reduce((s, r) => s + r.bookings, 0)} Bookings`}
-              </span>
-            </div>
-            <div className="p-2 sm:p-3 rounded-2xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-              <span className="text-[10px] font-extrabold text-[#6F4E37] uppercase tracking-wider block">Daily Average</span>
-              <span className="text-sm sm:text-base font-black text-[#2C1810]">
-                {chartMetric === 'revenue'
-                  ? `₹${Math.round(last7DaysData.reduce((s, r) => s + r.revenue, 0) / 7).toLocaleString()}`
-                  : `${(last7DaysData.reduce((s, r) => s + r.bookings, 0) / 7).toFixed(1)} / day`}
-              </span>
-            </div>
-            <div className="p-2 sm:p-3 rounded-2xl bg-[#FFF8F0]/70 border border-[#DDB892]/30">
-              <span className="text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider block">Peak Day</span>
-              <span className="text-sm sm:text-base font-black text-[#2C1810]">
-                {(() => {
-                  const maxDay = [...last7DaysData].sort((a, b) => b[chartMetric] - a[chartMetric])[0];
-                  return maxDay ? `${maxDay.day}` : '-';
-                })()}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Seating Capacity Donut Card */}
-        <div className="lg:col-span-4 bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-5 flex flex-col justify-between">
+      {/* ── 4. COMBINED REVENUE PERFORMANCE CHART (Requirement 4) ── */}
+      <div className="bg-white p-5 sm:p-7 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100">
           <div>
-            <div className="flex items-center justify-between">
-              <h3 className="text-base sm:text-xl font-extrabold text-[#2C1810]">Seating Capacity</h3>
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase">
-                {occupancyPercentage}% BOOKED
-              </span>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-[#E50914]" />
+              <h2 className="text-base sm:text-lg font-black text-[#252525] tracking-tight">
+                Revenue &amp; Orders Performance Trend
+              </h2>
             </div>
-            <p className="text-xs text-text/60 mt-0.5">Live table capacity breakdown across active cafe locations.</p>
+            <p className="text-xs text-stone-400 font-medium mt-0.5">
+              Daily revenue comparison between food ordering and table reservations.
+            </p>
           </div>
 
-          <div className="py-6 flex flex-col items-center justify-center relative">
-            <div className="w-36 h-36 rounded-full border-12 border-gray-100 border-t-[#6F4E37] border-r-[#6F4E37] flex items-center justify-center shadow-inner transition-all">
-              <div className="text-center">
-                <span className="text-[10px] font-extrabold text-text/40 uppercase tracking-widest block">TOTAL</span>
-                <span className="text-2xl font-black text-[#2C1810]">{totalSeats}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Live Recent Bookings Table */}
-      <div className="bg-white p-6 sm:p-7 rounded-3xl border border-border/60 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CalendarCheck className="w-5 h-5 text-[#6F4E37]" />
-            <h3 className="text-base sm:text-lg font-extrabold text-[#2C1810]">Recent Cafe Venue Bookings</h3>
+            <button
+              type="button"
+              onClick={() => setChartMetric('revenue')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                chartMetric === 'revenue' ? 'bg-[#E50914] text-white shadow-2xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+              }`}
+            >
+              Revenue (₹)
+            </button>
+            <button
+              type="button"
+              onClick={() => setChartMetric('volume')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                chartMetric === 'volume' ? 'bg-[#E50914] text-white shadow-2xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+              }`}
+            >
+              Volume (Count)
+            </button>
           </div>
-          <Link 
-            href="/owner/bookings" 
-            className="text-xs font-extrabold text-[#6F4E37] hover:underline"
-          >
-            Manage All Bookings →
-          </Link>
         </div>
 
-        {bookingList.length === 0 ? (
-          <div className="text-center py-8 text-xs text-text/50">
-            No recent cafe bookings found.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-border/60 text-[11px] font-extrabold text-text/50 uppercase">
-                  <th className="py-2.5 px-3">Customer</th>
-                  <th className="py-2.5 px-3">Guests</th>
-                  <th className="py-2.5 px-3">Date & Time</th>
-                  <th className="py-2.5 px-3">Amount</th>
-                  <th className="py-2.5 px-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/40">
-                {bookingList.slice(0, 5).map((booking, idx) => (
-                  <tr key={booking.id || idx} className="hover:bg-[#FFF8F0]/50 transition-colors">
-                    <td className="py-3 px-3 font-bold text-[#2C1810]">
-                      {booking.customerName || booking.customer_name || booking.users?.name || 'Customer'}
-                    </td>
-                    <td className="py-3 px-3 font-semibold text-text/70">
-                      {booking.guests || booking.total_persons || 1} Guests
-                    </td>
-                    <td className="py-3 px-3 text-text/70">
-                      {booking.date || booking.booking_date 
-                        ? new Date(booking.date || booking.booking_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
-                        : 'Today'} {booking.time ? new Date(booking.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' }) : ''}
-                    </td>
-                    <td className="py-3 px-3 font-extrabold text-[#2C1810]">
-                      ₹{Number(booking.amount || booking.subtotal || 0).toLocaleString()}
-                    </td>
-                    <td className="py-3 px-3">
-                      {(() => {
-                        const st = (booking.status || booking.booking_status || 'CONFIRMED').toUpperCase();
-                        if (st === 'CANCELLED' || st === 'REJECTED') {
-                          return (
-                            <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                              <span>{st}</span>
-                            </span>
-                          );
-                        }
-                        if (st === 'PENDING') {
-                          return (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                              <span>{st}</span>
-                            </span>
-                          );
-                        }
-                        return (
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            <span>{st}</span>
-                          </span>
-                        );
-                      })()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {/* Recharts Area / Bar Chart */}
+        <div className="h-72 sm:h-80 w-full pt-2">
+          {chartData.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-xs text-stone-400 font-bold">
+              No revenue records for this date range.
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              {chartMetric === 'revenue' ? (
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="foodGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#E50914" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#E50914" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="bookingGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#252525" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#252525" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#FEE2E2" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#78716c', fontWeight: 600 }} stroke="#e7e5e4" />
+                  <YAxis tick={{ fontSize: 11, fill: '#78716c', fontWeight: 600 }} stroke="#e7e5e4" tickFormatter={(v) => `₹${v}`} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #FEE2E2', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', fontSize: '12px', fontWeight: 700 }}
+                    formatter={(val, name) => [`₹${Number(val).toLocaleString()}`, name]}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 700, paddingTop: '10px' }} />
+                  <Area type="monotone" dataKey="Food Revenue" stroke="#E50914" strokeWidth={2.5} fillOpacity={1} fill="url(#foodGrad)" />
+                  <Area type="monotone" dataKey="Booking Revenue" stroke="#252525" strokeWidth={2.5} fillOpacity={1} fill="url(#bookingGrad)" />
+                </AreaChart>
+              ) : (
+                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#FEE2E2" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#78716c', fontWeight: 600 }} stroke="#e7e5e4" />
+                  <YAxis tick={{ fontSize: 11, fill: '#78716c', fontWeight: 600 }} stroke="#e7e5e4" />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #FEE2E2', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', fontSize: '12px', fontWeight: 700 }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 700, paddingTop: '10px' }} />
+                  <Bar dataKey="Food Orders" fill="#E50914" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="Bookings" fill="#252525" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              )}
+            </ResponsiveContainer>
+          )}
+        </div>
       </div>
+
+      {/* ── 5. TOP SELLING FOOD ITEMS & INSIGHTS ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Top Selling Food Items */}
+        <div className="lg:col-span-6 bg-white p-6 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-stone-100">
+            <div className="flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5 text-[#E50914]" />
+              <h3 className="text-base font-black text-[#252525]">Top-Selling Food Items</h3>
+            </div>
+            <span className="text-[10px] font-black text-stone-400 uppercase">By Volume</span>
+          </div>
+
+          {topSellingFood.length === 0 ? (
+            <div className="py-8 text-center text-xs text-stone-400 font-bold">
+              No food sales recorded in this period yet.
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {topSellingFood.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-stone-50 border border-stone-200/80">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-6 h-6 rounded-lg bg-white border border-stone-200 text-xs font-black text-[#E50914] flex items-center justify-center">
+                      #{idx + 1}
+                    </span>
+                    <span className="font-extrabold text-xs text-[#252525]">{item.name}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs font-black text-[#E50914]">{item.quantity} sold</span>
+                    <span className="text-[10px] text-stone-400 font-bold block">₹{item.revenue.toLocaleString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Data-Driven Insights */}
+        <div className="lg:col-span-6 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-4 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
+              <Sparkles className="w-5 h-5 text-amber-500" />
+              <h3 className="text-base font-black text-[#252525]">Business Highlights</h3>
+            </div>
+            <div className="mt-3 space-y-2.5">
+              {insights.map((ins, i) => (
+                <div key={i} className="p-3 rounded-2xl bg-[#FFF5F5] border border-[#FEE2E2] text-xs font-bold text-stone-700 flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#E50914] shrink-0 mt-0.5" />
+                  <span>{ins}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+            <span className="text-xs text-stone-500 font-semibold">Want to manage customers?</span>
+            <Link
+              href="/owner/customers"
+              className="px-4 py-2 rounded-xl bg-[#E50914] text-white text-xs font-black shadow-xs hover:bg-[#B71C1C] transition-all"
+            >
+              View Customers &rarr;
+            </Link>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   );
 }

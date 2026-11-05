@@ -97,7 +97,7 @@ export const VerifyOtpForm = ({ identifier, email }) => {
           className={`text-xs font-extrabold flex items-center gap-1.5 transition-all ${
             timer > 0 || isResending
               ? 'text-text/40 cursor-not-allowed'
-              : 'text-[#6F4E37] hover:text-[#5D3F2B] underline cursor-pointer'
+              : 'text-[#E50914] hover:text-[#E50914] underline cursor-pointer'
           }`}
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isResending ? 'animate-spin' : ''}`} />
@@ -107,7 +107,7 @@ export const VerifyOtpForm = ({ identifier, email }) => {
         </button>
       </div>
 
-      <Button type="submit" className="w-full mt-4 bg-[#6F4E37] hover:bg-[#5D3F2B]" isLoading={verifyOtpMutation.isPending}>
+      <Button type="submit" className="w-full mt-4 bg-[#E50914] hover:bg-[#E50914]" isLoading={verifyOtpMutation.isPending}>
         Verify OTP
       </Button>
     </form>

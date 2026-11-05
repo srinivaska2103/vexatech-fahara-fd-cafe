@@ -39,9 +39,9 @@ export const RevenueChart = ({
 
   const hasData = chartData.length > 0;
 
-  // Coffee accent colors matching Fahara guidelines
-  const primaryColor = '#6F4E37';
-  const secondaryColor = '#A67B5B';
+  // Coffee accent colors matching Grab2GO guidelines
+  const primaryColor = '#E50914';
+  const secondaryColor = '#B71C1C';
 
   const totalPeriodRevenue = hasData 
     ? chartData.reduce((sum, item) => sum + Number(item.revenue || 0), 0)
@@ -53,7 +53,7 @@ export const RevenueChart = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-lg font-bold text-[#2C1810]">Revenue & Bookings Overview</h3>
+            <h3 className="text-lg font-bold text-[#252525]">Revenue & Bookings Overview</h3>
             <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
               <TrendingUp className="w-3 h-3 text-emerald-600" />
               <span>₹{totalPeriodRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })} Total</span>
@@ -63,7 +63,7 @@ export const RevenueChart = ({
         </div>
 
         {/* Timeframe Selector Pill */}
-        <div className="flex items-center gap-1 bg-[#FFF8F0] p-1 rounded-2xl border border-[#DDB892]/60 shrink-0 self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-[#FFF5F5] p-1 rounded-2xl border border-[#EF5350]/60 shrink-0 self-start sm:self-auto">
           {[
             { key: '7D', label: '7 Days' },
             { key: '30D', label: '30 Days' },
@@ -76,8 +76,8 @@ export const RevenueChart = ({
               className={cn(
                 "px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer",
                 activeTimeframe === tf.key
-                  ? "bg-[#6F4E37] text-white shadow-xs"
-                  : "text-text/60 hover:text-[#6F4E37] hover:bg-white/60"
+                  ? "bg-[#E50914] text-white shadow-xs"
+                  : "text-text/60 hover:text-[#E50914] hover:bg-white/60"
               )}
             >
               {tf.label}
@@ -131,27 +131,27 @@ export const RevenueChart = ({
                 dataKey="name" 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{ fill: '#2C1810', opacity: 0.65, fontSize: 11, fontWeight: 600 }} 
+                tick={{ fill: '#252525', opacity: 0.65, fontSize: 11, fontWeight: 600 }} 
                 dy={8}
               />
               <YAxis 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{ fill: '#2C1810', opacity: 0.65, fontSize: 11, fontWeight: 600 }}
+                tick={{ fill: '#252525', opacity: 0.65, fontSize: 11, fontWeight: 600 }}
                 tickFormatter={(value) => `₹${value >= 1000 ? `${(value/1000).toFixed(1)}k` : value}`}
               />
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8DED5" opacity={0.7} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#FEE2E2" opacity={0.7} />
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'rgba(255, 255, 255, 0.98)', 
                   backdropFilter: 'blur(12px)',
                   borderRadius: '16px', 
-                  border: '1px solid #E8DED5', 
+                  border: '1px solid #FEE2E2', 
                   boxShadow: '0 12px 24px -4px rgba(44, 24, 16, 0.12)',
                   padding: '10px 14px'
                 }}
                 formatter={(value) => [`₹${Number(value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, 'Cafe Revenue']}
-                labelStyle={{ color: '#2C1810', fontWeight: '700', marginBottom: '4px', fontSize: '12px' }}
+                labelStyle={{ color: '#252525', fontWeight: '700', marginBottom: '4px', fontSize: '12px' }}
                 itemStyle={{ color: primaryColor, fontWeight: '700', fontSize: '13px' }}
               />
               <Area 

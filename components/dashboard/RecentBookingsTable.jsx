@@ -90,7 +90,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
       {/* Table Header */}
       <div className="flex items-center justify-between p-5 sm:p-6 border-b border-border/40">
         <div>
-          <h3 className="text-base sm:text-lg font-bold text-[#2C1810]">Recent Dining Bookings</h3>
+          <h3 className="text-base sm:text-lg font-bold text-[#252525]">Recent Dining Bookings</h3>
           <p className="text-xs text-text/50">Latest customer venue reservations, guests & status</p>
         </div>
         <Link 
@@ -105,7 +105,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
       {/* Desktop Table View (>= 768px) */}
       <div className="hidden md:block overflow-x-auto custom-scrollbar">
         <table className="w-full text-sm text-left">
-          <thead className="text-[11px] text-text/50 uppercase bg-[#FFF8F0]/60 border-b border-border/40 whitespace-nowrap">
+          <thead className="text-[11px] text-text/50 uppercase bg-[#FFF5F5]/60 border-b border-border/40 whitespace-nowrap">
             <tr>
               <th className="px-5 py-3 font-bold tracking-wider">Ref & Customer</th>
               <th className="px-5 py-3 font-bold tracking-wider">Date & Time</th>
@@ -118,15 +118,15 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
           </thead>
           <tbody className="divide-y divide-border/30 whitespace-nowrap">
             {data.map((booking) => (
-              <tr key={booking.id} className="hover:bg-[#FFF8F0]/30 transition-colors group">
+              <tr key={booking.id} className="hover:bg-[#FFF5F5]/30 transition-colors group">
                 {/* Ref & Customer */}
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#FFF8F0] border border-[#DDB892]/60 flex items-center justify-center text-[#6F4E37] font-bold text-xs shrink-0 shadow-2xs">
+                    <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#EF5350]/60 flex items-center justify-center text-[#E50914] font-bold text-xs shrink-0 shadow-2xs">
                       {getInitials(booking.customerName)}
                     </div>
                     <div className="min-w-0 max-w-[170px]">
-                      <div className="font-bold text-[#2C1810] truncate group-hover:text-primary transition-colors text-xs sm:text-sm">
+                      <div className="font-bold text-[#252525] truncate group-hover:text-primary transition-colors text-xs sm:text-sm">
                         {booking.customerName}
                       </div>
                       <div className="text-[11px] font-mono text-text/50 truncate">
@@ -138,7 +138,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
 
                 {/* Date & Time */}
                 <td className="px-5 py-3.5">
-                  <div className="font-semibold text-[#2C1810] text-xs">
+                  <div className="font-semibold text-[#252525] text-xs">
                     {booking.date ? new Date(booking.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                   </div>
                   <div className="text-[11px] text-text/50 font-medium">
@@ -148,7 +148,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
 
                 {/* Table or Package */}
                 <td className="px-5 py-3.5">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2C1810]">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#252525]">
                     <Armchair className="w-3.5 h-3.5 text-text/40" />
                     <span className="truncate max-w-[140px]">{booking.tableName || 'Standard Table'}</span>
                   </div>
@@ -164,7 +164,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
 
                 {/* Amount */}
                 <td className="px-5 py-3.5 text-right">
-                  <div className="font-extrabold text-[#2C1810] font-sans text-xs sm:text-sm">
+                  <div className="font-extrabold text-[#252525] font-sans text-xs sm:text-sm">
                     ₹{Number(booking.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </div>
                   <div className="pt-0.5">{getPaymentBadge(booking.payment_status)}</div>
@@ -195,21 +195,21 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
           <div key={booking.id} className="pt-3 first:pt-0 space-y-2.5">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[#FFF8F0] border border-[#DDB892]/60 flex items-center justify-center text-[#6F4E37] font-bold text-xs shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#EF5350]/60 flex items-center justify-center text-[#E50914] font-bold text-xs shrink-0">
                   {getInitials(booking.customerName)}
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs sm:text-sm text-[#2C1810]">{booking.customerName}</h4>
+                  <h4 className="font-bold text-xs sm:text-sm text-[#252525]">{booking.customerName}</h4>
                   <p className="text-[10px] font-mono text-text/50">{booking.booking_reference || `#FAH-${booking.id.slice(0, 8).toUpperCase()}`}</p>
                 </div>
               </div>
               <div>{getStatusBadge(booking.status)}</div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#FFF8F0]/50 p-2.5 rounded-xl border border-border/40">
+            <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#FFF5F5]/50 p-2.5 rounded-xl border border-border/40">
               <div className="space-y-0.5">
                 <span className="text-text/50 font-medium">Date & Time</span>
-                <p className="font-bold text-[#2C1810]">
+                <p className="font-bold text-[#252525]">
                   {booking.date ? new Date(booking.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'} 
                   {booking.time ? ` • ${new Date(booking.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' })}` : ''}
                 </p>
@@ -217,7 +217,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
 
               <div className="space-y-0.5 text-right">
                 <span className="text-text/50 font-medium">Guests & Table</span>
-                <p className="font-bold text-[#2C1810] truncate">
+                <p className="font-bold text-[#252525] truncate">
                   {booking.guests || 1} Guests • {booking.tableName || 'Table'}
                 </p>
               </div>
@@ -226,7 +226,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
             <div className="flex items-center justify-between pt-1 text-xs">
               <div className="flex items-center gap-1.5">
                 <span className="text-text/50">Amount:</span>
-                <span className="font-black text-[#2C1810]">
+                <span className="font-black text-[#252525]">
                   ₹{Number(booking.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
                 {getPaymentBadge(booking.payment_status)}
@@ -234,7 +234,7 @@ export const RecentBookingsTable = ({ data, isLoading }) => {
 
               <Link 
                 href="/owner/bookings" 
-                className="text-xs font-bold text-[#6F4E37] flex items-center gap-0.5 hover:underline"
+                className="text-xs font-bold text-[#E50914] flex items-center gap-0.5 hover:underline"
               >
                 <span>Details</span>
                 <ChevronRight className="w-3.5 h-3.5" />

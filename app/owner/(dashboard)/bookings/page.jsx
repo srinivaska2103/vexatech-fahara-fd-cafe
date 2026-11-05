@@ -231,16 +231,16 @@ export default function BookingsPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#2C1810]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF8F0] to-[#FFF5EA] p-6 sm:p-8 rounded-3xl border border-[#DDB892]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-1.5 z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6F4E37]/10 text-[#6F4E37] text-xs font-extrabold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>RESERVATION STUDIO</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#2C1810] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#252525] tracking-tight">
             Booking Management
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
@@ -253,14 +253,14 @@ export default function BookingsPage() {
           <button 
             type="button"
             onClick={handleExport}
-            className="py-2.5 px-4 rounded-xl bg-[#FFF8F0] hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white border border-[#DDB892]/60 text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-xl bg-[#FFF5F5] hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350]/60 text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>Export CSV</span>
           </button>
 
           <Link href="/owner/bookings/calendar">
-            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A67B5B] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
+            <Button className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-1.5 transition-all">
               <CalendarIcon className="w-4 h-4 text-white" />
               <span>Calendar View</span>
             </Button>
@@ -305,11 +305,11 @@ export default function BookingsPage() {
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Bookings</span>
-            <div className="w-8 h-8 rounded-xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-bold">
               <CalendarDays className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{totalCount}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{totalCount}</p>
           <p className="text-[10px] text-text/50 font-medium">All recorded diner slots</p>
         </div>
 
@@ -321,7 +321,7 @@ export default function BookingsPage() {
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{pendingCount}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{pendingCount}</p>
           <p className="text-[10px] text-amber-700/80 font-bold">Requires approval</p>
         </div>
 
@@ -333,7 +333,7 @@ export default function BookingsPage() {
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-3xl font-black text-[#2C1810]">{confirmedCount}</p>
+          <p className="text-xl sm:text-3xl font-black text-[#252525]">{confirmedCount}</p>
           <p className="text-[10px] text-emerald-700/80 font-bold">Approved reservations</p>
         </div>
 
@@ -346,7 +346,7 @@ export default function BookingsPage() {
                 <IndianRupee className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-3xl font-black text-[#6F4E37]">₹{totalRevenue}</p>
+            <p className="text-xl sm:text-3xl font-black text-[#E50914]">₹{totalRevenue}</p>
             <p className="text-[10px] text-text/50 font-medium">Recorded booking value</p>
           </div>
         )}
@@ -367,13 +367,13 @@ export default function BookingsPage() {
                   onClick={() => setStatusFilter(tab.id)}
                   className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 ${
                     isActive
-                      ? 'bg-[#6F4E37] text-white shadow-2xs'
-                      : 'bg-surface/50 text-[#2C1810] hover:bg-surface'
+                      ? 'bg-[#E50914] text-white shadow-2xs'
+                      : 'bg-surface/50 text-[#252525] hover:bg-surface'
                   }`}
                 >
                   <span>{tab.label}</span>
                   <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-white text-[#6F4E37]'
+                    isActive ? 'bg-white/20 text-white' : 'bg-white text-[#E50914]'
                   }`}>
                     {tab.count}
                   </span>
@@ -391,14 +391,14 @@ export default function BookingsPage() {
               <Input 
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#2C1810] placeholder:text-text/40" 
+                className="pl-9 h-10 rounded-2xl border-border/60 bg-surface/30 focus:bg-white text-xs font-medium text-[#252525] placeholder:text-text/40" 
                 placeholder="Search guest name, ref ID, or email..." 
               />
             </div>
 
             <button 
               onClick={() => refetch()}
-              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#6F4E37] text-[#6F4E37] hover:text-white flex items-center justify-center transition-all shrink-0"
+              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0"
               title="Refresh Bookings"
             >
               <RefreshCw className="w-4 h-4" />
@@ -415,11 +415,11 @@ export default function BookingsPage() {
         </div>
       ) : bookings.length === 0 ? (
         <div className="bg-white p-12 text-center rounded-3xl border border-border/60 shadow-2xs space-y-4 max-w-md mx-auto">
-          <div className="w-14 h-14 rounded-3xl bg-[#6F4E37]/10 text-[#6F4E37] flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-3xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center mx-auto">
             <CalendarIcon className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-base font-extrabold text-[#2C1810]">
+            <h3 className="text-base font-extrabold text-[#252525]">
               {search ? 'No Matching Reservations' : 'No Reservations Yet'}
             </h3>
             <p className="text-xs text-text/60 mt-1">

@@ -86,7 +86,7 @@ export const NotificationDropdown = () => {
     if (type?.includes('BOOKING')) return <CalendarCheck className="w-4 h-4 text-emerald-600" />;
     if (type?.includes('PAYMENT')) return <CreditCard className="w-4 h-4 text-blue-600" />;
     if (type?.includes('REVIEW')) return <Star className="w-4 h-4 text-amber-500" />;
-    return <Sparkles className="w-4 h-4 text-[#6F4E37]" />;
+    return <Sparkles className="w-4 h-4 text-[#E50914]" />;
   };
 
   return (
@@ -96,7 +96,7 @@ export const NotificationDropdown = () => {
         className="relative w-9 h-9 rounded-2xl bg-surface/80 hover:bg-white text-text/70 hover:text-primary border border-border hover:border-primary/40 flex items-center justify-center transition-all shadow-2xs group cursor-pointer"
         title="Notifications"
       >
-        <Bell className="w-4 h-4 text-[#6F4E37] group-hover:scale-110 transition-transform stroke-[2]" />
+        <Bell className="w-4 h-4 text-[#E50914] group-hover:scale-110 transition-transform stroke-[2]" />
         {unreadCount > 0 && (
           <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-pulse" />
         )}
@@ -106,9 +106,9 @@ export const NotificationDropdown = () => {
         <div className="fixed sm:absolute top-16 sm:top-auto right-3 sm:right-0 left-3 sm:left-auto mt-0 sm:mt-3 sm:w-96 bg-white rounded-3xl shadow-2xl border border-border/80 overflow-hidden z-50 animate-fade-in origin-top-right">
           
           {/* Top Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 bg-[#FFF8F0]/70">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 bg-[#FFF5F5]/70">
             <div className="flex items-center gap-2">
-              <h3 className="font-extrabold text-[#2C1810] text-sm">Notifications</h3>
+              <h3 className="font-extrabold text-[#252525] text-sm">Notifications</h3>
               {unreadCount > 0 ? (
                 <span className="px-2 py-0.5 text-[10px] font-extrabold bg-rose-500 text-white rounded-full">
                   {unreadCount} new
@@ -123,7 +123,7 @@ export const NotificationDropdown = () => {
             <button 
               type="button"
               onClick={handleMarkAllRead} 
-              className="text-xs text-[#6F4E37] hover:text-[#2C1810] font-extrabold flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-[#FFF8F0] border border-[#DDB892]/60 hover:border-[#6F4E37] transition-all cursor-pointer shadow-2xs"
+              className="text-xs text-[#E50914] hover:text-[#252525] font-extrabold flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-[#FFF5F5] border border-[#EF5350]/60 hover:border-[#E50914] transition-all cursor-pointer shadow-2xs"
               title="Mark all notifications as read"
             >
               <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -138,8 +138,8 @@ export const NotificationDropdown = () => {
                 {notifications.map((notif) => (
                   <Link href={notif.link || '#'} key={notif.id} onClick={() => setIsOpen(false)}>
                     <div className={cn(
-                      "px-4 py-3.5 hover:bg-[#FFF8F0]/80 transition-colors cursor-pointer space-y-1 relative border-b border-border/30 flex items-start gap-3",
-                      !notif.is_read ? "bg-[#FFF8F0]/40" : "bg-white"
+                      "px-4 py-3.5 hover:bg-[#FFF5F5]/80 transition-colors cursor-pointer space-y-1 relative border-b border-border/30 flex items-start gap-3",
+                      !notif.is_read ? "bg-[#FFF5F5]/40" : "bg-white"
                     )}>
                       {/* Icon */}
                       <div className="w-8 h-8 rounded-xl bg-surface flex items-center justify-center shrink-0 mt-0.5">
@@ -148,7 +148,7 @@ export const NotificationDropdown = () => {
 
                       <div className="flex-1 min-w-0 space-y-0.5">
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className={cn("text-xs leading-snug", !notif.is_read ? "font-extrabold text-[#2C1810]" : "font-semibold text-text/80")}>
+                          <h4 className={cn("text-xs leading-snug", !notif.is_read ? "font-extrabold text-[#252525]" : "font-semibold text-text/80")}>
                             {notif.title}
                           </h4>
                           <span className="text-[10px] font-medium text-text/40 shrink-0">
@@ -172,7 +172,7 @@ export const NotificationDropdown = () => {
           {/* Footer */}
           <div className="p-3 border-t border-border/40 bg-surface/40 text-center">
             <Link href="/owner/notifications" onClick={() => setIsOpen(false)}>
-              <button className="text-xs font-extrabold text-[#6F4E37] hover:text-[#2C1810] py-1.5 px-3 w-full rounded-xl hover:bg-white transition-all cursor-pointer flex items-center justify-center gap-1.5">
+              <button className="text-xs font-extrabold text-[#E50914] hover:text-[#252525] py-1.5 px-3 w-full rounded-xl hover:bg-white transition-all cursor-pointer flex items-center justify-center gap-1.5">
                 <span>View all notifications</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
