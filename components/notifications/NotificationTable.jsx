@@ -98,11 +98,13 @@ export const NotificationTable = ({ notifications }) => {
                   {notification.food_orders && (
                     <span className="text-[10px] font-bold text-rose-700">
                       Order #{notification.food_orders.order_number}
+                      {notification.cafes?.name && <span className="text-rose-500 font-semibold ml-1">• {notification.cafes.name}</span>}
                     </span>
                   )}
                   {notification.bookings && (
                     <span className="text-[10px] font-bold text-emerald-700">
                       Booking #{notification.bookings.booking_number}
+                      {notification.cafes?.name && <span className="text-emerald-600 font-semibold ml-1">• {notification.cafes.name}</span>}
                     </span>
                   )}
                 </td>

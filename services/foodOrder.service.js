@@ -38,6 +38,22 @@ export const foodOrderService = {
     return res.data;
   },
 
+  // Refund Requests Management
+  getRefundRequests: async (params = {}) => {
+    const res = await api.get('/cafe/orders/refund-requests', { params });
+    return res.data;
+  },
+
+  approveRefund: async (orderId) => {
+    const res = await api.post(`/cafe/orders/${orderId}/refund/approve`);
+    return res.data;
+  },
+
+  rejectRefund: async (orderId, reason) => {
+    const res = await api.post(`/cafe/orders/${orderId}/refund/reject`, { reason });
+    return res.data;
+  },
+
   // Fulfilment Settings
   getFulfilmentSettings: async () => {
     const res = await api.get(ENDPOINTS.fulfilment.getSettings);

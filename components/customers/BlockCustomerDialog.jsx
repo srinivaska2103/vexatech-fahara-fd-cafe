@@ -7,13 +7,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { blockCustomerSchema } from '@/schemas/customer.schema';
 import { cn } from '@/utils/cn';
 
-export const BlockCustomerDialog = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
+export const BlockCustomerDialog = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  onSubmit: propOnSubmit,
+  customerName = '',
+  isLoading = false,
+  isSubmitting = false 
+}) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(blockCustomerSchema),
   });
 
   const onSubmit = (data) => {
-    onConfirm(data);
+    const handler = onConfirm || propOnSubmit;
+    if (typeof handler === 'function') {
+      handler(data);
+    }
     reset();
   };
 
@@ -66,12 +77,12 @@ export const BlockCustomerDialog = ({ isOpen, onClose, onConfirm, isSubmitting }
               </div>
 
               <div className="flex justify-end gap-3">
-                <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
+                <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting || isLoading}>
                   Cancel
                 </Button>
                 <Button 
                   type="submit" 
-                  isLoading={isSubmitting}
+                  isLoading={isSubmitting || isLoading}
                   className="bg-danger hover:bg-danger/90 text-white border-transparent"
                 >
                   Block Customer

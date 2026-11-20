@@ -11,8 +11,21 @@ import {
   Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
+import { useAuthStore } from '@/store/auth.store';
 
 export const QuickActionsGrid = ({ isWalkingCafe = false }) => {
+  const role = useAuthStore((state) => state.role);
+  const user = useAuthStore((state) => state.user);
+
+  const isRestaurantOwner = 
+    role === 'RESTAURANT_OWNER' || 
+    user?.role === 'RESTAURANT_OWNER' || 
+    user?.user_type === 'RESTAURANT_OWNER' ||
+    user?.roles?.name === 'RESTAURANT_OWNER' ||
+    String(role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.role || '').toUpperCase().includes('RESTAURANT') ||
+    String(user?.user_type || '').toUpperCase().includes('RESTAURANT');
+
   const actions = [
     {
       title: 'Manage Tables',
@@ -22,17 +35,17 @@ export const QuickActionsGrid = ({ isWalkingCafe = false }) => {
       color: 'bg-amber-50 text-amber-900 border-amber-200/80 hover:bg-amber-100/70',
       badge: 'Seating'
     },
-    {
+    ...(!isRestaurantOwner ? [{
       title: 'Create Event Package',
       description: 'Offer dining parties & special celebration bundles',
       icon: CalendarPlus,
       href: '/owner/events',
       color: 'bg-emerald-50 text-emerald-900 border-emerald-200/80 hover:bg-emerald-100/70',
       badge: 'Packages'
-    },
+    }] : []),
     {
-      title: 'Edit Cafe',
-      description: 'Update cafe profile, photos, and timings',
+      title: isRestaurantOwner ? 'Edit Restaurant' : 'Edit Cafe',
+      description: isRestaurantOwner ? 'Update restaurant profile, photos, and timings' : 'Update cafe profile, photos, and timings',
       icon: Store,
       href: '/owner/cafes',
       color: 'bg-orange-50 text-orange-900 border-orange-200/80 hover:bg-orange-100/70',
@@ -79,7 +92,7 @@ export const QuickActionsGrid = ({ isWalkingCafe = false }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className={`grid grid-cols-2 sm:grid-cols-3 ${isRestaurantOwner ? 'lg:grid-cols-5' : 'lg:grid-cols-6'} gap-3`}>
         {actions.map((act) => {
           const Icon = act.icon;
           return (

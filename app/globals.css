@@ -9,13 +9,13 @@
   --breakpoint-xl: 1280px;
 
   --color-primary: #E50914;
-  --color-secondary: #B71C1C;
-  --color-accent: #EF5350;
-  --color-background: #FFF5F5;
+  --color-secondary: #475569;
+  --color-accent: #EF4444;
+  --color-background: #F8FAFC;
   --color-surface: #FFFFFF;
-  --color-border: #FEE2E2;
-  --color-text: #252525;
-  --color-success: #4CAF50;
+  --color-border: #E2E8F0;
+  --color-text: #0F172A;
+  --color-success: #10B981;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
 
@@ -26,8 +26,8 @@
 }
 
 :root {
-  --background: #FFF5F5;
-  --foreground: #252525;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
 }
 
 html, body {
@@ -99,14 +99,14 @@ div[data-nextjs-toast-wrapper] {
 select {
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E53935' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 0.85rem center;
   background-size: 1.1em 1.1em;
   padding-right: 2.5rem !important;
-  color: #252525;
-  background-color: #FFF5F5;
-  border: 1.5px solid #FEE2E2;
+  color: #0F172A;
+  background-color: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
   border-radius: 1rem;
   font-weight: 700;
   transition: all 0.2s ease-in-out;
@@ -114,19 +114,19 @@ select {
 }
 
 select:hover {
-  border-color: #E50914;
-  background-color: #FFF5F5;
+  border-color: #CBD5E1;
+  background-color: #F8FAFC;
 }
 
 select:focus {
   outline: none;
   border-color: #E50914;
-  box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.15);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.12);
 }
 
 select option {
-  background-color: #FFF5F5;
-  color: #252525;
+  background-color: #FFFFFF;
+  color: #0F172A;
   font-weight: 700;
   padding: 10px 14px;
 }

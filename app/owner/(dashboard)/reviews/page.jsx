@@ -19,6 +19,7 @@ import {
   Utensils,
   BookmarkCheck
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -27,8 +28,21 @@ export default function ReviewsPage() {
   const [search, setSearch] = useState('');
   const [ratingFilter, setRatingFilter] = useState('ALL');
   const [sourceFilter, setSourceFilter] = useState('ALL'); // ALL, FOOD_ORDER, BOOKING
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data: reviewRes, isLoading, isError, error, refetch } = useReviews({ search });
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refetch();
+      toast.success('Reviews updated');
+    } catch {
+      toast.error('Failed to refresh reviews');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
   const rawReviews = Array.isArray(reviewRes?.data) ? reviewRes.data : (Array.isArray(reviewRes) ? reviewRes : []);
 
   // Filter reviews based on rating, source & search
@@ -132,11 +146,12 @@ export default function ReviewsPage() {
         <div className="flex items-center gap-3">
           <Button 
             variant="outline" 
-            onClick={() => refetch()}
-            className="rounded-2xl border-border/60 hover:bg-surface/50 text-xs font-bold flex items-center gap-2"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="rounded-2xl border-border/60 hover:bg-surface/50 text-xs font-bold flex items-center gap-2 disabled:opacity-50"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-[#E50914]" />
-            Refresh
+            <RefreshCw className={`w-3.5 h-3.5 text-[#E50914] ${isRefreshing ? 'animate-spin' : ''}`} />
+            {isRefreshing ? 'Refreshing...' : 'Refresh'}
           </Button>
 
           <Button 

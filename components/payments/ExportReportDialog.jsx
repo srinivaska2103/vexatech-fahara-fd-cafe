@@ -9,7 +9,13 @@ import { cn } from '@/utils/cn';
 import { CustomSelect } from '../ui/CustomSelect';
 import { DatePicker } from '../ui/DatePicker';
 
-export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) => {
+export const ExportReportDialog = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  onSubmit: propOnSubmit,
+  isExporting = false 
+}) => {
   const { register, handleSubmit, watch, setValue, formState: { errors }, reset } = useForm({
     resolver: zodResolver(exportReportSchema),
     defaultValues: {
@@ -22,7 +28,10 @@ export const ExportReportDialog = ({ isOpen, onClose, onConfirm, isExporting }) 
   const dateRange = watch('date_range');
 
   const onSubmit = (data) => {
-    onConfirm(data);
+    const handler = onConfirm || propOnSubmit;
+    if (typeof handler === 'function') {
+      handler(data);
+    }
     reset();
   };
 

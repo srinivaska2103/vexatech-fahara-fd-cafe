@@ -1,5 +1,5 @@
 import React from 'react';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, IndianRupee } from 'lucide-react';
 
 export const CustomerPayments = ({ payments }) => {
   if (!payments || payments.length === 0) {
@@ -39,7 +39,12 @@ export const CustomerPayments = ({ payments }) => {
                     {payment.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right font-medium">₹{Number(payment.amount || 0).toLocaleString()}</td>
+                <td className="px-6 py-4 text-right font-medium">
+                  <span className="inline-flex items-center justify-end gap-0.5">
+                    <IndianRupee className="w-3.5 h-3.5 shrink-0" />
+                    <span>{Number(payment.amount || 0).toLocaleString()}</span>
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>

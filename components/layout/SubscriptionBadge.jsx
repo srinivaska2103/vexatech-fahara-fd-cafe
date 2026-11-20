@@ -84,6 +84,17 @@ export function getSubscriptionExpiryState(subscription, status, isActive) {
     };
   }
 
+  // Check if Lifetime Access (more than 365 days / far future)
+  if (daysLeft > 365) {
+    return {
+      state: 'LIFETIME',
+      daysLeft: 99999,
+      text: 'Lifetime Free Access Active',
+      shortText: 'Lifetime Free',
+      badgeType: 'lifetime'
+    };
+  }
+
   // More than 7 days left (Normal active coffee brand color)
   return {
     state: 'NORMAL',
@@ -136,7 +147,11 @@ export const SubscriptionBadge = ({ className }) => {
         <span className="hidden sm:inline font-semibold text-white/90">Subscription</span>
         <span className="hidden sm:inline text-white/60">·</span>
         <span className="font-extrabold text-white">
-          {expiryState.daysLeft > 0 ? `${expiryState.daysLeft} days left` : expiryState.shortText}
+          {expiryState.state === 'LIFETIME' 
+            ? 'Lifetime Free' 
+            : expiryState.daysLeft > 0 
+              ? `${expiryState.daysLeft} days left` 
+              : expiryState.shortText}
         </span>
       </span>
 

@@ -50,8 +50,8 @@ const mainMenuItems = [
 
 const foodOrderMenuItems = [
   { icon: ShoppingBag, label: 'Food Orders', href: '/owner/orders', color: 'text-rose-600', bg: 'bg-rose-100/70' },
-  { icon: UtensilsCrossed, label: 'Menu Management', href: '/owner/menu', color: 'text-[#E50914]', bg: 'bg-[#FFF5F5]' },
-  { icon: BadgePercent, label: 'Discounts & Offers', href: '/owner/offers', color: 'text-[#FF6B00]', bg: 'bg-[#FFF5F5]' },
+  { icon: UtensilsCrossed, label: 'Menu Management', href: '/owner/menu', color: 'text-[#E50914]', bg: 'bg-slate-100' },
+  { icon: BadgePercent, label: 'Discounts & Offers', href: '/owner/offers', color: 'text-[#FF6B00]', bg: 'bg-slate-100' },
   { icon: Bike, label: 'Delivery Staff', href: '/owner/delivery-staff', color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
   { icon: SlidersHorizontal, label: 'Fulfilment Settings', href: '/owner/fulfilment', color: 'text-blue-600', bg: 'bg-blue-100/70' },
   { icon: ExternalLink, label: 'Driver App Portal', href: '/delivery', color: 'text-purple-600', bg: 'bg-purple-100/70' },
@@ -114,11 +114,11 @@ export const Sidebar = () => {
     String(user?.role || '').toUpperCase().includes('WALKING');
 
   const visibleMainMenuItems = mainMenuItems.filter(item => {
+    if (isRestaurantOwner && (item.label === 'Events' || item.label === 'Manage Events' || item.href === '/owner/events')) {
+      return false;
+    }
     if (isWalkingCafe) {
       return item.label !== 'Events' && item.label !== 'Table Seating' && item.label !== 'Bookings';
-    }
-    if (isRestaurantOwner) {
-      return item.label !== 'Events';
     }
     return true;
   }).map(item => {
@@ -164,7 +164,7 @@ export const Sidebar = () => {
       {/* Logo Area */}
       <div className="flex items-center h-16 px-4 border-b border-border/60 shrink-0">
         <Link href="/owner/dashboard" className="flex items-center gap-3 overflow-hidden">
-          <div className="flex items-center justify-center shrink-0 w-10 h-10 rounded-2xl overflow-hidden bg-[#FFF5F5] shadow-2xs border border-[#EF5350]/70 p-0.5">
+          <div className="flex items-center justify-center shrink-0 w-10 h-10 rounded-2xl overflow-hidden bg-slate-50 shadow-2xs border border-slate-200 p-0.5">
             <img 
               src="/grab-it-logo.png" 
               alt="Grab2GO Logo" 
@@ -213,7 +213,7 @@ export const Sidebar = () => {
             ))}
           </SidebarGroup>
 
-          {!isRestaurantOwner && !isWalkingCafe && (
+          {!isWalkingCafe && (
             <SidebarGroup label="Finance">
               {financeMenuItems.map((item) => (
                 <SidebarItem key={item.label} {...item} isLocked={!isSubActive && !item.isUnlockedAlways} />
@@ -230,7 +230,7 @@ export const Sidebar = () => {
 
         {/* Bottom Modern Live Venue Health Card (when expanded) */}
         {!isSidebarCollapsed && (
-          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFF5F5] via-[#FFF5F5] to-[#FFF3E4] border border-[#EF5350]/60 shadow-2xs space-y-2 shrink-0">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs space-y-2 shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#E50914]" />
@@ -248,7 +248,7 @@ export const Sidebar = () => {
 
             <Link 
               href="/owner/analytics" 
-              className="block w-full py-1.5 text-center rounded-xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350]/60 text-[10px] font-extrabold transition-all shadow-2xs"
+              className="block w-full py-1.5 text-center rounded-xl bg-white hover:bg-slate-100 text-[#E50914] border border-slate-200 text-[10px] font-extrabold transition-all shadow-2xs"
             >
               View Analytics Overview →
             </Link>

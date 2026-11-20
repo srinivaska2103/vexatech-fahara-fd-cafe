@@ -45,7 +45,7 @@ const menuTabs = [
     href: '/owner/dashboard',
     icon: LayoutDashboard,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -56,7 +56,7 @@ const menuTabs = [
     href: '/owner/subscription',
     icon: Crown,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -67,7 +67,7 @@ const menuTabs = [
     href: '/owner/cafes',
     icon: Store,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -78,7 +78,7 @@ const menuTabs = [
     href: '/owner/tables',
     icon: Armchair,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -89,7 +89,7 @@ const menuTabs = [
     href: '/owner/bookings',
     icon: CalendarCheck,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -100,7 +100,7 @@ const menuTabs = [
     href: '/owner/bookings/calendar',
     icon: CalendarDays,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -111,7 +111,7 @@ const menuTabs = [
     href: '/owner/events',
     icon: CalendarDays,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -122,7 +122,7 @@ const menuTabs = [
     href: '/owner/orders',
     icon: ShoppingBag,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -133,7 +133,7 @@ const menuTabs = [
     href: '/owner/menu',
     icon: UtensilsCrossed,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -144,7 +144,7 @@ const menuTabs = [
     href: '/owner/offers',
     icon: BadgePercent,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -155,7 +155,7 @@ const menuTabs = [
     href: '/owner/delivery-staff',
     icon: Bike,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -166,7 +166,7 @@ const menuTabs = [
     href: '/owner/fulfilment',
     icon: SlidersHorizontal,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -177,7 +177,7 @@ const menuTabs = [
     href: '/delivery',
     icon: ExternalLink,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -188,7 +188,7 @@ const menuTabs = [
     href: '/owner/campaigns',
     icon: Megaphone,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -199,7 +199,7 @@ const menuTabs = [
     href: '/owner/customers',
     icon: Users,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -210,7 +210,7 @@ const menuTabs = [
     href: '/owner/reviews',
     icon: Star,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -221,7 +221,7 @@ const menuTabs = [
     href: '/owner/analytics',
     icon: BarChart3,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -233,7 +233,7 @@ const menuTabs = [
     exact: true,
     icon: CreditCard,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -244,7 +244,7 @@ const menuTabs = [
     href: '/owner/payments/settlements',
     icon: ArrowRightLeft,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -255,7 +255,7 @@ const menuTabs = [
     href: '/owner/payments/refunds',
     icon: RefreshCw,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -266,7 +266,7 @@ const menuTabs = [
     href: '/owner/payments/account',
     icon: ShieldCheck,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -277,7 +277,7 @@ const menuTabs = [
     href: '/owner/notifications',
     icon: Bell,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -288,7 +288,7 @@ const menuTabs = [
     href: '/owner/settings',
     icon: Settings,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   },
@@ -299,7 +299,7 @@ const menuTabs = [
     href: '/owner/support',
     icon: HelpCircle,
     activeBg: 'bg-gradient-to-r from-[#E50914] to-[#E50914] text-white shadow-md shadow-[#E50914]/25 border-[#E50914]',
-    inactiveBg: 'bg-white hover:bg-[#FFF5F5] text-[#252525] border-[#FEE2E2] hover:border-[#E50914]/30 shadow-2xs',
+    inactiveBg: 'bg-white hover:bg-[#F8FAFC] text-[#252525] border-[#E2E8F0] hover:border-[#E50914]/30 shadow-2xs',
     iconColor: 'text-[#E50914]',
     activeIconColor: 'text-amber-200'
   }
@@ -347,13 +347,11 @@ export const MobileSidebar = () => {
     String(user?.role || '').toUpperCase().includes('WALKING');
 
   const filteredTabs = menuTabs.filter((tab) => {
+    if (isRestaurantOwner && tab.id === 'events') {
+      return false;
+    }
     if (isWalkingCafe) {
       if (tab.id === 'events' || tab.id === 'tables' || tab.id === 'bookings' || tab.category === 'finance' || tab.id === 'support' || tab.id === 'analytics') {
-        return false;
-      }
-    }
-    if (isRestaurantOwner) {
-      if (tab.id === 'events') {
         return false;
       }
     }
@@ -378,7 +376,7 @@ export const MobileSidebar = () => {
 
       {/* Bottom Sheet Drawer coming up from down */}
       <aside
-        className={`fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] w-full bg-[#FFF5F5] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl rounded-t-3xl border-t-2 border-[#EF5350]/60 ${
+        className={`fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] w-full bg-[#F8FAFC] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl rounded-t-3xl border-t-2 border-[#E2E8F0]/60 ${
           isMobileSidebarOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
@@ -386,7 +384,7 @@ export const MobileSidebar = () => {
         <div className="w-12 h-1.5 rounded-full bg-[#E50914]/30 mx-auto my-2.5 shrink-0" />
 
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-4 pb-3 border-b border-[#E50914]/15 bg-[#FFF5F5] shrink-0">
+        <div className="flex items-center justify-between px-4 pb-3 border-b border-[#E50914]/15 bg-[#F8FAFC] shrink-0">
           <Link href="/owner/dashboard" onClick={closeMobileSidebar} className="flex items-center gap-3">
             <div className="flex items-center justify-center shrink-0 w-9 h-9 rounded-2xl overflow-hidden bg-gradient-to-br from-[#E50914]/10 to-surface shadow-xs border border-[#E50914]/20 p-0.5">
               <img src="/grab-it-logo.png" alt="Grab2GO Logo" className="w-full h-full object-cover rounded-xl" />
@@ -431,12 +429,16 @@ export const MobileSidebar = () => {
         </div>
 
         {/* Menu Tabs 2-Column Row-Wise Grid */}
-        <div className="flex-1 overflow-y-auto p-3.5 grid grid-cols-2 gap-2.5 content-start custom-scrollbar max-h-[60vh] bg-[#FFF5F5]/30">
+        <div className="flex-1 overflow-y-auto p-3.5 grid grid-cols-2 gap-2.5 content-start custom-scrollbar max-h-[60vh] bg-[#F8FAFC]/30">
           {filteredTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.exact 
               ? pathname === tab.href 
-              : pathname === tab.href || (pathname.startsWith(`${tab.href}/`) && tab.href !== '/owner/payments');
+              : tab.href === '/owner/bookings'
+                ? pathname === '/owner/bookings'
+                : tab.href === '/owner/orders'
+                  ? pathname === '/owner/orders' || (pathname.startsWith('/owner/orders/') && !pathname.startsWith('/owner/orders/refunds'))
+                  : pathname === tab.href || (pathname.startsWith(`${tab.href}/`) && tab.href !== '/owner/payments');
 
             return (
               <Link
@@ -452,14 +454,14 @@ export const MobileSidebar = () => {
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
                     isActive 
                       ? 'bg-white/20 text-white shadow-2xs' 
-                      : 'bg-[#FFF5F5] border border-[#EF5350]/60 text-[#E50914] shadow-2xs'
+                      : 'bg-[#F8FAFC] border border-[#E2E8F0]/60 text-[#E50914] shadow-2xs'
                   }`}>
                     <Icon className="w-4 h-4 stroke-[2.2]" />
                   </div>
                   {isActive ? (
                     <span className="w-2 h-2 rounded-full bg-amber-300 shadow-xs animate-pulse shrink-0" />
                   ) : (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FEE2E2] group-hover:bg-[#B71C1C] transition-colors shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E2E8F0] group-hover:bg-[#B71C1C] transition-colors shrink-0" />
                   )}
                 </div>
                 <span className={`text-xs font-black tracking-tight mt-2.5 line-clamp-2 leading-tight ${
@@ -491,3 +493,4 @@ export const MobileSidebar = () => {
     </>
   );
 };
+

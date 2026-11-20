@@ -42,7 +42,9 @@ import {
   Receipt,
   UserCheck,
   Percent,
-  Calendar
+  Calendar,
+  CheckCircle,
+  Clock4
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/utils/cn';
@@ -50,11 +52,12 @@ import Link from 'next/link';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState('7days');
-  const [activeTab, setActiveTab] = useState('overall'); // 'overall' | 'food' | 'bookings'
   const [chartMetric, setChartMetric] = useState('revenue'); // 'revenue' | 'volume'
 
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
+  const isRestaurant = userRole === 'RESTAURANT_OWNER' || user?.role === 'RESTAURANT_OWNER';
+
   const { data: cafesData } = useCafes();
   const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
 
@@ -76,6 +79,7 @@ export default function AnalyticsDashboardPage() {
   const totalFoodOrders = Number(kpi.total_food_orders || 0);
   const paidFoodOrders = Number(kpi.paid_food_orders || 0);
   const pendingFoodPayments = Number(kpi.pending_food_payments || 0);
+  const cancelledFoodOrders = Number(kpi.cancelled_food_orders || 0);
   const avgFoodOrderValue = Number(kpi.avg_food_order_value || 0);
 
   const totalBookings = Number(kpi.total_bookings || 0);
@@ -86,20 +90,30 @@ export default function AnalyticsDashboardPage() {
   const foodCustomers = Number(kpi.food_customers || 0);
   const bookingCustomers = Number(kpi.booking_customers || 0);
 
-  // Transform timeline data for chart
-  const chartData = timeline.map(item => ({
-    name: item.label,
-    date: item.date,
-    'Food Revenue': item.foodRevenue,
-    'Booking Revenue': item.bookingRevenue,
-    'Overall Revenue': item.totalRevenue,
-    'Food Orders': item.foodOrders,
-    'Bookings': item.bookings
-  }));
+  // Transform timeline data for chart based on role
+  const chartData = timeline.map(item => {
+    if (isRestaurant) {
+      return {
+        name: item.label,
+        date: item.date,
+        'Food Order Revenue': item.foodRevenue,
+        'Food Orders Placed': item.foodOrders
+      };
+    }
+    return {
+      name: item.label,
+      date: item.date,
+      'Food Revenue': item.foodRevenue,
+      'Booking Revenue': item.bookingRevenue,
+      'Overall Revenue': item.totalRevenue,
+      'Food Orders': item.foodOrders,
+      'Bookings': item.bookings
+    };
+  });
 
   if (isLoading) {
     return (
-      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+      <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
         <LoadingSkeleton type="dashboard" />
       </div>
     );
@@ -117,14 +131,16 @@ export default function AnalyticsDashboardPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-black text-[#252525] tracking-tight">
-                Restaurant &amp; Food Analytics
+                {isRestaurant ? 'Restaurant & Food Orders Analytics' : 'Restaurant & Food Analytics'}
               </h1>
               <span className="px-2.5 py-0.5 rounded-full bg-[#FFF5F5] text-[#E50914] border border-[#FEE2E2] text-[10px] font-black uppercase tracking-wider">
                 Live Overview
               </span>
             </div>
             <p className="text-xs sm:text-sm text-stone-500 font-medium mt-0.5">
-              Comprehensive real-time tracking of food orders, table bookings, customer counts and verified revenue.
+              {isRestaurant
+                ? 'Comprehensive real-time tracking of food orders, order values, customer counts, and verified revenue.'
+                : 'Comprehensive real-time tracking of food orders, table bookings, customer counts and verified revenue.'}
             </p>
           </div>
         </div>
@@ -156,106 +172,196 @@ export default function AnalyticsDashboardPage() {
         </div>
       </div>
 
-      {/* ── 2. TOP LEVEL REVENUE KPI CARDS (Requirements 3 & 4) ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        {/* Overall Revenue */}
-        <div className="bg-gradient-to-br from-[#E50914] to-[#B71C1C] p-5 rounded-3xl text-white shadow-md space-y-2 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Overall Net Revenue</span>
-            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white">
-              <IndianRupee className="w-4 h-4" />
+      {/* ── 2. TOP LEVEL REVENUE KPI CARDS ── */}
+      {isRestaurant ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Total Food Revenue */}
+          <div className="bg-gradient-to-br from-[#E50914] to-[#B71C1C] p-5 rounded-3xl text-white shadow-md space-y-2 relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Food Order Revenue</span>
+              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                <IndianRupee className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-          <div className="text-2xl sm:text-3xl font-black tracking-tight">
-            ₹{overallRevenue.toLocaleString()}
-          </div>
-          <p className="text-[10px] text-white/80 font-medium">Food Sales + Table Bookings</p>
-        </div>
-
-        {/* Food Revenue */}
-        <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#E50914]">Food Revenue</span>
-            <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
-              <ShoppingBag className="w-4 h-4" />
+            <div className="text-2xl sm:text-3xl font-black tracking-tight">
+              ₹{foodRevenue.toLocaleString()}
             </div>
+            <p className="text-[10px] text-white/80 font-medium">{paidFoodOrders} paid food orders</p>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#E50914] tracking-tight">
-            ₹{foodRevenue.toLocaleString()}
-          </div>
-          <p className="text-[10px] text-stone-400 font-medium">{paidFoodOrders} paid food orders</p>
-        </div>
 
-        {/* Booking Revenue */}
-        <div className="bg-white p-5 rounded-3xl border border-stone-200 shadow-xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Booking Revenue</span>
-            <div className="w-8 h-8 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
-              <Utensils className="w-4 h-4" />
+          {/* Avg Food Order Value */}
+          <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#E50914]">Avg Food Order Value</span>
+              <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
+                <Receipt className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
-            ₹{bookingRevenue.toLocaleString()}
-          </div>
-          <p className="text-[10px] text-stone-400 font-medium">{eligibleBookings} eligible bookings</p>
-        </div>
-
-        {/* Total Customers */}
-        <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Total Diners Served</span>
-            <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
-              <Users className="w-4 h-4" />
+            <div className="text-2xl sm:text-3xl font-black text-[#E50914] tracking-tight">
+              ₹{avgFoodOrderValue.toLocaleString()}
             </div>
+            <p className="text-[10px] text-stone-400 font-medium">Per completed order</p>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
-            {totalCustomers.toLocaleString()}
-          </div>
-          <p className="text-[10px] text-stone-400 font-medium">Food: {foodCustomers} | Bookings: {bookingCustomers}</p>
-        </div>
 
-      </div>
+          {/* Total Orders Placed */}
+          <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Total Orders Placed</span>
+              <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              {totalFoodOrders}
+            </div>
+            <p className="text-[10px] text-emerald-700 font-bold">{paidFoodOrders} Paid • {pendingFoodPayments} Pending</p>
+          </div>
+
+          {/* Unique Customers */}
+          <div className="bg-white p-5 rounded-3xl border border-stone-200 shadow-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Customers Served</span>
+              <div className="w-8 h-8 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
+                <Users className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              {foodCustomers}
+            </div>
+            <p className="text-[10px] text-stone-400 font-medium">Unique food order customers</p>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Overall Revenue */}
+          <div className="bg-gradient-to-br from-[#E50914] to-[#B71C1C] p-5 rounded-3xl text-white shadow-md space-y-2 relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Overall Net Revenue</span>
+              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                <IndianRupee className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black tracking-tight">
+              ₹{overallRevenue.toLocaleString()}
+            </div>
+            <p className="text-[10px] text-white/80 font-medium">Food Sales + Table Bookings</p>
+          </div>
+
+          {/* Food Revenue */}
+          <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#E50914]">Food Revenue</span>
+              <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#E50914] tracking-tight">
+              ₹{foodRevenue.toLocaleString()}
+            </div>
+            <p className="text-[10px] text-stone-400 font-medium">{paidFoodOrders} paid food orders</p>
+          </div>
+
+          {/* Booking Revenue */}
+          <div className="bg-white p-5 rounded-3xl border border-stone-200 shadow-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Booking Revenue</span>
+              <div className="w-8 h-8 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
+                <Utensils className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              ₹{bookingRevenue.toLocaleString()}
+            </div>
+            <p className="text-[10px] text-stone-400 font-medium">{eligibleBookings} eligible bookings</p>
+          </div>
+
+          {/* Total Customers */}
+          <div className="bg-white p-5 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-stone-500">Total Diners Served</span>
+              <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center">
+                <Users className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#252525] tracking-tight">
+              {totalCustomers.toLocaleString()}
+            </div>
+            <p className="text-[10px] text-stone-400 font-medium">Food: {foodCustomers} | Bookings: {bookingCustomers}</p>
+          </div>
+        </div>
+      )}
 
       {/* ── 3. OPERATIONAL BREAKDOWN TILES (AOV & Status) ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
-          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Avg Food Order Value</span>
-          <span className="text-lg sm:text-xl font-black text-[#252525]">₹{avgFoodOrderValue}</span>
-          <p className="text-[9px] text-stone-400 mt-0.5">Per paid food order</p>
-        </div>
+      {isRestaurant ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Paid Orders</span>
+            <span className="text-lg sm:text-xl font-black text-emerald-700">{paidFoodOrders}</span>
+            <p className="text-[9px] text-stone-400 mt-0.5">Successfully settled</p>
+          </div>
 
-        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
-          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Avg Booking Value</span>
-          <span className="text-lg sm:text-xl font-black text-[#252525]">₹{avgBookingValue}</span>
-          <p className="text-[9px] text-stone-400 mt-0.5">Per dining table reservation</p>
-        </div>
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Pending Payments</span>
+            <span className="text-lg sm:text-xl font-black text-amber-600">{pendingFoodPayments}</span>
+            <p className="text-[9px] text-stone-400 mt-0.5">Awaiting customer payment</p>
+          </div>
 
-        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
-          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Total Orders Placed</span>
-          <span className="text-lg sm:text-xl font-black text-[#252525]">{totalFoodOrders}</span>
-          <p className="text-[9px] text-emerald-700 font-bold mt-0.5">{paidFoodOrders} Paid • {pendingFoodPayments} Pending</p>
-        </div>
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Cancelled Orders</span>
+            <span className="text-lg sm:text-xl font-black text-stone-600">{cancelledFoodOrders}</span>
+            <p className="text-[9px] text-stone-400 mt-0.5">Cancelled or rejected</p>
+          </div>
 
-        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
-          <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Total Table Bookings</span>
-          <span className="text-lg sm:text-xl font-black text-[#252525]">{totalBookings}</span>
-          <p className="text-[9px] text-stone-500 font-medium mt-0.5">{eligibleBookings} Confirmed / Completed</p>
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Order Conversion</span>
+            <span className="text-lg sm:text-xl font-black text-[#252525]">
+              {totalFoodOrders > 0 ? `${Math.round((paidFoodOrders / totalFoodOrders) * 100)}%` : '0%'}
+            </span>
+            <p className="text-[9px] text-stone-400 mt-0.5">Paid vs Total ratio</p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Avg Food Order Value</span>
+            <span className="text-lg sm:text-xl font-black text-[#252525]">₹{avgFoodOrderValue}</span>
+            <p className="text-[9px] text-stone-400 mt-0.5">Per paid food order</p>
+          </div>
 
-      {/* ── 4. COMBINED REVENUE PERFORMANCE CHART (Requirement 4) ── */}
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Avg Booking Value</span>
+            <span className="text-lg sm:text-xl font-black text-[#252525]">₹{avgBookingValue}</span>
+            <p className="text-[9px] text-stone-400 mt-0.5">Per dining table reservation</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Total Orders Placed</span>
+            <span className="text-lg sm:text-xl font-black text-[#252525]">{totalFoodOrders}</span>
+            <p className="text-[9px] text-emerald-700 font-bold mt-0.5">{paidFoodOrders} Paid • {pendingFoodPayments} Pending</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block mb-1">Total Table Bookings</span>
+            <span className="text-lg sm:text-xl font-black text-[#252525]">{totalBookings}</span>
+            <p className="text-[9px] text-stone-500 font-medium mt-0.5">{eligibleBookings} Confirmed / Completed</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── 4. REVENUE PERFORMANCE CHART ── */}
       <div className="bg-white p-5 sm:p-7 rounded-3xl border border-[#FEE2E2] shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100">
           <div>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-[#E50914]" />
               <h2 className="text-base sm:text-lg font-black text-[#252525] tracking-tight">
-                Revenue &amp; Orders Performance Trend
+                {isRestaurant ? 'Food Orders & Revenue Trend' : 'Revenue & Orders Performance Trend'}
               </h2>
             </div>
             <p className="text-xs text-stone-400 font-medium mt-0.5">
-              Daily revenue comparison between food ordering and table reservations.
+              {isRestaurant
+                ? 'Timeline performance of verified food order earnings and order count.'
+                : 'Daily revenue comparison between food ordering and table reservations.'}
             </p>
           </div>
 
@@ -296,10 +402,12 @@ export default function AnalyticsDashboardPage() {
                       <stop offset="5%" stopColor="#E50914" stopOpacity={0.4}/>
                       <stop offset="95%" stopColor="#E50914" stopOpacity={0}/>
                     </linearGradient>
-                    <linearGradient id="bookingGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#252525" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#252525" stopOpacity={0}/>
-                    </linearGradient>
+                    {!isRestaurant && (
+                      <linearGradient id="bookingGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#252525" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#252525" stopOpacity={0}/>
+                      </linearGradient>
+                    )}
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#FEE2E2" vertical={false} />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#78716c', fontWeight: 600 }} stroke="#e7e5e4" />
@@ -308,9 +416,15 @@ export default function AnalyticsDashboardPage() {
                     contentStyle={{ backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #FEE2E2', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', fontSize: '12px', fontWeight: 700 }}
                     formatter={(val, name) => [`₹${Number(val).toLocaleString()}`, name]}
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 700, paddingTop: '10px' }} />
-                  <Area type="monotone" dataKey="Food Revenue" stroke="#E50914" strokeWidth={2.5} fillOpacity={1} fill="url(#foodGrad)" />
-                  <Area type="monotone" dataKey="Booking Revenue" stroke="#252525" strokeWidth={2.5} fillOpacity={1} fill="url(#bookingGrad)" />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: 700, paddingTop: '10px' }} />
+                  {isRestaurant ? (
+                    <Area type="monotone" dataKey="Food Order Revenue" stroke="#E50914" strokeWidth={2.5} fillOpacity={1} fill="url(#foodGrad)" />
+                  ) : (
+                    <>
+                      <Area type="monotone" dataKey="Food Revenue" stroke="#E50914" strokeWidth={2.5} fillOpacity={1} fill="url(#foodGrad)" />
+                      <Area type="monotone" dataKey="Booking Revenue" stroke="#252525" strokeWidth={2.5} fillOpacity={1} fill="url(#bookingGrad)" />
+                    </>
+                  )}
                 </AreaChart>
               ) : (
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -320,9 +434,15 @@ export default function AnalyticsDashboardPage() {
                   <Tooltip
                     contentStyle={{ backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #FEE2E2', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', fontSize: '12px', fontWeight: 700 }}
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 700, paddingTop: '10px' }} />
-                  <Bar dataKey="Food Orders" fill="#E50914" radius={[6, 6, 0, 0]} />
-                  <Bar dataKey="Bookings" fill="#252525" radius={[6, 6, 0, 0]} />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: 700, paddingTop: '10px' }} />
+                  {isRestaurant ? (
+                    <Bar dataKey="Food Orders Placed" fill="#E50914" radius={[6, 6, 0, 0]} />
+                  ) : (
+                    <>
+                      <Bar dataKey="Food Orders" fill="#E50914" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="Bookings" fill="#252525" radius={[6, 6, 0, 0]} />
+                    </>
+                  )}
                 </BarChart>
               )}
             </ResponsiveContainer>

@@ -189,6 +189,7 @@ export default function CustomerDetailsPage() {
           setIsNoteDialogOpen(false);
           setEditingNote(null);
         }}
+        onConfirm={editingNote ? handleUpdateNote : handleAddNote}
         onSubmit={editingNote ? handleUpdateNote : handleAddNote}
         initialText={editingNote?.note || ''}
         isEditing={!!editingNote}

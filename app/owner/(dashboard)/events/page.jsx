@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -51,8 +52,21 @@ export default function EventsPage() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [eventToDelete, setEventToDelete] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   const { data: eventsData, isLoading, isError, refetch } = useEvents({ search });
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refetch();
+      toast.success('Event packages updated');
+    } catch {
+      toast.error('Failed to refresh event packages');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
   const deleteMutation = useDeleteEvent();
 
   const events = Array.isArray(eventsData) ? eventsData : (eventsData?.data || eventsData?.events || []);
@@ -111,11 +125,12 @@ export default function EventsPage() {
         <div className="flex items-center gap-3 shrink-0">
           <button 
             type="button"
-            onClick={() => refetch()}
-            className="w-10 h-10 rounded-xl border border-[#FEE2E2] bg-white hover:bg-[#FFF5F5] text-[#E50914] flex items-center justify-center transition-all shrink-0"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="w-10 h-10 rounded-xl border border-[#FEE2E2] bg-white hover:bg-[#FFF5F5] text-[#E50914] disabled:opacity-50 flex items-center justify-center transition-all shrink-0"
             title="Refresh Packages"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
 
           <Link href="/owner/events/create">

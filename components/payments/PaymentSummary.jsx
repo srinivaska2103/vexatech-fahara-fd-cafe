@@ -6,9 +6,8 @@ export const PaymentSummary = ({ payment, onDownloadInvoice }) => {
   if (!payment) return null;
 
   const subtotal = Number(payment.amount || 0);
-  const tax = Number(payment.tax_amount || 0);
   const discount = Number(payment.discount_amount || 0);
-  const total = subtotal + tax - discount;
+  const total = subtotal - discount;
 
   return (
     <div className="bg-white p-6 md:p-8 rounded-3xl border border-border shadow-sm h-full flex flex-col">
@@ -26,14 +25,9 @@ export const PaymentSummary = ({ payment, onDownloadInvoice }) => {
              <span className="font-medium">-₹{discount.toLocaleString()}</span>
           </div>
         )}
-        
-        <div className="flex justify-between items-center text-sm">
-           <span className="text-text/70">Tax (GST)</span>
-           <span className="font-medium text-text">₹{tax.toLocaleString()}</span>
-        </div>
 
         <div className="pt-4 border-t border-border/50 flex justify-between items-center">
-           <span className="font-bold text-text">Total Amount</span>
+           <span className="font-bold text-text">Total Net Earning</span>
            <span className="text-2xl font-bold text-primary">₹{total.toLocaleString()}</span>
         </div>
       </div>

@@ -667,7 +667,7 @@ export default function SubscriptionPage() {
 
       {/* Cancellation Confirmation Modal */}
       {showCancelModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-[#FEE2E2] space-y-5 text-[#252525]">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 border border-amber-200">

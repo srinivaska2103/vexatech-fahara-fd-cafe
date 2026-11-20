@@ -27,7 +27,11 @@ export function LiveNotificationListener() {
     }
 
     const handleNewNotification = (notification) => {
-      console.log('[LiveNotificationListener] Received live notification via WebSocket:', notification);
+      // Security check: Ignore notification if it was not meant for this user
+      if (notification.user_id && notification.user_id !== user.id) {
+        return;
+      }
+      console.log('[LiveNotificationListener] Received live notification for current user:', notification);
       
       // Invalidate React Query cache so notification list updates instantly without refresh!
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -63,7 +67,7 @@ export function LiveNotificationListener() {
       );
     };
 
-    const handleGlobalEvent = (payload) => {
+    const handleUserEvent = (payload) => {
       if (payload?.userId === user.id) {
         queryClient.invalidateQueries({ queryKey: ['notifications'] });
         queryClient.invalidateQueries({ queryKey: ['notificationStats'] });
@@ -71,12 +75,12 @@ export function LiveNotificationListener() {
     };
 
     socket.on('new_notification', handleNewNotification);
-    socket.on('global_notification_event', handleGlobalEvent);
+    socket.on('user_notification_event', handleUserEvent);
 
     return () => {
       socket.off('connect', joinRoom);
       socket.off('new_notification', handleNewNotification);
-      socket.off('global_notification_event', handleGlobalEvent);
+      socket.off('user_notification_event', handleUserEvent);
     };
   }, [user?.id, queryClient]);
 

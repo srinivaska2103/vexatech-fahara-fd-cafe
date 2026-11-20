@@ -2,10 +2,10 @@
 import React from 'react';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/Button';
-import { Store, Clock, ExternalLink, Edit3, MapPin } from 'lucide-react';
+import { Store, Clock, ExternalLink, Edit3, MapPin, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 
-export const DashboardHeader = ({ summary, cafe }) => {
+export const DashboardHeader = ({ summary, cafe, onRefresh, isRefreshing }) => {
   const user = useAuthStore(state => state.user) || { name: 'Owner' };
   const role = useAuthStore(state => state.role);
   
@@ -95,6 +95,18 @@ export const DashboardHeader = ({ summary, cafe }) => {
         {/* Right: Action Buttons */}
         <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-stretch sm:items-center gap-3 shrink-0">
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            {onRefresh && (
+              <button
+                type="button"
+                onClick={onRefresh}
+                disabled={isRefreshing}
+                className="bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-md shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center p-2.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer"
+                title="Refresh Dashboard Data"
+              >
+                <RefreshCw className={`w-4 h-4 text-white ${isRefreshing ? 'animate-spin' : ''}`} />
+              </button>
+            )}
+
             {cafeId ? (
               <Link href={`/owner/cafes/${cafeId}`} className="flex-1 sm:flex-initial">
                 <Button 

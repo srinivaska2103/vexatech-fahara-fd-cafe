@@ -41,6 +41,7 @@ export const CustomSelect = ({
 
   const selectedOption = options.find(opt => getOptionValue(opt) === value);
   const displayLabel = selectedOption ? getOptionLabel(selectedOption) : (value || placeholder);
+  const displayIcon = selectedOption?.icon || null;
 
   return (
     <div ref={containerRef} className={`relative select-none ${className}`}>
@@ -57,7 +58,11 @@ export const CustomSelect = ({
         }`}
       >
         <div className="flex items-center gap-2 truncate">
-          {Icon && <Icon className="w-3.5 h-3.5 text-[#E50914] shrink-0" />}
+          {displayIcon ? (
+            <span className="shrink-0 text-[#E50914]">{displayIcon}</span>
+          ) : (
+            Icon && <Icon className="w-3.5 h-3.5 text-[#E50914] shrink-0" />
+          )}
           <span className="truncate">{displayLabel}</span>
         </div>
         <ChevronDown 
@@ -80,6 +85,7 @@ export const CustomSelect = ({
             {options.map((opt) => {
               const optValue = getOptionValue(opt);
               const optLabel = getOptionLabel(opt);
+              const optIcon = opt?.icon || null;
               const isSelected = optValue === value;
 
               return (
@@ -89,11 +95,14 @@ export const CustomSelect = ({
                   onClick={() => handleSelect(optValue)}
                   className={`w-full px-3 py-2 rounded-xl text-xs font-extrabold flex items-center justify-between transition-all duration-150 cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-[#E50914] to-[#757575] text-white shadow-xs'
+                      ? 'bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white shadow-xs'
                       : 'text-[#252525] hover:bg-[#FFF5F5] hover:text-[#E50914]'
                   }`}
                 >
-                  <span className="truncate">{optLabel}</span>
+                  <div className="flex items-center gap-2.5 truncate">
+                    {optIcon && <span className={`shrink-0 ${isSelected ? 'text-white' : 'text-[#E50914]'}`}>{optIcon}</span>}
+                    <span className="truncate">{optLabel}</span>
+                  </div>
                   {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0 ml-2" />}
                 </button>
               );

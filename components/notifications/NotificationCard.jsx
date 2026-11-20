@@ -101,11 +101,13 @@ export const NotificationCard = ({ notification }) => {
           {notification.food_orders && (
             <div className="mt-2 text-[11px] font-bold text-rose-700 bg-rose-50/80 px-2 py-1 rounded-lg inline-block border border-rose-100">
               Order #{notification.food_orders.order_number} • ₹{Number(notification.food_orders.total_amount).toFixed(2)}
+              {notification.cafes?.name && <span className="text-rose-500 font-semibold ml-1.5">• {notification.cafes.name}</span>}
             </div>
           )}
           {notification.bookings && (
             <div className="mt-2 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-1 rounded-lg inline-block border border-emerald-100">
               Booking #{notification.bookings.booking_number} • {notification.bookings.users?.name || 'Guest'}
+              {notification.cafes?.name && <span className="text-emerald-600 font-semibold ml-1.5">• {notification.cafes.name}</span>}
             </div>
           )}
         </div>

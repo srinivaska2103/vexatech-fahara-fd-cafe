@@ -7,14 +7,16 @@ import { useLayoutStore } from '@/store/layout.store';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
 import { CornerDownRight, ChevronRight, Lock } from 'lucide-react';
 
-export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#E50914]', bg = 'bg-[#FFF5F5]', isLocked = false, badge }) => {
+export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, color = 'text-[#E50914]', bg = 'bg-slate-100', isLocked = false, badge }) => {
   const pathname = usePathname();
   const targetHref = isLocked ? '/owner/subscription' : href;
   const isActive = exact 
     ? pathname === href 
     : href === '/owner/bookings'
       ? pathname === '/owner/bookings'
-      : pathname === href || (pathname.startsWith(`${href}/`) && href !== '/owner/payments');
+      : href === '/owner/orders'
+        ? pathname === '/owner/orders' || (pathname.startsWith('/owner/orders/') && !pathname.startsWith('/owner/orders/refunds'))
+        : pathname === href || (pathname.startsWith(`${href}/`) && href !== '/owner/payments');
   const isSidebarCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
   const closeMobileSidebar = useLayoutStore((state) => state.closeMobileSidebar);
 
@@ -37,7 +39,7 @@ export const SidebarItem = ({ icon: Icon, label, href, onClick, exact = false, c
           ? "bg-[#E50914] text-white font-extrabold shadow-md shadow-[#E50914]/20 scale-[1.01]"
           : isLocked
           ? "text-stone-400 hover:bg-amber-500/10 hover:text-amber-700 font-bold border border-transparent"
-          : "text-[#252525] hover:bg-[#FFF5F5] hover:text-[#E50914] hover:translate-x-0.5 font-bold border border-transparent hover:border-[#E50914]/15"
+          : "text-[#252525] hover:bg-slate-100 hover:text-[#E50914] hover:translate-x-0.5 font-bold border border-transparent hover:border-slate-200"
       )}
     >
       {/* Active Left Indicator Bar */}

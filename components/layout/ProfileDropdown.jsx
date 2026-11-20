@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { User, Settings, LogOut, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 
 export const UserAvatar = ({ name, className }) => {
@@ -18,6 +19,7 @@ export const UserAvatar = ({ name, className }) => {
 export const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const queryClient = useQueryClient();
   
   const user = useAuthStore((state) => state.user) || { name: 'Srinivas K A', email: 'owner@faharacafe.com', role: 'CAFE_OWNER' };
   const logout = useAuthStore((state) => state.logout);
@@ -34,6 +36,9 @@ export const ProfileDropdown = () => {
   }, []);
 
   const handleLogout = () => {
+    try {
+      queryClient.clear();
+    } catch (e) {}
     logout();
     router.push('/owner/login');
   };

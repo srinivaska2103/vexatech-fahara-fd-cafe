@@ -31,11 +31,13 @@ import { useCafes } from '@/hooks/cafe';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/store/auth.store';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
+import { toast } from 'react-hot-toast';
 
 export default function BookingsPage() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const confirm = useConfirm();
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
@@ -281,19 +283,23 @@ export default function BookingsPage() {
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xs sm:text-sm font-black text-red-950 tracking-tight flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-red-600 shrink-0" />
-                <span>Protect Your Booking from Last-Minute Cancellations</span>
+                <span>Protect Your Booking from Cancellations</span>
               </h2>
             </div>
             <p className="text-xs font-semibold text-red-900/80 leading-relaxed max-w-3xl">
-              To help prevent last-minute cancellations, customer cancellation is restricted during the final 3 hours before the scheduled booking time. Review and manage incoming booking requests promptly.
+              Wait 5 mins after the customer paid before accepting booking — it helps prevent accidental cancellations. Also, customer cancellation is restricted during the final 3 hours before the scheduled booking time.
             </p>
           </div>
         </div>
 
-        <div className="shrink-0 self-start sm:self-auto pl-14 sm:pl-0 z-10">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-red-300 text-red-700 text-[11px] font-black tracking-wide shadow-2xs hover:bg-red-50 transition-colors">
+        <div className="shrink-0 self-start sm:self-auto pl-14 sm:pl-0 z-10 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-red-300 text-red-700 text-[11px] font-black tracking-wide shadow-2xs">
+            <Clock className="w-3.5 h-3.5 text-red-600 stroke-[2.5]" />
+            <span>5-Min Safety Buffer</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-red-300 text-red-700 text-[11px] font-black tracking-wide shadow-2xs">
             <Timer className="w-3.5 h-3.5 text-red-600 stroke-[2.5]" />
-            <span>3-Hour Cancellation Policy</span>
+            <span>3-Hour Policy</span>
           </span>
         </div>
       </div>
@@ -397,11 +403,22 @@ export default function BookingsPage() {
             </div>
 
             <button 
-              onClick={() => refetch()}
-              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0"
+              onClick={async () => {
+                try {
+                  setIsRefreshing(true);
+                  await refetch();
+                  toast.success('Bookings refreshed');
+                } catch {
+                  toast.error('Failed to refresh bookings');
+                } finally {
+                  setTimeout(() => setIsRefreshing(false), 500);
+                }
+              }}
+              disabled={isRefreshing}
+              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0 cursor-pointer disabled:opacity-60"
               title="Refresh Bookings"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
 

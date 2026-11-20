@@ -156,6 +156,13 @@ export const NotificationDropdown = () => {
                           </span>
                         </div>
                         <p className="text-xs text-text/60 line-clamp-2 leading-relaxed">{notif.message}</p>
+                        {notif.cafes?.name && (
+                          <div className="pt-0.5">
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface text-primary border border-border/60">
+                              {notif.cafes.name}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </Link>

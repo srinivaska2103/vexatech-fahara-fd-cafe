@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { usePayments, useRevenueSummary } from '@/hooks/payment';
+import { usePayments, useRevenueSummary, usePaymentAccount } from '@/hooks/payment';
 import { PaymentTable } from '@/components/payments/PaymentTable';
 import { PaymentSearch } from '@/components/payments/PaymentSearch';
 import { PaymentFilters } from '@/components/payments/PaymentFilters';
@@ -42,6 +42,7 @@ export default function PaymentsPage() {
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState('30_DAYS');
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const [filters, setFilters] = useState({
     status: '',
@@ -50,7 +51,27 @@ export default function PaymentsPage() {
   });
 
   const { data: paymentsData, isLoading, isError, error, refetch } = usePayments({ search, dateFilter, ...filters });
-  const { data: revenueData } = useRevenueSummary();
+  const { data: revenueData, refetch: refetchRevenue } = useRevenueSummary();
+  const { data: accountData, refetch: refetchAccount } = usePaymentAccount();
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await Promise.all([
+        refetch ? refetch() : Promise.resolve(),
+        refetchRevenue ? refetchRevenue() : Promise.resolve(),
+        refetchAccount ? refetchAccount() : Promise.resolve(),
+      ]);
+      toast.success('Payment transactions updated');
+    } catch {
+      toast.error('Failed to refresh payments');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
+
+  const bankStatus = accountData?.data?.bankVerification || accountData?.data?.bankVerificationStatus || 'NOT_SUBMITTED';
+  const isBankVerified = bankStatus === 'VERIFIED';
   
   const rawPayments = Array.isArray(paymentsData?.data) ? paymentsData.data : (Array.isArray(paymentsData) ? paymentsData : []);
   const revenue = revenueData?.data || {};
@@ -65,12 +86,24 @@ export default function PaymentsPage() {
     return matchesSearch;
   });
 
-  // Calculate dynamic stats from payments list if revenue object is empty
+  // Dynamic financial stats reflecting backend revenue stats or current payment calculations
   const totalBookingValue = revenue.total_booking_value ?? rawPayments.reduce((sum, p) => sum + Number(p.bookingAmount || p.amount || 0), 0);
   const yourEarnings = revenue.your_earnings ?? rawPayments.reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
-  const pendingSettlement = revenue.pending_settlement ?? rawPayments.filter(p => String(p.settlementStatus || p.settlement_status || '').toUpperCase() === 'PENDING').reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
-  const settledAmount = revenue.settled_amount ?? rawPayments.filter(p => ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(String(p.settlementStatus || p.settlement_status || '').toUpperCase())).reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
-  const refundAmount = revenue.refund_amount ?? rawPayments.filter(p => ['REFUNDED', 'PARTIALLY_REFUNDED'].includes(String(p.status || p.paymentStatus || '').toUpperCase())).reduce((sum, p) => sum + Number(p.amount || 0), 0);
+  
+  // Pending settlement: defaults to backend revenue summary or computed from payment rows
+  const pendingSettlement = revenue.pending_settlement !== undefined && revenue.pending_settlement !== null
+    ? revenue.pending_settlement
+    : rawPayments.filter(p => String(p.settlementStatus || p.settlement_status || '').toUpperCase() === 'PENDING').reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
+
+  // Settled amount: defaults to backend revenue summary or computed from payment rows
+  const settledAmount = revenue.settled_amount !== undefined && revenue.settled_amount !== null
+    ? revenue.settled_amount
+    : rawPayments.filter(p => ['SETTLED', 'COMPLETED', 'SUCCESS'].includes(String(p.settlementStatus || p.settlement_status || '').toUpperCase())).reduce((sum, p) => sum + Number(p.cafeAmount || p.amount || 0), 0);
+
+  // Refund amount: accurately surfaces backend revenue summary refund_amount or computed from refund adjustments
+  const refundAmount = revenue.refund_amount !== undefined && revenue.refund_amount !== null
+    ? revenue.refund_amount
+    : rawPayments.filter(p => ['REFUNDED', 'PARTIALLY_REFUNDED'].includes(String(p.status || p.paymentStatus || '').toUpperCase())).reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
   const handleExportCSV = () => {
     let csv = 'Booking ID,Customer Name,Booking Date,Gross Amount,Cafe Net Amount,Payment Status,Settlement Status,Payment Date\n';
@@ -102,6 +135,13 @@ export default function PaymentsPage() {
 
   const getStatusBadge = (status) => {
     const uppercaseStatus = String(status || '').toUpperCase();
+    if (['REFUNDED', 'PARTIALLY_REFUNDED', 'CANCELLED / REFUNDED'].includes(uppercaseStatus)) {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/10 text-rose-700 border border-rose-500/30">
+          <ArrowRightLeft className="w-3 h-3" /> {uppercaseStatus.includes('CANCELLED') ? 'CANCELLED' : 'REFUNDED'}
+        </span>
+      );
+    }
     if (['PAID', 'SETTLED', 'COMPLETED', 'SUCCESS'].includes(uppercaseStatus)) {
       return (
         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 border border-emerald-500/30">
@@ -144,7 +184,7 @@ export default function PaymentsPage() {
             Payments & Finances
           </h1>
           <p className="text-xs sm:text-sm text-text/70 max-w-xl">
-            Track customer booking payments, platform fee adjustments, and net cafe bank split settlements.
+            Track customer booking payments, received earnings, and net cafe bank split settlements.
           </p>
         </div>
 
@@ -181,6 +221,41 @@ export default function PaymentsPage() {
         </div>
       </div>
 
+      {/* Mandatory Bank Account Onboarding Banner */}
+      {!isBankVerified && (
+        <div className="bg-amber-500/10 border-2 border-amber-500/30 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
+              <Clock className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-[#252525]">
+                {bankStatus === 'NOT_SUBMITTED' 
+                  ? 'Mandatory: Bank Account Details Required' 
+                  : bankStatus === 'VERIFICATION_PENDING' || bankStatus === 'SUBMITTED'
+                  ? 'Bank Account Verification Pending'
+                  : 'Bank Verification Requires Action'}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#252525]/80 mt-0.5 max-w-2xl">
+                {bankStatus === 'NOT_SUBMITTED'
+                  ? 'Please submit your bank details to enable automatic settlement transfers and online payouts via Razorpay Route.'
+                  : bankStatus === 'VERIFICATION_PENDING' || bankStatus === 'SUBMITTED'
+                  ? 'Your bank details are currently being verified with the payment gateway. Settlements will activate upon approval.'
+                  : 'Your bank account verification was unsuccessful or requires attention. Please update your details to re-verify.'}
+              </p>
+            </div>
+          </div>
+          <Link href="/owner/payments/account" className="shrink-0 w-full sm:w-auto">
+            <button
+              type="button"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] hover:opacity-95 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+            >
+              {bankStatus === 'NOT_SUBMITTED' ? 'Submit Bank Details' : 'View Bank Status'}
+            </button>
+          </Link>
+        </div>
+      )}
+
       {/* Date Filter Toolbar */}
       <div className="bg-white p-3 px-5 rounded-3xl border border-border/60 shadow-2xs flex items-center justify-between overflow-x-auto custom-scrollbar">
         <span className="text-xs font-extrabold text-[#E50914] uppercase tracking-wider shrink-0 mr-4">Filter Period:</span>
@@ -211,14 +286,14 @@ export default function PaymentsPage() {
       {/* 5 Dynamic Financial Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
         
-        {/* Total Booking Value */}
+        {/* Total Value */}
         <div className="bg-white p-4 sm:p-5 rounded-3xl border border-border/60 shadow-2xs hover:shadow-xs transition-all space-y-1">
-          <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Booking Value</span>
+          <span className="text-[10px] sm:text-xs font-extrabold text-text/50 uppercase tracking-wider">Total Value</span>
           <div>
             <p className="text-xl sm:text-2xl font-black text-[#252525]">
               ₹{Number(totalBookingValue).toLocaleString()}
             </p>
-            <p className="text-[10px] text-text/50 font-medium mt-0.5">Gross customer payments</p>
+            <p className="text-[10px] text-text/50 font-medium mt-0.5">Total orders value</p>
           </div>
         </div>
 
@@ -229,7 +304,7 @@ export default function PaymentsPage() {
             <p className="text-xl sm:text-2xl font-black text-[#E50914]">
               ₹{Number(yourEarnings).toLocaleString()}
             </p>
-            <p className="text-[10px] text-text/50 font-medium mt-0.5">After platform adjustments</p>
+            <p className="text-[10px] text-text/50 font-medium mt-0.5">Your earnings</p>
           </div>
         </div>
 
@@ -288,11 +363,12 @@ export default function PaymentsPage() {
             <PaymentFilters filters={filters} setFilters={setFilters} />
             
             <button 
-              onClick={() => refetch()}
-              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="w-10 h-10 rounded-2xl border border-border/60 bg-surface/40 hover:bg-[#E50914] text-[#E50914] hover:text-white disabled:opacity-50 flex items-center justify-center transition-all shrink-0"
               title="Refresh Payments"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
 
@@ -321,10 +397,10 @@ export default function PaymentsPage() {
             <table className="w-full text-left text-xs whitespace-nowrap">
               <thead className="text-[11px] font-extrabold uppercase bg-surface/50 text-[#E50914] border-b border-border/50 tracking-wider">
                 <tr>
-                  <th className="px-6 py-4">Booking ID</th>
+                  <th className="px-6 py-4">Order / Booking ID</th>
                   <th className="px-6 py-4">Customer Diner</th>
-                  <th className="px-6 py-4">Booking Date</th>
-                  <th className="px-6 py-4 text-right">Cafe Net Amount</th>
+                  <th className="px-6 py-4">Date</th>
+                  <th className="px-6 py-4 text-right">Net Amount</th>
                   <th className="px-6 py-4 text-center">Payment Status</th>
                   <th className="px-6 py-4 text-center">Settlement Status</th>
                   <th className="px-6 py-4 text-right">Details</th>
@@ -444,29 +520,15 @@ export default function PaymentsPage() {
                     <div className="flex items-center justify-between pb-2 border-b border-border/40">
                       <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#E50914] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-[#E50914]" />
-                        <span>Split Settlement Breakdown</span>
+                        <span>Settlement Details</span>
                       </h4>
                       <span className="text-[10px] font-bold text-[#E50914] bg-[#E50914]/10 px-2 py-0.5 rounded-full">
-                        T+1 Split
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between text-xs py-1.5">
-                      <span className="text-text/70">Customer Total Paid</span>
-                      <span className="font-extrabold text-[#252525]">
-                        ₹{Number(selectedPayment.bookingAmount || selectedPayment.amount || 0).toLocaleString()}
+                        Direct Transfer
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs py-1.5 text-rose-600">
-                      <span className="text-text/70">Platform Fee Adjustment</span>
-                      <span className="font-bold">
-                        -₹{Number(selectedPayment.faharaFee || 0).toLocaleString()}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-sm py-2.5 font-black text-[#E50914] border-t border-border/40 pt-2.5 mt-1 bg-[#FFF5F5]/60 p-2.5 rounded-xl">
-                      <span>Final Cafe Settlement Amount</span>
+                    <div className="flex items-center justify-between text-sm py-2 font-black text-[#E50914] bg-[#FFF5F5]/60 p-2.5 rounded-xl">
+                      <span>Restaurant Earning Amount</span>
                       <span className="text-base font-black text-[#E50914]">
                         ₹{Number(selectedPayment.cafeAmount || selectedPayment.amount || 0).toLocaleString()}
                       </span>

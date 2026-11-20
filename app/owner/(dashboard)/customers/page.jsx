@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
+import ModernDropdown from '@/components/ui/ModernDropdown';
 
 import { useAuthStore } from '@/store/auth.store';
 import { useCafes } from '@/hooks/cafe';
@@ -34,6 +36,14 @@ export default function CustomersPage() {
   const [search, setSearch] = useState('');
   const [sourceFilter, setSourceFilter] = useState('ALL'); // ALL | FOOD_ORDER | TABLE_BOOKING | MULTIPLE | REPEAT | VIP
   const [spendingFilter, setSpendingFilter] = useState('ALL'); // ALL | HIGH | MEDIUM | LOW
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const spendingOptions = [
+    { value: 'ALL', label: 'All Spending' },
+    { value: 'HIGH', label: 'High Spenders (> ₹2,000)' },
+    { value: 'MEDIUM', label: 'Medium Spenders (₹500 - ₹2,000)' },
+    { value: 'LOW', label: 'Low Spenders (< ₹500)' },
+  ];
 
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
@@ -43,9 +53,24 @@ export default function CustomersPage() {
   const isRestaurant = true; // Grab2GO is unified for all food & table partners
 
   const { data: customerRes, isLoading, isError, error, refetch } = useCustomers({ search });
-  const { data: analyticsRes } = useCustomerAnalytics();
+  const { data: analyticsRes, refetch: refetchAnalytics } = useCustomerAnalytics();
   const rawCustomers = Array.isArray(customerRes?.data) ? customerRes.data : (Array.isArray(customerRes) ? customerRes : []);
   const analyticsData = analyticsRes?.data || null;
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await Promise.all([
+        refetch(),
+        refetchAnalytics?.()
+      ]);
+      toast.success('Customers refreshed');
+    } catch (err) {
+      toast.error('Failed to refresh customer directory');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   // Filter customers based on source, spending & search
   const customers = rawCustomers.filter(c => {
@@ -147,10 +172,12 @@ export default function CustomersPage() {
 
           <Button
             variant="outline"
-            onClick={() => refetch()}
-            className="rounded-2xl border-[#FEE2E2] hover:bg-[#FFF5F5] text-[#E50914] text-xs font-black gap-1.5 shadow-2xs"
+            disabled={isRefreshing}
+            onClick={handleRefresh}
+            className="rounded-2xl border-[#FEE2E2] hover:bg-[#FFF5F5] text-[#E50914] text-xs font-black gap-1.5 shadow-2xs transition-all cursor-pointer disabled:opacity-60"
           >
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
           </Button>
         </div>
       </div>
@@ -266,19 +293,16 @@ export default function CustomersPage() {
             ))}
           </div>
 
-          {/* Spending Filter Dropdown */}
+          {/* Spending Filter Modern Dropdown */}
           <div className="flex items-center gap-2">
-            <select
+            <ModernDropdown
+              options={spendingOptions}
               value={spendingFilter}
-              onChange={(e) => setSpendingFilter(e.target.value)}
-              aria-label="Filter customers by spending"
-              className="px-3 py-2 rounded-2xl bg-white border border-stone-200 text-xs font-black text-stone-700 focus:outline-none focus:border-[#E50914]"
-            >
-              <option value="ALL">All Spending</option>
-              <option value="HIGH">High Spender (&gt; ₹2,000)</option>
-              <option value="MEDIUM">Medium Spender (₹500 - ₹2,000)</option>
-              <option value="LOW">Low Spender (&lt; ₹500)</option>
-            </select>
+              onChange={(newVal) => setSpendingFilter(newVal)}
+              placeholder="All Spending"
+              className="min-w-[170px]"
+              buttonClassName="rounded-2xl border-stone-200 text-xs font-black text-stone-700 bg-white hover:border-[#E50914]/40"
+            />
 
             {/* View Mode Toggle */}
             <div className="flex items-center border border-stone-200 rounded-2xl p-0.5 bg-stone-50">

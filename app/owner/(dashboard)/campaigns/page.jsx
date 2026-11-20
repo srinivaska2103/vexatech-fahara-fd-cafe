@@ -20,7 +20,23 @@ export default function CampaignsPage() {
 
   // Fetch real notification data (includes email broadcasts sent by manager/owner)
   const { data: rawNotifications = [], isLoading, refetch, isRefetching } = useNotifications({ search: searchQuery });
-  const { data: customersResponse } = useCustomers();
+  const { data: customersResponse, refetch: refetchCustomers } = useCustomers();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await Promise.all([
+        refetch ? refetch() : Promise.resolve(),
+        refetchCustomers ? refetchCustomers() : Promise.resolve()
+      ]);
+      toast.success('Campaigns updated');
+    } catch {
+      toast.error('Failed to refresh campaigns');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
   
   const customers = Array.isArray(customersResponse?.data) 
     ? customersResponse.data 
@@ -98,12 +114,13 @@ export default function CampaignsPage() {
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <button 
               type="button"
-              onClick={() => refetch()}
-              className="px-4 py-2.5 rounded-2xl bg-white hover:bg-stone-50 border border-stone-200 text-stone-700 text-xs font-extrabold shadow-2xs flex items-center gap-2 transition-all active:scale-95 min-h-[42px] cursor-pointer"
+              onClick={handleRefresh}
+              disabled={isRefreshing || isRefetching}
+              className="px-4 py-2.5 rounded-2xl bg-white hover:bg-stone-50 border border-stone-200 text-stone-700 text-xs font-extrabold shadow-2xs disabled:opacity-50 flex items-center gap-2 transition-all active:scale-95 min-h-[42px] cursor-pointer"
               suppressHydrationWarning
             >
-              <RefreshCw className={`w-4 h-4 text-stone-500 ${isRefetching ? 'animate-spin' : ''}`} />
-              <span>Refresh</span>
+              <RefreshCw className={`w-4 h-4 text-stone-500 ${(isRefreshing || isRefetching) ? 'animate-spin' : ''}`} />
+              <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
             </button>
 
             <button

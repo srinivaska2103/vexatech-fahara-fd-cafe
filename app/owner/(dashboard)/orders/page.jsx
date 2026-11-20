@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   ShoppingBag, 
@@ -29,6 +31,7 @@ import ModernDropdown from '@/components/ui/ModernDropdown';
 import { toast } from 'react-hot-toast';
 
 export default function CafeOrdersPage() {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [typeFilter, setTypeFilter] = useState('ALL');
@@ -38,13 +41,13 @@ export default function CafeOrdersPage() {
   const [selectedDriverId, setSelectedDriverId] = useState('');
 
   // 1. Fetch Orders Stats
-  const { data: statsData, isLoading: statsLoading } = useQuery({
+  const { data: statsData, isLoading: statsLoading, refetch: refetchStats } = useQuery({
     queryKey: ['cafe-order-stats'],
     queryFn: () => foodOrderService.getOrderStats()
   });
 
   // 2. Fetch Orders List
-  const { data: ordersData, isLoading: ordersLoading, refetch } = useQuery({
+  const { data: ordersData, isLoading: ordersLoading, isFetching: isOrdersFetching, refetch } = useQuery({
     queryKey: ['cafe-orders', statusFilter, typeFilter, searchQuery],
     queryFn: () => foodOrderService.getOrders({
       status: statusFilter,
@@ -52,6 +55,15 @@ export default function CafeOrdersPage() {
       search: searchQuery
     })
   });
+
+  const handleRefreshOrders = async () => {
+    try {
+      await Promise.all([refetch(), refetchStats()]);
+      toast.success('Orders refreshed');
+    } catch (e) {
+      toast.error('Failed to refresh orders');
+    }
+  };
 
   // 3. Fetch Delivery Employees for Assignment
   const { data: staffData } = useQuery({
@@ -126,13 +138,36 @@ export default function CafeOrdersPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => refetch()}
-          className="flex items-center gap-2 px-3.5 py-2 bg-white border border-[#FEE2E2] hover:bg-[#FFF5F5] text-xs font-bold text-[#252525] rounded-xl cursor-pointer shadow-2xs transition-all w-fit"
-        >
-          <RefreshCw className="w-3.5 h-3.5 text-[#E50914]" />
-          Refresh Orders
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefreshOrders}
+            disabled={isOrdersFetching}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-xs font-bold text-[#252525] rounded-2xl cursor-pointer shadow-2xs hover:shadow-xs transition-all w-fit disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-[#E50914] ${isOrdersFetching ? 'animate-spin' : ''}`} />
+            <span>{isOrdersFetching ? 'Refreshing...' : 'Refresh Orders'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── 5-MINUTE CANCELLATION BUFFER POLICY ALERT ── */}
+      <div className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-3.5 sm:p-4 flex items-start sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center shrink-0">
+            <Clock className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm font-black text-[#252525]">
+              Wait 5 mins after the customer paid before accepting booking — it helps prevent accidental cancellations.
+            </p>
+            <p className="text-[11px] text-[#252525]/75 font-medium mt-0.5">
+              Customers have a 5-minute direct cancellation window. Waiting ensures food preparation does not start on orders being voided or refunded.
+            </p>
+          </div>
+        </div>
+        <span className="hidden md:inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-800 shrink-0">
+          5-Min Buffer
+        </span>
       </div>
 
       {/* ── LIVE ACTION BANNER: PAID ORDERS NOTIFICATION & START PREPARATION PROMPT ── */}
@@ -263,104 +298,119 @@ export default function CafeOrdersPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {orders.map((order) => {
             const isTakeaway = order.order_type === 'TAKEAWAY';
+            const netAmount = Math.max(0, Number(order.subtotal || 0) - Number(order.discount_amount || 0));
 
             return (
               <div 
                 key={order.id}
-                className="bg-white rounded-3xl border border-[#FEE2E2] p-4.5 space-y-3.5 shadow-xs hover:border-[#E50914]/40 transition-all flex flex-col justify-between"
+                className="bg-white rounded-3xl border border-stone-200/80 p-5 space-y-4 shadow-sm hover:shadow-md hover:border-[#E50914]/40 transition-all flex flex-col justify-between"
               >
-                {/* Header */}
-                <div className="flex items-start justify-between gap-2">
+                {/* Header: Order Number, Time & Status Pill */}
+                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="text-[11px] font-black text-[#252525] block">{order.order_number}</span>
-                    <span className="text-[10px] text-[#757575] font-bold flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3 text-[#E50914]" />
-                      {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(order.created_at).toLocaleDateString()}
-                    </span>
+                    <h3 className="text-sm font-black text-[#252525] tracking-tight">{order.order_number}</h3>
+                    <div className="text-[11px] text-text/50 font-medium flex items-center gap-1.5 mt-0.5">
+                      <Clock className="w-3.5 h-3.5 text-text/40 shrink-0" />
+                      <span>{new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(order.created_at).toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                    </div>
                   </div>
 
-                  <span className={`px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider ${
-                    order.order_status === 'NEW' ? 'bg-red-50 text-red-700 border border-red-200' :
-                    order.order_status === 'ACCEPTED' ? 'bg-orange-50 text-orange-700 border border-orange-200' :
-                    order.order_status === 'PREPARING' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                    order.order_status === 'READY_FOR_PICKUP' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                    order.order_status === 'OUT_FOR_DELIVERY' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                    order.order_status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                    order.order_status === 'CANCELLED' ? 'bg-rose-100 text-rose-800 border border-rose-300 font-black' :
-                    'bg-stone-100 text-stone-700'
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border shrink-0 ${
+                    order.order_status === 'NEW' ? 'bg-amber-500/10 text-amber-700 border-amber-500/30' :
+                    order.order_status === 'ACCEPTED' ? 'bg-blue-500/10 text-blue-700 border-blue-500/30' :
+                    order.order_status === 'PREPARING' ? 'bg-amber-500/10 text-amber-800 border-amber-500/30 font-black' :
+                    order.order_status === 'READY_FOR_PICKUP' ? 'bg-purple-500/10 text-purple-700 border-purple-500/30' :
+                    order.order_status === 'OUT_FOR_DELIVERY' ? 'bg-cyan-500/10 text-cyan-700 border-cyan-500/30' :
+                    order.order_status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30' :
+                    order.order_status === 'CANCELLED' ? 'bg-rose-500/10 text-rose-700 border-rose-500/30' :
+                    'bg-surface text-text/70 border-border'
                   }`}>
                     {order.order_status.replace(/_/g, ' ')}
                   </span>
                 </div>
 
-                {/* Cancellation Banner on Card if Cancelled */}
+                {/* Promotional Offer Banner if Applied */}
+                {order.applied_offers && order.applied_offers.length > 0 && (
+                  <div className="px-3 py-2 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-2 font-bold text-amber-950 truncate">
+                      <span className="text-base shrink-0 leading-none">🎁</span>
+                      <span className="truncate">{order.applied_offers[0]?.title}</span>
+                    </span>
+                    <span className="ml-2 px-2 py-0.5 rounded-md bg-[#E50914] text-white text-[9px] font-black uppercase tracking-wider shrink-0">
+                      BOGO
+                    </span>
+                  </div>
+                )}
+
+                {/* Fulfilment Type & Customer Name */}
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold flex items-center gap-1.5 border ${
+                    isTakeaway ? 'bg-orange-50/80 text-orange-800 border-orange-200/60' : 'bg-cyan-50/80 text-cyan-800 border-cyan-200/60'
+                  }`}>
+                    {isTakeaway ? <UtensilsCrossed className="w-3 h-3 text-orange-600" /> : <Bike className="w-3 h-3 text-cyan-600" />}
+                    <span>{isTakeaway ? 'Takeaway' : 'Delivery'}</span>
+                  </span>
+                  <span className="font-extrabold text-[#252525] truncate max-w-[140px]">{order.customer_name}</span>
+                </div>
+
+                {/* Order Items & Clean Net Amount Box */}
+                <div className="bg-[#FFF5F5]/60 rounded-2xl p-3 space-y-2 border border-[#EF5350]/20 text-xs">
+                  <div className="space-y-1 max-h-24 overflow-y-auto custom-scrollbar pr-0.5">
+                    {order.order_items?.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center text-[11px] font-bold text-[#252525]">
+                        <span className="truncate pr-2 font-medium text-stone-700">
+                          <strong className="text-[#252525] font-black">{item.quantity}x</strong> {item.item_name_snapshot}
+                        </span>
+                        <span className="shrink-0 text-stone-600 font-bold">₹{Number(item.line_total).toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 border-t border-[#EF5350]/20 flex justify-between items-center">
+                    <span className="text-xs font-black text-stone-700">Net Amount</span>
+                    <span className="text-base font-black text-[#E50914]">
+                      ₹{netAmount.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Cancellation Banner if Cancelled */}
                 {order.order_status === 'CANCELLED' && (
-                  <div className="p-2.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-1">
+                  <div className="p-2.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-0.5">
                     <div className="flex items-center gap-1.5 font-black text-rose-700 text-[11px]">
                       <XCircle className="w-3.5 h-3.5" />
                       <span>ORDER CANCELLED</span>
                     </div>
                     {order.cancellation_reason && (
                       <p className="text-[10px] text-rose-800 line-clamp-1">
-                        <strong className="text-rose-900">Reason:</strong> {order.cancellation_reason}
+                        <strong>Reason:</strong> {order.cancellation_reason}
                       </p>
-                    )}
-                    {order.order_cancellations?.[0] && (
-                      <div className="text-[10px] text-rose-700 flex items-center justify-between pt-0.5">
-                        <span>Status: <strong className="uppercase">{order.order_cancellations[0].status || 'Cancelled'}</strong></span>
-                        <span>{new Date(order.order_cancellations[0].created_at || order.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
                     )}
                   </div>
                 )}
 
-                {/* Fulfilment badge & customer */}
-                <div className="flex items-center justify-between text-xs pt-2 border-t border-[#FEE2E2]">
-                  <span className={`px-2 py-0.5 rounded-lg text-[10px] font-black flex items-center gap-1 ${
-                    isTakeaway ? 'bg-orange-50 text-orange-700' : 'bg-cyan-50 text-cyan-700'
-                  }`}>
-                    {isTakeaway ? <UtensilsCrossed className="w-3 h-3" /> : <Bike className="w-3 h-3" />}
-                    {isTakeaway ? 'Takeaway' : 'Delivery'}
-                  </span>
-                  <span className="font-bold text-[#252525] truncate">{order.customer_name}</span>
-                </div>
-
-                {/* Items Summary */}
-                <div className="bg-[#FFF5F5] rounded-2xl p-2.5 space-y-1 text-xs">
-                  {order.order_items?.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center text-[11px] font-bold text-[#252525]">
-                      <span className="truncate pr-2">{item.quantity}x {item.item_name_snapshot}</span>
-                      <span className="shrink-0 text-stone-600">₹{Number(item.line_total).toFixed(2)}</span>
-                    </div>
-                  ))}
-                  <div className="pt-1.5 border-t border-[#FEE2E2] flex justify-between items-center text-xs font-black text-[#252525]">
-                    <span>Total Amount</span>
-                    <span className="text-[#E50914] text-sm">₹{Number(order.total_amount).toFixed(2)}</span>
-                  </div>
-                </div>
-
                 {/* Assigned staff if delivery */}
                 {!isTakeaway && order.assigned_employee && (
-                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
                     <Bike className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate text-[11px] font-black">Driver: {order.assigned_employee.name}</span>
                   </div>
                 )}
 
-                {/* Action Buttons based on Status */}
-                <div className="pt-2 flex flex-wrap gap-1.5">
+                {/* Action Buttons */}
+                <div className="pt-1 flex items-center gap-2">
                   <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="flex-1 py-2 rounded-xl bg-white border border-[#FEE2E2] hover:bg-[#FFF5F5] text-xs font-bold text-[#252525] transition-colors cursor-pointer text-center"
+                    onClick={() => router.push(`/owner/orders/${order.id}`)}
+                    className="flex-1 py-2.5 rounded-2xl bg-white border border-stone-200 hover:border-stone-400 hover:bg-stone-50 text-xs font-black text-[#252525] transition-all cursor-pointer text-center shadow-2xs"
                   >
                     View Details
                   </button>
 
                   {order.order_status === 'CANCELLED' && (
-                    <span className="flex-1 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-black text-center select-none">
+                    <span className="flex-1 py-2.5 rounded-2xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-black text-center select-none">
                       Cancelled
                     </span>
                   )}
@@ -368,7 +418,7 @@ export default function CafeOrdersPage() {
                   {order.order_status === 'NEW' && (
                     <button
                       onClick={() => statusMutation.mutate({ orderId: order.id, status: 'ACCEPTED' })}
-                      className="flex-1 py-2 rounded-xl bg-[#E50914] hover:bg-[#B71C1C] text-xs font-black text-white transition-colors cursor-pointer text-center"
+                      className="flex-1 py-2.5 rounded-2xl bg-[#E50914] hover:bg-[#c90711] text-xs font-black text-white transition-all cursor-pointer text-center shadow-2xs"
                     >
                       Accept
                     </button>
@@ -377,7 +427,7 @@ export default function CafeOrdersPage() {
                   {order.order_status === 'ACCEPTED' && (
                     <button
                       onClick={() => statusMutation.mutate({ orderId: order.id, status: 'PREPARING' })}
-                      className="flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-xs font-black text-white transition-colors cursor-pointer text-center"
+                      className="flex-1 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-xs font-black text-white transition-all cursor-pointer text-center shadow-2xs"
                     >
                       Start Prep
                     </button>
@@ -386,7 +436,7 @@ export default function CafeOrdersPage() {
                   {order.order_status === 'PREPARING' && (
                     <button
                       onClick={() => statusMutation.mutate({ orderId: order.id, status: 'READY_FOR_PICKUP' })}
-                      className="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-black text-white transition-colors cursor-pointer text-center"
+                      className="flex-1 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-xs font-black text-white transition-all cursor-pointer text-center shadow-2xs"
                     >
                       Ready
                     </button>
@@ -395,7 +445,7 @@ export default function CafeOrdersPage() {
                   {order.order_status === 'READY_FOR_PICKUP' && isTakeaway && (
                     <button
                       onClick={() => statusMutation.mutate({ orderId: order.id, status: 'COMPLETED' })}
-                      className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-black text-white transition-colors cursor-pointer text-center"
+                      className="flex-1 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-xs font-black text-white transition-all cursor-pointer text-center shadow-2xs"
                     >
                       Handover
                     </button>
@@ -407,13 +457,12 @@ export default function CafeOrdersPage() {
                         setSelectedOrder(order);
                         setAssignModalOpen(true);
                       }}
-                      className="flex-1 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-xs font-black text-white transition-colors cursor-pointer text-center"
+                      className="flex-1 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-xs font-black text-white transition-all cursor-pointer text-center shadow-2xs"
                     >
                       Assign Staff
                     </button>
                   )}
                 </div>
-
               </div>
             );
           })}
@@ -422,7 +471,7 @@ export default function CafeOrdersPage() {
 
       {/* ── ORDER DETAILS POPUP MODAL ── */}
       {selectedOrder && !assignModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
           <div className="bg-white rounded-3xl p-6 max-w-lg w-full border border-[#FEE2E2] shadow-2xl space-y-4 my-auto">
             <div className="flex items-center justify-between border-b border-[#FEE2E2] pb-3">
               <div>
@@ -536,6 +585,63 @@ export default function CafeOrdersPage() {
               </div>
             )}
 
+            {/* ── CRITICAL KITCHEN ORDER CHECKLIST & PROMOTIONAL REWARDS ── */}
+            {selectedOrder.applied_offers && selectedOrder.applied_offers.length > 0 && (
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-orange-300 rounded-2xl p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-lg bg-[#E50914] text-white flex items-center justify-center font-black text-xs shadow-xs">
+                      🎁
+                    </span>
+                    <span className="text-xs font-black uppercase text-orange-900 tracking-wider">
+                      Promotional Offer: {selectedOrder.applied_offers[0]?.title}
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-md bg-[#E50914] text-white text-[9px] font-black uppercase">
+                    BOGO ACTIVE
+                  </span>
+                </div>
+
+                {/* Clear Breakdown Table */}
+                <div className="bg-white rounded-xl p-2.5 border border-orange-200 text-xs space-y-2">
+                  <div className="text-[10px] font-black uppercase text-[#757575] flex justify-between border-b pb-1">
+                    <span>Preparation Item</span>
+                    <span>Quantity &amp; Type</span>
+                  </div>
+                  {selectedOrder.applied_offers.map((off, idx) => (
+                    <div key={idx} className="space-y-1.5">
+                      {off.qualifyingItem && (
+                        <div className="flex justify-between items-center font-bold text-[#252525]">
+                          <span>{off.qualifyingItem.name}</span>
+                          <span className="px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 text-[10px] font-black">
+                            {off.qualifyingItem.quantity}x PAID
+                          </span>
+                        </div>
+                      )}
+                      {off.rewardItem && (
+                        <div className="flex justify-between items-center font-black text-emerald-700">
+                          <span>{off.rewardItem.name}</span>
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black">
+                            {off.rewardItem.quantity}x FREE PROMOTIONAL REWARD
+                          </span>
+                        </div>
+                      )}
+                      {off.totalKitchenQuantity && (
+                        <div className="flex justify-between items-center pt-1 border-t border-dashed border-orange-200 text-[11px] font-black text-[#E50914]">
+                          <span>TOTAL KITCHEN PREPARATION:</span>
+                          <span className="text-sm">{off.totalKitchenQuantity} UNITS</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-2 rounded-xl bg-orange-100 text-orange-900 text-[11px] font-bold">
+                  ⚠️ <strong>Kitchen Notice:</strong> Please prepare all items including free promotional units. Customer paid for {selectedOrder.applied_offers[0]?.qualifyingItem?.quantity || 1} item(s) and earned {selectedOrder.applied_offers[0]?.rewardItem?.quantity || 1} free promotional item(s).
+                </div>
+              </div>
+            )}
+
             {/* Ordered Items List */}
             <div className="space-y-2">
               <span className="text-[10px] font-black uppercase tracking-wider text-[#757575] block">Items in Order</span>
@@ -603,7 +709,7 @@ export default function CafeOrdersPage() {
 
       {/* ── ASSIGN DELIVERY DRIVER MODAL ── */}
       {assignModalOpen && selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-[#FEE2E2] shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-[#FEE2E2] pb-3">
               <div className="flex items-center gap-2">

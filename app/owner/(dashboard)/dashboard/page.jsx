@@ -32,6 +32,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -49,9 +50,10 @@ const itemVariants = {
 export default function DashboardPage() {
   const [revenuePeriod, setRevenuePeriod] = useState('7D');
   const [visitorPeriod, setVisitorPeriod] = useState('7days');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const userRole = useAuthStore((state) => state.role);
   const user = useAuthStore((state) => state.user);
-  const { data: cafesData } = useCafes();
+  const { data: cafesData, refetch: refetchCafes } = useCafes();
   const cafeList = Array.isArray(cafesData) ? cafesData : (cafesData?.data || cafesData?.cafes || []);
 
   const isWalkingCafe = 
@@ -61,12 +63,32 @@ export default function DashboardPage() {
     String(user?.role || '').toUpperCase().includes('WALKING') ||
     cafeList.some(c => c.is_walking_cafe === true || (c.category || '').toLowerCase().includes('walking'));
 
-  const { data: summaryResponse, isLoading: isLoadingSummary } = useDashboardSummary();
-  const { data: revenueData, isLoading: isLoadingRevenue } = useDashboardRevenue(revenuePeriod);
-  const { data: recentBookings, isLoading: isLoadingRecent } = useRecentBookings();
-  const { data: recentReviews, isLoading: isLoadingReviews } = useRecentReviews();
-  const { data: activities, isLoading: isLoadingActivity } = useActivityTimeline();
-  const { data: cafeAnalyticsRes } = useCafeAnalytics('overview', { period: visitorPeriod });
+  const { data: summaryResponse, isLoading: isLoadingSummary, refetch: refetchSummary } = useDashboardSummary();
+  const { data: revenueData, isLoading: isLoadingRevenue, refetch: refetchRevenue } = useDashboardRevenue(revenuePeriod);
+  const { data: recentBookings, isLoading: isLoadingRecent, refetch: refetchBookings } = useRecentBookings();
+  const { data: recentReviews, isLoading: isLoadingReviews, refetch: refetchReviews } = useRecentReviews();
+  const { data: activities, isLoading: isLoadingActivity, refetch: refetchActivity } = useActivityTimeline();
+  const { data: cafeAnalyticsRes, refetch: refetchAnalytics } = useCafeAnalytics('overview', { period: visitorPeriod });
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await Promise.all([
+        refetchSummary ? refetchSummary() : Promise.resolve(),
+        refetchRevenue ? refetchRevenue() : Promise.resolve(),
+        refetchBookings ? refetchBookings() : Promise.resolve(),
+        refetchReviews ? refetchReviews() : Promise.resolve(),
+        refetchActivity ? refetchActivity() : Promise.resolve(),
+        refetchAnalytics ? refetchAnalytics() : Promise.resolve(),
+        refetchCafes ? refetchCafes() : Promise.resolve(),
+      ]);
+      toast.success('Dashboard metrics refreshed');
+    } catch {
+      toast.error('Failed to refresh dashboard');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   // Unwrap summary data cleanly
   const summary = (summaryResponse?.data && typeof summaryResponse.data === 'object' && !Array.isArray(summaryResponse.data))
@@ -121,7 +143,7 @@ export default function DashboardPage() {
   return (
     <PageContainer>
       {/* Top Welcome & Cafe Live Status Header */}
-      <DashboardHeader summary={summary} cafe={cafeList[0]} />
+      <DashboardHeader summary={summary} cafe={cafeList[0]} onRefresh={handleRefresh} isRefreshing={isRefreshing} />
 
       <motion.div 
         variants={containerVariants} 

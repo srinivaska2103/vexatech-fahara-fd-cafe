@@ -3,14 +3,19 @@ import React from 'react';
 import { LogOut } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useLayoutStore } from '@/store/layout.store';
 
 export const SidebarFooter = () => {
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const isSidebarCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
 
   const handleLogout = () => {
+    try {
+      queryClient.clear();
+    } catch (e) {}
     logout();
     router.push('/owner/login');
   };

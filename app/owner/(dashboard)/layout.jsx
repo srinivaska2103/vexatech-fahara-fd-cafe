@@ -240,7 +240,7 @@ export default function DashboardLayout({ children }) {
       <MobileSidebar />
       <div className="flex flex-col flex-1 overflow-hidden relative">
         <Navbar />
-        <main className="flex-1 overflow-y-auto custom-scrollbar pb-20 lg:pb-0 relative">
+        <main className="flex-1 overflow-y-auto custom-scrollbar pb-28 lg:pb-0 relative">
           
           {/* STATE 1: LOADING STATE (While verifying subscription on page refresh) */}
           {isCheckingSubscription ? (
@@ -276,13 +276,10 @@ export default function DashboardLayout({ children }) {
             <div className="min-h-full py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-10">
               
               {/* Hero Banner */}
-              <div className="relative bg-gradient-to-br from-[#FFF9F2] via-[#FFF5F5] to-[#F5E6D3] text-[#252525] p-8 sm:p-10 rounded-3xl shadow-xl overflow-hidden border border-[#EF5350]/80">
-                <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#E50914]/10 rounded-full blur-3xl pointer-events-none" />
-                
+              <div className="relative bg-white text-[#252525] p-8 sm:p-10 rounded-3xl shadow-sm border border-stone-200">
                 <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
                   <div className="space-y-4 max-w-2xl">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-black uppercase tracking-wider border border-[#E50914]/20 shadow-xs">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 text-[#E50914] text-xs font-black uppercase tracking-wider border border-red-200 shadow-xs">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                       <Lock className="w-3.5 h-3.5" />
                       {role === 'EVENT_MANAGER' ? 'Grab2GO EVENT PARTNER • INSTANT UNLOCK' : 'Grab2GO PARTNER SUITE • INSTANT UNLOCK'}
@@ -306,7 +303,7 @@ export default function DashboardLayout({ children }) {
                   </div>
 
                     {/* Price Action Card */}
-                    <div className="w-full lg:w-80 bg-white/90 backdrop-blur-xl border border-[#EF5350]/80 hover:border-[#E50914]/50 p-6 rounded-3xl shrink-0 text-center space-y-4 shadow-xl transition-all">
+                    <div className="w-full lg:w-80 bg-stone-50 border border-stone-200 p-6 rounded-3xl shrink-0 text-center space-y-4 shadow-xs transition-all">
                       <div className="space-y-1">
                         <span className="text-stone-500 text-[11px] font-black uppercase tracking-widest block">Partner Membership</span>
                         <div className="flex items-baseline justify-center gap-1">
@@ -319,7 +316,7 @@ export default function DashboardLayout({ children }) {
                       <button
                         onClick={handleDirectSubscribe}
                         disabled={checkoutLoading}
-                        className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#593E2B] to-[#452718] hover:from-[#593E2B] hover:to-[#252525] text-white font-black text-xs sm:text-sm shadow-lg shadow-[#E50914]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        className="w-full py-4 px-6 rounded-2xl bg-[#E50914] hover:bg-[#B71C1C] text-white font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                       >
                         {checkoutLoading ? (
                           <>
@@ -328,7 +325,7 @@ export default function DashboardLayout({ children }) {
                           </>
                         ) : (
                           <>
-                            <Sparkles className="w-4 h-4 text-amber-300 fill-current" />
+                            <Sparkles className="w-4 h-4 text-white fill-current" />
                             <span>Subscribe Now for ₹399/month</span>
                           </>
                         )}
@@ -397,7 +394,7 @@ export default function DashboardLayout({ children }) {
               </div>
 
               {/* Bottom Action Footer Banner */}
-              <div className="bg-gradient-to-r from-[#FFF5F5] via-[#FFF5F5] to-[#FFF5F5] border border-[#EF5350]/80 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+              <div className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
                 <div className="space-y-1 text-center sm:text-left">
                   <h4 className="text-lg font-black text-[#252525]">Ready to transform your venue management?</h4>
                   <p className="text-xs text-stone-600 font-medium">Instant 1-click subscription for ₹399/month. Cancel renewal anytime.</p>
@@ -406,9 +403,9 @@ export default function DashboardLayout({ children }) {
                 <button
                   onClick={handleDirectSubscribe}
                   disabled={checkoutLoading}
-                  className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#252525] hover:from-[#E50914] hover:to-[#1A0F0A] text-white text-xs sm:text-sm font-black shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center gap-2.5 shrink-0"
+                  className="px-8 py-4 rounded-2xl bg-[#E50914] hover:bg-[#B71C1C] text-white text-xs sm:text-sm font-black shadow-md transition-all cursor-pointer flex items-center gap-2.5 shrink-0"
                 >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <Sparkles className="w-4 h-4 text-white" />
                   <span>Subscribe Now for ₹399/month</span>
                 </button>
               </div>

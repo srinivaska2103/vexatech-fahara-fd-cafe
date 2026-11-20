@@ -6,7 +6,7 @@ import { CustomerBookings } from './CustomerBookings';
 import { CustomerPayments } from './CustomerPayments';
 import { CustomerReviews } from './CustomerReviews';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/Tabs';
-import { ShoppingBag, Utensils, Receipt, Star, Clock, Calendar } from 'lucide-react';
+import { ShoppingBag, Utensils, IndianRupee, Star, Clock, Calendar } from 'lucide-react';
 
 export const CustomerProfile = ({ 
   customer, 
@@ -46,7 +46,7 @@ export const CustomerProfile = ({
                     <span>Bookings ({bookings.length})</span>
                   </TabsTrigger>
                   <TabsTrigger value="payments" className="flex items-center gap-1.5 font-bold">
-                    <Receipt className="w-3.5 h-3.5 text-stone-600" />
+                    <IndianRupee className="w-3.5 h-3.5 text-stone-600" />
                     <span>Payments ({payments.length})</span>
                   </TabsTrigger>
                   <TabsTrigger value="reviews" className="flex items-center gap-1.5 font-bold">
@@ -88,8 +88,9 @@ export const CustomerProfile = ({
                           </div>
 
                           <div className="text-right">
-                            <span className="text-base font-black text-[#E50914]">
-                              ₹{Number(order.total_amount || 0).toFixed(2)}
+                            <span className="text-base font-black text-[#E50914] flex items-center justify-end gap-0.5">
+                              <IndianRupee className="w-3.5 h-3.5 shrink-0" />
+                              <span>{Number(order.total_amount || 0).toFixed(2)}</span>
                             </span>
                             <div className="text-[10px] font-black text-emerald-700">
                               {order.payment_status}

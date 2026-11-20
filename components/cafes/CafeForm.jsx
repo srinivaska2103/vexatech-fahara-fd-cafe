@@ -729,7 +729,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
     { id: 5, title: 'Business Hours', icon: Clock, description: 'Weekly operating schedule' },
   ] : [
     { id: 1, title: 'Basic & Location', icon: Store, description: 'Venue name, address & location pin' },
-    { id: 2, title: 'Pricing & Capacity', icon: Tag, description: 'Hourly rates & guest seating limits' },
+    { id: 2, title: isRestaurantOwner ? 'Capacity & Offers' : 'Pricing & Capacity', icon: Tag, description: isRestaurantOwner ? 'Guest seating limits & discounts' : 'Hourly rates & guest seating limits' },
     { id: 3, title: 'Amenities & Photos', icon: ImageIcon, description: 'Venue features & photo gallery' },
     { id: 4, title: 'Business Hours', icon: Clock, description: 'Weekly operating schedule' },
   ];
@@ -1507,14 +1507,16 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               <Tag className="w-5 h-5" />
                             </div>
                             <div>
-                              <h3 className="text-base font-extrabold text-[#252525]">Attributes & Pricing Configuration</h3>
+                              <h3 className="text-base font-extrabold text-[#252525]">
+                                {isRestaurantOwner ? "Venue Category & Attributes" : "Attributes & Pricing Configuration"}
+                              </h3>
                               <p className="text-xs text-text/60">
-                                Select venue category for your cafe
+                                {isRestaurantOwner ? "Select venue category for your restaurant" : "Select venue category for your cafe"}
                               </p>
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className={cn("grid gap-5", isRestaurantOwner ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2")}>
                             <div>
                               <Label htmlFor="category">Venue Category</Label>
                               <ModernCategorySelect 
@@ -1525,7 +1527,7 @@ export const CafeForm = ({ defaultValues = {}, onSubmit, isLoading, submitLabel 
                               />
                             </div>
 
-                            {!providesEventServices && (
+                            {!isRestaurantOwner && !providesEventServices && (
                               <div>
                                 <Label htmlFor="price">Hourly Seating Rate (₹/hr)</Label>
                                 <div className="relative">

@@ -7,13 +7,35 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { customerNoteSchema } from '@/schemas/customer.schema';
 import { cn } from '@/utils/cn';
 
-export const AddNoteDialog = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+export const AddNoteDialog = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  onSubmit: propOnSubmit,
+  initialText = '',
+  isEditing = false,
+  isLoading = false,
+  isSubmitting = false 
+}) => {
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     resolver: zodResolver(customerNoteSchema),
+    defaultValues: {
+      note: initialText
+    }
   });
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setValue('note', initialText || '');
+    }
+  }, [isOpen, initialText, setValue]);
+
   const onSubmit = (data) => {
-    onConfirm(data);
+    const handler = onConfirm || propOnSubmit;
+    if (typeof handler === 'function') {
+      // If parent expects just noteText (string) or data object ({ note })
+      handler(data.note || data);
+    }
     reset();
   };
 
@@ -65,14 +87,14 @@ export const AddNoteDialog = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
               </div>
 
               <div className="flex justify-end gap-3">
-                <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
+                <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting || isLoading}>
                   Cancel
                 </Button>
                 <Button 
                   type="submit" 
-                  isLoading={isSubmitting}
+                  isLoading={isSubmitting || isLoading}
                 >
-                  Save Note
+                  {isEditing ? 'Update Note' : 'Save Note'}
                 </Button>
               </div>
             </form>

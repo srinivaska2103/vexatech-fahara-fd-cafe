@@ -121,7 +121,7 @@ export default function SupportPage() {
         'Sidebar → Finance → Payments: View all transaction logs and customer payment receipts.',
         'Sidebar → Finance → Settlements: Track eligible funds and payout processing dates.',
         'Payouts are transferred directly to your verified bank account 7 business days post-completion.',
-        'Sidebar → Finance → Refunds: Review customer cancellation refund logs and platform fee splits.'
+        'Sidebar → Finance → Refunds: Review customer cancellation refund logs and earnings adjustments.'
       ],
       tip: 'Download itemized monthly financial invoices directly from the Payments section for your accounting.'
     },

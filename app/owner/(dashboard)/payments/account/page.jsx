@@ -34,11 +34,26 @@ export default function PaymentAccountPage() {
     accountNumber: '',
     confirmAccountNumber: '',
     ifsc: '',
+    bankName: '',
+    accountType: 'Current',
     phone: '',
     email: ''
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refetch();
+      toast.success('Account status updated');
+    } catch {
+      toast.error('Failed to update account status');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   // Sync state from backend response
   useEffect(() => {
@@ -46,6 +61,8 @@ export default function PaymentAccountPage() {
       const isVerified = data.data.bankVerification === 'VERIFIED' || data.data.bankVerificationStatus === 'VERIFIED';
       const currentHolder = data.data.accountHolderName || '';
       const currentIfsc = data.data.ifsc || data.data.rawIfsc || '';
+      const currentBankName = data.data.bankName || '';
+      const currentAccountType = data.data.accountType || 'Current';
       const currentEmail = data.data.email || '';
       const currentPhone = data.data.phone || '';
       
@@ -53,6 +70,8 @@ export default function PaymentAccountPage() {
         ...prev,
         accountHolderName: currentHolder,
         ifsc: currentIfsc === 'Not Configured' ? '' : currentIfsc,
+        bankName: currentBankName === 'Bank' || currentBankName === 'Connected Bank' ? '' : currentBankName,
+        accountType: currentAccountType,
         email: currentEmail,
         phone: currentPhone || prev.phone
       }));
@@ -71,8 +90,8 @@ export default function PaymentAccountPage() {
   const handleVerifyBankAccount = async (e) => {
     e.preventDefault();
 
-    if (!formData.accountHolderName || !formData.accountNumber || !formData.confirmAccountNumber || !formData.ifsc || !formData.phone || !formData.email) {
-      toast.error('Please complete all required fields: Account Holder Name, Bank Account Number, Confirm Bank Account Number, IFSC Code, Phone Number, and Email Address.');
+    if (!formData.accountHolderName || !formData.accountNumber || !formData.confirmAccountNumber || !formData.ifsc || !formData.bankName || !formData.phone || !formData.email) {
+      toast.error('Please complete all required fields: Account Holder Name, Bank Account Number, Confirm Bank Account Number, IFSC Code, Bank Name, Phone Number, and Email Address.');
       return;
     }
 
@@ -99,6 +118,8 @@ export default function PaymentAccountPage() {
         bankAccountNumber: formData.accountNumber,
         confirmBankAccountNumber: formData.confirmAccountNumber,
         ifscCode: formData.ifsc.toUpperCase(),
+        bankName: formData.bankName,
+        accountType: formData.accountType || 'Current',
         phoneNumber: formData.phone,
         email: formData.email
       });
@@ -112,8 +133,7 @@ export default function PaymentAccountPage() {
     }
   };
 
-  const bankStatus = accountInfo.bankVerification || accountInfo.bankVerificationStatus || 'PENDING';
-  const vendorStatus = accountInfo.vendorStatus || accountInfo.cashfreeVendorStatus || 'ACTIVE';
+  const bankStatus = accountInfo.bankVerification || accountInfo.bankVerificationStatus || 'NOT_SUBMITTED';
   const settlementCapability = bankStatus === 'VERIFIED' ? 'ENABLED' : (accountInfo.settlementStatus || 'DISABLED');
 
   const renderStatusBadge = (status) => {
@@ -125,36 +145,41 @@ export default function PaymentAccountPage() {
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            {status === 'VERIFIED' ? '✓ Verified' : status}
+            Verified
           </span>
         );
+      case 'VERIFICATION_PENDING':
+      case 'SUBMITTED':
       case 'VERIFYING':
-        return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-700 border border-blue-500/20">
-            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            Verifying...
-          </span>
-        );
-      case 'REVIEW_REQUIRED':
+      case 'PENDING':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 border border-amber-500/20">
-            <Search className="w-3.5 h-3.5" />
-            Under Review
+            <Clock className="w-3.5 h-3.5 animate-pulse" />
+            Verification Pending
           </span>
         );
+      case 'ACTION_REQUIRED':
+      case 'REVIEW_REQUIRED':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-700 border border-blue-500/20">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            Action Required
+          </span>
+        );
+      case 'REJECTED':
       case 'FAILED':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-700 border border-rose-500/20">
             <XCircle className="w-3.5 h-3.5" />
-            Failed
+            Verification Rejected
           </span>
         );
-      case 'PENDING':
+      case 'NOT_SUBMITTED':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-700 border border-slate-500/20">
             <Clock className="w-3.5 h-3.5" />
-            Verification Required
+            Not Submitted
           </span>
         );
     }
@@ -188,11 +213,12 @@ export default function PaymentAccountPage() {
         <div className="flex items-center gap-2.5 z-10 shrink-0">
           <button 
             type="button"
-            onClick={() => refetch()}
-            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-xs hover:shadow-md flex items-center gap-2 transition-all cursor-pointer"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-xs hover:shadow-md disabled:opacity-50 flex items-center gap-2 transition-all cursor-pointer"
           >
-            <RefreshCw className="w-4 h-4 text-white" />
-            <span>Refresh Status</span>
+            <RefreshCw className={`w-4 h-4 text-white ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Refreshing...' : 'Refresh Status'}</span>
           </button>
         </div>
       </div>
@@ -290,6 +316,41 @@ export default function PaymentAccountPage() {
                     />
                   </div>
 
+                  {/* Bank Name */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
+                      Bank Name <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="bankName"
+                      value={formData.bankName}
+                      onChange={handleChange}
+                      disabled={updateAccountMutation.isPending}
+                      placeholder="e.g. HDFC Bank, ICICI Bank, State Bank of India"
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-medium text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
+                      required
+                    />
+                  </div>
+
+                  {/* Account Type */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
+                      Account Type <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      name="accountType"
+                      value={formData.accountType}
+                      onChange={handleChange}
+                      disabled={updateAccountMutation.isPending}
+                      className="w-full px-4 py-3 bg-[#FFF5F5]/40 border border-[#EF5350] rounded-xl text-sm font-medium text-[#252525] focus:outline-none focus:border-[#E50914] disabled:opacity-50 transition-colors"
+                      required
+                    >
+                      <option value="Current">Current Account</option>
+                      <option value="Savings">Savings Account</option>
+                    </select>
+                  </div>
+
                   {/* Bank Account Number */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-[#252525]/80 uppercase tracking-wider">
@@ -378,10 +439,10 @@ export default function PaymentAccountPage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#EF5350]/30">
-                  {bankStatus === 'FAILED' && (
+                  {(bankStatus === 'REJECTED' || bankStatus === 'FAILED') && (
                     <div className="flex items-center gap-2 text-xs text-rose-700 font-medium">
                       <AlertTriangle className="w-4 h-4 shrink-0" />
-                      <span>⚠ Bank Account Verification Failed. Please update details above.</span>
+                      <span>Your bank account verification was unsuccessful. Please review your details and resubmit.</span>
                     </div>
                   )}
 
@@ -400,12 +461,12 @@ export default function PaymentAccountPage() {
                         <>
                           <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> Verifying Bank Account...
                         </>
-                      ) : bankStatus === 'FAILED' ? (
+                      ) : (bankStatus === 'REJECTED' || bankStatus === 'FAILED') ? (
                         <>
-                          <RotateCcw className="w-4 h-4 mr-2" /> Try Again
+                          <RotateCcw className="w-4 h-4 mr-2" /> Resubmit Details
                         </>
                       ) : (
-                        'Verify Bank Account'
+                        'Save & Verify Bank Account'
                       )}
                     </Button>
                   </div>
@@ -423,9 +484,39 @@ export default function PaymentAccountPage() {
                   <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#252525]">✓ Bank Account Verified</h4>
+                      <h4 className="font-bold text-[#252525]">Your bank account has been verified. Your settlement account is ready.</h4>
                       <p className="text-xs text-[#252525]/70 mt-0.5">
-                        Bank account validation complete. Automated payouts are active.
+                        Bank account validation complete. Razorpay Route automated payouts and split settlements are active.
+                      </p>
+                    </div>
+                  </div>
+                ) : bankStatus === 'VERIFICATION_PENDING' || bankStatus === 'SUBMITTED' ? (
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#252525]">Your bank details are being verified. Payment settlements will be enabled after approval.</h4>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">
+                        Our payment provider is verifying your account details. This usually completes shortly.
+                      </p>
+                    </div>
+                  </div>
+                ) : bankStatus === 'ACTION_REQUIRED' ? (
+                  <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-900 flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#252525]">Action required on your bank account.</h4>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">
+                        Please review and update your bank details to enable settlement transfers.
+                      </p>
+                    </div>
+                  </div>
+                ) : bankStatus === 'REJECTED' || bankStatus === 'FAILED' ? (
+                  <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-900 flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#252525]">Your bank account verification was unsuccessful. Please review your details and resubmit.</h4>
+                      <p className="text-xs text-[#252525]/70 mt-0.5">
+                        Click "Edit Bank Details" below to review and submit correct bank account credentials.
                       </p>
                     </div>
                   </div>
@@ -433,9 +524,9 @@ export default function PaymentAccountPage() {
                   <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#252525]">Bank Details Not Configured</h4>
+                      <h4 className="font-bold text-[#252525]">Bank Details Not Submitted</h4>
                       <p className="text-xs text-[#252525]/70 mt-0.5">
-                        Please click "Edit Bank Details" to link your settlement bank account.
+                        Mandatory onboarding: Please submit your bank details to enable payment settlements and Razorpay Route transfers.
                       </p>
                     </div>
                   </div>
@@ -448,6 +539,20 @@ export default function PaymentAccountPage() {
                       {accountInfo.accountHolderName && accountInfo.accountHolderName !== 'Not Configured' 
                         ? accountInfo.accountHolderName.toUpperCase() 
                         : 'Not Configured'}
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">Bank Name</p>
+                    <p className="text-base font-semibold text-[#252525]">
+                      {accountInfo.bankName || 'Not Configured'}
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FFF5F5]/60 border border-[#EF5350]/40 space-y-1">
+                    <p className="text-xs text-[#252525]/50 font-bold uppercase tracking-wider">Account Type</p>
+                    <p className="text-base font-semibold text-[#252525]">
+                      {accountInfo.accountType ? `${accountInfo.accountType} Account` : 'Current Account'}
                     </p>
                   </div>
 
@@ -487,13 +592,27 @@ export default function PaymentAccountPage() {
                     {bankStatus === 'VERIFIED' ? (
                       <p className="text-base font-semibold text-emerald-700 flex items-center gap-1.5">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span>Enabled for Automated Daily Settlement</span>
+                        <span>Enabled for Automated Route Settlements</span>
                       </p>
                     ) : (
-                      <p className="text-base font-semibold text-amber-700">Disabled</p>
+                      <p className="text-base font-semibold text-amber-700">
+                        Disabled (Requires verified bank account)
+                      </p>
                     )}
                   </div>
                 </div>
+
+                {bankStatus !== 'VERIFIED' && (
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(true)}
+                      className="px-6 py-2.5 rounded-xl bg-[#E50914] text-white text-sm font-semibold hover:bg-[#b71c1c] transition-colors cursor-pointer"
+                    >
+                      {bankStatus === 'NOT_SUBMITTED' ? 'Submit Bank Details' : 'Edit Bank Details'}
+                    </button>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

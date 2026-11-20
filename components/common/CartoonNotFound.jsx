@@ -229,11 +229,11 @@ export function CartoonNotFound({ dashboardLink = "/owner/dashboard", portalName
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#252525] tracking-tight leading-tight">
-            Lost in the Cafe?
+            Page Not Found
           </h1>
 
           <p className="text-xs sm:text-sm text-[#E50914]/85 max-w-sm mx-auto font-medium leading-relaxed">
-            Oops! It seems you've wandered off the map. The page you are looking for doesn't exist or has been moved.
+            Oops! It seems you've wandered off the map. The page you are looking for doesn't exist or is undergoing updates.
           </p>
         </div>
 

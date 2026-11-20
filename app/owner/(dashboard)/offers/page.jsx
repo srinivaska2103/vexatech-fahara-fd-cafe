@@ -183,6 +183,17 @@ export default function OffersManagementPage() {
           </div>
           <span className="text-[10px] text-[#757575] mt-1 block">Paused by owner</span>
         </div>
+
+        <div className="bg-white border border-[#FEE2E2] rounded-2xl p-4 shadow-xs col-span-2 lg:col-span-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#757575]">Redemptions</span>
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          </div>
+          <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-2">
+            {offers.reduce((acc, o) => acc + (o.redemption_count || 0), 0)}
+          </div>
+          <span className="text-[10px] text-[#757575] mt-1 block">Total times redeemed</span>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -218,9 +229,12 @@ export default function OffersManagementPage() {
             onChange={setSelectedTypeFilter}
             options={[
               { value: 'ALL', label: 'All Offer Types' },
-              { value: 'ITEM', label: 'Item-wise Offers' },
-              { value: 'CATEGORY', label: 'Category-wise Offers' },
-              { value: 'RESTAURANT', label: 'Restaurant-wide Offers' }
+              { value: 'BUY_X_GET_Y', label: 'Buy X Get Y (BOGO)' },
+              { value: 'PERCENTAGE', label: 'Percentage Off (%)' },
+              { value: 'FLAT', label: 'Flat Discount (₹)' },
+              { value: 'COMBO', label: 'Combo Deals' },
+              { value: 'CATEGORY', label: 'Category Discounts' },
+              { value: 'RESTAURANT', label: 'Restaurant Specials' }
             ]}
           />
 
@@ -299,13 +313,52 @@ export default function OffersManagementPage() {
                   </div>
 
                   {/* Discount Value Badge */}
-                  <div className="flex items-baseline gap-2 pt-1">
-                    <span className="text-3xl font-black text-[#E50914] tracking-tight">
-                      {isPercentage ? `${Number(offer.discount_value)}% OFF` : `₹${Number(offer.discount_value)} OFF`}
-                    </span>
+                  <div className="flex items-baseline gap-2 pt-1 flex-wrap">
+                    {offer.offer_category === 'BUY_X_GET_Y' || offer.offer_type === 'BUY_X_GET_Y' ? (
+                      <span className="text-2xl font-black text-[#E50914] tracking-tight flex items-center gap-1.5">
+                        <span className="px-2 py-0.5 rounded-lg bg-red-100 text-[#E50914] text-xs font-black uppercase">BOGO</span>
+                        <span>Buy {offer.buy_quantity || 1} Get {offer.reward_quantity || 1} Free</span>
+                      </span>
+                    ) : offer.offer_category === 'COMBO' ? (
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-black text-[#E50914] tracking-tight">
+                          ₹{Number(offer.combo_price || 0).toFixed(2)}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase">
+                          Combo Special
+                        </span>
+                        {offer.discount_value > 0 && (
+                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                            Save ₹{Number(offer.discount_value).toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    ) : offer.offer_category === 'FREE_ITEM' ? (
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-black text-[#E50914] tracking-tight">
+                          FREE ITEM (₹0)
+                        </span>
+                        <span className="px-2 py-0.5 rounded-lg bg-amber-100 text-amber-800 text-[10px] font-black uppercase">
+                          Reward
+                        </span>
+                      </div>
+                    ) : offer.offer_category === 'FLAT' ? (
+                      <span className="text-3xl font-black text-[#E50914] tracking-tight">
+                        ₹{Number(offer.discount_value)} FLAT OFF
+                      </span>
+                    ) : (
+                      <span className="text-3xl font-black text-[#E50914] tracking-tight">
+                        {isPercentage ? `${Number(offer.discount_value)}% OFF` : `₹${Number(offer.discount_value)} OFF`}
+                      </span>
+                    )}
                     {offer.max_discount_amount && isPercentage && (
                       <span className="text-[10px] font-bold text-[#757575]">
                         (Up to ₹{Number(offer.max_discount_amount)})
+                      </span>
+                    )}
+                    {offer.min_order_value && Number(offer.min_order_value) > 0 && (
+                      <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                        Min ₹{Number(offer.min_order_value)}
                       </span>
                     )}
                   </div>
@@ -429,7 +482,7 @@ export default function OffersManagementPage() {
 
       {/* ==================== DELETE CONFIRMATION MODAL ==================== */}
       {deleteConfirmation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-[#FEE2E2] shadow-2xl space-y-4">
             <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto">
               <AlertCircle className="w-6 h-6" />
@@ -469,10 +522,43 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
 
   const [title, setTitle] = useState(offer?.title || '');
   const [description, setDescription] = useState(offer?.description || '');
+  const [offerCategory, setOfferCategory] = useState(offer?.offer_category || (offer?.offer_type === 'BUY_X_GET_Y' ? 'BUY_X_GET_Y' : 'PERCENTAGE'));
   const [offerType, setOfferType] = useState(offer?.offer_type || 'ITEM');
   const [discountType, setDiscountType] = useState(offer?.discount_type || 'PERCENTAGE');
   const [discountValue, setDiscountValue] = useState(offer?.discount_value || '');
   const [maxDiscountAmount, setMaxDiscountAmount] = useState(offer?.max_discount_amount || '');
+
+  // BOGO / Advanced State
+  const [buyItemId, setBuyItemId] = useState(offer?.buy_item_id || safeMenuItems[0]?.id || '');
+  const [buyQuantity, setBuyQuantity] = useState(offer?.buy_quantity || 1);
+  const [rewardItemId, setRewardItemId] = useState(offer?.reward_item_id || safeMenuItems[0]?.id || '');
+  const [rewardQuantity, setRewardQuantity] = useState(offer?.reward_quantity || 1);
+  const [rewardDiscountType, setRewardDiscountType] = useState(offer?.reward_discount_type || 'FREE');
+  const [rewardDiscountValue, setRewardDiscountValue] = useState(offer?.reward_discount_value || 100);
+  const [maxRewardQuantity, setMaxRewardQuantity] = useState(offer?.max_reward_quantity || '');
+  const [minOrderValue, setMinOrderValue] = useState(offer?.min_order_value || '');
+  const [maxRedemptions, setMaxRedemptions] = useState(offer?.max_redemptions || '');
+  const [comboPrice, setComboPrice] = useState(offer?.combo_price || '');
+
+  // Combo components [{ itemId, quantity }]
+  const parseInitialCombo = () => {
+    if (offer?.terms_and_conditions && typeof offer.terms_and_conditions === 'string' && offer.terms_and_conditions.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(offer.terms_and_conditions);
+        if (Array.isArray(parsed.components) && parsed.components.length > 0) return parsed.components;
+      } catch (e) {}
+    }
+    if (safeMenuItems.length >= 2) {
+      return [
+        { itemId: safeMenuItems[0].id, quantity: 1 },
+        { itemId: safeMenuItems[1].id, quantity: 1 }
+      ];
+    } else if (safeMenuItems.length === 1) {
+      return [{ itemId: safeMenuItems[0].id, quantity: 2 }];
+    }
+    return [];
+  };
+  const [comboComponents, setComboComponents] = useState(parseInitialCombo);
   
   // Format start & end dates
   const defaultStart = offer?.start_date ? new Date(offer.start_date).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16);
@@ -490,22 +576,45 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Live Calculation Preview dynamically based on actual selected item or first dish
+  // Live Calculation Preview dynamically based on actual selected category
+  const buyItemObj = safeMenuItems.find((i) => i.id === buyItemId) || safeMenuItems[0];
+  const rewardItemObj = safeMenuItems.find((i) => i.id === rewardItemId) || buyItemObj || safeMenuItems[0];
   const firstSelectedItem = safeMenuItems.find((i) => selectedItems.includes(i.id)) || safeMenuItems[0];
   const targetItemName = firstSelectedItem?.name || 'Selected Dish';
   const originalPrice = firstSelectedItem ? Number(firstSelectedItem.price) : 200;
   
   const numDiscount = Number(discountValue) || 0;
   let calculatedSavings = 0;
-  if (discountType === 'PERCENTAGE') {
+  let sampleFinalPrice = originalPrice;
+
+  // Combo calculations
+  const comboOriginalTotal = comboComponents.reduce((sum, comp) => {
+    const it = safeMenuItems.find(i => i.id === comp.itemId);
+    return sum + (it ? Number(it.price) * (Number(comp.quantity) || 1) : 0);
+  }, 0);
+  const numComboPrice = Number(comboPrice) || 0;
+
+  if (offerCategory === 'BUY_X_GET_Y') {
+    const buyP = Number(buyItemObj?.price || 190);
+    const rewP = Number(rewardItemObj?.price || 190);
+    calculatedSavings = rewardDiscountType === 'FREE' ? rewP * Number(rewardQuantity || 1) : (rewP * (Number(rewardDiscountValue || 100) / 100));
+    sampleFinalPrice = buyP * Number(buyQuantity || 1);
+  } else if (offerCategory === 'COMBO') {
+    calculatedSavings = Math.max(0, comboOriginalTotal - numComboPrice);
+    sampleFinalPrice = numComboPrice;
+  } else if (offerCategory === 'FLAT' || discountType === 'FIXED_AMOUNT') {
+    calculatedSavings = Math.min(numDiscount, originalPrice);
+    sampleFinalPrice = Math.max(0, originalPrice - calculatedSavings);
+  } else if (discountType === 'PERCENTAGE') {
     calculatedSavings = (originalPrice * numDiscount) / 100;
     if (maxDiscountAmount && Number(maxDiscountAmount) > 0) {
       calculatedSavings = Math.min(calculatedSavings, Number(maxDiscountAmount));
     }
+    sampleFinalPrice = Math.max(0, originalPrice - calculatedSavings);
   } else {
     calculatedSavings = Math.min(numDiscount, originalPrice);
+    sampleFinalPrice = Math.max(0, originalPrice - calculatedSavings);
   }
-  const sampleFinalPrice = Math.max(0, originalPrice - calculatedSavings);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -514,37 +623,95 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
       toast.error('Offer title is required');
       return;
     }
-    if (!discountValue || Number(discountValue) <= 0) {
-      toast.error('Valid discount value is required');
-      return;
-    }
-    if (discountType === 'PERCENTAGE' && Number(discountValue) > 100) {
-      toast.error('Percentage discount cannot exceed 100%');
-      return;
-    }
-    if (offerType === 'ITEM' && selectedItems.length === 0) {
-      toast.error('Please select at least one menu item');
-      return;
-    }
-    if (offerType === 'CATEGORY' && selectedCategories.length === 0) {
-      toast.error('Please select at least one category');
-      return;
+
+    if (offerCategory === 'COMBO') {
+      if (!comboPrice || Number(comboPrice) <= 0) {
+        toast.error('Please enter a valid combo selling price');
+        return;
+      }
+      if (comboComponents.length === 0) {
+        toast.error('Please select at least one item for the combo');
+        return;
+      }
+      if (comboOriginalTotal <= Number(comboPrice)) {
+        toast.error(`Combo price (₹${comboPrice}) must be less than combined original price (₹${comboOriginalTotal})`);
+        return;
+      }
+    } else if (offerCategory === 'FLAT') {
+      if (!discountValue || Number(discountValue) <= 0) {
+        toast.error('Please enter a valid flat discount amount in ₹');
+        return;
+      }
+      if (offerType === 'ITEM' && selectedItems.length === 0) {
+        toast.error('Please select at least one menu item');
+        return;
+      }
+      if (offerType === 'CATEGORY' && selectedCategories.length === 0) {
+        toast.error('Please select at least one category');
+        return;
+      }
+    } else if (offerCategory === 'CATEGORY') {
+      if (selectedCategories.length === 0) {
+        toast.error('Please select at least one category');
+        return;
+      }
+      if (!discountValue || Number(discountValue) <= 0) {
+        toast.error('Please enter a valid discount value');
+        return;
+      }
+    } else if (offerCategory !== 'BUY_X_GET_Y') {
+      if (!discountValue || Number(discountValue) <= 0) {
+        toast.error('Valid discount value is required');
+        return;
+      }
+      if (discountType === 'PERCENTAGE' && Number(discountValue) > 100) {
+        toast.error('Percentage discount cannot exceed 100%');
+        return;
+      }
+      if (offerType === 'ITEM' && selectedItems.length === 0) {
+        toast.error('Please select at least one menu item');
+        return;
+      }
+      if (offerType === 'CATEGORY' && selectedCategories.length === 0) {
+        toast.error('Please select at least one category');
+        return;
+      }
     }
 
     try {
       setIsSubmitting(true);
+      const targetItem = safeMenuItems.find((i) => i.id === buyItemId || i.id === rewardItemId || (comboComponents[0] && i.id === comboComponents[0].itemId)) || safeMenuItems[0];
+      const detectedCafeId = targetItem?.cafe_id || offer?.cafe_id || null;
+
       const payload = {
+        cafeId: detectedCafeId,
         title: title.trim(),
         description: description.trim() || null,
-        offerType,
-        discountType,
-        discountValue: Number(discountValue),
+        offerType: offerCategory === 'BUY_X_GET_Y' ? 'ITEM' : offerCategory === 'COMBO' ? 'ITEM' : offerCategory === 'CATEGORY' ? 'CATEGORY' : offerType,
+        offerCategory,
+        discountType: (offerCategory === 'FLAT' || (offerCategory === 'CATEGORY' && discountType === 'FIXED_AMOUNT')) ? 'FIXED_AMOUNT' : (offerCategory === 'BUY_X_GET_Y' || offerCategory === 'COMBO') ? 'PERCENTAGE' : discountType,
+        discountValue: offerCategory === 'BUY_X_GET_Y' ? Number(rewardDiscountValue || 100) : offerCategory === 'COMBO' ? Math.max(0, comboOriginalTotal - numComboPrice) : Number(discountValue),
         maxDiscountAmount: maxDiscountAmount ? Number(maxDiscountAmount) : null,
         startDate: new Date(startDate).toISOString(),
         endDate: new Date(endDate).toISOString(),
         isActive: Boolean(isActive),
-        itemIds: offerType === 'ITEM' ? selectedItems : [],
-        categoryIds: offerType === 'CATEGORY' ? selectedCategories : []
+        itemIds: offerCategory === 'BUY_X_GET_Y' ? [buyItemId, rewardItemId].filter(Boolean) : offerCategory === 'COMBO' ? comboComponents.map(c => c.itemId) : (offerType === 'ITEM' ? selectedItems : []),
+        categoryIds: (offerCategory === 'CATEGORY' || offerType === 'CATEGORY') ? selectedCategories : [],
+
+        // Combo Deals
+        comboPrice: offerCategory === 'COMBO' ? numComboPrice : null,
+        comboComponents: offerCategory === 'COMBO' ? comboComponents : null,
+
+        // Advanced BOGO parameters
+        buyItemId: offerCategory === 'BUY_X_GET_Y' ? buyItemId : null,
+        buyQuantity: offerCategory === 'BUY_X_GET_Y' ? Number(buyQuantity || 1) : 1,
+        rewardItemId: offerCategory === 'BUY_X_GET_Y' ? rewardItemId : null,
+        rewardQuantity: offerCategory === 'BUY_X_GET_Y' ? Number(rewardQuantity || 1) : 1,
+        rewardDiscountType,
+        rewardDiscountValue: Number(rewardDiscountValue || 100),
+        maxRewardQuantity: maxRewardQuantity ? Number(maxRewardQuantity) : null,
+        minOrderValue: minOrderValue ? Number(minOrderValue) : 0,
+        maxRedemptions: maxRedemptions ? Number(maxRedemptions) : null
       };
 
       if (offer?.id) {
@@ -563,36 +730,36 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-xl w-full border border-[#FEE2E2] shadow-2xl space-y-3.5 my-auto max-h-[92vh] flex flex-col">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full border border-[#FEE2E2] shadow-2xl space-y-4 my-8 max-h-[90vh] flex flex-col">
         
         {/* Compact Header */}
-        <div className="flex items-center justify-between border-b border-[#FEE2E2] pb-2.5 shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-[#FFF5F5] text-[#E50914] border border-[#FEE2E2]">
-              <BadgePercent className="w-4 h-4" />
+        <div className="flex items-center justify-between border-b border-[#FEE2E2] pb-3 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <span className="p-2 rounded-xl bg-[#FFF5F5] text-[#E50914] border border-[#FEE2E2]">
+              <BadgePercent className="w-5 h-5" />
             </span>
             <div>
-              <h3 className="text-sm sm:text-base font-black text-[#252525] leading-none">
+              <h3 className="text-base sm:text-lg font-black text-[#252525] leading-tight">
                 {offer?.id ? 'Edit Special Offer' : 'Create Special Offer'}
               </h3>
-              <span className="text-[10px] text-[#757575] font-medium mt-0.5 block">Configure live discount rates & scope</span>
+              <span className="text-xs text-[#757575] font-medium mt-0.5 block">Configure live BOGO, discounts & scope</span>
             </div>
           </div>
           <button 
             type="button"
             onClick={onClose} 
-            className="text-[#757575] hover:text-[#252525] p-1 rounded-xl hover:bg-[#FFF5F5] transition-colors cursor-pointer"
+            className="text-[#757575] hover:text-[#252525] p-1.5 rounded-xl hover:bg-[#FFF5F5] transition-colors cursor-pointer"
           >
             <XCircle className="w-5 h-5" />
           </button>
         </div>
 
         {/* Scrollable Compact Form */}
-        <form onSubmit={handleSubmit} className="space-y-3 overflow-y-auto scrollbar-none pr-0.5 flex-1">
+        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto scrollbar-none pr-1 flex-1">
           
           {/* Row 1: Title & Status */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2">
               <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
                 Offer Title *
@@ -602,8 +769,8 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. 20% OFF Biriyani Weekend"
-                className="w-full px-3 py-2 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914] transition-all"
+                placeholder="e.g. Buy 1 Chicken Biryani Get 1 Free"
+                className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914] transition-all"
               />
             </div>
             <div>
@@ -622,100 +789,388 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
             </div>
           </div>
 
-          {/* Row 2: Offer Scope & Discount Type */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {/* Row 2: Offer Category Selector */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
-                Offer Scope *
+                Offer Category *
               </label>
               <ModernDropdown
                 className="w-full"
-                value={offerType}
-                onChange={setOfferType}
+                value={offerCategory}
+                onChange={setOfferCategory}
                 options={[
-                  { value: 'ITEM', label: 'Item-wise Discount' },
-                  { value: 'CATEGORY', label: 'Category-wise' },
-                  { value: 'RESTAURANT', label: 'Restaurant-wide (All)' }
+                  { value: 'BUY_X_GET_Y', label: 'Buy X Get Y (BOGO)' },
+                  { value: 'PERCENTAGE', label: 'Percentage Off (%)' },
+                  { value: 'FLAT', label: 'Flat Discount (₹)' },
+                  { value: 'COMBO', label: 'Combo Deals' },
+                  { value: 'CATEGORY', label: 'Category Discount' }
                 ]}
               />
             </div>
 
-            <div>
-              <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
-                Discount Type *
-              </label>
-              <ModernDropdown
-                className="w-full"
-                value={discountType}
-                onChange={setDiscountType}
-                options={[
-                  { value: 'PERCENTAGE', label: 'Percentage (%) Off' },
-                  { value: 'FIXED_AMOUNT', label: 'Fixed Amount (₹) Off' }
-                ]}
-              />
-            </div>
+            {offerCategory !== 'BUY_X_GET_Y' && (
+              <div>
+                <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                  Offer Scope *
+                </label>
+                <ModernDropdown
+                  className="w-full"
+                  value={offerType}
+                  onChange={setOfferType}
+                  options={[
+                    { value: 'ITEM', label: 'Item-wise Discount' },
+                    { value: 'CATEGORY', label: 'Category-wise' },
+                    { value: 'RESTAURANT', label: 'Restaurant-wide (All)' }
+                  ]}
+                />
+              </div>
+            )}
           </div>
 
-          {/* Row 3: Discount Value & Max Cap */}
-          <div className="grid grid-cols-2 gap-2.5">
-            <div>
-              <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
-                Discount {discountType === 'PERCENTAGE' ? '(%)' : '(₹)'} *
-              </label>
-              <input
-                type="number"
-                min="0.01"
-                step="0.01"
-                required
-                value={discountValue}
-                onChange={(e) => setDiscountValue(e.target.value)}
-                placeholder={discountType === 'PERCENTAGE' ? '20' : '40'}
-                className="w-full px-3 py-2 bg-white border border-[#FEE2E2] rounded-xl text-xs font-black text-[#252525] outline-none focus:border-[#E50914]"
-              />
-            </div>
+          {/* ================= DEDICATED CONTROLS BY OFFER CATEGORY ================= */}
+          {offerCategory === 'BUY_X_GET_Y' ? (
+            <div className="p-4 bg-[#FFF5F5] rounded-2xl border border-red-200 space-y-3">
+              <span className="text-[11px] font-black uppercase text-[#E50914] tracking-wider block">
+                BOGO Rules &amp; Reward Configuration
+              </span>
 
+              {/* Buy Item & Buy Quantity */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="sm:col-span-2">
+                  <label className="text-[10px] font-black text-[#252525] uppercase block mb-1">Buy Item *</label>
+                  <ModernDropdown
+                    className="w-full"
+                    value={buyItemId}
+                    onChange={(val) => {
+                      setBuyItemId(val);
+                      if (!rewardItemId) setRewardItemId(val);
+                    }}
+                    options={safeMenuItems.map((item) => ({
+                      value: item.id,
+                      label: `${item.name} (₹${Number(item.price).toFixed(2)})`
+                    }))}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase block mb-1">Buy Qty (X) *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={buyQuantity}
+                    onChange={(e) => setBuyQuantity(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-black text-[#252525] outline-none focus:border-[#E50914]"
+                  />
+                </div>
+              </div>
+
+              {/* Reward Item & Reward Quantity */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="sm:col-span-2">
+                  <label className="text-[10px] font-black text-[#252525] uppercase block mb-1">Reward Item *</label>
+                  <ModernDropdown
+                    className="w-full"
+                    value={rewardItemId}
+                    onChange={setRewardItemId}
+                    options={safeMenuItems.map((item) => ({
+                      value: item.id,
+                      label: `${item.name} (₹${Number(item.price).toFixed(2)})`
+                    }))}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase block mb-1">Get Qty (Y) *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={rewardQuantity}
+                    onChange={(e) => setRewardQuantity(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-black text-[#252525] outline-none focus:border-[#E50914]"
+                  />
+                </div>
+              </div>
+
+              {/* Reward Discount Type & Max Reward Quantity */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase block mb-1">Reward Discount</label>
+                  <ModernDropdown
+                    className="w-full"
+                    value={rewardDiscountType}
+                    onChange={setRewardDiscountType}
+                    options={[
+                      { value: 'FREE', label: '100% Free' },
+                      { value: 'PERCENTAGE', label: 'Percentage Discount (%)' },
+                      { value: 'FIXED_AMOUNT', label: 'Fixed Discount (₹)' }
+                    ]}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase block mb-1">Max Rewards / Order</label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="e.g. 2 (Unlimited if empty)"
+                    value={maxRewardQuantity}
+                    onChange={(e) => setMaxRewardQuantity(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914]"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : offerCategory === 'COMBO' ? (
+            /* ================= COMBO DEALS FORM ================= */
+            <div className="p-4 bg-emerald-50/40 rounded-2xl border border-emerald-200 space-y-3">
+              <span className="text-[11px] font-black uppercase text-emerald-800 tracking-wider block">
+                Combo Items &amp; Package Pricing
+              </span>
+
+              {/* Multi-item component selector */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-[#252525] uppercase block">
+                  Select Combo Items &amp; Required Quantities *
+                </label>
+                {comboComponents.map((comp, idx) => {
+                  const it = safeMenuItems.find(i => i.id === comp.itemId);
+                  return (
+                    <div key={idx} className="flex items-center gap-2 bg-white p-2.5 rounded-xl border border-emerald-100 shadow-2xs">
+                      <div className="flex-1 min-w-0">
+                        <ModernDropdown
+                          className="w-full text-xs"
+                          value={comp.itemId}
+                          onChange={(val) => {
+                            const updated = [...comboComponents];
+                            updated[idx].itemId = val;
+                            setComboComponents(updated);
+                          }}
+                          options={safeMenuItems.map((item) => ({
+                            value: item.id,
+                            label: `${item.name} (₹${Number(item.price).toFixed(2)})`
+                          }))}
+                        />
+                      </div>
+                      <div className="w-20 shrink-0">
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Qty"
+                          value={comp.quantity}
+                          onChange={(e) => {
+                            const updated = [...comboComponents];
+                            updated[idx].quantity = Math.max(1, parseInt(e.target.value) || 1);
+                            setComboComponents(updated);
+                          }}
+                          className="w-full px-2 py-2 bg-[#FFF5F5]/30 border border-[#FEE2E2] rounded-lg text-xs font-black text-center text-[#252525]"
+                        />
+                      </div>
+                      <span className="text-xs font-mono font-bold text-[#757575] shrink-0 w-16 text-right">
+                        ₹{it ? (Number(it.price) * (Number(comp.quantity) || 1)).toFixed(2) : '0.00'}
+                      </span>
+                      {comboComponents.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setComboComponents(comboComponents.filter((_, i) => i !== idx))}
+                          className="p-1.5 text-stone-400 hover:text-red-500 rounded-lg hover:bg-red-50"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (safeMenuItems.length > 0) {
+                      setComboComponents([...comboComponents, { itemId: safeMenuItems[0].id, quantity: 1 }]);
+                    }
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 px-3 py-1.5 rounded-xl hover:bg-emerald-50 transition-colors cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" /> Add Another Food Item
+                </button>
+              </div>
+
+              {/* Original Calculated Price vs Combo Selling Price */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-emerald-100">
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                    Combined Menu Price (Original)
+                  </label>
+                  <div className="px-3.5 py-2.5 bg-stone-100 border border-stone-200 rounded-xl text-xs font-black text-[#252525]">
+                    ₹{comboOriginalTotal.toFixed(2)}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                    Combo Selling Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    required
+                    value={comboPrice}
+                    onChange={(e) => setComboPrice(e.target.value)}
+                    placeholder="e.g. 499"
+                    className="w-full px-3.5 py-2.5 bg-white border border-emerald-300 rounded-xl text-xs font-black text-emerald-800 outline-none focus:border-emerald-500 shadow-2xs"
+                  />
+                </div>
+              </div>
+
+              {/* Max Combos per order */}
+              <div>
+                <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                  Max Combos per Order (Optional)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={maxRewardQuantity}
+                  onChange={(e) => setMaxRewardQuantity(e.target.value)}
+                  placeholder="e.g. 3 (Default unlimited)"
+                  className="w-full px-3.5 py-2.5 bg-white border border-emerald-200 rounded-xl text-xs font-bold text-[#252525] outline-none"
+                />
+              </div>
+            </div>
+          ) : offerCategory === 'FLAT' ? (
+            /* ================= FLAT RUPEE DISCOUNT FORM ================= */
+            <div className="p-4 bg-blue-50/40 rounded-2xl border border-blue-200 space-y-3">
+              <span className="text-[11px] font-black uppercase text-blue-800 tracking-wider block">
+                Flat Rupee (₹) Discount Configuration
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                    Discount Amount (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    required
+                    value={discountValue}
+                    onChange={(e) => setDiscountValue(e.target.value)}
+                    placeholder="e.g. 50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-blue-300 rounded-xl text-xs font-black text-blue-900 outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                    Min Order Value (₹) (Optional)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={minOrderValue}
+                    onChange={(e) => setMinOrderValue(e.target.value)}
+                    placeholder="e.g. 299"
+                    className="w-full px-3.5 py-2.5 bg-white border border-blue-200 rounded-xl text-xs font-bold text-[#252525] outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* ================= STANDARD PERCENTAGE OR CATEGORY DISCOUNT CONTROLS ================= */
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                  Discount {discountType === 'PERCENTAGE' ? '(%)' : '(₹)'} *
+                </label>
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  required
+                  value={discountValue}
+                  onChange={(e) => setDiscountValue(e.target.value)}
+                  placeholder={discountType === 'PERCENTAGE' ? '20' : '40'}
+                  className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-black text-[#252525] outline-none focus:border-[#E50914]"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                  Max Cap (₹) {discountType === 'PERCENTAGE' ? '' : '(N/A)'}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  disabled={discountType === 'FIXED_AMOUNT'}
+                  value={maxDiscountAmount}
+                  onChange={(e) => setMaxDiscountAmount(e.target.value)}
+                  placeholder="e.g. 100"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914] disabled:bg-stone-50 disabled:text-stone-300"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Optional Min Order & Max Redemptions */}
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
-                Max Cap (₹) {discountType === 'PERCENTAGE' ? '' : '(N/A)'}
+                Min Order Value (₹)
               </label>
               <input
                 type="number"
                 min="0"
                 step="0.01"
-                disabled={discountType === 'FIXED_AMOUNT'}
-                value={maxDiscountAmount}
-                onChange={(e) => setMaxDiscountAmount(e.target.value)}
-                placeholder="e.g. 100"
-                className="w-full px-3 py-2 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914] disabled:bg-stone-50 disabled:text-stone-300"
+                value={minOrderValue}
+                onChange={(e) => setMinOrderValue(e.target.value)}
+                placeholder="e.g. 299 (Optional)"
+                className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914]"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider block mb-1">
+                Max Redemptions
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={maxRedemptions}
+                onChange={(e) => setMaxRedemptions(e.target.value)}
+                placeholder="e.g. 100 (Optional)"
+                className="w-full px-3.5 py-2.5 bg-white border border-[#FEE2E2] rounded-xl text-xs font-bold text-[#252525] outline-none focus:border-[#E50914]"
               />
             </div>
           </div>
 
           {/* LIVE DISCOUNT PREVIEW BANNER DYNAMIC */}
-          <div className="bg-[#FFF5F5] border border-[#FEE2E2] rounded-2xl px-3.5 py-2.5 flex items-center justify-between">
-            <div className="flex items-center gap-2 min-w-0">
-              <Sparkles className="w-4 h-4 text-[#FF6B00] shrink-0" />
+          <div className="bg-[#FFF5F5] border border-[#FEE2E2] rounded-2xl p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <Sparkles className="w-5 h-5 text-[#FF6B00] shrink-0" />
               <div className="min-w-0">
-                <span className="text-[9px] font-black uppercase tracking-wider text-[#757575] block truncate leading-none">
-                  Live Preview • {targetItemName} (Original: ₹{originalPrice.toFixed(2)})
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#757575] block truncate leading-none">
+                  {offerCategory === 'BUY_X_GET_Y' 
+                    ? `Live BOGO Preview • Buy ${buyQuantity}x ${buyItemObj?.name || 'Item'} → Get ${rewardQuantity}x ${rewardItemObj?.name || 'Item'} Free` 
+                    : offerCategory === 'COMBO'
+                    ? `Live Combo Preview • ${comboComponents.length} items bundled (Original: ₹${comboOriginalTotal.toFixed(2)})`
+                    : offerCategory === 'FLAT'
+                    ? `Live Flat Discount Preview • ₹${discountValue || 0} OFF on ${offerType === 'RESTAURANT' ? 'Entire Order' : targetItemName}`
+                    : `Live Preview • ${targetItemName} (Original: ₹${originalPrice.toFixed(2)})`}
                 </span>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-2 mt-1.5">
                   <span className="text-xs line-through text-stone-400 font-bold">
-                    ₹{originalPrice.toFixed(2)}
+                    ₹{(sampleFinalPrice + calculatedSavings).toFixed(2)}
                   </span>
-                  <span className="text-sm font-black text-[#E50914]">
+                  <span className="text-base font-black text-[#E50914]">
                     ₹{sampleFinalPrice.toFixed(2)}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="px-2.5 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black shrink-0 text-right">
+            <div className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-black shrink-0 text-right">
               Saves ₹{calculatedSavings.toFixed(2)}
             </div>
           </div>
 
-          {/* Dynamic Selection: Items or Categories */}
-          {offerType === 'ITEM' && (
+          {/* Dynamic Selection: Items or Categories when not BOGO/COMBO */}
+          {offerCategory !== 'BUY_X_GET_Y' && offerCategory !== 'COMBO' && offerCategory !== 'FREE_ITEM' && offerType === 'ITEM' && (
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider">
@@ -765,7 +1220,8 @@ function OfferModal({ isOpen, offer, categories = [], menuItems = [], onClose, o
             </div>
           )}
 
-          {offerType === 'CATEGORY' && (
+          {/* Dynamic Selection: Categories */}
+          {(offerCategory === 'CATEGORY' || (offerCategory !== 'BUY_X_GET_Y' && offerCategory !== 'COMBO' && offerCategory !== 'FREE_ITEM' && offerType === 'CATEGORY')) && (
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[10px] font-black text-[#252525] uppercase tracking-wider">

@@ -3,6 +3,7 @@
 import { PageContainer } from '@/components/layout/PageContainer';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { menuService } from '@/services/menu.service';
 import { 
@@ -23,7 +24,8 @@ import {
   Image as ImageIcon,
   Upload,
   ArrowUpDown,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ModernDropdown from '@/components/ui/ModernDropdown';
@@ -588,8 +590,8 @@ export default function MenuManagementPage() {
       )}
 
       {/* ==================== MODAL: DELETE CONFIRMATION ==================== */}
-      {deleteConfirmation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+      {deleteConfirmation && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-[#FEE2E2] shadow-2xl space-y-4">
             <div className="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
               <AlertCircle className="w-6 h-6" />
@@ -621,7 +623,8 @@ export default function MenuManagementPage() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </PageContainer>
@@ -694,14 +697,23 @@ function CategoryModal({ isOpen, category, onClose, onSuccess }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-      <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-[#FEE2E2] shadow-2xl space-y-4">
-        <h3 className="text-base font-extrabold text-[#252525]">
-          {category ? 'Edit Menu Category' : 'Create Menu Category'}
-        </h3>
+  const modalContent = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-md w-full border border-[#FEE2E2] shadow-2xl space-y-4 my-auto max-h-[92vh] flex flex-col">
+        <div className="flex items-center justify-between pb-2 border-b border-[#FEE2E2] shrink-0">
+          <h3 className="text-base font-extrabold text-[#252525]">
+            {category ? 'Edit Menu Category' : 'Create Menu Category'}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-xl hover:bg-[#FFF5F5] text-[#757575] hover:text-[#E50914] transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto pr-1 flex-1">
           <div>
             <label className="text-[11px] font-extrabold text-[#252525] uppercase tracking-wider block mb-1">
               Category Name *
@@ -815,6 +827,8 @@ function CategoryModal({ isOpen, category, onClose, onSuccess }) {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null;
 }
 
 // ==================== FOOD ITEM FORM MODAL ====================
@@ -902,14 +916,23 @@ function FoodItemModal({ isOpen, item, categories, onClose, onSuccess }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl p-6 max-w-lg w-full border border-[#FEE2E2] shadow-2xl space-y-4 my-8">
-        <h3 className="text-base font-extrabold text-[#252525]">
-          {item ? 'Edit Food Item' : 'Add New Food Item'}
-        </h3>
+  const modalContent = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-lg w-full border border-[#FEE2E2] shadow-2xl space-y-4 my-auto max-h-[92vh] flex flex-col">
+        <div className="flex items-center justify-between pb-2 border-b border-[#FEE2E2] shrink-0">
+          <h3 className="text-base font-extrabold text-[#252525]">
+            {item ? 'Edit Food Item' : 'Add New Food Item'}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-xl hover:bg-[#FFF5F5] text-[#757575] hover:text-[#E50914] transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto pr-1 flex-1">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[11px] font-extrabold text-[#252525] uppercase tracking-wider block mb-1">
@@ -1101,5 +1124,7 @@ function FoodItemModal({ isOpen, item, categories, onClose, onSuccess }) {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null;
 }
 

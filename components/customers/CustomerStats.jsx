@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarCheck, ShoppingBag, Utensils, CreditCard, Star, Clock } from 'lucide-react';
+import { CalendarCheck, ShoppingBag, Utensils, IndianRupee, Star, Clock } from 'lucide-react';
 
 export const CustomerStats = ({ customer, isWalkingCafe = false }) => {
   if (!customer) return null;
@@ -19,7 +19,10 @@ export const CustomerStats = ({ customer, isWalkingCafe = false }) => {
           </div>
         </div>
         <div className="text-lg sm:text-2xl font-black text-[#E50914]">{customer.total_food_orders || 0}</div>
-        <p className="text-[9px] text-stone-500 font-semibold">₹{foodSpend.toLocaleString()} food spend</p>
+        <p className="text-[9px] text-stone-500 font-semibold flex items-center gap-0.5">
+          <IndianRupee className="w-2.5 h-2.5 inline shrink-0" />
+          <span>{foodSpend.toLocaleString()} food spend</span>
+        </p>
       </div>
 
       {/* 2. Table Bookings */}
@@ -31,7 +34,10 @@ export const CustomerStats = ({ customer, isWalkingCafe = false }) => {
           </div>
         </div>
         <div className="text-lg sm:text-2xl font-black text-[#252525]">{customer.total_bookings || 0}</div>
-        <p className="text-[9px] text-stone-400 font-semibold">₹{bookingSpend.toLocaleString()} booking spend</p>
+        <p className="text-[9px] text-stone-400 font-semibold flex items-center gap-0.5">
+          <IndianRupee className="w-2.5 h-2.5 inline shrink-0" />
+          <span>{bookingSpend.toLocaleString()} booking spend</span>
+        </p>
       </div>
 
       {/* 3. Total Spending */}
@@ -39,10 +45,13 @@ export const CustomerStats = ({ customer, isWalkingCafe = false }) => {
         <div className="flex items-center justify-between gap-1">
           <span className="text-[10px] sm:text-xs font-black text-[#E50914] uppercase tracking-wider truncate">Total Spending</span>
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] text-[#E50914] flex items-center justify-center shrink-0">
-            <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <IndianRupee className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
         </div>
-        <div className="text-lg sm:text-2xl font-black text-[#E50914] truncate">₹{totalSpend.toLocaleString()}</div>
+        <div className="text-lg sm:text-2xl font-black text-[#E50914] truncate flex items-center gap-0.5">
+          <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+          <span>{totalSpend.toLocaleString()}</span>
+        </div>
         <p className="text-[9px] text-emerald-700 font-bold">Paid Lifetime Spend</p>
       </div>
 

@@ -20,8 +20,10 @@ import {
   Sparkles,
   FilterX,
   SlidersHorizontal,
-  UtensilsCrossed
+  UtensilsCrossed,
+  RefreshCw
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -38,13 +40,26 @@ export default function NotificationsPage() {
   });
   
   const [isMarkAllDialogOpen, setIsMarkAllDialogOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data, isLoading, isError, error } = useNotifications({ 
+  const { data, isLoading, isError, error, refetch } = useNotifications({ 
     search, 
     status: filters.status,
     priority: filters.priority,
     category: filters.category || filters.type
   });
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refetch();
+      toast.success('Notifications updated');
+    } catch {
+      toast.error('Failed to refresh notifications');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
   
   const markAllAsReadMutation = useMarkAllAsRead();
   
@@ -95,6 +110,17 @@ export default function NotificationsPage() {
 
         {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-2.5 z-10">
+          <Button 
+            variant="outline" 
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="py-2 px-3.5 rounded-xl border-[#EF5350]/60 bg-white hover:bg-[#E50914]/10 text-[#E50914] text-xs font-bold flex items-center gap-1.5 disabled:opacity-50"
+            title="Refresh notifications"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-[#E50914] ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+          </Button>
+
           {unreadCount > 0 && (
             <Button 
               variant="outline" 

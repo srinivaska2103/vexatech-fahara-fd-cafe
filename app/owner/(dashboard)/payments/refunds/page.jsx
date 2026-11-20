@@ -31,8 +31,21 @@ export default function RefundsPage() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data, isLoading, refetch } = useRefunds({ search, status: statusFilter });
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refetch();
+      toast.success('Refunds synced successfully');
+    } catch {
+      toast.error('Failed to sync refunds');
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
   const refunds = data?.data || [];
 
   const filteredRefunds = refunds.filter((r) => {
@@ -48,10 +61,12 @@ export default function RefundsPage() {
   });
 
   // Calculate dynamic refund metrics
-  const totalRefunded = refunds.filter(r => (r.status || r.refund_status) === 'Refunded').reduce((sum, r) => sum + Number(r.refundAmount || r.refund_amount || 0), 0);
-  const pendingRefunds = refunds.filter(r => ['Pending', 'Refund Pending'].includes(r.status || r.refund_status)).reduce((sum, r) => sum + Number(r.refundAmount || r.refund_amount || 0), 0);
-  const processedCount = refunds.filter(r => (r.status || r.refund_status) === 'Refunded').length;
-  const failedCount = refunds.filter(r => (r.status || r.refund_status) === 'Failed').length;
+  const totalRefunded = refunds.filter(r => ['Refunded', 'SUCCESS', 'COMPLETED', 'PROCESSED'].includes(r.status || r.refund_status)).reduce((sum, r) => sum + Number(r.refundAmount || r.refund_amount || r.amount || 0), 0);
+  const pendingRefunds = refunds.filter(r => ['Pending', 'Refund Pending', 'Processing', 'PENDING', 'PROCESSING', 'UNDER_REVIEW'].includes(r.status || r.refund_status)).reduce((sum, r) => sum + Number(r.refundAmount || r.refund_amount || r.amount || 0), 0);
+  const processedCount = refunds.filter(r => ['Refunded', 'SUCCESS', 'COMPLETED', 'PROCESSED'].includes(r.status || r.refund_status)).length;
+  const processingCount = refunds.filter(r => ['Processing', 'PROCESSING'].includes(r.status || r.refund_status)).length;
+  const pendingCount = refunds.filter(r => ['Pending', 'Refund Pending', 'PENDING', 'UNDER_REVIEW'].includes(r.status || r.refund_status)).length;
+  const failedCount = refunds.filter(r => ['Failed', 'FAILED', 'REJECTED'].includes(r.status || r.refund_status)).length;
 
   const handleExportCSV = () => {
     let csv = 'Booking ID,Customer Name,Refund Amount,Reason,Status,Date\n';
@@ -106,8 +121,8 @@ export default function RefundsPage() {
   const statusTabs = [
     { id: 'ALL', label: 'All Refunds', count: refunds.length },
     { id: 'Refunded', label: 'Completed Refund', count: processedCount },
-    { id: 'Refund Pending', label: 'Pending Request', count: refunds.filter(r => ['Pending', 'Refund Pending'].includes(r.status || r.refund_status)).length },
-    { id: 'Processing', label: 'Processing', count: refunds.filter(r => (r.status || r.refund_status) === 'Processing').length },
+    { id: 'Pending', label: 'Pending Request', count: pendingCount },
+    { id: 'Processing', label: 'Processing', count: processingCount },
     { id: 'Failed', label: 'Failed / Rejected', count: failedCount },
   ];
 
@@ -115,17 +130,17 @@ export default function RefundsPage() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 text-[#252525]">
       
       {/* SaaS Hero Header Banner */}
-      <div className="bg-gradient-to-r from-white via-[#FFF5F5] to-[#FFF5F5] p-6 sm:p-8 rounded-3xl border border-[#EF5350]/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-1.5 z-10">
           <div className="flex items-center gap-2">
             <button 
               onClick={() => router.push('/owner/payments')}
-              className="px-3 py-1 rounded-full bg-[#E50914]/10 text-[#E50914] text-xs font-extrabold flex items-center gap-1 hover:bg-[#E50914] hover:text-white transition-all cursor-pointer"
+              className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-extrabold flex items-center gap-1 hover:bg-[#E50914] hover:text-white transition-all cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Payments</span>
             </button>
-            <span className="text-[10px] text-text/40 font-bold uppercase tracking-wider">• FINANCIAL ADJUSTMENTS</span>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">• FINANCIAL ADJUSTMENTS</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold text-[#252525] tracking-tight">
@@ -138,10 +153,19 @@ export default function RefundsPage() {
 
         {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-2.5 z-10 shrink-0">
+          <Link
+            href="/owner/orders/refunds"
+            className="py-2.5 px-4 rounded-2xl bg-[#E50914] hover:bg-[#b80710] text-white text-xs font-black shadow-2xs flex items-center gap-2 transition-all cursor-pointer"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>Food Order Refund Requests</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
+
           <button 
             type="button"
             onClick={handleExportCSV}
-            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white border border-[#EF5350] text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 text-xs font-extrabold shadow-2xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>Export CSV</span>
@@ -149,11 +173,12 @@ export default function RefundsPage() {
 
           <button 
             type="button"
-            onClick={() => refetch()}
-            className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#E50914] to-[#B71C1C] text-white text-xs font-extrabold shadow-2xs hover:shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="py-2.5 px-4 rounded-2xl bg-[#E50914] hover:bg-[#b80710] text-white text-xs font-extrabold shadow-2xs disabled:opacity-50 flex items-center gap-2 transition-all cursor-pointer"
           >
-            <RefreshCw className="w-4 h-4 text-white" />
-            <span>Sync Refunds</span>
+            <RefreshCw className={`w-4 h-4 text-white ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Syncing...' : 'Sync Refunds'}</span>
           </button>
         </div>
       </div>

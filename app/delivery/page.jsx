@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bike, 
   MapPin, 
@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   ChevronRight,
   TrendingUp,
-  Receipt
+  Receipt,
+  Radio
 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -33,6 +34,88 @@ export default function DeliveryStaffPortal() {
   const [orders, setOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('ACTIVE');
+  const [gpsActive, setGpsActive] = useState(false);
+  const [lastLocationSync, setLastLocationSync] = useState(null);
+  const watchIdRef = useRef(null);
+
+  // Active Orders needing live tracking (PICKED_UP or OUT_FOR_DELIVERY)
+  const inTransitOrders = orders.filter(
+    (o) => o.order_status === 'PICKED_UP' || o.order_status === 'OUT_FOR_DELIVERY'
+  );
+
+  // Background Geolocation Publisher for Orders in Transit
+  useEffect(() => {
+    if (!session?.employee?.id || inTransitOrders.length === 0) {
+      if (watchIdRef.current !== null && typeof navigator !== 'undefined' && navigator.geolocation) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+      setGpsActive(false);
+      return;
+    }
+
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      console.warn('Geolocation is not supported by this browser');
+      return;
+    }
+
+    let lastSentTime = 0;
+    const sendLocationUpdate = async (pos) => {
+      const now = Date.now();
+      // Throttle GPS updates to max once every 10 seconds
+      if (now - lastSentTime < 10000) return;
+      lastSentTime = now;
+
+      const { latitude, longitude, accuracy, heading, speed } = pos.coords;
+
+      for (const order of inTransitOrders) {
+        try {
+          await axios.post(
+            `${API_BASE_URL}/delivery/orders/${order.id}/location`,
+            {
+              latitude,
+              longitude,
+              accuracy: accuracy || null,
+              heading: heading || null,
+              speed: speed || null
+            },
+            {
+              headers: { 'x-employee-id': session.employee.id }
+            }
+          );
+        } catch (err) {
+          console.error(`Failed to post GPS for order ${order.id}:`, err?.message);
+        }
+      }
+
+      setGpsActive(true);
+      setLastLocationSync(new Date());
+    };
+
+    const handleError = (error) => {
+      console.warn('GPS location tracking error:', error.message);
+      setGpsActive(false);
+    };
+
+    try {
+      watchIdRef.current = navigator.geolocation.watchPosition(sendLocationUpdate, handleError, {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 15000
+      });
+      setGpsActive(true);
+    } catch (e) {
+      console.warn('Failed to start watchPosition:', e);
+    }
+
+    return () => {
+      if (watchIdRef.current !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+      setGpsActive(false);
+    };
+  }, [session, inTransitOrders.map((o) => `${o.id}-${o.order_status}`).join(',')]);
 
   // Restore saved session
   useEffect(() => {
@@ -219,6 +302,20 @@ export default function DeliveryStaffPortal() {
 
           {/* Quick controls */}
           <div className="flex items-center gap-2">
+            {inTransitOrders.length > 0 && (
+              <div 
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] font-black ${
+                  gpsActive 
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300' 
+                    : 'bg-amber-50 text-amber-700 border-amber-300'
+                }`}
+                title={gpsActive ? `GPS Active • Synced at ${lastLocationSync?.toLocaleTimeString() || 'now'}` : 'GPS standby / awaiting location'}
+              >
+                <Radio className={`w-3.5 h-3.5 ${gpsActive ? 'text-emerald-600 animate-pulse' : 'text-amber-500'}`} />
+                <span>{gpsActive ? 'GPS Live' : 'GPS Standby'}</span>
+              </div>
+            )}
+
             <button
               onClick={fetchOrders}
               className="p-2.5 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] hover:bg-white text-[#252525] transition-all cursor-pointer shadow-2xs active:scale-95"

@@ -9,13 +9,15 @@ import { AvailabilityCalendarView } from '@/components/bookings/AvailabilityCale
 import { useBookingCalendar } from '@/hooks/booking';
 import { useCafes } from '@/hooks/cafe';
 import { LoadingSkeleton } from '@/components/dashboard/LoadingSkeleton';
+import { toast } from 'react-hot-toast';
 
 export default function BookingsCalendarPage() {
   const router = useRouter();
   const { data: bookingsData, isLoading: isBookingsLoading, refetch } = useBookingCalendar();
-  const { data: cafesData, isLoading: isCafesLoading } = useCafes();
+  const { data: cafesData, isLoading: isCafesLoading, refetch: refetchCafes } = useCafes();
 
   const [selectedCafeId, setSelectedCafeId] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Safely extract arrays
   const bookings = Array.isArray(bookingsData) ? bookingsData : (bookingsData?.data || bookingsData?.bookings || []);
@@ -62,11 +64,22 @@ export default function BookingsCalendarPage() {
         {/* Action Controls */}
         <div className="flex items-center gap-2 z-10">
           <button 
-            onClick={() => refetch()}
-            className="w-10 h-10 rounded-2xl border border-[#EF5350]/60 bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0 cursor-pointer"
+            onClick={async () => {
+              try {
+                setIsRefreshing(true);
+                await Promise.all([refetch(), refetchCafes?.()]);
+                toast.success('Calendar refreshed');
+              } catch {
+                toast.error('Failed to refresh calendar');
+              } finally {
+                setTimeout(() => setIsRefreshing(false), 500);
+              }
+            }}
+            disabled={isRefreshing}
+            className="w-10 h-10 rounded-2xl border border-[#EF5350]/60 bg-white hover:bg-[#E50914] text-[#E50914] hover:text-white flex items-center justify-center transition-all shrink-0 cursor-pointer disabled:opacity-60"
             title="Refresh Calendar Data"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
 
           <Link href="/owner/bookings">

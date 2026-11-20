@@ -157,22 +157,22 @@ export const MobileBottomNav = () => {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-              className="relative z-10 bg-[#FFF5F5] border-t-2 border-[#EF5350]/60 rounded-t-3xl p-5 shadow-2xl space-y-4 max-h-[80vh] overflow-y-auto"
+              className="relative z-10 bg-white border-t border-stone-200 rounded-t-3xl p-5 shadow-2xl space-y-4 max-h-[80vh] overflow-y-auto"
             >
-              <div className="flex items-center justify-between border-b border-[#E50914]/15 pb-3">
+              <div className="flex items-center justify-between border-b border-stone-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-[#E50914]/10 flex items-center justify-center text-[#E50914]">
+                  <div className="w-8 h-8 rounded-xl bg-[#FFF5F5] border border-[#FEE2E2] flex items-center justify-center text-[#E50914]">
                     <Plus className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="text-base font-extrabold text-[#252525]">Owner Quick Actions</h3>
-                    <p className="text-[11px] text-[#252525]/60">Fast portal shortcuts and operations</p>
+                    <p className="text-[11px] text-stone-500">Fast portal shortcuts and operations</p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setIsQuickActionsOpen(false)}
-                  className="p-1.5 rounded-full text-[#252525]/50 hover:bg-[#E50914]/10 transition-colors"
+                  className="p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -185,7 +185,7 @@ export const MobileBottomNav = () => {
                     <button
                       key={idx}
                       onClick={() => handleActionClick(item)}
-                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#EF5350]/40 hover:border-[#E50914]/40 shadow-xs hover:shadow-sm text-left transition-all active:scale-[0.98]"
+                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-stone-200 hover:border-[#E50914]/40 hover:bg-[#FFF5F5]/30 shadow-xs hover:shadow-sm text-left transition-all active:scale-[0.98] cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center shrink-0 shadow-xs`}>
@@ -193,10 +193,10 @@ export const MobileBottomNav = () => {
                         </div>
                         <div>
                           <h4 className="text-xs font-extrabold text-[#252525]">{item.title}</h4>
-                          <p className="text-[10px] text-[#252525]/60 mt-0.5">{item.description}</p>
+                          <p className="text-[10px] text-stone-500 mt-0.5">{item.description}</p>
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-[#252525]/40 shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-stone-400 shrink-0" />
                     </button>
                   );
                 })}
@@ -206,19 +206,20 @@ export const MobileBottomNav = () => {
         )}
       </AnimatePresence>
 
-      {/* Fixed Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#FFF5F5]/95 backdrop-blur-md border-t border-[#EF5350]/60 rounded-t-3xl sm:rounded-t-[32px] shadow-[0_-8px_30px_rgba(44,24,16,0.15)] px-3 py-2">
-        <div className="flex items-center justify-between max-w-md mx-auto relative">
+      {/* Floating Bottom Navigation Bar */}
+      <div className="fixed bottom-3 inset-x-3 z-40 lg:hidden max-w-md mx-auto">
+        <div className="bg-white/95 backdrop-blur-md border border-stone-200/90 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] px-3 py-2">
+          <div className="flex items-center justify-between relative">
           
           {/* Dashboard Item */}
           <Link
             href="/owner/dashboard"
             className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-              pathname === '/owner/dashboard' ? 'text-[#E50914] font-extrabold' : 'text-[#252525]/60 hover:text-[#E50914]'
+              pathname === '/owner/dashboard' ? 'text-[#E50914] font-black' : 'text-stone-500 hover:text-[#E50914]'
             }`}
           >
             <LayoutDashboard className={`w-5 h-5 ${pathname === '/owner/dashboard' ? 'text-[#E50914] scale-110' : ''}`} />
-            <span className="text-[10px] tracking-tight mt-0.5">Dashboard</span>
+            <span className="text-[10px] font-bold tracking-tight mt-0.5">Dashboard</span>
           </Link>
 
           {/* Bookings or Analytics Item */}
@@ -226,21 +227,21 @@ export const MobileBottomNav = () => {
             <Link
               href="/owner/analytics"
               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-                pathname.startsWith('/owner/analytics') ? 'text-amber-700 font-extrabold' : 'text-[#252525]/60 hover:text-amber-700'
+                pathname.startsWith('/owner/analytics') ? 'text-[#E50914] font-black' : 'text-stone-500 hover:text-[#E50914]'
               }`}
             >
-              <TrendingUp className={`w-5 h-5 ${pathname.startsWith('/owner/analytics') ? 'text-amber-700 scale-110' : ''}`} />
-              <span className="text-[10px] tracking-tight mt-0.5">Analytics</span>
+              <TrendingUp className={`w-5 h-5 ${pathname.startsWith('/owner/analytics') ? 'text-[#E50914] scale-110' : ''}`} />
+              <span className="text-[10px] font-bold tracking-tight mt-0.5">Analytics</span>
             </Link>
           ) : (
             <Link
               href="/owner/bookings"
               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-                pathname.startsWith('/owner/bookings') ? 'text-emerald-700 font-extrabold' : 'text-[#252525]/60 hover:text-emerald-700'
+                pathname.startsWith('/owner/bookings') ? 'text-[#E50914] font-black' : 'text-stone-500 hover:text-[#E50914]'
               }`}
             >
-              <CalendarCheck className={`w-5 h-5 ${pathname.startsWith('/owner/bookings') ? 'text-emerald-700 scale-110' : ''}`} />
-              <span className="text-[10px] tracking-tight mt-0.5">Bookings</span>
+              <CalendarCheck className={`w-5 h-5 ${pathname.startsWith('/owner/bookings') ? 'text-[#E50914] scale-110' : ''}`} />
+              <span className="text-[10px] font-bold tracking-tight mt-0.5">Bookings</span>
             </Link>
           )}
 
@@ -248,12 +249,12 @@ export const MobileBottomNav = () => {
           <div className="flex flex-col items-center justify-center flex-1 relative">
             <button
               onClick={() => setIsQuickActionsOpen(!isQuickActionsOpen)}
-              className="absolute -top-6 w-13 h-13 rounded-full bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white flex items-center justify-center shadow-lg shadow-[#E50914]/40 ring-4 ring-[#FFF5F5] active:scale-95 transition-all"
+              className="absolute -top-6 w-13 h-13 rounded-full bg-gradient-to-r from-[#E50914] via-[#E50914] to-[#B71C1C] text-white flex items-center justify-center shadow-lg shadow-[#E50914]/30 ring-4 ring-white active:scale-95 transition-all"
               title="Quick Actions"
             >
               <Plus className={`w-7 h-7 transition-transform duration-300 ${isQuickActionsOpen ? 'rotate-45' : ''}`} />
             </button>
-            <span className="text-[10px] font-extrabold text-[#E50914] tracking-tight mt-7">Actions</span>
+            <span className="text-[10px] font-black text-[#E50914] tracking-tight mt-7">Actions</span>
           </div>
 
           {/* Cafes / Restaurants or Food Orders Item */}
@@ -261,32 +262,33 @@ export const MobileBottomNav = () => {
             <Link
               href="/owner/orders"
               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-                pathname.startsWith('/owner/orders') ? 'text-[#E50914] font-extrabold' : 'text-[#252525]/60 hover:text-[#E50914]'
+                pathname.startsWith('/owner/orders') ? 'text-[#E50914] font-black' : 'text-stone-500 hover:text-[#E50914]'
               }`}
             >
               <ShoppingBag className={`w-5 h-5 ${pathname.startsWith('/owner/orders') ? 'text-[#E50914] scale-110' : ''}`} />
-              <span className="text-[10px] tracking-tight mt-0.5">Orders</span>
+              <span className="text-[10px] font-bold tracking-tight mt-0.5">Orders</span>
             </Link>
           ) : (
             <Link
               href="/owner/cafes"
               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
-                pathname.startsWith('/owner/cafes') ? 'text-[#E50914] font-extrabold' : 'text-[#252525]/60 hover:text-[#E50914]'
+                pathname.startsWith('/owner/cafes') ? 'text-[#E50914] font-black' : 'text-stone-500 hover:text-[#E50914]'
               }`}
             >
               <Store className={`w-5 h-5 ${pathname.startsWith('/owner/cafes') ? 'text-[#E50914] scale-110' : ''}`} />
-              <span className="text-[10px] tracking-tight mt-0.5">Cafes</span>
+              <span className="text-[10px] font-bold tracking-tight mt-0.5">Cafes</span>
             </Link>
           )}
 
           {/* Menu Drawer Toggle */}
           <button
             onClick={openMobileSidebar}
-            className="flex flex-col items-center justify-center flex-1 py-1 text-[#252525]/60 hover:text-[#E50914] transition-all"
+            className="flex flex-col items-center justify-center flex-1 py-1 text-stone-500 hover:text-[#E50914] transition-all cursor-pointer"
           >
             <Menu className="w-5 h-5" />
-            <span className="text-[10px] tracking-tight mt-0.5">Menu</span>
+            <span className="text-[10px] font-bold tracking-tight mt-0.5">Menu</span>
           </button>
+        </div>
         </div>
       </div>
     </>
