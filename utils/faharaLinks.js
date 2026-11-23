@@ -4,7 +4,7 @@ const IS_PROD = typeof window !== 'undefined'
   : process.env.NODE_ENV === 'production';
 
 export const USER_APP_URL = process.env.NEXT_PUBLIC_USER_URL || (IS_PROD ? 'https://fahara.in' : 'http://localhost:3001');
-export const CAFE_APP_URL = process.env.NEXT_PUBLIC_CAFE_URL || (IS_PROD ? 'https://cafe.fahara.in' : 'http://localhost:3002');
+export const CAFE_APP_URL = process.env.NEXT_PUBLIC_CAFE_URL || (IS_PROD ? 'https://cafe.fahara.in' : 'http://localhost:52');
 export const EVENT_APP_URL = process.env.NEXT_PUBLIC_EVENT_URL || (IS_PROD ? 'https://em.fahara.in' : 'http://localhost:3004');
 export const ADMIN_APP_URL = process.env.NEXT_PUBLIC_ADMIN_URL || (IS_PROD ? 'https://admin.fahara.in' : 'http://localhost:3003');
 
